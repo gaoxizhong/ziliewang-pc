@@ -24,8 +24,7 @@ export const constantRoutes = [
 
 ];
 
-const createRouter = () =>
-  new Router({
+const router = new Router({
     // mode: 'history', // require service support
     scrollBehavior: () => ({ y: 0 }),
     routes: constantRoutes,
@@ -60,14 +59,5 @@ router.beforeEach(async (to, from, next) => {
   
 
 
-
-
-
-
-
-export function resetRouter() {
-  const newRouter = createRouter();
-  router.matcher = newRouter.matcher; // reset router
-}
 
 export default router;
