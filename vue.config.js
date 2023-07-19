@@ -14,41 +14,10 @@ module.exports = defineConfig({
   // 指定生成的 index.html 的输出路径，也可以是一个绝对路径。index的路劲和名字 (相对于 outputDir 的)
   indexPath: 'index.html',
   productionSourceMap: false,
-
-  css: {
-    // 是否使用css分离插件 ExtractTextPlugin
-    extract: {
-      // 修改打包后css文件名
-      filename: `static/css/[name].${Version}.css`,
-      chunkFilename: `static/css/[name].${Version}.css`
-    }
-  },
-  configureWebpack: {
-    output: { // 输出重构  打包编译后的 文件名称  【模块名称.时间戳】
-      filename: `static/js/[name].${Version}.js`,
-      chunkFilename: `static/js/[name].${Version}.js`
-    },
-  },
-  chainWebpack(config) {
-		// img的文件名修改
-	    config.module
-	      .rule('images')
-	      .use('url-loader')
-	      .tap(options => {
-	        options.name = `static/img/[name].${Version}.[ext]`
-	        options.fallback = {
-	          loader: 'file-loader',
-	          options: {
-	            name: `static/img/[name].${Version}.[ext]`
-	          }
-	        }
-	        return options
-	      })
-	},
   devServer: {
     proxy: {
       [context]: {
-        target: '',
+        target: 'http://182.43.50.128:8081/',
         ws: true,
         changeOrigin: true, //是否跨域
       },
