@@ -7,7 +7,7 @@ Vue.use(Router);
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login'),
+    component: () => import('@/views/login/index'),
     hidden: true,
   },
 

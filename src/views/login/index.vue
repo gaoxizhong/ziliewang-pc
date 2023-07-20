@@ -12,8 +12,8 @@
         <!-- 登录模块 开始 -->
         <div class="sign-box">
           <div class="sign-type-box">
-            <span>快捷登录</span>
-            <span>密码登录</span>
+            <span :class=" sign_way == 1?'hover':'' " @click="clickTab(1)">快捷登录</span>
+            <span :class=" sign_way == 2?'hover':'' " @click="clickTab(2)">密码登录</span>
           </div>
 
         </div>
@@ -58,13 +58,16 @@ export default {
     })
   },
   methods: {
-  
+    // 点击注册登录框tab
+    clickTab(n){
+      this.sign_way = n;
+    }
   
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 $bg: #ffffff;
@@ -125,6 +128,16 @@ $cursor: #000;
     padding: 4px 0;
     cursor: pointer;
   }
+  span.hover::after{
+      content: '';
+      width: 30px;
+      height: 2px;
+      background: $g_color;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+    }
 }
 
 
@@ -135,16 +148,6 @@ $cursor: #000;
   .login-container .el-input input {
     color: $cursor;
   }
-}
-
-</style>
-
-<style lang="scss" scoped>
-$bg: #fff;
-$dark_gray: #889aa4;
-$light_gray: #000;
-::v-deep .el-form-item__content {
-  line-height: 1;
 }
 
 </style>
