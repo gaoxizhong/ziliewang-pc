@@ -7,22 +7,26 @@
       </div>
     </div>
     <div class="home-container" :style="login_bgurl" >
-      <div class="form-container-box">
+      <div class="home-container-div">
 
-        <!-- 登录模块 开始 -->
-        <div class="sign-box">
-          <div class="sign-type-box">
-            <span :class=" sign_way == 1?'hover':'' " @click="clickTab(1)">快捷登录</span>
-            <span :class=" sign_way == 2?'hover':'' " @click="clickTab(2)">密码登录</span>
+        <div class="form-container-box">
+
+          <!-- 登录模块 开始 -->
+          <div class="sign-box">
+            <div class="sign-type-box">
+              <span :class=" sign_way == 1?'hover':'' " @click="clickTab(1)">快捷登录</span>
+              <span :class=" sign_way == 2?'hover':'' " @click="clickTab(2)">密码登录</span>
+            </div>
+
           </div>
+          <!-- 登录模块 结束 -->
 
         </div>
-        <!-- 登录模块 结束 -->
-
-
+        
       </div>
 
     </div>
+
   </div>
 </template>
 
@@ -83,6 +87,7 @@ $cursor: #000;
   .header-nav-box{
     width: 1200px;
     height: 100%;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -94,15 +99,21 @@ $cursor: #000;
   height: calc(100vh - 50px);
   position: relative;
 }
+.home-container-div{
+  width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+}
 .form-container-box{
-  width: 440px;
-  height: 450px;
+  width: 22rem;
+  height: 27.5rem;
   background: rgba(255,255,255,0.8);
   border-radius: 4px 4px 4px 4px;
   opacity: 1;
   position: absolute;
   top: 50%;
-  right: 12.9%;
+  right: 0;
   transform: translateY(-50%);
   padding: 20px 40px;
 }
