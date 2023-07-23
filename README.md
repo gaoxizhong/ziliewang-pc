@@ -1,4 +1,4 @@
-# ziliewang-pc1
+# ziliewang-pc
 
 ## Project setup
 ```

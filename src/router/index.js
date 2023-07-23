@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import { getToken } from '@/utils/auth'; // get token from cookie
-
 Vue.use(Router);
+import talentSide from '@/views/talentSide/Mian.vue';
 
 export const constantRoutes = [
   {
@@ -16,12 +16,72 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true,
   },
+  // {
+  //   path: "/",
+  //   name: "HomeView",
+  //   component:  () => import('@/views/HomeView'),
+  // },
   {
     path: "/",
-    name: "home",
-    component:  () => import('@/views/HomeView'),
-  }
-
+    component: talentSide,
+    redirect: '/talentHome',
+    children: [
+      {
+        path: '/talentHome',
+        name: 'talentHome',
+        component: () => import('@/views/talentSide/talentHome'),
+        meta: { 
+          title: '首页',
+          keepAlive: true,
+       },
+      },
+      {
+        path: '/position',
+        name: 'position',
+        component: () => import('@/views/talentSide/position'),
+        meta: { 
+          title: '职位',
+          keepAlive: true,
+       },
+      },
+      {
+        path: '/myResume',
+        name: 'myResume',
+        component: () => import('@/views/talentSide/myResume'),
+        meta: { 
+          title: '我的简历',
+          keepAlive: true,
+       },
+      },
+      {
+        path: '/myDelivery',
+        name: 'myDelivery',
+        component: () => import('@/views/talentSide/myDelivery'),
+        meta: { 
+          title: '我的投递',
+          keepAlive: true,
+       },
+      },
+      {
+        path: '/myProfessionalCircle',
+        name: 'myProfessionalCircle',
+        component: () => import('@/views/talentSide/myProfessionalCircle'),
+        meta: { 
+          title: '我的职圈',
+          keepAlive: true,
+       },
+      },
+      {
+        path: '/talentSideSettings',
+        name: 'talentSideSettings',
+        component: () => import('@/views/talentSide/talentSideSettings'),
+        meta: { 
+          title: '设置',
+          keepAlive: true,
+       },
+      },
+    ]
+  },
 ];
 
 const router = new Router({

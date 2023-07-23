@@ -1,5 +1,5 @@
 
-const TokenKey = 'jingmiao_token';
+const TokenKey = 'ziliewang_token';
 
 // 每次打开都要重新登录，token 存在 sessionStorage
 export function getToken() {

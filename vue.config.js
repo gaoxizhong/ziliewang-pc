@@ -11,7 +11,7 @@ function resolve(dir) {
 
 
 const context = process.env.VUE_APP_BASE_API;
-
+console.log(context)
 module.exports = {
   // transpileDependencies: true,
   lintOnSave: false,
@@ -32,9 +32,12 @@ module.exports = {
     },
     proxy: {
       [context]: {
-        target: 'http://182.43.50.128:8081/',
+        target: 'http://59.110.24.172:8997/',
         ws: true,
         changeOrigin: true, //是否跨域
+        pathRewrite: {
+          '^/api': ''
+        }
       },
 
     }
