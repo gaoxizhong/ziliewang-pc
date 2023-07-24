@@ -72,7 +72,7 @@ export default {
         padding-left: 30px;
         font-size: 16px;
         font-weight: bold;
-        color: #1F2E4D;
+        color: $g_textColor;
         line-height: 40px;
       }
       .le-ul{

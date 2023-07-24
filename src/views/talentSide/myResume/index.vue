@@ -1,4 +1,5 @@
 <template>
+  <!-- 我的简历页 -->
   <div class="container">
     <div class="tab-box">
       <div :class="is_titleTab == 1? 'hover':'' " @click="clickTitleTab(1)">预览简历</div>
@@ -9,60 +10,43 @@
     <div class="info-box">
       <div class="info-left-box">
         <!-- 个人信息 开始 -->
-        <div class="info-title-box">
-          <div class="info-title-top">
-            <img :src="require('../../../assets/image/img-user.jpg')" alt="" />
-            <div style="flex: 1;padding-left: 0.9rem;">
-              <div class="info-1">
-                <span class="info-name">张三</span>
-                <span class="info-set">编辑</span>
-              </div>
-              <ul class="info-2">
-                <li>
-                  <img src="../../../assets/image/Frame_1.png" alt="">
-                  <span>32</span>
-                </li>
-                <li>
-                  <img src="../../../assets/image/Frame_2.png" alt="">
-                  <span>工作11年2月</span>
-                </li>
-                <li>
-                  <img src="../../../assets/image/Frame_5.png" alt="">
-                  <span>宁波</span>
-                </li>
-                <li>
-                  <img src="../../../assets/image/Frame_5.png" alt="">
-                  <span>在职，看看新机会</span>
-                </li>
-              </ul>
-              <ul class="info-2">
-                <li>
-                  <img src="../../../assets/image/Frame_6.png" alt="">
-                  <span>187****1259</span>
-                </li>
-                <li>
-                  <img src="../../../assets/image/Frame_4.png" alt="">
-                  <span>47****27@qq.com</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="info-title-bottom">
-            <div class="info-title-t">
-              <span class="info-t">优势亮点</span>
-              <span class="info-set">编辑</span>
-            </div>
-            <div class="info-title-x">7年互联网行业。善长网页设计，B端设计，ui设计熟悉设计组件 antdesign等。软件ps xd sketch fimga</div>
-          </div>
-        </div>
+          <MyInfo v-if="infoData.basic_info" :data="infoData.basic_info" />  
         <!-- 个人信息 结束 -->
 
+        <!-- 优势亮点 开始 -->
+        <div class="jobExpectation-box myResume-plate">
+          <div class="jobExpectation-title-box">
+            <span class="info-t">求职期望</span>
+           <img src="../../../assets/image/Frame_7.png" alt="" class="info-icon-img"/>
+          </div>
+          <div class="myResume-plate-list">
+            <ul class="plate-list-ul">
+              <li>
+                <div class="li-name">
+                  <span class="li-name-1">首席执行官CEO/总裁/总经理</span>
+                  <span class="li-name-2">
+                    <span>8k - 13k x 12薪</span>
+                    <span>|</span>
+                    <span> 宁波</span>
+                    <span>|</span>
+                    <span>全部行业</span>
+                  </span>
+                 
+                </div>
+                <div class="info-set">设置</div>
+              </li>
+              <li></li>
+            </ul>
+
+          </div>
+        </div>
+        <!-- 优势亮点 结束 -->
+
       </div>
-      <div class="info-right-box"></div>
+      <div class="info-right-box">
+
+      </div>
     </div>
-
-
-
 
 
 
@@ -71,35 +55,45 @@
 </template>
 
 <script>
+import MyInfo from "../components/myResume/myInfo.vue"
 export default {
   name: 'myResume',
   components: {
+    MyInfo,
   },
   data(){
     return{
       is_titleTab: 3,
+      infoData:{}, // 信息
     }
   },
   computed: {
     
   },
   mounted(){
-    this.getUserProfile();
+
   },  
+  created(){
+    // 获取个人信息
+    this.getUserProfile();
+  },
   methods: {
     clickTitleTab(n){
       this.is_titleTab = n;
     },
-    getUserProfile(){
+    
+   // 获取个人信息
+   getUserProfile(){
       let that = this;
-      that.$axios.post('/user/profile',{}).then(res =>{
-        if(res.data.code == 0){
-
+      that.$axios.post('/api/user/profile',{}).then(res =>{
+        console.log(res.data)
+        if(res.code == 0){
+          this.infoData = res.data;
         }
       }).catch(e =>{
         console.log(e)
       })
-    }
+    },
   },
 };
 </script>
@@ -135,81 +129,62 @@ export default {
   margin-top: 20px;
   .info-left-box{
     flex: 1;
-    .info-title-box{
+    .myResume-plate{
       width: 100%;
       border-radius: 6px;
       background: #fff;
       padding: 24px 30px;
-      .info-title-top{
-        width: 100%;
+      margin-bottom: 16px;
+      .jobExpectation-title-box{
         display: flex;
-        img{
-          width: 64px;
-          height: 64px;
-          border-radius: 50%;
+        align-items: center;
+        justify-content: space-between;
+        .info-t{
+          font-size: 18px;
+          font-weight: bold;
+          color: $g_textColor;
+          line-height: 24px;
         }
-
-        .info-1{
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          .info-name{
-            font-size: 18px;
-            font-weight: bold;
-            color: #1F2E4D;
-          }
-
-        }
-        .info-2{
-          width: 100%;
-          display: flex;
-          flex-wrap: wrap;
-          li{
-            display: flex;
-            align-items: center;
-            margin-top: 8px;
-            margin-left: 30px;
-            line-height: 22px;
-            img{
-              width: 14px;
-              height: 14px;
-            }
-            span{
-              font-size: 14px;
-              color: #1F2E4D;
-              padding-left: 4px;
-            }
-          }
-          li:nth-of-type(1){
-            margin-left: 0;
-          }
+        .info-icon-img{
+          width: 20px;
+          height: 20px;
+          cursor: pointer;
         }
       }
-      .info-title-bottom{
-        margin-top: 38px;
-        .info-title-t{
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          .info-t{
-            font-size: 18px;
-            font-weight: bold;
-            color: #1F2E4D;
-            line-height: 24px;
+      .myResume-plate-list{
+        width: 100%;
+        margin-top: 20px;
+        .plate-list-ul{
+          width: 100%;
+          li{
+            padding: 12px 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .li-name{
+              flex: 1;
+              text-align: left;
+              color: $g_textColor;
+              .li-name-1{
+                font-weight: bold;
+              }
+              .li-name-2{
+                span{
+                  padding-left: 16px;
+                }
+              }
+            }
+            &:hover{
+              background: #F7F8FA;
+            }
           }
-        }
-        .info-title-x{
-          padding: 10px 0;
-          margin-top: 6px;
-          font-size: 12px;
-          font-weight: 400;
-          color: #4E5969;
-          line-height: 22px;
-          text-align: left;
+          
         }
       }
       
     }
+ 
   }
   .info-set{
     font-size: 0.7rem;

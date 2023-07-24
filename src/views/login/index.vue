@@ -473,16 +473,16 @@ $cursor: #000;
   }
 }
 .form-container-box{
-  width: 22rem;
+  width: 380px;
   height: auto;
   background: rgba(255,255,255,0.8);
   border-radius: 4px 4px 4px 4px;
   opacity: 1;
   position: absolute;
-  top: 50%;
+  top: 120px;
   right: 20px;
-  transform: translateY(-50%);
-  padding: 1rem 2rem;
+  // transform: translateY(-50%);
+  padding: 20px 30px;
 }
 .signLogin-box{
   width: 100%;
@@ -507,7 +507,7 @@ $cursor: #000;
   }
   span.hover{
     font-weight: bold;
-    color: #1F2E4D;
+    color: $g_textColor;
     &::after{
       content: '';
       width: 36px;
@@ -621,7 +621,7 @@ $cursor: #000;
     span.title{
       font-size: 14px;
       font-weight: bold;
-      color: #1F2E4D;
+      color: $g_textColor;
     }
     span.qh{
       font-size: 14px;
@@ -652,7 +652,7 @@ $cursor: #000;
     p{
       font-size: 14px;
       font-weight: bold;
-      color: #1F2E4D;
+      color: $g_textColor;
       width: 100%;
       height: 32px;
       line-height: 32px;
