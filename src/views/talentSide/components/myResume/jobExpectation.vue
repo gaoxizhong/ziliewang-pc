@@ -3,36 +3,19 @@
     <div class="jobExpectation-box myResume-plate">
       <div class="myResume-plate-title-box">
         <span class="info-t">求职期望</span>
-        <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img"/>
+        <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" @click="clickCreat"/>
       </div>
       <div class="myResume-plate-list">
         <ul class="plate-list-ul">
-          <li>
+          <li v-for="(item,index) in dataList" :key="index">
             <div class="li-name">
-              <span class="li-name-1">首席执行官CEO/总裁/总经理</span>
+              <span class="li-name-1">{{ item.desired_position }}/{{ item.job_preference }}</span>
               <span class="li-name-2">
-                <span>8k - 13k x 12薪</span>
+                <span>{{ item.expected_salary }}</span>
                 <span>|</span>
-                <span> 宁波</span>
+                <span>{{ item.desired_location }}</span>
                 <span>|</span>
-                <span>全部行业</span>
-              </span>
-            </div>
-            <div class="info-set">
-              <span>删除</span>
-              <span>/</span>
-              <span>编辑</span>
-            </div>
-          </li>
-          <li>
-            <div class="li-name">
-              <span class="li-name-1">首席执行官CEO/总裁/总经理</span>
-              <span class="li-name-2">
-                <span>8k - 13k x 12薪</span>
-                <span>|</span>
-                <span> 宁波</span>
-                <span>|</span>
-                <span>全部行业</span>
+                <span>{{ item.desired_industry }}</span>
               </span>
             </div>
             <div class="info-set">
@@ -55,21 +38,21 @@ export default {
   },
   props:{
     data:{
-      typeof: Object,
+      // 数组/对象的默认值应当由一个工厂函数返回
+      type: Array,
       default() {
-          return {
-            data: {}
-          }
-        }
+        return []
+      }
     }
   },
   data(){
     return{
-      infoData: {},
+      dataList: [], //接收父组件的数据数组
+      infoData: [],
     }
   },
   mounted(){
-    console.log(this.data)
+    this.dataList = this.data;
   },
   computed: {
     
@@ -103,8 +86,8 @@ export default {
         line-height: 24px;
       }
       .info-icon-img{
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         cursor: pointer;
       }
     }

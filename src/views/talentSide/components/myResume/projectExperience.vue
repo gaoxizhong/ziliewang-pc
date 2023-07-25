@@ -7,11 +7,11 @@
       </div>
       <div class="myResume-plate-list">
         <ul class="plate-list-ul">
-          <li>
+          <li v-for="(item,index) in datalist" :key="index">
             <div class="li-title-box">
               <div class="li-name">
-                <span class="li-name-1">鄞州非遗馆</span>
-                <span class="li-name-2">2014-2015</span>
+                <span class="li-name-1">{{ item.project_desc }}</span>
+                <span class="li-name-2">{{ item.begin_date}} - {{ item.end_date }}</span>
               </div>
               <div class="info-set">
                 <span>删除</span>
@@ -19,26 +19,9 @@
                 <span>编辑</span>
               </div>
             </div>
-            <div class="items-sub-box">宁波彩壳广告有限公司·设计师</div>
+            <div class="items-sub-box">{{ item.company_name }} · {{ item.position }}</div>
             <div class="items-text-box">
-              负责非遗馆所有平面物料。展厅策划
-            </div>
-          </li>
-          <li>
-            <div class="li-title-box">
-              <div class="li-name">
-                <span class="li-name-1">鄞州非遗馆</span>
-                <span class="li-name-2">2014-2015</span>
-              </div>
-              <div class="info-set">
-                <span>删除</span>
-                <span>/</span>
-                <span>编辑</span>
-              </div>
-            </div>
-            <div class="items-sub-box">宁波彩壳广告有限公司·设计师</div>
-            <div class="items-text-box">
-              负责非遗馆所有平面物料。展厅策划
+              {{ item.job_content }}
             </div>
           </li>
         </ul>
@@ -55,20 +38,22 @@ export default {
   },
   props:{
     data:{
-      typeof: Object,
+      // 数组/对象的默认值应当由一个工厂函数返回
+      type: Array,
       default() {
-          return {
-            data: {}
-          }
-        }
+        return []
+      }
     }
   },
   data(){
     return{
-      infoData: {},
+      dataList: [], //接收父组件的数据数组
+      infoData: [],
+
     }
   },
   mounted(){
+    this.dataList = this.data;
   
   },
   computed: {
@@ -103,8 +88,8 @@ export default {
         line-height: 24px;
       }
       .info-icon-img{
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         cursor: pointer;
       }
     }

@@ -7,18 +7,18 @@
       </div>
       <div class="myResume-plate-list">
         <ul class="plate-list-ul">
-          <li>
+          <li v-for="(item,index) in dataList" :key="index">
             <div class="li-title-box">
               <div class="li-name">
-                <span class="li-name-1">金职院</span>
-                <span class="li-name-2">2014-2015</span>
+                <span class="li-name-1">{{ item.school }}</span>
+                <span class="li-name-2">{{ item.school_date }}</span>
               </div>
               <div class="info-set">
                 <span>编辑</span>
               </div>
             </div>
             <div class="items-sub-box">统招</div>
-            <div class="items-text-box"> 大专|工业设计</div>
+            <div class="items-text-box"> 大专| {{ item.specialty }}</div>
           </li>
 
         </ul>
@@ -35,20 +35,22 @@ export default {
   },
   props:{
     data:{
-      typeof: Object,
+      // 数组/对象的默认值应当由一个工厂函数返回
+      type: Array,
       default() {
-          return {
-            data: {}
-          }
-        }
+        return []
+      }
     }
   },
   data(){
     return{
-      infoData: {},
+      dataList: [], //接收父组件的数据数组
+      infoData: [],
+
     }
   },
   mounted(){
+    this.dataList = this.data;
   
   },
   computed: {
@@ -83,8 +85,8 @@ export default {
         line-height: 24px;
       }
       .info-icon-img{
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         cursor: pointer;
       }
     }

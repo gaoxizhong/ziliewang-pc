@@ -105,11 +105,9 @@ export default {
   },
   props:{
     data:{
-      typeof: Object,
+      type: Object,
       default() {
-          return {
-            data: {}
-          }
+          return {}
         }
     }
   },
@@ -122,7 +120,7 @@ export default {
     }
   },
   mounted(){
-  
+    
   },
   computed: {
     
@@ -183,8 +181,8 @@ export default {
         line-height: 24px;
       }
       .info-icon-img{
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         cursor: pointer;
       }
 

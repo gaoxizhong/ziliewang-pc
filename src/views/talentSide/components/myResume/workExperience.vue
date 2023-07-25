@@ -7,11 +7,11 @@
       </div>
       <div class="myResume-plate-list">
         <ul class="plate-list-ul">
-          <li>
+          <li v-for="(item,index) in dataList" :key="index">
             <div class="li-title-box">
               <div class="li-name">
-                <span class="li-name-1">宁波荣胜网络科技有限公司</span>
-                <span class="li-name-2">2014-2015</span>
+                <span class="li-name-1">{{ item.company_name }}</span>
+                <span class="li-name-2">{{ item.begin_date }} - {{ item.end_date }}</span>
               </div>
               <div class="info-set">
                 <span>删除</span>
@@ -19,26 +19,9 @@
                 <span>编辑</span>
               </div>
             </div>
-            <div class="items-sub-box">设计总监</div>
+            <div class="items-sub-box">{{ item.position }}</div>
             <div class="items-text-box">
-              负责规划方案设计的技术指导工作；2、负责公司开发产品总体效果的控制；3、组织落实规划建筑、室内装修的设计方案及施工图；4、负责组织审查建筑专业的图纸并提
-            </div>
-          </li>
-          <li>
-            <div class="li-title-box">
-              <div class="li-name">
-                <span class="li-name-1">宁波荣胜网络科技有限公司</span>
-                <span class="li-name-2">2014-2015</span>
-              </div>
-              <div class="info-set">
-                <span>删除</span>
-                <span>/</span>
-                <span>编辑</span>
-              </div>
-            </div>
-            <div class="items-sub-box">设计总监</div>
-            <div class="items-text-box">
-              负责规划方案设计的技术指导工作；2、负责公司开发产品总体效果的控制；3、组织落实规划建筑、室内装修的设计方案及施工图；4、负责组织审查建筑专业的图纸并提
+              {{ item.responsibility_performance }}
             </div>
           </li>
         </ul>
@@ -55,20 +38,22 @@ export default {
   },
   props:{
     data:{
-      typeof: Object,
+      // 数组/对象的默认值应当由一个工厂函数返回
+      type: Array,
       default() {
-          return {
-            data: {}
-          }
-        }
+        return []
+      }
     }
   },
   data(){
     return{
-      infoData: {},
+      dataList: [], //接收父组件的数据数组
+      infoData: [],
+
     }
   },
   mounted(){
+    this.dataList = this.data;
   
   },
   computed: {
@@ -103,8 +88,8 @@ export default {
         line-height: 24px;
       }
       .info-icon-img{
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         cursor: pointer;
       }
     }
