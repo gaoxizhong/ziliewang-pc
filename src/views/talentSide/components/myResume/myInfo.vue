@@ -277,6 +277,7 @@ export default {
             white-space: nowrap;
             position: relative;
             vertical-align: middle;
+            font-size: 16px;
             &:last-of-type {
               margin-right: 0;
             }

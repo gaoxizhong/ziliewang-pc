@@ -10,177 +10,23 @@
     <div class="info-box">
       <div class="info-left-box">
         <!-- 个人信息 开始 -->
-          <MyInfo v-if="infoData.basic_info" :data="infoData.basic_info" />  
+        <MyInfo :data="infoData.basic_info" />  
         <!-- 个人信息 结束 -->
 
         <!-- 求职期望 开始 -->
-        <div class="jobExpectation-box myResume-plate">
-          <div class="myResume-plate-title-box">
-            <span class="info-t">求职期望</span>
-           <img src="../../../assets/image/Frame_7.png" alt="" class="info-icon-img"/>
-          </div>
-          <div class="myResume-plate-list">
-            <ul class="plate-list-ul">
-              <li>
-                <div class="li-name">
-                  <span class="li-name-1">首席执行官CEO/总裁/总经理</span>
-                  <span class="li-name-2">
-                    <span>8k - 13k x 12薪</span>
-                    <span>|</span>
-                    <span> 宁波</span>
-                    <span>|</span>
-                    <span>全部行业</span>
-                  </span>
-                </div>
-                <div class="info-set">
-                  <span>删除</span>
-                  <span>/</span>
-                  <span>编辑</span>
-                </div>
-              </li>
-              <li>
-                <div class="li-name">
-                  <span class="li-name-1">首席执行官CEO/总裁/总经理</span>
-                  <span class="li-name-2">
-                    <span>8k - 13k x 12薪</span>
-                    <span>|</span>
-                    <span> 宁波</span>
-                    <span>|</span>
-                    <span>全部行业</span>
-                  </span>
-                </div>
-                <div class="info-set">
-                  <span>删除</span>
-                  <span>/</span>
-                  <span>编辑</span>
-                </div>
-              </li>
-            </ul>
-
-          </div>
-        </div>
+        <JobExpectation :data="infoData.job_expectation" />  
         <!-- 求职期望 结束 -->
-
+        
         <!-- 工作经历 开始 -->
-        <div class="workExperience-box myResume-plate">
-          <div class="myResume-plate-title-box">
-            <span class="info-t">工作经历</span>
-           <img src="../../../assets/image/Frame_7.png" alt="" class="info-icon-img"/>
-          </div>
-          <div class="myResume-plate-list">
-            <ul class="plate-list-ul">
-              <li>
-                <div class="li-title-box">
-                  <div class="li-name">
-                    <span class="li-name-1">宁波荣胜网络科技有限公司</span>
-                    <span class="li-name-2">2014-2015</span>
-                  </div>
-                  <div class="info-set">
-                    <span>删除</span>
-                    <span>/</span>
-                    <span>编辑</span>
-                  </div>
-                </div>
-                <div class="items-sub-box">设计总监</div>
-                <div class="items-text-box">
-                  负责规划方案设计的技术指导工作；2、负责公司开发产品总体效果的控制；3、组织落实规划建筑、室内装修的设计方案及施工图；4、负责组织审查建筑专业的图纸并提
-                </div>
-              </li>
-              <li>
-                <div class="li-title-box">
-                  <div class="li-name">
-                    <span class="li-name-1">宁波荣胜网络科技有限公司</span>
-                    <span class="li-name-2">2014-2015</span>
-                  </div>
-                  <div class="info-set">
-                    <span>删除</span>
-                    <span>/</span>
-                    <span>编辑</span>
-                  </div>
-                </div>
-                <div class="items-sub-box">设计总监</div>
-                <div class="items-text-box">
-                  负责规划方案设计的技术指导工作；2、负责公司开发产品总体效果的控制；3、组织落实规划建筑、室内装修的设计方案及施工图；4、负责组织审查建筑专业的图纸并提
-                </div>
-              </li>
-            </ul>
-
-          </div>
-        </div>
+        <WorkExperience :data="infoData.workExperience" />  
         <!-- 工作经历 结束 -->
+
         <!-- 项目经历 开始 -->
-        <div class="projectExperience-box myResume-plate">
-          <div class="myResume-plate-title-box">
-            <span class="info-t">项目经历</span>
-           <img src="../../../assets/image/Frame_7.png" alt="" class="info-icon-img"/>
-          </div>
-          <div class="myResume-plate-list">
-            <ul class="plate-list-ul">
-              <li>
-                <div class="li-title-box">
-                  <div class="li-name">
-                    <span class="li-name-1">鄞州非遗馆</span>
-                    <span class="li-name-2">2014-2015</span>
-                  </div>
-                  <div class="info-set">
-                    <span>删除</span>
-                    <span>/</span>
-                    <span>编辑</span>
-                  </div>
-                </div>
-                <div class="items-sub-box">宁波彩壳广告有限公司·设计师</div>
-                <div class="items-text-box">
-                  负责非遗馆所有平面物料。展厅策划
-                </div>
-              </li>
-              <li>
-                <div class="li-title-box">
-                  <div class="li-name">
-                    <span class="li-name-1">鄞州非遗馆</span>
-                    <span class="li-name-2">2014-2015</span>
-                  </div>
-                  <div class="info-set">
-                    <span>删除</span>
-                    <span>/</span>
-                    <span>编辑</span>
-                  </div>
-                </div>
-                <div class="items-sub-box">宁波彩壳广告有限公司·设计师</div>
-                <div class="items-text-box">
-                  负责非遗馆所有平面物料。展厅策划
-                </div>
-              </li>
-            </ul>
-
-          </div>
-        </div>
+        <ProjectExperience :data="infoData.project_experience" />  
         <!-- 项目经历 结束 -->
+
         <!-- 教育经历 开始 -->
-        <div class="educationExperience-box myResume-plate">
-          <div class="myResume-plate-title-box">
-            <span class="info-t">教育经历</span>
-           <img src="../../../assets/image/Frame_7.png" alt="" class="info-icon-img"/>
-          </div>
-          <div class="myResume-plate-list">
-            <ul class="plate-list-ul">
-              <li>
-                <div class="li-title-box">
-                  <div class="li-name">
-                    <span class="li-name-1">金职院</span>
-                    <span class="li-name-2">2014-2015</span>
-                  </div>
-                  <div class="info-set">
-                    <span>编辑</span>
-                  </div>
-                </div>
-                <div class="items-sub-box">统招</div>
-                <div class="items-text-box"> 大专|工业设计</div>
-              </li>
-
-            </ul>
-
-          </div>
-        </div>
+        <EducationExperience :data="infoData.education_experience" />  
         <!-- 教育经历 结束 -->
 
       </div>
@@ -204,11 +50,19 @@
 </template>
 
 <script>
-import MyInfo from "../components/myResume/myInfo.vue"
+import MyInfo from "../components/myResume/myInfo";
+import JobExpectation from "../components/myResume/jobExpectation";
+import WorkExperience from "../components/myResume/workExperience";
+import ProjectExperience from "../components/myResume/projectExperience";
+import EducationExperience from "../components/myResume/educationExperience";
 export default {
   name: 'myResume',
   components: {
     MyInfo,
+    JobExpectation,
+    WorkExperience,
+    ProjectExperience,
+    EducationExperience
   },
   data(){
     return{
@@ -278,191 +132,6 @@ export default {
   margin-top: 20px;
   .info-left-box{
     flex: 1;
-    .myResume-plate{
-      width: 100%;
-      border-radius: 6px;
-      background: #fff;
-      padding: 24px 30px;
-      margin-bottom: 16px;
-      .myResume-plate-title-box{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        .info-t{
-          font-size: 18px;
-          font-weight: bold;
-          color: $g_textColor;
-          line-height: 24px;
-        }
-        .info-icon-img{
-          width: 20px;
-          height: 20px;
-          cursor: pointer;
-        }
-      }
-    }
-    // =====  求职期望   ↓=====
-    .jobExpectation-box{
-      .myResume-plate-list{
-        width: 100%;
-        margin-top: 10px;
-        .plate-list-ul{
-          width: 100%;
-          li{
-            padding: 12px 20px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .li-name{
-              flex: 1;
-              text-align: left;
-              color: $g_textColor;
-              .li-name-1{
-                font-weight: bold;
-              }
-              .li-name-2{
-                span{
-                  padding-left: 16px;
-                }
-              }
-            }
-            &:hover{
-              background: #F7F8FA;
-            }
-            &:hover .info-set{
-              display: block;
-            }
-          }
-          
-        }
-      }
-    }
-    // =====  求职期望   ↑=====
-    // =====  工作经历/项目经历   ↓=====
-    .workExperience-box,.projectExperience-box{
-      .myResume-plate-list{
-        width: 100%;
-        margin-top: 10px;
-        .plate-list-ul{
-          width: 100%;
-          li{
-            padding: 12px 10px 12px 20px;
-            font-size: 14px;
-            text-align: left;
-            &:hover{
-              background: #F7F8FA;
-            }
-            &:hover .info-set{
-              display: block;
-            }
-            .li-title-box{
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              .li-name{
-                flex: 1;
-                text-align: left;
-                color: $g_textColor;
-                .li-name-1{
-                  font-size: 15px;
-                  font-weight: bold;
-                }
-                .li-name-2{
-                  color: #86909C;
-                  padding-left: 30px;
-                }
-              }
-
-            }
-            .items-sub-box{
-              font-size: 14px;
-              font-weight: 400;
-              color: #4E5969;
-              line-height: 22px;
-            }
-            .items-text-box{
-              margin-top: 0.8rem;
-              color: $g_textColor;
-              font-size: 14px;
-              font-weight: 400;
-              line-height: 22px;
-            }
-            
-          }
-          
-        }
-      }
-    }
-
-    // =====  工作经历/项目经历  ↑=====
-
-    // =====  教育经历   ↓=====
-    .educationExperience-box{
-      .myResume-plate-list{
-        width: 100%;
-        margin-top: 10px;
-        .plate-list-ul{
-          width: 100%;
-          li{
-            padding: 12px 10px 12px 20px;
-            font-size: 14px;
-            text-align: left;
-            &:hover{
-              background: #F7F8FA;
-            }
-            &:hover .info-set{
-              display: block;
-            }
-            .li-title-box{
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              .li-name{
-                flex: 1;
-                text-align: left;
-                color: $g_textColor;
-                .li-name-1{
-                  font-size: 14px;
-                  font-weight: bold;
-                }
-                .li-name-2{
-                  color: #86909C;
-                  padding-left: 20px;
-                }
-              }
-
-            }
-            .items-sub-box{
-              width: 60px;
-              height: 22px;
-              text-align: center;
-              background: #FFF7E6;
-              border-radius: 2px;
-              opacity: 1;
-              border: 1px solid #FFD591;
-              font-size: 12px;
-              font-weight: 400;
-              color: #FA8C16;
-              line-height: 20px;
-              margin-top: 4px;
-            }
-            .items-text-box{
-              margin-top: 0.8rem;
-              color: $g_textColor;
-              font-size: 14px;
-              font-weight: 400;
-              line-height: 22px;
-            }
-            
-          }
-          
-        }
-      }
-    }
-
-    // =====  教育经历  ↑=====
-
   }
   .info-set{
     font-size: 14px;
@@ -474,7 +143,6 @@ export default {
       padding-left: 6px;
     }
   }
-
   .info-right-box{
     width: 406px;
     padding-left: 0.8rem;
