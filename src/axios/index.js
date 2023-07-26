@@ -2,8 +2,11 @@ import store from '@/store';
 import axios from 'axios';
 import { Message, Loading } from 'element-ui';
 import { getToken, setToken, removeToken } from '@/utils/auth';
-import router from '@/router'
-import domMessage from '@/utils/messageOnce'
+import router from '@/router';
+import domMessage from '@/utils/messageOnce';
+import config from './config'
+
+const baseURL = config.baseURL.pro;
 
 const messageOnce = new domMessage()
 // 公共数据
@@ -11,9 +14,8 @@ let loadingInstance = null; // 声明loading
 let loadingCount = 0; // 声明接口并发计数器
 
 // 创建一个 axios 实例
-// baseUrl = '/api
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  baseURL,
   timeout: 50000
 });
 

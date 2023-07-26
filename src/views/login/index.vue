@@ -191,7 +191,6 @@ export default {
     },
     // 用户登录
     LoginUserInfo(e){
-      console.log(e)
       let that = this;
       let login_way = that.login_way;
       let login_user = that.login_user;
@@ -229,7 +228,7 @@ export default {
         p.password = login_user.password,
         p.login_type = 'pass_login'
       }
-      that.$axios.post('/login',p).then( res =>{
+      that.$axios.post('/api/login',p).then( res =>{
         let data = res.data;
         that.$store.commit("setToken", res.data.token);  // vuex
         that.$store.commit("setUserInfo", data.user.name); // vuex
@@ -310,7 +309,7 @@ export default {
         phone: sign_user.phone,
       };
 
-      that.$axios.post('/register',p).then( res =>{
+      that.$axios.post('/api/register',p).then( res =>{
         if(res.data.code == 0){
           that.$message.success({
             message:'注册成功'
@@ -376,9 +375,17 @@ export default {
           }
         }
       }, 1000)
+      let p ={
+        phone,
+      }
       return
+      this.$axios.post('/api/sms/send',).then(res =>{
+
+      }).catch( e=>{
+
+      })
       getTelCode({phone,type}).then(res =>{
-        if(res.data.code == 0){
+        if(res.data.code == 0){ 
           that.$message({
             showClose: true,
             message: '发送成功，请注意短信查收！',
@@ -479,9 +486,9 @@ $cursor: #000;
   border-radius: 4px 4px 4px 4px;
   opacity: 1;
   position: absolute;
-  top: 120px;
+  top: 50%;
   right: 20px;
-  // transform: translateY(-50%);
+  transform: translateY(-50%);
   padding: 20px 30px;
 }
 .signLogin-box{

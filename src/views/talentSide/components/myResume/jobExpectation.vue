@@ -7,7 +7,7 @@
       </div>
       <div class="myResume-plate-list">
         <ul class="plate-list-ul">
-          <li v-for="(item,index) in dataList" :key="index">
+          <li v-for="(item,index) in data" :key="index">
             <div class="li-name">
               <span class="li-name-1">{{ item.desired_position }}/{{ item.job_preference }}</span>
               <span class="li-name-2">
@@ -47,12 +47,11 @@ export default {
   },
   data(){
     return{
-      dataList: [], //接收父组件的数据数组
       infoData: [],
     }
   },
   mounted(){
-    this.dataList = this.data;
+
   },
   computed: {
     
@@ -63,6 +62,9 @@ export default {
       this.infoData = JSON.parse(JSON.stringify(this.data));
       
     }, 
+    clickCreat(){
+
+    }
 
   },
 };

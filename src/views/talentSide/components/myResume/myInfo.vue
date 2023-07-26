@@ -2,7 +2,21 @@
   <div class="container">
     <div class="info-title-box myResume-plate">
       <div class="info-title-top" v-if=" !redact_info ">
-        <img :src="require('../../../../assets/image/img-user.jpg')" alt="" />
+        <div class="info-avatar">
+          <img :src=" data.avatar ? data.avatar : require('../../../../assets/image/img-user.jpg' )" alt="" />
+          <div class="info-avatar-i">
+            <el-upload class="avatar-uploader" 
+              drag ref="upload" 
+              :action= "action"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+              :data="uploadData"
+              >
+              <i class="el-icon-camera"></i>
+            </el-upload>
+          </div>
+        </div>
         <div style="flex: 1;padding-left: 0.9rem;">
           <div class="info-1">
             <span class="info-name">{{ data.name }}</span>
@@ -11,11 +25,11 @@
           <ul class="info-2">
             <li>
               <img src="../../../../assets/image/Frame_1.png" alt="">
-              <span>{{ data.birth_year_month }}</span>
+              <span>{{ data.birth_year_month?data.birth_year_month:'无' }}</span>
             </li>
             <li>
               <img src="../../../../assets/image/Frame_2.png" alt="">
-              <span>{{ data.work_year }}</span>
+              <span>{{ data.work_year?data.work_year:'无' }}</span>
             </li>
             <li>
               <img src="../../../../assets/image/Frame_5.png" alt="">
@@ -24,8 +38,10 @@
             <li>
               <img src="../../../../assets/image/Frame_5.png" alt="">
               <span v-if="data.work_status == 2">在职不考虑</span>
-              <span v-if="data.work_status == 3">在职，看看新机会</span>
-              <span v-if="data.work_status == 4">离职</span>
+              <span v-else-if="data.work_status == 3">在职，看看新机会</span>
+              <span v-else-if="data.work_status == 4">离职</span>
+              <span v-else>离职</span>
+
             </li>
           </ul>
           <ul class="info-2">
@@ -100,6 +116,8 @@
 </template>
 
 <script>
+import config from '../../../../axios/config'
+
 export default {
   components: {
   },
@@ -117,15 +135,47 @@ export default {
       redact_spot: false,
       infoData: {},
       radio: 0,
+      fileList:[],
+      imageUrl:'',
+      action:'',
+      uploadData:{
+        up_tag: 'avatar'
+      }
     }
   },
   mounted(){
-    
+    this.action = config.baseURL.pro + 'api/upload'
   },
   computed: {
     
   },
   methods: {
+    // 选择的文件超出限制的文件总数量时触发
+    limitCheck() {
+      this.$message.warning('每次只能上传一个文件')
+    },
+ 
+    handleAvatarSuccess(res, file) {
+      console.log(res)
+      console.log(file)
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.fileList = []; // 清空已上传的文件
+
+    },
+   
+    beforeAvatarUpload(file) {
+      console.log(file)
+      const isJPG = file.type === 'image/png' || 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 jpeg 或 png 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
     clickRadio(n){
       this.infoData.radio = n;
       this.radio = n;
@@ -193,12 +243,47 @@ export default {
       width: 100%;
       display: flex;
       padding: 24px 30px;
-
-      img{
+      .info-avatar{
         width: 64px;
         height: 64px;
         border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+        .info-avatar-i{
+          width: 100%;
+          height: 100%;
+          background: #898a8b7a;
+          font-size: 28px;
+          display: none;
+          text-align: center;
+          line-height: 64px;
+          color: #ffffff;
+          position: absolute;
+          left: 0;
+          top: 0;
+          cursor: pointer;
+          .avatar-uploader::v-deep .el-upload-dragger{
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: none;
+          }
+          .avatar-uploader::v-deep .el-upload-dragger .el-icon-camera{
+            font-size: 28px;
+          }
+        }
+        &:hover .info-avatar-i{
+          display: block;
+        }
       }
+      
 
       .info-1{
         display: flex;

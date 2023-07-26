@@ -7,7 +7,7 @@
       </div>
       <div class="myResume-plate-list">
         <ul class="plate-list-ul">
-          <li v-for="(item,index) in dataList" :key="index">
+          <li v-for="(item,index) in data" :key="index">
             <div class="li-title-box">
               <div class="li-name">
                 <span class="li-name-1">{{ item.school }}</span>
@@ -44,13 +44,11 @@ export default {
   },
   data(){
     return{
-      dataList: [], //接收父组件的数据数组
       infoData: [],
 
     }
   },
   mounted(){
-    this.dataList = this.data;
   
   },
   computed: {

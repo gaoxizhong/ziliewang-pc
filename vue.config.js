@@ -3,15 +3,9 @@ const webpack = require("webpack");
 const defaultSettings = require('./src/settings.js');
 const scssVariables = require('./src/styles/variables.scss.js'); // 引入全局scss
 const name = defaultSettings.title || 'ziliewang vue-cli'; // page title
-const path = require('path');
-
-function resolve(dir) {
-  return path.join(__dirname, dir);
-}
 
 
-const context = process.env.VUE_APP_BASE_API;
-console.log(context)
+// const context = process.env.VUE_APP_BASE_API;
 module.exports = {
   // transpileDependencies: true,
   lintOnSave: false,
@@ -31,24 +25,19 @@ module.exports = {
       errors: true,
     },
     proxy: {
-      [context]: {
+      '/api': {
         target: 'http://59.110.24.172:8997/',
         ws: true,
         changeOrigin: true, //是否跨域
-        pathRewrite: {
-          '^/api': ''
-        }
+        // pathRewrite: {
+        //   '^/api': ''
+        // }
       },
 
     }
   },
   configureWebpack: {
     name: name, // 页面标题
-    resolve: {
-      alias: {
-        '@': resolve('src'),
-      },
-    },
     output: { // 输出重构  打包编译后的 文件名称  【模块名称.时间戳】
       filename: `static/js/[name].${Version}.js`,
       chunkFilename: `static/js/[name].${Version}.js`
