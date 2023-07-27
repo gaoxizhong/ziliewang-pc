@@ -396,7 +396,7 @@ export default {
       }
     }
     .redact-title-bottom{
-      padding: 24px 30px;
+      padding: 20px 30px;
       background: #F4F5F7;
       text-align: left;
       position: relative;

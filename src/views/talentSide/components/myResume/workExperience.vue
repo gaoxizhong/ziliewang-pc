@@ -3,9 +3,9 @@
     <div class="workExperience-box myResume-plate">
       <div class="myResume-plate-title-box">
         <span class="info-t">工作经历</span>
-        <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img"/>
+        <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" @click="clickCreat"/>
       </div>
-      <div class="myResume-plate-list">
+      <div class="myResume-plate-list" v-if="!is_creat">
         <ul class="plate-list-ul">
           <li v-for="(item,index) in data" :key="index">
             <div class="li-title-box">
@@ -27,6 +27,18 @@
         </ul>
 
       </div>
+
+      <!-- 编辑状态模块 开始 -->
+      <div class="redact-title-bottom" v-if="is_creat">
+        <div class="redact-title-box">
+          <span class="info-t">添加工作经历</span>
+        </div>
+
+
+      </div>
+      <!-- 编辑状态模块 结束 -->
+
+
     </div>
   </div>
 
@@ -48,6 +60,7 @@ export default {
   data(){
     return{
       infoData: [],
+      is_creat: false
 
     }
   },
@@ -63,7 +76,9 @@ export default {
       this.infoData = JSON.parse(JSON.stringify(this.data));
       
     }, 
-
+    clickCreat(){
+      this.is_creat = true
+    }
   },
 };
 </script>
@@ -73,12 +88,13 @@ export default {
     width: 100%;
     border-radius: 6px;
     background: #fff;
-    padding: 24px 30px;
     margin-bottom: 16px;
     .myResume-plate-title-box{
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 24px 30px;
+
       .info-t{
         font-size: 18px;
         font-weight: bold;
@@ -160,5 +176,37 @@ export default {
   }
   .mb20{
     margin-bottom: 20px;
+  }
+  .redact-title-bottom{
+    padding: 20px 30px;
+    background: #F4F5F7;
+    text-align: left;
+    position: relative;
+    .textarea-box{
+      width: 100%;
+      margin-top: 10px; 
+      font-size: 14px;
+      /deep/ .el-textarea__inner{
+        font-size: 14px;
+        &:focus{
+          border-color: $g_color;
+        }
+      }
+    }
+    .form-spotbtns{
+      margin-top: 16px;
+      width: 100%;
+      text-align: right;
+    }
+    .redact-title-box{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .info-t{
+        font-size: 16px;
+        color: $g_textColor;
+        line-height: 24px;
+      }
+    }
   }
 </style>

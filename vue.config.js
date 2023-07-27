@@ -24,17 +24,17 @@ module.exports = {
       warnings: false,
       errors: true,
     },
-    proxy: {
-      '/api': {
-        target: 'http://59.110.24.172:8997/',
-        ws: true,
-        changeOrigin: true, //是否跨域
-        // pathRewrite: {
-        //   '^/api': ''
-        // }
-      },
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://59.110.24.172:8997/',
+    //     ws: true,
+    //     changeOrigin: true, //是否跨域
+    //     pathRewrite: {
+    //       '^/api': ''
+    //     }
+    //   },
 
-    }
+    // }
   },
   configureWebpack: {
     name: name, // 页面标题

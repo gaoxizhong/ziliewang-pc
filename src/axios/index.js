@@ -5,7 +5,6 @@ import { getToken, setToken, removeToken } from '@/utils/auth';
 import router from '@/router';
 import domMessage from '@/utils/messageOnce';
 import config from './config'
-
 const baseURL = config.baseURL.pro;
 
 const messageOnce = new domMessage()

@@ -35,7 +35,7 @@
                 </div>
                 <div class="input-box">
                   <el-input class="input" maxlength="4" placeholder="短信验证码" v-model="login_user.code" name="code"/>
-                  <div class="send-vcode-btn" :style="{'color': isDisable?'#ababab':'#3377FF'}" :disabled="isDisable" @click.stop="click_code(2)">{{dl_statusMsg}}</div>
+                  <div class="send-vcode-btn" :style="{'color': isDisable?'#ababab':'#3377FF'}" :disabled="isDisable" @click.stop="click_code(2)">{{statusMsg}}</div>
                 </div>
               </div>
               <!-- 密码登录  -->
@@ -45,7 +45,7 @@
                   <el-input v-model="login_user.phone" type="tel" name="phone" placeholder="请输入手机号或邮箱"></el-input>
                 </div>
                 <div class="input-box">
-                  <el-input type="password" v-model="login_user.password" name="password" placeholder="请输入密码" ></el-input>
+                  <el-input type="password" v-model="login_user.password" name="password" placeholder="请输入密码" show-password></el-input>
                 </div>
               </div>
               <div class="login-check-box">
@@ -85,7 +85,7 @@
                 </div>
                 <!-- <div class="input-box">
                   <el-input class="input" maxlength="4" placeholder="短信验证码" v-model="sign_user.code" name="code"/>
-                  <div class="send-vcode-btn" :style="{'color': isDisable?'#ababab':'#3377FF'}" :disabled="isDisable" @click.stop="click_code(2)">{{dl_statusMsg}}</div>
+                  <div class="send-vcode-btn" :style="{'color': isDisable?'#ababab':'#3377FF'}" :disabled="isDisable" @click.stop="click_code(2)">{{statusMsg}}</div>
                 </div> -->
               </div>
               <div class="login-check-box">
@@ -141,8 +141,8 @@ export default {
       
       isDisable: false,
       statusMsg:'获取验证码',
-      zc_statusMsg:'获取验证码',
-      dl_statusMsg: '获取验证码',
+      // zc_statusMsg:'获取验证码',
+      // dl_statusMsg: '获取验证码',
       is_yzmlogin: false, // 验证码登录状态
       redirect: undefined,
     };
@@ -181,6 +181,9 @@ export default {
     // 点击注册登录框tab
     clickTab(n){
       this.login_way = n;
+      window.clearInterval(timerid);
+      this.isDisable = false;
+      this.statusMsg = `获取验证码`;
     },
     // 点击用户注册
     clickUserSign(){
@@ -228,7 +231,7 @@ export default {
         p.password = login_user.password,
         p.login_type = 'pass_login'
       }
-      that.$axios.post('/api/login',p).then( res =>{
+      that.$axios.post('/login',p).then( res =>{
         let data = res.data;
         that.$store.commit("setToken", res.data.token);  // vuex
         that.$store.commit("setUserInfo", data.user.name); // vuex
@@ -337,6 +340,25 @@ export default {
       let that = this;
       let type = ty; // 1、注册； 2、登录
       let phone = type == 1?that.newuser.phone: that.login_user.phone;
+
+      let event = '';
+      if(type == 1){
+        // 注册
+        event = 'register'
+      }
+      if(type == 2){
+        // 登录
+        event = 'login'
+      }
+      if(type == 3){
+        // 修改密码
+        event = 'changepwd'
+      }
+      if(type == 4){
+        // 修改手机号
+        event = 'changephone'
+      }
+
       if(phone == ''){
         this.$message.error({
           message:'请输入手机号'
@@ -348,81 +370,39 @@ export default {
         return
       }
       that.isDisable = true;
-      that.$message({
-        showClose: true,
-        message: '发送成功，请注意短信查收！',
-        type: 'success'
-      })
-      let count = 60;
-      if(type == 1){
-        that.zc_statusMsg = `${count--}秒后重新发送`;
-      }else{
-        that.dl_statusMsg = `${count--}秒后重新发送`;
-      }
-      let timerid = window.setInterval(function() {
-        if(type == 1){
-          that.zc_statusMsg = `${count--}秒后重新发送`;
-        }else{
-          that.dl_statusMsg = `${count--}秒后重新发送`;
-        }
-        if (Number(count)<= 0) {
-          window.clearInterval(timerid);
-          that.isDisable = false;
-          if(type == 1){
-            that.zc_statusMsg = `获取验证码`;
-          }else{
-            that.dl_statusMsg = `获取验证码`;
-          }
-        }
-      }, 1000)
       let p ={
         phone,
+        event,
       }
-      return
-      this.$axios.post('/api/sms/send',).then(res =>{
-
-      }).catch( e=>{
-
-      })
-      getTelCode({phone,type}).then(res =>{
-        if(res.data.code == 0){ 
+      that.$axios.post('/api/sms/send',p).then(res =>{
+        if(res.code == 0){ 
           that.$message({
             showClose: true,
             message: '发送成功，请注意短信查收！',
             type: 'success'
           })
           let count = 60;
-          if(type == 1){
-            that.zc_statusMsg = `${count--}秒后重新发送`;
-          }else{
-            that.dl_statusMsg = `${count--}秒后重新发送`;
-          }
+          that.statusMsg = `${count--}秒后重新发送`;
           let timerid = window.setInterval(function() {
-            if(type == 1){
-              that.zc_statusMsg = `${count--}秒后重新发送`;
-            }else{
-              that.dl_statusMsg = `${count--}秒后重新发送`;
-            }
+            that.statusMsg = `${count--}秒后重新发送`;
             if (Number(count)<= 0) {
               window.clearInterval(timerid);
               that.isDisable = false;
-              if(type == 1){
-                that.zc_statusMsg = `获取验证码`;
-              }else{
-                that.dl_statusMsg = `获取验证码`;
-              }
+              
+              that.statusMsg = `获取验证码`;
+
             }
           }, 1000)
         }else{
-        this.$message.error({
-          message:res.data.msg
-        })
+          this.$message.error({
+            message:res.msg
+          })
           that.isDisable = false;
         }
-      }).catch(err => {
-          that.isDisable = false;
-          console.log(err.response.data.message)
-        })
+      }).catch( e=>{
+        that.isDisable = false;
+
+      })
     },
   
   },
