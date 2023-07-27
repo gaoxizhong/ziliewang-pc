@@ -3,7 +3,7 @@
     <div class="jobExpectation-box myResume-plate">
       <div class="myResume-plate-title-box">
         <span class="info-t">求职期望</span>
-        <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" @click="clickCreat"/>
+        <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" v-if="!is_creat" @click="clickCreat"/>
       </div>
       
       <div class="myResume-plate-list" v-if="!is_creat">
@@ -35,6 +35,54 @@
           <span class="info-t">添加求职期望</span>
         </div>
 
+        <div class="redact-item-box">
+
+          <div class="mb20 redact-item">
+            <div class="item-label">期待职位</div>
+            <div class="item-content">
+              <el-input v-model="infoData.desired_position" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" />
+            </div>
+          </div>
+
+          <div class="mb20 redact-item">
+            <div class="item-label">期望地点</div>
+            <div class="item-content">
+              <el-input v-model="infoData.desired_location" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" />
+            </div>
+          </div>
+
+          <div class="mb20 redact-item">
+            <div class="item-label">期望行业</div>
+            <div class="item-content">
+              <el-input v-model="infoData.desired_industry" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" />
+            </div>
+          </div>
+
+          <div class="mb20 redact-item">
+            <div class="item-label">期望薪资</div>
+            <div class="item-content">
+              <el-input v-model="infoData.expected_salary" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" />
+            </div>
+          </div>
+
+          <div class="mb20 redact-item">
+            <div class="item-label">职位偏好</div>
+            <div class="item-content">
+              <el-input v-model="infoData.expected_salary" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" />
+            </div>
+          </div>
+
+          <div class="form-btns">
+            <el-button @click="clickInfoCancelBtn">取消</el-button>
+            <el-button type="primary" @click="clickInfoVerifyBtn">确定</el-button>
+          </div>
+        
+        </div>
 
       </div>
       <!-- 编辑状态模块 结束 -->
@@ -77,7 +125,11 @@ export default {
     }, 
     clickCreat(){
       this.is_creat = true
-    }
+    },
+    // 点击新建取消按钮
+    clickInfoCancelBtn(){
+      this.is_creat = false;
+    },
 
   },
 };
@@ -186,9 +238,92 @@ export default {
       align-items: center;
       justify-content: space-between;
       .info-t{
-        font-size: 16px;
+        font-weight: bold;
+        font-size: 15px;
         color: $g_textColor;
         line-height: 24px;
+      }
+    }
+  }
+
+
+  .redact-item-box{
+    padding: 20px 0;
+    text-align: left;
+    position: relative;
+    .redact-item{
+      display: inline-block;
+      width: 50%;
+      vertical-align: top;
+      padding: 0 15px;
+      .item-label{
+        font-size: 14px;
+        text-align: right;
+        vertical-align: middle;
+        color: #495060;
+        line-height: 1;
+        box-sizing: border-box;
+        float: none;
+        display: inline-block;
+        padding: 0 0 10px;
+      }
+      .item-content {
+        position: relative;
+        line-height: 32px;
+        display: flex;
+        .radio-item{
+          flex: 1;
+          min-width: auto;
+          line-height: 36px;
+          display: inline-block;
+          border: 1px solid #e3e7ed;
+          background-color: #fff;
+          text-align: center;
+          cursor: pointer;
+          color: #9fa3b0;
+          margin-right: 20px;
+          white-space: nowrap;
+          position: relative;
+          vertical-align: middle;
+          font-size: 16px;
+          &:last-of-type {
+            margin-right: 0;
+          }
+        }
+        .radio-checked {
+          border-color: $g_color;
+          color: $g_color;
+          background-color: #effbfa;
+        }
+        /deep/ .el-input__inner{
+          height: 38px;
+          line-height: 38px;
+          cursor: pointer;
+        }
+        img{
+          width: 21px;
+          height: 18px;
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 2;
+        }
+      }
+    }
+    .redact-item:nth-child(odd) {
+      margin-bottom: 0;
+    }
+    .form-btns{
+      position: absolute;
+      bottom: 20px;
+      right: 15px;
+      text-align: right;
+      /deep/ .el-button{
+        padding: 0;
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
       }
     }
   }

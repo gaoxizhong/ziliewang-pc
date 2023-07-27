@@ -144,7 +144,7 @@ export default {
     }
   },
   mounted(){
-    this.action = config.baseURL.pro + 'api/upload'
+    this.action = config.baseURL.upload + 'api/upload'
   },
   computed: {
     

@@ -25,15 +25,16 @@ module.exports = {
       errors: true,
     },
     // proxy: {
-    //   '/api': {
+    //   '/baseURL': {
     //     target: 'http://59.110.24.172:8997/',
     //     ws: true,
     //     changeOrigin: true, //是否跨域
     //     pathRewrite: {
-    //       '^/api': ''
+    //       '^/baseURL': '' /* 重写路径，当我们在浏览器中看到请求的地址为：http://localhost:8080/baseURL/login 时
+    //       实际上访问的地址是：http://59.110.24.172:8997/login,因为重写了 /api
+    //      */
     //     }
     //   },
-
     // }
   },
   configureWebpack: {

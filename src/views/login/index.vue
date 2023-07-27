@@ -181,7 +181,6 @@ export default {
     // 点击注册登录框tab
     clickTab(n){
       this.login_way = n;
-      window.clearInterval(timerid);
       this.isDisable = false;
       this.statusMsg = `获取验证码`;
     },
@@ -231,7 +230,7 @@ export default {
         p.password = login_user.password,
         p.login_type = 'pass_login'
       }
-      that.$axios.post('/login',p).then( res =>{
+      that.$axios.post('/api/login',p).then( res =>{
         let data = res.data;
         that.$store.commit("setToken", res.data.token);  // vuex
         that.$store.commit("setUserInfo", data.user.name); // vuex
