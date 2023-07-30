@@ -184,10 +184,6 @@ export default {
       padding-left: 6px;
     }
   }
-  .mb20{
-    margin-bottom: 20px;
-  }
-  
   .redact-title-bottom{
     padding: 20px 30px;
     background: #F4F5F7;

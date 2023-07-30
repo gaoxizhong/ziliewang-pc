@@ -7,11 +7,12 @@
           <div class="info-avatar-i">
             <el-upload class="avatar-uploader" 
               drag ref="upload" 
-              :action= "action"
+              action= "none"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
               :data="uploadData"
+              :http-request="uploadArticleCover" 
               >
               <i class="el-icon-camera"></i>
             </el-upload>
@@ -137,14 +138,13 @@ export default {
       radio: 0,
       fileList:[],
       imageUrl:'',
-      action:'',
       uploadData:{
         up_tag: 'avatar'
       }
     }
   },
   mounted(){
-    this.action = config.baseURL.upload + 'api/upload'
+ 
   },
   computed: {
     
@@ -154,7 +154,21 @@ export default {
     limitCheck() {
       this.$message.warning('每次只能上传一个文件')
     },
- 
+    // 上传图片
+    uploadArticleCover(param){
+      console.log(param.file)
+      const formData = new FormData();
+      formData.append('file',param.file);
+      formData.append('pictureCategory','articleCover');
+      formData.append('up_tag','avatar');
+      this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
+        console.log(res)
+        this.$refs['upload'].clearFiles()
+      }).catch( e=>{
+        console.log('erro')
+        this.$refs['upload'].clearFiles()
+      })
+    },
     handleAvatarSuccess(res, file) {
       console.log(res)
       console.log(file)
@@ -418,7 +432,10 @@ export default {
       }
     }
     /deep/ .el-button{
-      padding: 10px 30px;
+      padding: 0;
+      width: 100px;
+      height: 40px;
+      line-height: 40px;
     }
     /deep/ .el-button--primary{
       background-color: $g_color;
@@ -431,7 +448,5 @@ export default {
     color: $g_color;
     cursor: pointer;
   }
-  .mb20{
-    margin-bottom: 20px;
-  }
+
 </style>
