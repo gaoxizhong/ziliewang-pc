@@ -39,6 +39,41 @@
           </div>
           <div class="up-box-Instructions">在附件中展示更多优势与特长</div>
         </div>
+
+        <div class="right-box resume-improvement-box">
+          <div class="improvement-att-t">
+            <span class="span-1">简历待完善项</span>
+            <img src="../../../assets/image/Frame_9.png" alt="" />
+          </div>
+          <div class="improvement-box-Instructions">完善后获更强竞争力</div>
+
+          <div class="improvement-items-box">
+            <div class="i-items">
+              <div class="up-att-t">
+                <span class="span-1">基本信息</span>
+                <span class="span-2">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+              </div>
+              <div class="up-box-Instructions">必填字段缺失 <span>·1项</span></div>
+            </div>
+
+            <div class="i-items">
+              <div class="up-att-t">
+                <span class="span-1">工作经历</span>
+                <span class="span-2">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+              </div>
+              <div class="up-box-Instructions">宁波...必填字段缺失 <span>·1项</span></div>
+            </div>
+            
+
+          </div>
+        </div>
+
+        <div class="right-box integrity-box">
+          <div class="integrity-att-t">中文简历完整度</div>
+          <div></div>
+          <div class="integrity-instructions">完善后获更强竞争力</div>
+        </div>
+
       </div>
       <!-- 右侧模块 结束 -->
     </div>
@@ -126,7 +161,7 @@ export default {
     color: #fff;
   }
  }
- .info-box{
+.info-box{
   width: 100%;
   display: flex;
   margin-top: 20px;
@@ -168,6 +203,7 @@ export default {
           font-weight: 400;
           color: $g_color;
           line-height: 22px;
+          margin-left: 10px;
         }
       }
       .up-box-Instructions{
@@ -179,8 +215,87 @@ export default {
         text-align: left;
       }
     }
+    .resume-improvement-box{
+      margin-top: 16px;
+      .improvement-att-t{
+        display: flex;
+        align-items: center;
+        .span-1{
+          font-size: 15px;
+          font-weight: bold;
+          color: $g_textColor;
+          line-height: 24px;
+        }
+        img{
+          width: 18px;
+          height: 18px;
+          margin-left: 10px;
+        }
+      }
+      .improvement-box-Instructions{
+        font-size: 14px;
+        font-weight: 400;
+        color: #86909C;
+        line-height: 22px;
+        margin-top: 8px;
+        text-align: left;
+      }
+      .improvement-items-box{
+        width: 100%;
+        .i-items{
+          margin-top: 16px;
+          width: 100%;
+          .up-att-t{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .span-1{
+              font-size: 14px;
+              font-weight: bold;
+              color: $g_textColor;
+              line-height: 24px;
+            }
+            .span-2{
+              font-size: 14px;
+              font-weight: 400;
+              color: $g_color;
+              line-height: 22px;
+              margin-left: 10px;
+            }
+          }
+          .up-box-Instructions{
+            font-size: 14px;
+            font-weight: 400;
+            color: $g_textColor;
+            line-height: 22px;
+            text-align: left;
+            span{
+              color: #FF751A;
+            }
+          }
+        }
+      }
+    }
+    .integrity-box{
+      margin-top: 16px;
+      .integrity-att-t{
+        font-size: 15px;
+        font-weight: bold;
+        color: $g_textColor;
+        line-height: 24px;
+        text-align: left;
+      }
+      .integrity-instructions{
+        font-size: 14px;
+        font-weight: 400;
+        color: #86909C;
+        line-height: 22px;
+        margin-top: 8px;
+        text-align: left;
+      }
+    }
   }
- }
+}
 
 
 

@@ -3,7 +3,7 @@
     <div class="workExperience-box myResume-plate">
       <div class="myResume-plate-title-box">
         <span class="info-t">工作经历</span>
-        <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" @click="clickCreat"/>
+        <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" v-if="!is_creat" @click="clickCreat"/>
       </div>
       <div class="myResume-plate-list" v-if="!is_creat">
         <ul class="plate-list-ul">
@@ -333,14 +333,13 @@ export default {
     .redact-item.redact-item1{
       width: 100%;
     }
-    .redact-item:nth-child(odd) {
-      margin-bottom: 0;
-    }
+    
     .form-btns{
-      position: absolute;
-      bottom: 20px;
-      right: 15px;
+      // position: absolute;
+      // bottom: 20px;
+      // right: 15px;
       text-align: right;
+      margin-right: 16px;
       /deep/ .el-button{
         padding: 0;
         width: 100px;

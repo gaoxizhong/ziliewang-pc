@@ -9,7 +9,6 @@
               drag ref="upload" 
               action= "none"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
               :data="uploadData"
               :http-request="uploadArticleCover" 
@@ -163,20 +162,15 @@ export default {
       formData.append('up_tag','avatar');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
         console.log(res)
+        this.data.avatar = res.data.upload_files;
+        let upload_files_path = res.data.upload_files_path;
+
         this.$refs['upload'].clearFiles()
       }).catch( e=>{
         console.log('erro')
         this.$refs['upload'].clearFiles()
       })
     },
-    handleAvatarSuccess(res, file) {
-      console.log(res)
-      console.log(file)
-      this.imageUrl = URL.createObjectURL(file.raw);
-      this.fileList = []; // 清空已上传的文件
-
-    },
-   
     beforeAvatarUpload(file) {
       console.log(file)
       const isJPG = file.type === 'image/png' || 'image/jpeg';
