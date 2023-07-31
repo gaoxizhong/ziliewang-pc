@@ -36,15 +36,14 @@
         <div class="redact-item-box">
 
           <div class="mb20 redact-item">
-            <div class="item-label">期待职位</div>
+            <div class="item-label">公司名称</div>
             <div class="item-content">
-              <el-input v-model="infoData.desired_position" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <el-input v-model="infoData.desired_position" placeholder="请选择"></el-input>
             </div>
           </div>
 
           <div class="mb20 redact-item">
-            <div class="item-label">期望地点</div>
+            <div class="item-label">所属行业</div>
             <div class="item-content">
               <el-input v-model="infoData.desired_location" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
               <img src="../../../../assets/image/Frame_8.png" alt="" />
@@ -52,26 +51,28 @@
           </div>
 
           <div class="mb20 redact-item">
-            <div class="item-label">期望行业</div>
+            <div class="item-label">工作时间</div>
             <div class="item-content">
               <el-input v-model="infoData.desired_industry" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+            </div>
+          </div>
+          <div class="mb20 redact-item"></div>
+          <div class="mb20 redact-item redact-item1">
+            <div class="item-label">职位名称</div>
+            <div class="item-content">
+              <el-input v-model="infoData.expected_salary" placeholder="请填写职位名称"></el-input>
             </div>
           </div>
 
-          <div class="mb20 redact-item">
-            <div class="item-label">期望薪资</div>
+          <div class="mb20 redact-item redact-item1">
+            <div class="item-label">职责业绩</div>
             <div class="item-content">
-              <el-input v-model="infoData.expected_salary" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
-            </div>
-          </div>
-
-          <div class="mb20 redact-item">
-            <div class="item-label">职位偏好</div>
-            <div class="item-content">
-              <el-input v-model="infoData.expected_salary" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <el-input
+                type="textarea"
+                :rows="4"
+                placeholder="请输入内容"
+                v-model="infoData.advantages_highlights">
+              </el-input>
             </div>
           </div>
 
@@ -301,6 +302,12 @@ export default {
           &:last-of-type {
             margin-right: 0;
           }
+          /deep/ .el-textarea__inner{
+            font-size: 14px;
+            &:focus{
+              border-color: $g_color;
+            }
+          }
         }
         .radio-checked {
           border-color: $g_color;
@@ -322,6 +329,9 @@ export default {
           z-index: 2;
         }
       }
+    }
+    .redact-item.redact-item1{
+      width: 100%;
     }
     .redact-item:nth-child(odd) {
       margin-bottom: 0;

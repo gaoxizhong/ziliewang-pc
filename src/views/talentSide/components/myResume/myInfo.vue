@@ -158,7 +158,7 @@ export default {
     uploadArticleCover(param){
       console.log(param.file)
       const formData = new FormData();
-      formData.append('file',param.file);
+      formData.append('file[]',param.file);
       formData.append('pictureCategory','articleCover');
       formData.append('up_tag','avatar');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
