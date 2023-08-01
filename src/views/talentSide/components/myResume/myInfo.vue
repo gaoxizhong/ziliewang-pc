@@ -131,12 +131,14 @@ export default {
   },
   data(){
     return{
+      config: config.baseURL.upload,
       redact_info: false, 
       redact_spot: false,
       infoData: {},
       radio: 0,
       fileList:[],
       imageUrl:'',
+      upload_files_path:'',
       uploadData:{
         up_tag: 'avatar'
       }
@@ -149,6 +151,22 @@ export default {
     
   },
   methods: {
+    //  修改信息
+    setUserSave(data){
+      let that = this;
+      let p = Object.assign({},data);
+      that.$axios.post('/api/user/save',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.$message.success('修改成功！');
+          if( p.advantages_highlights ){
+            this.redact_spot = false;
+            this.data.advantages_highlights = p.advantages_highlights;
+
+          }
+        }
+      })
+    },
     // 选择的文件超出限制的文件总数量时触发
     limitCheck() {
       this.$message.warning('每次只能上传一个文件')
@@ -164,8 +182,12 @@ export default {
         console.log(res)
         this.data.avatar = res.data.upload_files;
         let upload_files_path = res.data.upload_files_path;
+        this.$refs['upload'].clearFiles();
 
-        this.$refs['upload'].clearFiles()
+        let p = {
+          avatar: upload_files_path
+        }
+        this.setUserSave(p);
       }).catch( e=>{
         console.log('erro')
         this.$refs['upload'].clearFiles()
@@ -184,6 +206,8 @@ export default {
       }
       return isJPG && isLt2M;
     },
+
+    
     clickRadio(n){
       this.infoData.radio = n;
       this.radio = n;
@@ -214,8 +238,15 @@ export default {
     },
     // 点击优势亮点确定按钮
     clickSpotVerifyBtn(){
-
-      this.redact_spot = false;
+      const advantages_highlights = this.infoData.advantages_highlights;
+      if(!advantages_highlights || advantages_highlights == ''){
+        this.$message.error('填写不能为空!');
+        return
+      }
+      let p = {
+        advantages_highlights,
+      }
+      this.setUserSave(p);
     },
 
   },
