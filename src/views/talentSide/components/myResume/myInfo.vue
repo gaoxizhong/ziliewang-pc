@@ -41,7 +41,6 @@
               <span v-else-if="data.work_status == 3">在职，看看新机会</span>
               <span v-else-if="data.work_status == 4">离职</span>
               <span v-else>离职</span>
-
             </li>
           </ul>
           <ul class="info-2">
@@ -57,34 +56,55 @@
         </div>
       </div>
       <div class="redact-title-top" v-else>
-
-        <div class="mb20 redact-item">
-          <div class="item-label">姓名</div>
-          <div class="item-content">
-            <el-input v-model="infoData.name" placeholder="请输入姓名" clearable></el-input>
+        <el-form ref="form" :model="infoData">
+          <div class="mb20 redact-item">
+            <div class="item-label">姓名</div>
+            <div class="item-content">
+              <el-input v-model="infoData.real_name" placeholder="请输入姓名" clearable></el-input>
+            </div>
           </div>
-        </div>
 
-        <div class="mb20 redact-item">
-          <div class="item-label">邮箱</div>
-          <div class="item-content">
-            <el-input v-model="infoData.email" placeholder="请输入邮箱" clearable></el-input>
+          <div class="mb20 redact-item">
+            <div class="item-label">当前求职状态</div>
+            <div class="item-content">
+              <el-select v-model="infoData.work_status" placeholder="请选择">
+                <el-option
+                  v-for="item in work_status_op"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
           </div>
-        </div>
 
-        <div class="mb20 redact-item">
-          <div class="item-label">性别</div>
-          <div class="item-content">
-            <div class="radio-item" :class="radio == 1 ? 'radio-checked':'' " @click="clickRadio(1)">男</div>
-            <div class="radio-item" :class="radio == 2 ? 'radio-checked':'' " @click="clickRadio(2)">女</div>
+          <div class="mb20 redact-item">
+            <div class="item-label">电话</div>
+            <div class="item-content">
+              <el-input v-model="infoData.real_phone" placeholder="请输入电话" clearable></el-input>
+            </div>
           </div>
-        </div>
-        
-        <div class="form-btns">
-          <el-button @click="clickInfoCancelBtn">取消</el-button>
-          <el-button type="primary" @click="clickInfoVerifyBtn">确定</el-button>
-        </div>
-        
+
+          <div class="mb20 redact-item">
+            <div class="item-label">邮箱</div>
+            <div class="item-content">
+              <el-input v-model="infoData.real_email" placeholder="请输入邮箱" clearable></el-input>
+            </div>
+          </div>
+
+          <div class="mb20 redact-item">
+            <div class="item-label">性别</div>
+            <div class="item-content">
+              <div class="radio-item" :class="radio == 1 ? 'radio-checked':'' " @click="clickRadio(1)">男</div>
+              <div class="radio-item" :class="radio == 2 ? 'radio-checked':'' " @click="clickRadio(2)">女</div>
+            </div>
+          </div>
+          
+          <div class="form-btns">
+            <el-button @click="clickInfoCancelBtn">取消</el-button>
+            <el-button type="primary" @click="clickInfoVerifyBtn">确定</el-button>
+          </div>
+        </el-form>
       </div>
       <div class="info-title-bottom" v-if="!redact_spot">
         <div class="jobExpectation-title-box">
@@ -141,7 +161,12 @@ export default {
       upload_files_path:'',
       uploadData:{
         up_tag: 'avatar'
-      }
+      },
+      work_status_op: [
+        {value: 2,label: '在职不考虑'},
+        {value: 3,label: '在职，看看新机会'},
+        {value: 4,label: '离职'}
+      ]
     }
   },
   mounted(){
@@ -152,18 +177,14 @@ export default {
   },
   methods: {
     //  修改信息
-    setUserSave(data){
+    setUserSave(data,f){
       let that = this;
       let p = Object.assign({},data);
       that.$axios.post('/api/user/save',p).then( res =>{
         console.log(res)
         if(res.code == 0){
           that.$message.success('修改成功！');
-          if( p.advantages_highlights ){
-            this.redact_spot = false;
-            this.data.advantages_highlights = p.advantages_highlights;
-
-          }
+          return f()
         }
       })
     },
@@ -229,8 +250,40 @@ export default {
     },
     // 点击编辑个人信息确定按钮
     clickInfoVerifyBtn(){
-
-      this.redact_info = false;
+      let p = {
+        name: this.infoData.real_name,
+        sex: this.infoData.radio,
+        phone: this.infoData.real_phone,
+        email: this.infoData.real_email,
+        work_status: this.infoData.work_status,
+      }
+      if(p.name == ''){
+        this.$message.error('姓名不能为空!');
+        return
+      }
+      if(p.work_status == '' || !p.work_status){
+        this.$message.error('请选择当前求职状态!');
+        return
+      }
+      if(p.phone == ''){
+        this.$message.error('手机号不能为空!');
+        return
+      }
+      if(p.sex == '' || !p.sex || p.sex == 0){
+        this.$message.error('请选择性别!');
+        return
+      }
+      if(p.email == '' || !p.email){
+        this.$message.error('邮箱不能为空!');
+        return
+      }
+      const subCallback= ()=>{
+        this.redact_info = false;
+        this.$emit('refreshInfo')
+      }
+      this.setUserSave(p,subCallback);
+     
+      // this.redact_info = false;
     },
     // 点击优势亮点取消按钮
     clickSpotCancelBtn(){
@@ -245,8 +298,12 @@ export default {
       }
       let p = {
         advantages_highlights,
+      };
+      const subCallback= ()=>{
+        this.redact_spot = false;
+        this.data.advantages_highlights = p.advantages_highlights;
       }
-      this.setUserSave(p);
+      this.setUserSave(p,subCallback);
     },
 
   },
@@ -408,6 +465,15 @@ export default {
             border-color: $g_color;
             color: $g_color;
             background-color: #effbfa;
+          }
+          /deep/ .el-select{
+            width: 100%;
+          }
+          /deep/ .el-select .el-input.is-focus .el-input__inner{
+            border-color: $g_color;
+          }
+          /deep/ .el-input__inner:focus{
+            border-color: $g_color;
           }
         }
       }

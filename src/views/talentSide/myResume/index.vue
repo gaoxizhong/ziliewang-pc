@@ -10,7 +10,7 @@
     <div class="info-box">
       <div class="info-left-box">
         <!-- 个人信息 开始 -->
-        <MyInfo :data="infoData.basic_info" />  
+        <MyInfo :data="infoData.basic_info" @refreshInfo="refreshInfo"/>  
         <!-- 个人信息 结束 -->
 
         <!-- 求职期望 开始 -->
@@ -116,6 +116,10 @@ export default {
     this.getUserProfile();
   },
   methods: {
+    // 刷新信息
+    refreshInfo(){
+      this.getUserProfile();
+    },
     clickTitleTab(n){
       this.is_titleTab = n;
     },
