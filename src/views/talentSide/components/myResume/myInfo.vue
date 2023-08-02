@@ -84,6 +84,7 @@
               <el-date-picker
                 v-model="infoData.work_year"
                 type="month"
+                value-format="yyyy-MM"
                 placeholder="参加工作时间">
               </el-date-picker>
             </div>

@@ -14,9 +14,9 @@
                 <span class="li-name-2">{{ item.begin_date }} - {{ item.end_date }}</span>
               </div>
               <div class="info-set">
-                <span>删除</span>
+                <span @click="clickDelete(item.id,index)">删除</span>
                 <span>/</span>
-                <span>编辑</span>
+                <span @click="clickUpdate(item)">编辑</span>
               </div>
             </div>
             <div class="items-sub-box">{{ item.position }}</div>
@@ -60,12 +60,16 @@
               <el-date-picker
                 v-model="infoData.begin_date"
                 type="month"
+                format="yyyy-MM"
+                value-format="yyyy-MM"
                 placeholder="开始时间">
               </el-date-picker>
               <span class="span-line"> 至 </span>
               <el-date-picker
                 v-model="infoData.end_date"
                 type="month"
+                format="yyyy-MM"
+                value-format="yyyy-MM"
                 placeholder="结束时间">
               </el-date-picker>
             </div>
@@ -83,7 +87,7 @@
             <div class="item-content">
               <el-input
                 type="textarea"
-                :rows="4"
+                :rows="6"
                 placeholder="请输入内容"
                 v-model="infoData.responsibility_performance">
               </el-input>
@@ -115,8 +119,14 @@
           <img src="../../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
         </div>
         <div class="dialog-body">
-          123
-
+          <div class="body-left-box">
+            <div class="left-list-box">
+              <ul>
+                <li :class="selt_item == index? 'active':'' " v-for="(item,index) in industryList" :key="index" @click="click_industryListLi(item,index)">{{ item.industry }}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="body-right-box"></div>
         </div>
         <!-- <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -155,7 +165,9 @@ export default {
       is_creat: false,
       dialogVisible: false,
       dialogVisible_seach:'',
-
+      list_id: '', // 选中的列表id
+      industryList: [], // 获取行业职位信息
+      selt_item: 0
     }
   },
   mounted(){
@@ -167,24 +179,19 @@ export default {
   methods: {
     // 点击选择行业
     clickInvolved(){
-      this.dialogVisible = true;
+      this.getIndustryList();
     },
     // 点击职业弹窗关闭按钮
     clickClose(){
       this.dialogVisible = false;
     },
-    clickRedactBtn(){
-      // this.infoData = JSON.parse(JSON.stringify(this.data));
-    }, 
-    clickCreat(e){
-      // if(e){
-      //   this.infoData = e;
-      // }
+    clickCreat(){
       this.is_creat = true;
     },
     // 点击新建取消按钮
     clickInfoCancelBtn(){
       this.is_creat = false;
+      this.list_id = '';
     },
     // 点击创建、编辑确认按钮
     clickInfoVerifyBtn(){
@@ -215,23 +222,80 @@ export default {
       }
       const subCallback= ()=>{
         setTimeout(() => {
-          this.redact_info = false;
-          this.$emit('refreshInfo')
+          this.is_creat = false;
+          this.list_id = '';
+          this.$emit('refreshInfo');
         }, 1000);
       }
-      this.createWorkExperience(p,'创建成功！',subCallback);
+      let api = '';
+      let text = '';
+      if(this.list_id){
+        p.id = this.list_id;
+        // 编辑修改
+        api = '/api/work-experience/update';
+        text = '修改成功'
+      }else{
+        // 创建项目
+        api = '/api/work-experience/create';
+        text = '创建成功'
+      }
+      this.createWorkExperience(p,api,text,subCallback);
     },
     // 创建工作经历
-    createWorkExperience(data,text,f){
+    createWorkExperience(data,api,text,f){
       let that = this;
       let p = Object.assign({},data);
-      that.$axios.post('/api/work-experience/create',p).then( res =>{
+      that.$axios.post(api,p).then( res =>{
         if(res.code == 0){
           that.$message.success( text );
           return f()
         }
       })
+    },
+    //点击删除
+    clickDelete(id,idx){
+      let that = this;
+      let data = that.data;
+      that.$axios.post('/api/work-experience/delete',{
+        id,
+      }).then( res =>{
+        if(res.code == 0){
+          that.$message.success( '删除成功！' );
+          data.splice(idx);
+          that.data = data;
+        }
+      })
+    },
+    // 点击列表编辑
+    clickUpdate(e){
+      const infoData = this.infoData;
+      const obj= Object.assign({},e);
+      this.list_id = obj.id;
+      for(var key in infoData){
+        infoData[key] = obj[key]
+      }
+      this.infoData = infoData;
+      console.log(this.infoData)
+      this.is_creat = true;
+    },
+
+    // 获取行业职位信息
+    getIndustryList(){
+      let that = this;
+      that.$axios.post('/api/industry/list',{}).then( res =>{
+        this.industryList = res.data;
+        this.dialogVisible = true;
+      }).catch( e=>{
+        console.log(e)
+      })
+    },
+    click_industryListLi(n,i){
+      let item = n;
+      let index = i;
+      this.selt_item = index;
+      console.log(item)
     }
+    
   },
 };
 </script>
@@ -550,6 +614,49 @@ export default {
       }
       .dialog-body {
         overflow: visible;
+        height: calc(60vh);
+        width: 100%;
+        display: flex;
+        .body-left-box{
+          width: 13rem;
+          padding: 10px 10px 20px;
+          overflow-x: hidden;
+          overflow-y: auto;
+          border-right: 1px solid #f5f6f9;
+
+          .left-list-box{
+            width: 100%;
+            height: auto;
+            ul{
+              width: 100%;
+              height: auto;
+              li{
+                width: 100%;
+                height: 40px;
+                border-radius: 4px 4px 4px 4px;
+                font-size: 14px;
+                line-height: 40px;
+                color: $g_textColor;
+                padding: 0 12px;
+                cursor: pointer;
+                text-align: left;
+              }
+              li.active{
+                background: #F7F8FA;
+              }
+            }
+          }
+        }
+        .body-right-box{
+          flex: 1;
+          height: 100%;
+          overflow-x: hidden;
+          overflow-y: auto;
+          .left-list-box{
+            width: 100%;
+            height: auto;
+          }
+        }
       }
 
     }
