@@ -79,6 +79,27 @@
           </div>
 
           <div class="mb20 redact-item">
+            <div class="item-label">参加工作时间</div>
+            <div class="item-content">
+              <el-date-picker
+                v-model="infoData.work_year"
+                type="month"
+                placeholder="参加工作时间">
+              </el-date-picker>
+            </div>
+          </div>
+
+          <div class="mb20 redact-item">
+            <div class="item-label">所在城市</div>
+            <div class="item-content">
+              <el-cascader
+              v-model="infoData.car"
+              :options="options"
+              @change="handleChange"></el-cascader>
+            </div>
+          </div>
+
+          <div class="mb20 redact-item">
             <div class="item-label">电话</div>
             <div class="item-content">
               <el-input v-model="infoData.real_phone" placeholder="请输入电话" clearable></el-input>
@@ -258,23 +279,23 @@ export default {
         work_status: this.infoData.work_status,
       }
       if(p.name == ''){
-        this.$message.error('姓名不能为空!');
+        this.$message.warning('姓名不能为空!');
         return
       }
       if(p.work_status == '' || !p.work_status){
-        this.$message.error('请选择当前求职状态!');
+        this.$message.warning('请选择当前求职状态!');
         return
       }
       if(p.phone == ''){
-        this.$message.error('手机号不能为空!');
+        this.$message.warning('手机号不能为空!');
         return
       }
       if(p.sex == '' || !p.sex || p.sex == 0){
-        this.$message.error('请选择性别!');
+        this.$message.warning('请选择性别!');
         return
       }
       if(p.email == '' || !p.email){
-        this.$message.error('邮箱不能为空!');
+        this.$message.warning('邮箱不能为空!');
         return
       }
       const subCallback= ()=>{
@@ -293,7 +314,7 @@ export default {
     clickSpotVerifyBtn(){
       const advantages_highlights = this.infoData.advantages_highlights;
       if(!advantages_highlights || advantages_highlights == ''){
-        this.$message.error('填写不能为空!');
+        this.$message.warning('填写不能为空!');
         return
       }
       let p = {
@@ -468,9 +489,15 @@ export default {
           }
           /deep/ .el-select{
             width: 100%;
+            .el-input.is-focus .el-input__inner{
+              border-color: $g_color;
+            }
           }
-          /deep/ .el-select .el-input.is-focus .el-input__inner{
-            border-color: $g_color;
+          /deep/ .el-date-editor.el-input,/deep/  .el-date-editor.el-input__inner{
+            width: 100%;
+          }
+          .el-cascader{
+            width: 100%;
           }
           /deep/ .el-input__inner:focus{
             border-color: $g_color;
@@ -539,5 +566,7 @@ export default {
     color: $g_color;
     cursor: pointer;
   }
-
+  .el-select-dropdown__item.selected{
+    color: $g_color;
+  }
 </style>

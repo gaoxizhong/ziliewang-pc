@@ -14,19 +14,19 @@
         <!-- 个人信息 结束 -->
 
         <!-- 求职期望 开始 -->
-        <JobExpectation :data="infoData.job_expectation" />  
+        <JobExpectation :data="infoData.job_expectation" @refreshInfo="refreshInfo"/>  
         <!-- 求职期望 结束 -->
         
         <!-- 工作经历 开始 -->
-        <WorkExperience :data="infoData.workExperience" />  
+        <WorkExperience :data="infoData.work_experience" @refreshInfo="refreshInfo"/>  
         <!-- 工作经历 结束 -->
 
         <!-- 项目经历 开始 -->
-        <ProjectExperience :data="infoData.project_experience" />  
+        <ProjectExperience :data="infoData.project_experience" @refreshInfo="refreshInfo"/>  
         <!-- 项目经历 结束 -->
 
         <!-- 教育经历 开始 -->
-        <EducationExperience :data="infoData.education_experience" />  
+        <EducationExperience :data="infoData.education_experience" @refreshInfo="refreshInfo"/>  
         <!-- 教育经历 结束 -->
 
       </div>

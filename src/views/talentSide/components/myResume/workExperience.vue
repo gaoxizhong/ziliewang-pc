@@ -38,14 +38,18 @@
           <div class="mb20 redact-item">
             <div class="item-label">公司名称</div>
             <div class="item-content">
-              <el-input v-model="infoData.desired_position" placeholder="请选择"></el-input>
+              <el-input v-model="infoData.company_name" placeholder="公司名称"></el-input>
             </div>
+            <div class="login-check-box">
+                <el-checkbox v-model="infoData.checked"></el-checkbox>
+                <div class="login-check-text">对该公司屏蔽我的简历</div>
+              </div>
           </div>
 
           <div class="mb20 redact-item">
             <div class="item-label">所属行业</div>
-            <div class="item-content">
-              <el-input v-model="infoData.desired_location" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+            <div class="item-content" @click="clickInvolved">
+              <el-input v-model="infoData.industry_involved" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
               <img src="../../../../assets/image/Frame_8.png" alt="" />
             </div>
           </div>
@@ -53,14 +57,24 @@
           <div class="mb20 redact-item">
             <div class="item-label">工作时间</div>
             <div class="item-content">
-              <el-input v-model="infoData.desired_industry" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <el-date-picker
+                v-model="infoData.begin_date"
+                type="month"
+                placeholder="开始时间">
+              </el-date-picker>
+              <span class="span-line"> 至 </span>
+              <el-date-picker
+                v-model="infoData.end_date"
+                type="month"
+                placeholder="结束时间">
+              </el-date-picker>
             </div>
           </div>
           <div class="mb20 redact-item"></div>
           <div class="mb20 redact-item redact-item1">
             <div class="item-label">职位名称</div>
             <div class="item-content">
-              <el-input v-model="infoData.expected_salary" placeholder="请填写职位名称"></el-input>
+              <el-input v-model="infoData.position" placeholder="请填写职位名称"></el-input>
             </div>
           </div>
 
@@ -71,7 +85,7 @@
                 type="textarea"
                 :rows="4"
                 placeholder="请输入内容"
-                v-model="infoData.advantages_highlights">
+                v-model="infoData.responsibility_performance">
               </el-input>
             </div>
           </div>
@@ -86,6 +100,29 @@
       </div>
       <!-- 编辑状态模块 结束 -->
 
+
+    </div>
+
+    <!-- 行业弹窗 -->
+    <div title="" class="dialogVisible-pop-box" v-if="dialogVisible">
+      <div class="mask-box"></div>
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <h3 class="title">请选择职位类别</h3>
+          <div class="dialog-header-input">
+            <el-input type="text" v-model="dialogVisible_seach"></el-input>
+          </div>
+          <img src="../../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
+        </div>
+        <div class="dialog-body">
+          123
+
+        </div>
+        <!-- <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span> -->
+      </div>
 
     </div>
   </div>
@@ -107,8 +144,17 @@ export default {
   },
   data(){
     return{
-      infoData: [],
-      is_creat: false
+      infoData: {
+        company_name: '', // 公司名称
+        industry_involved: '互联网', // 所属行业
+        begin_date: '', // 开始时间
+        end_date: '', // 结束时间
+        position: '', // 职位
+        responsibility_performance: '' // 职责业绩
+      },
+      is_creat: false,
+      dialogVisible: false,
+      dialogVisible_seach:'',
 
     }
   },
@@ -119,18 +165,73 @@ export default {
     
   },
   methods: {
-   
+    // 点击选择行业
+    clickInvolved(){
+      this.dialogVisible = true;
+    },
+    // 点击职业弹窗关闭按钮
+    clickClose(){
+      this.dialogVisible = false;
+    },
     clickRedactBtn(){
-      this.infoData = JSON.parse(JSON.stringify(this.data));
-      
+      // this.infoData = JSON.parse(JSON.stringify(this.data));
     }, 
-    clickCreat(){
-      this.is_creat = true
+    clickCreat(e){
+      // if(e){
+      //   this.infoData = e;
+      // }
+      this.is_creat = true;
     },
     // 点击新建取消按钮
     clickInfoCancelBtn(){
       this.is_creat = false;
     },
+    // 点击创建、编辑确认按钮
+    clickInfoVerifyBtn(){
+      const p = Object.assign({},this.infoData);
+      if(p.company_name == ''){
+        this.$message.warning('公司名称不能为空!');
+        return
+      }
+      if(p.industry_involved == ''){
+        this.$message.warning('所属行业不能为空!');
+        return
+      }
+      if(p.begin_date == ''){
+        this.$message.warning('开始时间不能为空!');
+        return
+      }
+      if(p.end_date == ''){
+        this.$message.warning('结束时间不能为空!');
+        return
+      }
+      if(p.position == ''){
+        this.$message.warning('职位不能为空!');
+        return
+      }
+      if(p.responsibility_performance == ''){
+        this.$message.warning('职责业绩不能为空!');
+        return
+      }
+      const subCallback= ()=>{
+        setTimeout(() => {
+          this.redact_info = false;
+          this.$emit('refreshInfo')
+        }, 1000);
+      }
+      this.createWorkExperience(p,'创建成功！',subCallback);
+    },
+    // 创建工作经历
+    createWorkExperience(data,text,f){
+      let that = this;
+      let p = Object.assign({},data);
+      that.$axios.post('/api/work-experience/create',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success( text );
+          return f()
+        }
+      })
+    }
   },
 };
 </script>
@@ -328,6 +429,29 @@ export default {
           transform: translateY(-50%);
           z-index: 2;
         }
+        .span-line{
+          margin: 0 10px;
+          font-size: 14px;
+        }
+      }
+      .login-check-box{
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        .login-check-text{
+          font-size: 14px;
+          margin-left: 8px;
+          span{
+            color: $g_color;
+          }
+        }
+        /deep/ .el-checkbox__input.is-checked .el-checkbox__inner{
+          background: $g_bg;
+          border-color: $g_bg;
+        }
+        /deep/ .el-checkbox__input.is-focus .el-checkbox__inner {
+          border-color: $g_bg;
+        }
       }
     }
     .redact-item.redact-item1{
@@ -346,6 +470,88 @@ export default {
         height: 40px;
         line-height: 40px;
       }
+      /deep/ .el-button--primary{
+        background-color: $g_color;
+        border-color: $g_color;
+      }
+    }
+  }
+  .dialogVisible-pop-box{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    .mask-box{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: .5;
+      background: #000;
+    }
+    .dialog-container{
+      min-width: 320px;
+      width: 50%;
+      max-height: 100%;
+      transform: none;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      background: #FFF;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
+      box-sizing: border-box;
+      .dialog-header{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+        line-height: 60px;
+        border-bottom: 1px solid #f5f6f9;
+        font-size: 14px;
+        padding: 0 24px;
+        .title{
+          font-size: 16px;
+          color: $g_textColor;
+          font-weight: bold;
+          width: auto;
+        }
+        .dialog-header-input{
+          flex: 1;
+          display: flex;
+          align-items: center;
+          padding-left: 30px;
+          /deep/ .el-input{
+            width: 320px;
+            border: none;
+            .el-input__inner{
+              background: #F7F8FA;
+              height: 38px;
+              line-height: 38px;
+            }
+          }
+          /deep/ .el-input.is-focus .el-input__inner{
+            border-color: $g_color;
+            &:focus{
+              border-color: $g_color;
+            }
+          }
+        }
+        img{
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+        }
+      }
+      .dialog-body {
+        overflow: visible;
+      }
+
     }
   }
 </style>
