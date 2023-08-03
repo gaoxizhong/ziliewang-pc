@@ -49,8 +49,16 @@
           <div class="mb20 redact-item">
             <div class="item-label">所属行业</div>
             <div class="item-content">
-              <el-input v-model="infoData.industry_involved"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <!-- <el-input v-model="infoData.industry_involved" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" /> -->
+              <el-select v-model="infoData.industry_involved" placeholder="请选择">
+                <el-option
+                  v-for="item in industry.industryList"
+                  :key="item.industry"
+                  :label="item.industry"
+                  :value="item.industry">
+                </el-option>
+              </el-select>
             </div>
           </div>
 
@@ -123,13 +131,13 @@
           <div class="body-left-box">
             <div class="left-list-box">
               <ul>
-                <li :class="selt_item == index? 'active':'' " v-for="(item,index) in industryList" :key="index" @click="click_industryListLi(item,index)">{{ item.industry }}</li>
+                <li :class="selt_item == index? 'active':'' " v-for="(item,index) in position.industryList" :key="index" @click="click_industryListLi(item,index)">{{ item.industry }}</li>
               </ul>
             </div>
           </div>
           <div class="body-right-box">
             <div class="right-list-box">
-              <div class="category-list-items" v-for="(item,index) in category_list" :key="index">
+              <div class="category-list-items" v-for="(item,index) in position.category_list" :key="index">
                 <div class="category-name">{{ item.category_name }}</div>
                 <ul>
                   <li :class="selt_item == index? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name)">{{ items.category_name }}</li>
@@ -178,13 +186,19 @@ export default {
       dialogVisible: false,
       dialogVisible_seach:'',
       list_id: '', // 选中的列表id
-      industryList: [], // 获取行业职位信息
-      category_list: [], // 点击行业匹配到对应的岗位数组
+      position:{
+        industryList: [], // 获取行业职位信息
+        category_list: [], // 点击行业匹配到对应的岗位数组
+      },
+      industry:{ // 行业信息
+        industryList:[]
+      },
       selt_item: 0
     }
   },
   mounted(){
-  
+    // 点击所属行业项
+    this.getIndustryList();
   },
   computed: {
     
@@ -292,12 +306,22 @@ export default {
       this.dialogVisible = false;
     },
 
-    // 获取行业职位信息
+    // 获取行业列表信息
+    getIndustryList(){
+      let that = this;
+      that.$axios.post('/api/industry/list',{}).then( res =>{
+        that.industry.industryList = res.data;
+        
+      }).catch( e=>{
+        console.log(e)
+      })
+    },
+    // 获取职位列表信息
     getPositionList(){
       let that = this;
       that.$axios.post('/api/position/list',{}).then( res =>{
-        that.industryList = res.data;
-        that.category_list = that.industryList[that.selt_item].category_list;
+        that.position.industryList = res.data;
+        that.position.category_list = that.position.industryList[that.selt_item].category_list;
         that.dialogVisible = true;
       }).catch( e=>{
         console.log(e)
@@ -308,7 +332,7 @@ export default {
       let item = n;
       let index = i;
       this.selt_item = index;
-      this.category_list = item.category_list;
+      this.position.category_list = item.category_list;
     },
     // 点击职位列表
     click_position_list(n){
@@ -506,6 +530,12 @@ export default {
           color: $g_color;
           background-color: #effbfa;
         }
+        /deep/ .el-select{
+          width: 100%;
+          .el-input.is-focus .el-input__inner{
+            border-color: $g_color;
+          }
+        }
         /deep/ .el-input__inner{
           height: 38px;
           line-height: 38px;
@@ -682,7 +712,7 @@ export default {
           .right-list-box{
             width: 100%;
             height: auto;
-            padding: 0 40px 16px;
+            padding: 0 1.2rem 0.8rem;
             .category-list-items{
               margin-top: 20px;
               text-align: left;

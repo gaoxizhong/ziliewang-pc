@@ -113,3 +113,9 @@ li{
 .el-select-dropdown__item.selected{
   color: $g_color;
 }
+.el-month-table td.today .cell{
+  color: $g_color;
+}
+.el-month-table td.current:not(.disabled) .cell {
+  color: $g_color;
+}

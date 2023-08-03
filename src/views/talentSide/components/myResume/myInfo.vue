@@ -94,9 +94,13 @@
             <div class="item-label">所在城市</div>
             <div class="item-content">
               <el-cascader
-              v-model="infoData.car"
-              :options="options"
-              @change="handleChange"></el-cascader>
+                :options="options"
+                ref="cascaderAddr" 
+                v-model="selectedOptions"
+                :props="{ value: 'label' }"
+                :show-all-levels="false"
+                @change="handleChange">
+              </el-cascader>
             </div>
           </div>
 
@@ -159,6 +163,7 @@
 
 <script>
 import config from '../../../../axios/config'
+import pcas from '../../../../assets/json/pc-code.json'
 
 export default {
   components: {
@@ -188,7 +193,9 @@ export default {
         {value: 2,label: '在职不考虑'},
         {value: 3,label: '在职，看看新机会'},
         {value: 4,label: '离职'}
-      ]
+      ],
+      options: pcas,
+      selectedOptions: [],
     }
   },
   mounted(){
@@ -198,6 +205,12 @@ export default {
     
   },
   methods: {
+     // 获取省市区地址级联
+     handleChange(thsAreaCode) {
+      thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
+      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
+      this.infoData.location = thsAreaCode[1];
+    },
     //  修改信息
     setUserSave(data,f){
       let that = this;

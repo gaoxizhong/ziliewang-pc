@@ -48,16 +48,32 @@
           <div class="mb20 redact-item">
             <div class="item-label">期望地点</div>
             <div class="item-content">
-              <el-input v-model="infoData.desired_location" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <!-- <el-input v-model="infoData.desired_location" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" /> -->
+              <el-cascader
+                :options="options"
+                ref="cascaderAddr" 
+                v-model="selectedOptions"
+                :props="{ value: 'label' }"
+                :show-all-levels="false"
+                @change="handleChange">
+              </el-cascader>
             </div>
           </div>
 
           <div class="mb20 redact-item">
             <div class="item-label">期望行业</div>
             <div class="item-content">
-              <el-input v-model="infoData.desired_industry" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <!-- <el-input v-model="infoData.desired_industry" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" /> -->
+              <el-select v-model="infoData.desired_industry" placeholder="请选择">
+                <el-option
+                  v-for="item in industry.industryList"
+                  :key="item.industry"
+                  :label="item.industry"
+                  :value="item.industry">
+                </el-option>
+              </el-select>
             </div>
           </div>
 
@@ -75,7 +91,7 @@
               <span class="span-line"> - </span>
               <el-select v-model="infoData.expected_salary" placeholder="请选择">
                 <el-option
-                  v-for="item in expected_salary_st"
+                  v-for="item in expected_salary_end"
                   :key="item"
                   :label="item"
                   :value="item">
@@ -121,13 +137,13 @@
           <div class="body-left-box">
             <div class="left-list-box">
               <ul>
-                <li :class="selt_item == index? 'active':'' " v-for="(item,index) in industryList" :key="index" @click="click_industryListLi(item,index)">{{ item.industry }}</li>
+                <li :class="selt_item == index? 'active':'' " v-for="(item,index) in position.industryList" :key="index" @click="click_industryListLi(item,index)">{{ item.industry }}</li>
               </ul>
             </div>
           </div>
           <div class="body-right-box">
             <div class="right-list-box">
-              <div class="category-list-items" v-for="(item,index) in category_list" :key="index">
+              <div class="category-list-items" v-for="(item,index) in position.category_list" :key="index">
                 <div class="category-name">{{ item.category_name }}</div>
                 <ul>
                   <li :class="selt_item == index? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name)">{{ items.category_name }}</li>
@@ -150,6 +166,8 @@
 </template>
 
 <script>
+let pcas = require('../../../../assets/json/pc-code.json');
+
 export default {
   components: {
   },
@@ -175,21 +193,35 @@ export default {
       dialogVisible: false,
       dialogVisible_seach:'',
       list_id: '', // 选中的列表id
-      industryList: [], // 获取行业职位信息
-      category_list: [], // 点击行业匹配到对应的岗位数组
+      position:{
+        industryList: [], // 获取行业职位信息
+        category_list: [], // 点击行业匹配到对应的岗位数组
+      },
+      industry:{ // 行业信息
+        industryList:[]
+      },
       selt_item: 0,
-      expected_salary_st: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K']
-
+      expected_salary_st: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K'],
+      expected_salary_end: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K'],
+      
+      options: pcas,
+      selectedOptions: [],
     }
   },
   mounted(){
-
+    // 点击所属行业项
+    this.getIndustryList();
   },
   computed: {
     
   },
   methods: {
-    
+     // 获取省市区地址级联
+     handleChange(thsAreaCode) {
+      thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
+      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
+      this.infoData.desired_location = thsAreaCode[1];
+    },
     clickCreat(){
       this.is_creat = true
     },
@@ -279,12 +311,21 @@ export default {
     clickClose(){
       this.dialogVisible = false;
     },
-    // 获取行业职位信息
+    // 获取行业列表信息
+    getIndustryList(){
+      let that = this;
+      that.$axios.post('/api/industry/list',{}).then( res =>{
+        that.industry.industryList = res.data;
+      }).catch( e=>{
+        console.log(e)
+      })
+    },
+    // 获取职位列表信息
     getPositionList(){
       let that = this;
       that.$axios.post('/api/position/list',{}).then( res =>{
-        that.industryList = res.data;
-        that.category_list = that.industryList[that.selt_item].category_list;
+        that.position.industryList = res.data;
+        that.position.category_list = that.position.industryList[that.selt_item].category_list;
         that.dialogVisible = true;
       }).catch( e=>{
         console.log(e)
@@ -295,7 +336,7 @@ export default {
       let item = n;
       let index = i;
       this.selt_item = index;
-      this.category_list = item.category_list;
+      this.position.category_list = item.category_list;
     },
     // 点击职位列表
     click_position_list(n){
@@ -636,7 +677,7 @@ export default {
           .right-list-box{
             width: 100%;
             height: auto;
-            padding: 0 40px 16px;
+            padding: 0 1.2rem 0.8rem;
             .category-list-items{
               margin-top: 20px;
               text-align: left;
