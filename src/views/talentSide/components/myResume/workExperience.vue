@@ -48,8 +48,8 @@
 
           <div class="mb20 redact-item">
             <div class="item-label">所属行业</div>
-            <div class="item-content" @click="clickInvolved">
-              <el-input v-model="infoData.industry_involved" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+            <div class="item-content">
+              <el-input v-model="infoData.industry_involved"></el-input>
               <img src="../../../../assets/image/Frame_8.png" alt="" />
             </div>
           </div>
@@ -75,10 +75,11 @@
             </div>
           </div>
           <div class="mb20 redact-item"></div>
-          <div class="mb20 redact-item redact-item1">
+          <div class="mb20 redact-item">
             <div class="item-label">职位名称</div>
-            <div class="item-content">
-              <el-input v-model="infoData.position" placeholder="请填写职位名称"></el-input>
+            <div class="item-content" @click="clickInvolved">
+              <el-input v-model="infoData.position" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" />
             </div>
           </div>
 
@@ -107,14 +108,14 @@
 
     </div>
 
-    <!-- 行业弹窗 -->
-    <div title="" class="dialogVisible-pop-box" v-if="dialogVisible">
+    <!-- 职位弹窗 -->
+    <div class="dialogVisible-pop-box" v-if="dialogVisible">
       <div class="mask-box"></div>
       <div class="dialog-container">
         <div class="dialog-header">
           <h3 class="title">请选择职位类别</h3>
           <div class="dialog-header-input">
-            <el-input type="text" v-model="dialogVisible_seach"></el-input>
+            <!-- <el-input type="text" v-model="dialogVisible_seach"></el-input> -->
           </div>
           <img src="../../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
         </div>
@@ -126,7 +127,18 @@
               </ul>
             </div>
           </div>
-          <div class="body-right-box"></div>
+          <div class="body-right-box">
+            <div class="right-list-box">
+              <div class="category-list-items" v-for="(item,index) in category_list" :key="index">
+                <div class="category-name">{{ item.category_name }}</div>
+                <ul>
+                  <li :class="selt_item == index? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name)">{{ items.category_name }}</li>
+                </ul>
+              </div>
+              
+            </div>
+            
+          </div>
         </div>
         <!-- <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -167,6 +179,7 @@ export default {
       dialogVisible_seach:'',
       list_id: '', // 选中的列表id
       industryList: [], // 获取行业职位信息
+      category_list: [], // 点击行业匹配到对应的岗位数组
       selt_item: 0
     }
   },
@@ -177,14 +190,7 @@ export default {
     
   },
   methods: {
-    // 点击选择行业
-    clickInvolved(){
-      this.getIndustryList();
-    },
-    // 点击职业弹窗关闭按钮
-    clickClose(){
-      this.dialogVisible = false;
-    },
+
     clickCreat(){
       this.is_creat = true;
     },
@@ -275,25 +281,46 @@ export default {
         infoData[key] = obj[key]
       }
       this.infoData = infoData;
-      console.log(this.infoData)
       this.is_creat = true;
+    },
+    // 点击选择职位
+    clickInvolved(){
+      this.getPositionList();
+    },
+    // 点击职位弹窗关闭按钮
+    clickClose(){
+      this.dialogVisible = false;
     },
 
     // 获取行业职位信息
-    getIndustryList(){
+    getPositionList(){
       let that = this;
-      that.$axios.post('/api/industry/list',{}).then( res =>{
-        this.industryList = res.data;
-        this.dialogVisible = true;
+      that.$axios.post('/api/position/list',{}).then( res =>{
+        that.industryList = res.data;
+        that.category_list = that.industryList[that.selt_item].category_list;
+        that.dialogVisible = true;
       }).catch( e=>{
         console.log(e)
       })
     },
+    // 点击职业分类列表
     click_industryListLi(n,i){
       let item = n;
       let index = i;
       this.selt_item = index;
-      console.log(item)
+      this.category_list = item.category_list;
+    },
+    // 点击职位列表
+    click_position_list(n){
+      this.infoData.position = n;
+      this.dialogVisible = false;
+    },
+
+    // 高亮方法text 要查找的对象，keyword 高亮关键字
+    highLighWorld(text, keyword){
+      const _reg = new RegExp(keyword,'g');
+      const newText = text.replace(_reg,`<span style="color: red;">${keyword}</span>`);
+      return newText
     }
     
   },
@@ -652,13 +679,45 @@ export default {
           height: 100%;
           overflow-x: hidden;
           overflow-y: auto;
-          .left-list-box{
+          .right-list-box{
             width: 100%;
             height: auto;
+            padding: 0 40px 16px;
+            .category-list-items{
+              margin-top: 20px;
+              text-align: left;
+              .category-name{
+                font-size: 16px;
+                font-weight: bold;
+                color: $g_textColor;
+                line-height: 24px;
+                width: 100%;
+              }
+              ul{
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                li{
+                  width: auto;
+                  height: 38px;
+                  text-align: center;
+                  line-height: 38px;
+                  background: #F7F8FA;
+                  border-radius: 4px 4px 4px 4px;
+                  font-size: 14px;
+                  color: $g_textColor;
+                  margin-top: 16px;
+                  margin-right: 16px;
+                  padding: 0 10px;
+                  cursor: pointer;
+                }
+              }
+            }
           }
         }
       }
 
     }
   }
+
 </style>

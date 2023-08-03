@@ -109,3 +109,7 @@ li{
 .mb20{
   margin-bottom: 20px;
 }
+
+.el-select-dropdown__item.selected{
+  color: $g_color;
+}
