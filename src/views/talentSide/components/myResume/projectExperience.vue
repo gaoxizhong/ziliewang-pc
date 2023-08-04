@@ -14,9 +14,9 @@
                 <span class="li-name-2">{{ item.begin_date}} - {{ item.end_date }}</span>
               </div>
               <div class="info-set">
-                <span>删除</span>
+                <span @click="clickDelete">删除</span>
                 <span>/</span>
-                <span>编辑</span>
+                <span @click="clickUpdate">编辑</span>
               </div>
             </div>
             <div class="items-sub-box">{{ item.company_name }} · {{ item.position }}</div>
@@ -35,42 +35,63 @@
         <div class="redact-item-box">
 
           <div class="mb20 redact-item">
-            <div class="item-label">期待职位</div>
+            <div class="item-label">项目名称</div>
             <div class="item-content">
-              <el-input v-model="infoData.desired_position" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <el-input v-model="infoData.project_name" placeholder="例如: 猎聘网"></el-input>
             </div>
           </div>
 
           <div class="mb20 redact-item">
-            <div class="item-label">期望地点</div>
+            <div class="item-label">公司名称</div>
             <div class="item-content">
-              <el-input v-model="infoData.desired_location" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <el-input v-model="infoData.company_name" placeholder="公司名称"></el-input>
             </div>
           </div>
 
           <div class="mb20 redact-item">
-            <div class="item-label">期望行业</div>
+            <div class="item-label">项目角色</div>
             <div class="item-content">
-              <el-input v-model="infoData.desired_industry" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <el-input v-model="infoData.position" placeholder="例如: UI 设计师"></el-input>
             </div>
           </div>
 
-          <div class="mb20 redact-item">
-            <div class="item-label">期望薪资</div>
+          <!-- <div class="mb20 redact-item">
+            <div class="item-label">项目链接 (选填)</div>
             <div class="item-content">
-              <el-input v-model="infoData.expected_salary" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <el-input v-model="infoData.desired_industry" placeholder="例如: github.com/erik"></el-input>
+            </div>
+          </div> -->
+
+          <div class="mb20 redact-item">
+            <div class="item-label">项目开始时间</div>
+            <div class="item-content">
+              <el-date-picker
+                v-model="infoData.begin_date"
+                type="month"
+                format="yyyy-MM"
+                value-format="yyyy-MM"
+                placeholder="开始时间">
+              </el-date-picker>
+              <span class="span-line"> 至 </span>
+              <el-date-picker
+                v-model="infoData.end_date"
+                type="month"
+                format="yyyy-MM"
+                value-format="yyyy-MM"
+                placeholder="结束时间">
+              </el-date-picker>
             </div>
           </div>
 
-          <div class="mb20 redact-item">
-            <div class="item-label">职位偏好</div>
+          <div class="mb20 redact-item redact-item1">
+            <div class="item-label">项目描述</div>
             <div class="item-content">
-              <el-input v-model="infoData.expected_salary" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <el-input
+                type="textarea"
+                :rows="6"
+                placeholder="请输入内容"
+                v-model="infoData.project_desc">
+              </el-input>
             </div>
           </div>
 
@@ -104,8 +125,17 @@ export default {
   },
   data(){
     return{
-      infoData: [],
-      is_creat: false
+      infoData: {
+        project_name: '', // 项目名称
+        company_name: '', // 公司名称
+        begin_date: '', //开始时间
+        end_date: '', // 结束时间
+        position: '', //职位
+        job_content: '', // 负责工作
+        project_desc: '', // 项目描述
+      },
+      is_creat: false,
+      list_id: '', // 选中的列表id
 
     }
   },
@@ -117,16 +147,97 @@ export default {
   },
   methods: {
    
-    clickRedactBtn(){
-      this.infoData = JSON.parse(JSON.stringify(this.data));
-      
-    }, 
+    // clickRedactBtn(){
+    //   this.infoData = JSON.parse(JSON.stringify(this.data));
+    // }, 
     clickCreat(){
       this.is_creat = true
     },
     // 点击新建取消按钮
     clickInfoCancelBtn(){
       this.is_creat = false;
+      this.list_id = '';
+
+    },
+        // 点击创建、编辑确认按钮
+        clickInfoVerifyBtn(){
+      const p = Object.assign({},this.infoData);
+      if(p.project_name == ''){
+        this.$message.warning('公项目名称不能为空!');
+        return
+      }
+      if(p.company_name == ''){
+        this.$message.warning('公司名称不能为空!');
+        return
+      }
+      if(p.position == ''){
+        this.$message.warning('职位不能为空!');
+        return
+      }
+      if(p.begin_date == ''){
+        this.$message.warning('开始时间不能为空!');
+        return
+      }
+      if(p.end_date == ''){
+        this.$message.warning('结束时间不能为空!');
+        return
+      }
+      const subCallback= ()=>{
+        setTimeout(() => {
+          this.is_creat = false;
+          this.list_id = '';
+          this.$emit('refreshInfo');
+        }, 1000);
+      }
+      let api = '';
+      let text = '';
+      if(this.list_id){
+        p.id = this.list_id;
+        // 编辑修改
+        api = '/api/project-experience/update';
+        text = '修改成功'
+      }else{
+        // 创建项目
+        api = '/api/project-experience/create';
+        text = '创建成功'
+      }
+      this.createWorkExperience(p,api,text,subCallback);
+    },
+    // 创建工作经历
+    createWorkExperience(data,api,text,f){
+      let that = this;
+      let p = Object.assign({},data);
+      that.$axios.post(api,p).then( res =>{
+        if(res.code == 0){
+          that.$message.success( text );
+          return f()
+        }
+      })
+    },
+    //点击删除
+    clickDelete(id,idx){
+      let that = this;
+      let data = that.data;
+      that.$axios.post('/api/project-experience/delete',{
+        id,
+      }).then( res =>{
+        if(res.code == 0){
+          that.$message.success( '删除成功！' );
+          data.splice(idx);
+          that.data = data;
+        }
+      })
+    },
+    // 点击列表编辑
+    clickUpdate(e){
+      const infoData = this.infoData;
+      const obj= Object.assign({},e);
+      this.list_id = obj.id;
+      for(var key in infoData){
+        infoData[key] = obj[key]
+      }
+      this.infoData = infoData;
+      this.is_creat = true;
     },
 
   },
@@ -134,209 +245,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .myResume-plate{
-    width: 100%;
-    border-radius: 6px;
-    background: #fff;
-    margin-bottom: 16px;
-    .myResume-plate-title-box{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 24px 30px;
-
-      .info-t{
-        font-size: 18px;
-        font-weight: bold;
-        color: $g_textColor;
-        line-height: 24px;
-      }
-      .info-icon-img{
-        width: 22px;
-        height: 22px;
-        cursor: pointer;
-      }
-    }
-  }
-   // ===== 项目经历   ↓=====
-  .projectExperience-box{
-    .myResume-plate-list{
-      width: 100%;
-      margin-top: 10px;
-      .plate-list-ul{
-        width: 100%;
-        li{
-          padding: 12px 10px 12px 20px;
-          font-size: 14px;
-          text-align: left;
-          &:hover{
-            background: #F7F8FA;
-          }
-          &:hover .info-set{
-            display: block;
-          }
-          .li-title-box{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .li-name{
-              flex: 1;
-              text-align: left;
-              color: $g_textColor;
-              .li-name-1{
-                font-size: 15px;
-                font-weight: bold;
-              }
-              .li-name-2{
-                color: #86909C;
-                padding-left: 30px;
-              }
-            }
-
-          }
-          .items-sub-box{
-            font-size: 14px;
-            font-weight: 400;
-            color: #4E5969;
-            line-height: 22px;
-          }
-          .items-text-box{
-            margin-top: 0.8rem;
-            color: $g_textColor;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 22px;
-          }
-          
-        }
-        
-      }
-    }
-  }
-    // ===== 项目经历  ↑=====
-  .info-set{
-    font-size: 14px;
-    font-weight: 400;
-    color: $g_color;
-    cursor: pointer;
-    display: none;
-    span{
-      padding-left: 6px;
-    }
-  }
-  .redact-title-bottom{
-    padding: 20px 30px;
-    background: #F4F5F7;
-    text-align: left;
-    position: relative;
-    .textarea-box{
-      width: 100%;
-      margin-top: 10px; 
-      font-size: 14px;
-      /deep/ .el-textarea__inner{
-        font-size: 14px;
-        &:focus{
-          border-color: $g_color;
-        }
-      }
-    }
-    .form-spotbtns{
-      margin-top: 16px;
-      width: 100%;
-      text-align: right;
-    }
-    .redact-title-box{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .info-t{
-        font-weight: bold;
-        font-size: 15px;
-        color: $g_textColor;
-        line-height: 24px;
-      }
-    }
-  }
-  
-  .redact-item-box{
-    padding: 20px 0;
-    text-align: left;
-    position: relative;
-    .redact-item{
-      display: inline-block;
-      width: 50%;
-      vertical-align: top;
-      padding: 0 15px;
-      .item-label{
-        font-size: 14px;
-        text-align: right;
-        vertical-align: middle;
-        color: #495060;
-        line-height: 1;
-        box-sizing: border-box;
-        float: none;
-        display: inline-block;
-        padding: 0 0 10px;
-      }
-      .item-content {
-        position: relative;
-        line-height: 32px;
-        display: flex;
-        .radio-item{
-          flex: 1;
-          min-width: auto;
-          line-height: 36px;
-          display: inline-block;
-          border: 1px solid #e3e7ed;
-          background-color: #fff;
-          text-align: center;
-          cursor: pointer;
-          color: #9fa3b0;
-          margin-right: 20px;
-          white-space: nowrap;
-          position: relative;
-          vertical-align: middle;
-          font-size: 16px;
-          &:last-of-type {
-            margin-right: 0;
-          }
-        }
-        .radio-checked {
-          border-color: $g_color;
-          color: $g_color;
-          background-color: #effbfa;
-        }
-        /deep/ .el-input__inner{
-          height: 38px;
-          line-height: 38px;
-          cursor: pointer;
-        }
-        img{
-          width: 21px;
-          height: 18px;
-          position: absolute;
-          right: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          z-index: 2;
-        }
-      }
-    }
-    .redact-item:nth-child(odd) {
-      margin-bottom: 0;
-    }
-    .form-btns{
-      position: absolute;
-      bottom: 20px;
-      right: 15px;
-      text-align: right;
-      /deep/ .el-button{
-        padding: 0;
-        width: 100px;
-        height: 40px;
-        line-height: 40px;
-      }
-    }
-  }
-
 </style>

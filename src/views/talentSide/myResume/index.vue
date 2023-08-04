@@ -8,7 +8,7 @@
     </div>
     
     <div class="info-box">
-      <div class="info-left-box">
+      <div class="info-left-box" id="myReaume">
         <!-- 个人信息 开始 -->
         <MyInfo :data="infoData.basic_info" @refreshInfo="refreshInfo"/>  
         <!-- 个人信息 结束 -->
