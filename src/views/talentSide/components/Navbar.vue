@@ -19,7 +19,16 @@
         </el-menu>
       </div>
       <div class="right-menu">
-        <div class="right-items-box"></div>
+        <div class="right-items-box">
+          <div @click="clickProfessionalCircle">
+            <img src="../../../assets/image/nav_1.png" alt="" />
+            <span>职圈</span>
+          </div>
+          <div>
+            <img src="../../../assets/image/nav_1.png" alt="" />
+            <span>消息</span>
+          </div>
+        </div>
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
             <img :src="require('../../../assets/image/img-user.jpg')" class="user-avatar" />
@@ -73,6 +82,10 @@ export default {
     sessionStorage.removeItem("route")
     this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
+    // 点击职圈
+    clickProfessionalCircle(){
+      this.$router.push('/professionalCircle');
+    }
   },
 };
 </script>
@@ -120,11 +133,29 @@ export default {
     width: auto;
     height: 100%;
     line-height: 50px;
+    display: flex;
+    align-items: center;
 
     &:focus {
       outline: none;
     }
-
+    .right-items-box{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      div{
+        margin-right: 30px;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        img{
+          width: 14px;
+          height: 14px;
+          margin-right: 4px;
+        }
+      }
+    }
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;

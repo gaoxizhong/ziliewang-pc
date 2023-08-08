@@ -38,7 +38,6 @@ module.exports = {
     // }
   },
   configureWebpack: {
-    name: name, // 页面标题
     output: { // 输出重构  打包编译后的 文件名称  【模块名称.时间戳】
       filename: `static/js/[name].${Version}.js`,
       chunkFilename: `static/js/[name].${Version}.js`

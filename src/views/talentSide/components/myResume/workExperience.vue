@@ -108,7 +108,7 @@
             <el-button type="primary" @click="clickInfoVerifyBtn">确定</el-button>
           </div>
 
-          </div>
+        </div>
 
       </div>
       <!-- 编辑状态模块 结束 -->

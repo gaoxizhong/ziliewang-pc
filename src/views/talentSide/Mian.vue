@@ -55,10 +55,13 @@ import Navbar from './components/Navbar';
 </script>
 <style lang="scss" scoped>
   .container-box{
-    width: 1200px;
-    margin: 1.2rem auto 0;
+    width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+    .container{
+      width: 1200px;
+      margin: 1.2rem auto 0;
+    }
   }
 
 </style>

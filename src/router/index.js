@@ -3,12 +3,16 @@ import Router from 'vue-router';
 import { getToken } from '@/utils/auth'; // get token from cookie
 Vue.use(Router);
 import talentSide from '@/views/talentSide/Mian.vue';
+import getPageTitle from '@/utils/get-page-title';
 
 export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true,
+    meta: { 
+      title: '登录',
+   },
   },
 
   {
@@ -65,7 +69,7 @@ export const constantRoutes = [
       {
         path: '/myProfessionalCircle',
         name: 'myProfessionalCircle',
-        component: () => import('@/views/talentSide/myProfessionalCircle'),
+        component: () => import('@/views/talentSide/myProfessionalCircle/index.vue'),
         meta: { 
           title: '我的职圈',
           keepAlive: true,
@@ -77,6 +81,24 @@ export const constantRoutes = [
         component: () => import('@/views/talentSide/talentSideSettings'),
         meta: { 
           title: '设置',
+          keepAlive: true,
+       },
+      },
+      {
+        path: '/professionalCircle',
+        name: 'professionalCircle',
+        component: () => import('@/views/talentSide/myProfessionalCircle/professionalCircle'),
+        meta: { 
+          title: '职圈',
+          keepAlive: true,
+       },
+      },
+      {
+        path: '/circleDetails',
+        name: 'circleDetails',
+        component: () => import('@/views/talentSide/myProfessionalCircle/circleDetails'),
+        meta: { 
+          title: '帖子详情',
           keepAlive: true,
        },
       },
@@ -114,6 +136,7 @@ router.beforeEach(async (to, from, next) => {
     to.meta.keepAlive = false; 
   }
   next()
+  document.title = getPageTitle(to.meta.title);
 
 })
   

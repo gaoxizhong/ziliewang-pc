@@ -35,7 +35,18 @@
         <div class="right-box up-attachments-box">
           <div class="up-att-t">
             <span class="span-1">上传附件简历</span>
-            <span class="span-2">去上传<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+            <el-upload class="upload-demo"
+              drag ref="upload" 
+              action= "none"
+              :accept="accept" 
+              :limit="3"
+              :show-file-list="false"
+              multiple
+              :http-request="uploadArticleCover" 
+              :on-exceed='limitCheck'
+            >
+              <span class="span-2">去上传<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+            </el-upload>
           </div>
           <div class="up-box-Instructions">在附件中展示更多优势与特长</div>
         </div>
@@ -103,6 +114,7 @@ export default {
     return{
       is_titleTab: 3,
       infoData:{}, // 信息
+      accept:'.pdf,.doc,.docx', // 接受上传文件
     }
   },
   computed: {
@@ -116,6 +128,7 @@ export default {
     this.getUserProfile();
   },
   methods: {
+    
     // 刷新信息
     refreshInfo(){
       this.getUserProfile();
@@ -134,6 +147,25 @@ export default {
         }
       }).catch(e =>{
         console.log(e)
+      })
+    },
+    // 选择的文件超出限制的文件总数量时触发
+    limitCheck() {
+      this.$message.warning('每次只能上传3个文件')
+    },
+    // 点击去上传
+    uploadArticleCover(param){
+      console.log(param.file)
+      const formData = new FormData();
+      formData.append('file[]',param.file);
+      formData.append('pictureCategory','articleCover');
+      formData.append('up_tag','resume');
+      this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
+        console.log(res)
+        this.$refs['upload'].clearFiles()
+      }).catch( e=>{
+        console.log(e)
+        this.$refs['upload'].clearFiles()
       })
     },
   },
@@ -196,6 +228,11 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        /deep/ .el-upload-dragger{
+          border: none;
+          width: auto;
+          height: auto;
+        }
         .span-1{
           font-size: 15px;
           font-weight: bold;
@@ -208,6 +245,7 @@ export default {
           color: $g_color;
           line-height: 22px;
           margin-left: 10px;
+          cursor: pointer;
         }
       }
       .up-box-Instructions{
