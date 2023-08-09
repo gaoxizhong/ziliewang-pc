@@ -20,7 +20,7 @@
         <div style="flex: 1;padding-left: 0.9rem;">
           <div class="info-1">
             <span class="info-name">{{ data.name }}</span>
-            <span class="info-set" @click="clickRedactBtn(1)">编辑</span>
+            <span class="info-set1" @click="clickRedactBtn(1)">编辑</span>
           </div>
           <ul class="info-2">
             <li>
@@ -135,7 +135,7 @@
       <div class="info-title-bottom" v-if="!redact_spot">
         <div class="jobExpectation-title-box">
           <span class="info-t">优势亮点</span>
-          <span class="info-set" @click="clickRedactBtn(2)">编辑</span>
+          <span class="info-set1" @click="clickRedactBtn(2)">编辑</span>
         </div>
         <div class="info-title-x">{{ data.advantages_highlights?data.advantages_highlights:'暂无' }}</div>
       </div>
@@ -231,7 +231,7 @@ export default {
     uploadArticleCover(param){
       console.log(param.file)
       const formData = new FormData();
-      formData.append('file[]',param.file);
+      formData.append('file[]',param.file);7
       formData.append('pictureCategory','articleCover');
       formData.append('up_tag','avatar');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
@@ -574,7 +574,7 @@ export default {
       border-color: $g_color;
     }
   }
-  .info-set{
+  .info-set1{
     font-size: 14px;
     font-weight: 400;
     color: $g_color;

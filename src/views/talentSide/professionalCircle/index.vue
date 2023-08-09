@@ -15,7 +15,7 @@
             <div class="right-container-item" @click.stop="clicklistItems(item)">
               <div class="title">
                 <div class="title-left" @click.stop="clickName(item)">
-                  <img :src=" item.avatar ? item.avatar : require('../../../../assets/image/img-user.jpg' )" alt="" />
+                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg' )" alt="" />
                   <span>{{ item.users.name }}</span>
                 </div>
                 <div class="title-t">{{ item.createtime }}</div>
@@ -33,15 +33,15 @@
                 </div>
                 <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
-                    <img src="../../../../assets/image/preview-open.png" alt="" />
+                    <img src="../../../assets/image/preview-open.png" alt="" />
                     <span>{{ item.read_num?item.read_num:0 }}阅读</span>
                   </div>
                   <div class="bottom-btn-items">
-                    <img src="../../../../assets/image/thumbs-up.png" alt="" />
+                    <img src="../../../assets/image/thumbs-up.png" alt="" />
                     <span>{{ item.point_num?item.point_num:0 }}点赞</span>
                   </div>
                   <div class="bottom-btn-items">
-                    <img src="../../../../assets/image/comment.png" alt="" />
+                    <img src="../../../assets/image/comment.png" alt="" />
                     <span>{{ item.comment_num?item.comment_num:0 }}评论</span>
                   </div>
                 </div>
@@ -52,53 +52,23 @@
           <!-- 列表项 结束 -->
         </div>
       </div>
+      <!-- 右侧模块 开始 -->
       <div class="info-right-box">
-        <div class="info-right-top">
-          <div class="title">热门职位</div>
-          <ul>
-            <li>
-              <div class="li-title">
-                <span class="li-text">软件测试/解决方案测试工...</span>
-                <span class="li-xz">25-50K·13薪</span>
-              </div>
-              <div class="li-bottom-box">
-                <div>华为云</div>
-                <span>宁波</span>
-              </div>
-            </li>
-            <li>
-              <div class="li-title">
-                <span class="li-text">软件测试/解决方案测试工...</span>
-                <span class="li-xz">25-50K·13薪</span>
-              </div>
-              <div class="li-bottom-box">
-                <div>华为云</div>
-                <span>宁波</span>
-              </div>
-            </li>
-            <li>
-              <div class="li-title">
-                <span class="li-text">软件测试/解决方案测试工...</span>
-                <span class="li-xz">25-50K·13薪</span>
-              </div>
-              <div class="li-bottom-box">
-                <div>华为云</div>
-                <span>宁波</span>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <!-- 热门推荐 -->
+        <hotRecommendation />
       </div>
+      <!-- 右侧模块 结束 -->
     </div>
   </div>
-
 
 </template>
 
 <script>
+import hotRecommendation from './components/hotRecommendation.vue';
 export default {
   name: 'myProfessionalCircle',
   components: {
+    hotRecommendation,
   },
   data(){
     return{
@@ -304,65 +274,6 @@ export default {
     .info-right-box{
       width: 19rem;
       padding-left: 0.8rem;
-      .info-right-top{
-        width: 100%;
-        height: auto;
-        padding: 0.8rem 1.1rem;
-        background: #FFFFFF;
-        border-radius: 4px 4px 4px 4px;
-        .title{
-          font-size: 0.8rem;
-          font-weight: bold;
-          color: $g_textColor;
-          line-height: 1.2rem;
-        }
-        ul{
-          margin-top: 1rem;
-          width: 100%;
-          li{
-            width: 100%;
-            height: auto;
-            padding: 0.6rem 0.7rem;
-            font-size: 0.7rem;
-            cursor: pointer;
-            &:hover{
-              background: #F4F8FF;
-            }
-            .li-title{
-              width: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              font-weight: bold;
-              .li-text{
-                flex: 1;
-                color: $g_textColor;
-                line-height: 22px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-              .li-xz{
-                width: auto;
-                color: #FF4D4F;
-                line-height: 22px;
-              }
-            }
-            .li-bottom-box{
-              margin-block: 0.8rem;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              div{
-                font-size: 12px;
-                font-weight: 400;
-                color: #86909C;
-                line-height: 20px;
-              }
-            }
-          }
-        }
-      }
     }
   }
 </style>

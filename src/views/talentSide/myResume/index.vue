@@ -39,7 +39,7 @@
               drag ref="upload" 
               action= "none"
               :accept="accept" 
-              :limit="3"
+              :limit="1"
               :show-file-list="false"
               multiple
               :http-request="uploadArticleCover" 
@@ -49,6 +49,18 @@
             </el-upload>
           </div>
           <div class="up-box-Instructions">在附件中展示更多优势与特长</div>
+
+          <div class="attachments-list-box">
+            <div class="list-title">附件管理</div>
+            <div class="list-items" v-if="curriculum_vitae">
+              <span class="items-title">个人简历.pdf</span>
+              <img src="../../../assets/image/delete.png" alt="" class="img" @click="clickVitaeDelet"/>
+            </div>
+            <div v-else>
+              <span>暂无</span>
+            </div>
+          </div>
+
         </div>
 
         <div class="right-box resume-improvement-box">
@@ -114,7 +126,8 @@ export default {
     return{
       is_titleTab: 3,
       infoData:{}, // 信息
-      accept:'.pdf,.doc,.docx', // 接受上传文件
+      accept:'.pdf', // 接受上传文件
+      curriculum_vitae: "", // 附件简历
     }
   },
   computed: {
@@ -144,6 +157,7 @@ export default {
         console.log(res.data)
         if(res.code == 0){
           this.infoData = res.data;
+          this.curriculum_vitae = res.data.basic_info.curriculum_vitae;
         }
       }).catch(e =>{
         console.log(e)
@@ -151,7 +165,7 @@ export default {
     },
     // 选择的文件超出限制的文件总数量时触发
     limitCheck() {
-      this.$message.warning('每次只能上传3个文件')
+      this.$message.warning('每次只能上传1个文件')
     },
     // 点击去上传
     uploadArticleCover(param){
@@ -162,10 +176,38 @@ export default {
       formData.append('up_tag','resume');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
         console.log(res)
-        this.$refs['upload'].clearFiles()
+        this.curriculum_vitae = res.data.upload_files;
+        let upload_files_path = res.data.upload_files_path;
+        this.$refs['upload'].clearFiles();
+
+        let p = {
+          curriculum_vitae: upload_files_path
+        }
+        this.setUserSave(p,'','上传成功!');
       }).catch( e=>{
         console.log(e)
         this.$refs['upload'].clearFiles()
+      })
+    },
+    // 点击个人简历删除
+    clickVitaeDelet(){
+      let p = {
+          curriculum_vitae: ''
+        }
+        this.setUserSave(p,'delet','删除成功!');
+    },
+    //  修改信息
+    setUserSave(data,type,text){
+      let that = this;
+      let p = Object.assign({},data);
+      that.$axios.post('/api/user/save',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.$message.success( text );
+          if(type == 'delet'){
+            this.curriculum_vitae = '';
+          }
+        }
       })
     },
   },
@@ -338,7 +380,40 @@ export default {
     }
   }
 }
+.attachments-list-box{
+  width: 100%;
+  margin-top: 16px;
+  text-align: left;
+  .list-title{
+    font-size: 15px;
+    font-weight: bold;
+    color: $g_textColor;
+    line-height: 24px;
+    margin-bottom: 10px;
+  }
+  .list-items{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    cursor: pointer;
+    overflow: hidden;
+    .items-title{
+      flex: 1;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .img{
+      width: 16px;
+      height: 16px;
+    }
+    &:hover{
+      background: rgb(248, 248, 248);
+    }
+  }
 
+}
 
 
 </style>

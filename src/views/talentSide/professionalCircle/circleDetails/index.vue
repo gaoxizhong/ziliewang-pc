@@ -7,15 +7,15 @@
           <div class="right-container-item">
             <div class="title">
               <div class="title-left" @click.stop="clickName(infoData)">
-                <img src="../../../../assets/image/img-user.jpg" alt="" />
-                <span>匿名用户</span>
+                <img :src="infoData.users.avatar" alt="" />
+                <span>{{ infoData.users.name }}</span>
               </div>
               <div class="title-t">2023-08-03 18:20:33</div>
             </div>
 
             <div class="items-c-box">
               <div>
-                <div class="items-c-p">我的职圈123</div>
+                <div class="items-c-p">{{ infoData.content }}</div>
                 <!-- <div class="items-img-box" v-if="item.images">
                   <img :src="img_item" alt="" v-for="(img_item,idx) in item.images" :key="idx"/>
                 </div> -->
@@ -26,19 +26,19 @@
               <div class="items-bottom-btn">
                 <div class="bottom-btn-items">
                   <img src="../../../../assets/image/preview-open.png" alt="" />
-                  <span>0 阅读</span>
+                  <span>{{ infoData.read_num }} 阅读</span>
                 </div>
                 <div class="bottom-btn-items">
                   <img src="../../../../assets/image/thumbs-up.png" alt="" />
-                  <span>0 点赞</span>
+                  <span>{{ infoData.point_num }} 点赞</span>
                 </div>
                 <div class="bottom-btn-items">
                   <img src="../../../../assets/image/comment.png" alt="" />
-                  <span>0评论</span>
+                  <span>{{ infoData.comment_num }} 评论</span>
                 </div>
               </div>
             </div>
-            <div class="fabu-box">
+            <div class="fabu-box" v-if="is_content">
               <el-input type="text" v-model="content" placeholder="评论千万条，友善第一条"></el-input>
               <el-button type="primary" @click="clickInfoVerifyBtn">发布</el-button>
             </div>
@@ -47,56 +47,35 @@
         <!-- 列表项 结束 -->
       </div>
     </div>
+    <!-- 右侧模块 开始 -->
     <div class="info-right-box">
-      <div class="info-right-top">
-        <div class="title">热门职位</div>
-        <ul>
-          <li>
-            <div class="li-title">
-              <span class="li-text">软件测试/解决方案测试工...</span>
-              <span class="li-xz">25-50K·13薪</span>
-            </div>
-            <div class="li-bottom-box">
-              <div>华为云</div>
-              <span>宁波</span>
-            </div>
-          </li>
-          <li>
-            <div class="li-title">
-              <span class="li-text">软件测试/解决方案测试工...</span>
-              <span class="li-xz">25-50K·13薪</span>
-            </div>
-            <div class="li-bottom-box">
-              <div>华为云</div>
-              <span>宁波</span>
-            </div>
-          </li>
-          <li>
-            <div class="li-title">
-              <span class="li-text">软件测试/解决方案测试工...</span>
-              <span class="li-xz">25-50K·13薪</span>
-            </div>
-            <div class="li-bottom-box">
-              <div>华为云</div>
-              <span>宁波</span>
-            </div>
-          </li>
-        </ul>
-      </div>
+      <!-- 热门推荐 -->
+      <hotRecommendation />
     </div>
+    <!-- 右侧模块 结束 -->
   </div>
 
 </template>
 
 <script>
+import hotRecommendation from '../components/hotRecommendation.vue';
 export default {
   name: 'circleDetails',
   components: {
+    hotRecommendation,
   },
   data(){
     return{
-      infoData:{}
+      infoData:{},
+      content:'',
+      id: '',
+      is_content: false, // 评论框展示判断
     }
+  },
+  created(){
+    this.id = this.$route.query.id;
+    //获取职圈详情
+    this.getInfoData();
   },
   computed: {
     
@@ -104,7 +83,9 @@ export default {
   methods: {
     // 获取详情
     getInfoData(){
-      this.$axios.post('',{}).then( res =>{
+      this.$axios.post('/api/profession-circle/detail',{
+        profession_circle_id: this.id
+      }).then( res =>{
         if( res.code == 0 ){
           this.infoData = res.data;
         }
@@ -274,65 +255,6 @@ export default {
     .info-right-box{
       width: 19rem;
       padding-left: 0.8rem;
-      .info-right-top{
-        width: 100%;
-        height: auto;
-        padding: 0.8rem 1.1rem;
-        background: #FFFFFF;
-        border-radius: 4px 4px 4px 4px;
-        .title{
-          font-size: 0.8rem;
-          font-weight: bold;
-          color: $g_textColor;
-          line-height: 1.2rem;
-        }
-        ul{
-          margin-top: 1rem;
-          width: 100%;
-          li{
-            width: 100%;
-            height: auto;
-            padding: 0.6rem 0.7rem;
-            font-size: 0.7rem;
-            cursor: pointer;
-            &:hover{
-              background: #F4F8FF;
-            }
-            .li-title{
-              width: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              font-weight: bold;
-              .li-text{
-                flex: 1;
-                color: $g_textColor;
-                line-height: 22px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-              .li-xz{
-                width: auto;
-                color: #FF4D4F;
-                line-height: 22px;
-              }
-            }
-            .li-bottom-box{
-              margin-block: 0.8rem;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              div{
-                font-size: 12px;
-                font-weight: 400;
-                color: #86909C;
-                line-height: 20px;
-              }
-            }
-          }
-        }
-      }
     }
   }
 </style>

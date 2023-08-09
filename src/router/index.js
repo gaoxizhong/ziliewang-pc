@@ -87,7 +87,7 @@ export const constantRoutes = [
       {
         path: '/professionalCircle',
         name: 'professionalCircle',
-        component: () => import('@/views/talentSide/myProfessionalCircle/professionalCircle'),
+        component: () => import('@/views/talentSide/professionalCircle'),
         meta: { 
           title: '职圈',
           keepAlive: true,
@@ -96,7 +96,7 @@ export const constantRoutes = [
       {
         path: '/circleDetails',
         name: 'circleDetails',
-        component: () => import('@/views/talentSide/myProfessionalCircle/circleDetails'),
+        component: () => import('@/views/talentSide/professionalCircle/circleDetails'),
         meta: { 
           title: '帖子详情',
           keepAlive: true,
