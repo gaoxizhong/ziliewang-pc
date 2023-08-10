@@ -352,6 +352,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import '../../../../styles/myResume.scss';
   .dialogVisible-pop-box{
     width: 100%;
     height: 100%;

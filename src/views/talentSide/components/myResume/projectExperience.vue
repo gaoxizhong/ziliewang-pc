@@ -10,7 +10,7 @@
           <li v-for="(item,index) in data" :key="index">
             <div class="li-title-box">
               <div class="li-name">
-                <span class="li-name-1">{{ item.project_desc }}</span>
+                <span class="li-name-1">{{ item.project_name }}</span>
                 <span class="li-name-2">{{ item.begin_date}} - {{ item.end_date }}</span>
               </div>
               <div class="info-set">
@@ -80,6 +80,17 @@
                 value-format="yyyy-MM"
                 placeholder="结束时间">
               </el-date-picker>
+            </div>
+          </div>
+          <div class="mb20 redact-item redact-item1">
+            <div class="item-label">负责工作</div>
+            <div class="item-content">
+              <el-input
+                type="textarea"
+                :rows="6"
+                placeholder="请输入负责工作内容"
+                v-model="infoData.job_content">
+              </el-input>
             </div>
           </div>
 
@@ -159,11 +170,11 @@ export default {
       this.list_id = '';
 
     },
-        // 点击创建、编辑确认按钮
-        clickInfoVerifyBtn(){
+    // 点击创建、编辑确认按钮
+    clickInfoVerifyBtn(){
       const p = Object.assign({},this.infoData);
       if(p.project_name == ''){
-        this.$message.warning('公项目名称不能为空!');
+        this.$message.warning('项目名称不能为空!');
         return
       }
       if(p.company_name == ''){
@@ -245,4 +256,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import '../../../../styles/myResume.scss';
 </style>

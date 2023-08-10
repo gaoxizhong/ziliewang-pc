@@ -9,21 +9,24 @@
       <div class="myResume-plate-list" v-if="!is_creat">
         <ul class="plate-list-ul">
           <li v-for="(item,index) in data" :key="index">
-            <div class="li-name">
-              <span class="li-name-1">{{ item.desired_position }}/{{ item.job_preference }}</span>
-              <span class="li-name-2">
-                <span>{{ item.expected_salary }}</span>
-                <span>|</span>
-                <span>{{ item.desired_location }}</span>
-                <span>|</span>
-                <span>{{ item.desired_industry }}</span>
-              </span>
+            <div class="li-title-box">
+              <div class="li-name">
+                <span class="li-name-1">{{ item.desired_position }}/{{ item.job_preference }}</span>
+                <span class="li-name-3">
+                  <span>{{ item.expected_salary }}</span>
+                  <span>|</span>
+                  <span>{{ item.desired_location }}</span>
+                  <span>|</span>
+                  <span>{{ item.desired_industry }}</span>
+                </span>
+              </div>
+              <div class="info-set">
+                <span>删除</span>
+                <span>/</span>
+                <span>编辑</span>
+              </div>
             </div>
-            <div class="info-set">
-              <span>删除</span>
-              <span>/</span>
-              <span>编辑</span>
-            </div>
+
           </li>
         </ul>
 
@@ -80,18 +83,18 @@
           <div class="mb20 redact-item">
             <div class="item-label">期望薪资</div>
             <div class="item-content">
-              <el-select v-model="infoData.expected_salary" placeholder="请选择">
+              <el-select v-model="expected_salary_st" placeholder="请选择">
                 <el-option
-                  v-for="item in expected_salary_st"
+                  v-for="item in option_salary_st"
                   :key="item"
                   :label="item"
                   :value="item">
                 </el-option>
               </el-select>
               <span class="span-line"> - </span>
-              <el-select v-model="infoData.expected_salary" placeholder="请选择">
+              <el-select v-model="expected_salary_end" placeholder="请选择">
                 <el-option
-                  v-for="item in expected_salary_end"
+                  v-for="item in option_salary_end"
                   :key="item"
                   :label="item"
                   :value="item">
@@ -103,8 +106,9 @@
           <div class="mb20 redact-item">
             <div class="item-label">职位偏好</div>
             <div class="item-content">
-              <el-input v-model="infoData.job_preference" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-              <img src="../../../../assets/image/Frame_8.png" alt="" />
+              <el-input v-model="infoData.job_preference" placeholder="职位偏好"></el-input>
+              <!-- <el-input v-model="infoData.job_preference" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../../assets/image/Frame_8.png" alt="" /> -->
             </div>
           </div>
 
@@ -201,9 +205,10 @@ export default {
         industryList:[]
       },
       selt_item: 0,
-      expected_salary_st: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K'],
-      expected_salary_end: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K'],
-      
+      option_salary_st: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K'],
+      option_salary_end: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K'],
+      expected_salary_st:'',
+      expected_salary_end:'',
       options: pcas,
       selectedOptions: [],
     }
@@ -232,6 +237,8 @@ export default {
     },
     // 点击创建、编辑确认按钮
     clickInfoVerifyBtn(){
+      let infoData = this.infoData;
+      infoData.expected_salary = this.expected_salary_st+'-'+this.expected_salary_end;
       const p = Object.assign({},this.infoData);
       if(p.desired_position == ''){
         this.$message.warning('期待职位不能为空!');
@@ -277,6 +284,17 @@ export default {
         text = '创建成功'
       }
       this.createWorkExperience(p,api,text,subCallback);
+    },
+    // 创建
+    createWorkExperience(data,api,text,f){
+      let that = this;
+      let p = Object.assign({},data);
+      that.$axios.post(api,p).then( res =>{
+        if(res.code == 0){
+          that.$message.success( text );
+          return f()
+        }
+      })
     },
     //点击删除
     clickDelete(id,idx){
@@ -349,218 +367,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .myResume-plate{
-    width: 100%;
-    border-radius: 6px;
-    background: #fff;
-    margin-bottom: 16px;
-    .myResume-plate-title-box{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 24px 30px;
-      .info-t{
-        font-size: 18px;
-        font-weight: bold;
-        color: $g_textColor;
-        line-height: 24px;
-      }
-      .info-icon-img{
-        width: 22px;
-        height: 22px;
-        cursor: pointer;
-      }
-    }
-  }
-  // =====  求职期望   ↓=====
-  .jobExpectation-box{
-    .myResume-plate-list{
-      width: 100%;
-      margin-top: 10px;
-      .plate-list-ul{
-        width: 100%;
-        li{
-          padding: 12px 20px;
-          font-size: 14px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          .li-name{
-            flex: 1;
-            text-align: left;
-            color: $g_textColor;
-            .li-name-1{
-              font-weight: bold;
-            }
-            .li-name-2{
-              span{
-                padding-left: 16px;
-              }
-            }
-          }
-          &:hover{
-            background: #F7F8FA;
-          }
-          &:hover .info-set{
-            display: block;
-          }
-        }
-        
-      }
-    }
-  }
-
-  // =====  求职期望   ↑=====
-  .info-set{
-    font-size: 14px;
-    font-weight: 400;
-    color: $g_color;
-    cursor: pointer;
-    display: none;
-    span{
-      padding-left: 6px;
-    }
-  }
-
-  .redact-title-bottom{
-    padding: 20px 30px;
-    background: #F4F5F7;
-    text-align: left;
-    position: relative;
-    .textarea-box{
-      width: 100%;
-      margin-top: 10px; 
-      font-size: 14px;
-      /deep/ .el-textarea__inner{
-        font-size: 14px;
-        &:focus{
-          border-color: $g_color;
-        }
-      }
-    }
-    .form-spotbtns{
-      margin-top: 16px;
-      width: 100%;
-      text-align: right;
-    }
-    .redact-title-box{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      .info-t{
-        font-weight: bold;
-        font-size: 15px;
-        color: $g_textColor;
-        line-height: 24px;
-      }
-    }
-  }
-
-
-  .redact-item-box{
-    padding: 20px 0;
-    text-align: left;
-    position: relative;
-    .redact-item{
-      display: inline-block;
-      width: 50%;
-      vertical-align: top;
-      padding: 0 15px;
-      .item-label{
-        font-size: 14px;
-        text-align: right;
-        vertical-align: middle;
-        color: #495060;
-        line-height: 1;
-        box-sizing: border-box;
-        float: none;
-        display: inline-block;
-        padding: 0 0 10px;
-      }
-      .item-content {
-        position: relative;
-        line-height: 32px;
-        display: flex;
-        .radio-item{
-          flex: 1;
-          min-width: auto;
-          line-height: 36px;
-          display: inline-block;
-          border: 1px solid #e3e7ed;
-          background-color: #fff;
-          text-align: center;
-          cursor: pointer;
-          color: #9fa3b0;
-          margin-right: 20px;
-          white-space: nowrap;
-          position: relative;
-          vertical-align: middle;
-          font-size: 16px;
-          &:last-of-type {
-            margin-right: 0;
-          }
-        }
-        .radio-checked {
-          border-color: $g_color;
-          color: $g_color;
-          background-color: #effbfa;
-        }
-        /deep/ .el-input__inner{
-          height: 38px;
-          line-height: 38px;
-          cursor: pointer;
-        }
-        img{
-          width: 21px;
-          height: 18px;
-          position: absolute;
-          right: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          z-index: 2;
-        }
-        .span-line{
-          margin: 0 10px;
-          font-size: 14px;
-        }
-        /deep/ .el-select{
-          width: 100%;
-          .el-input.is-focus .el-input__inner{
-            border-color: $g_color;
-          }
-        }
-        /deep/ .el-date-editor.el-input,/deep/  .el-date-editor.el-input__inner{
-          width: 100%;
-        }
-        .el-cascader{
-          width: 100%;
-        }
-        /deep/ .el-input__inner:focus{
-          border-color: $g_color;
-        }
-      }
-    }
-    .redact-item:nth-child(odd) {
-      margin-bottom: 0;
-    }
-    .form-btns{
-      position: absolute;
-      bottom: 20px;
-      right: 15px;
-      text-align: right;
-      /deep/ .el-button{
-        padding: 0;
-        width: 100px;
-        height: 40px;
-        line-height: 40px;
-      }
-      /deep/ .el-button--primary{
-        background-color: $g_color;
-        border-color: $g_color;
-      }
-    }
-  }
-
+  @import '../../../../styles/myResume.scss';
   // 职位弹窗 
   .dialogVisible-pop-box{
     width: 100%;

@@ -55,6 +55,11 @@
               color: #86909C;
               padding-left: 30px;
             }
+            .li-name-3{
+              span{
+                padding-left: 16px;
+              }
+            }
           }
 
         }
@@ -184,6 +189,9 @@
           height: 38px;
           line-height: 38px;
           cursor: pointer;
+        }
+        /deep/ .el-cascader{
+          width: 100%;
         }
         img{
           width: 21px;

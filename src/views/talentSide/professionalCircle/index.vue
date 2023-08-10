@@ -103,7 +103,7 @@ export default {
     clickName(i){
       console.log(i)
       this.$router.push({
-        path:'/myCircle',   //跳转的路径
+        path:'/circleCentre',   //跳转的路径
         query:{           //路由传参时push和query搭配使用 ，作用时传递参数
           id:i.id,
         }

@@ -403,6 +403,7 @@ export default {
       flex: 1;
       display: inline-block;
       white-space: nowrap;
+      font-size: 14px;
     }
     .img{
       width: 16px;

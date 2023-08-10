@@ -7,10 +7,10 @@
           <div class="right-container-item">
             <div class="title">
               <div class="title-left" @click.stop="clickName(infoData)">
-                <img :src="infoData.users.avatar" alt="" />
+                <img :src="infoData.users.avatar" alt="" class="avatar-img"/>
                 <span>{{ infoData.users.name }}</span>
               </div>
-              <div class="title-t">2023-08-03 18:20:33</div>
+              <div class="title-t">{{ infoData.createtime }}</div>
             </div>
 
             <div class="items-c-box">
@@ -28,11 +28,11 @@
                   <img src="../../../../assets/image/preview-open.png" alt="" />
                   <span>{{ infoData.read_num }} 阅读</span>
                 </div>
-                <div class="bottom-btn-items">
+                <div class="bottom-btn-items" @click="clickPoint">
                   <img src="../../../../assets/image/thumbs-up.png" alt="" />
-                  <span>{{ infoData.point_num }} 点赞</span>
+                  <span>{{ infoData.point_num }} {{infoData.laud_status == 1 ? '已赞':'赞'}}</span>
                 </div>
-                <div class="bottom-btn-items">
+                <div class="bottom-btn-items" @click.stop="clickComment(infoData)">
                   <img src="../../../../assets/image/comment.png" alt="" />
                   <span>{{ infoData.comment_num }} 评论</span>
                 </div>
@@ -42,6 +42,43 @@
               <el-input type="text" v-model="content" placeholder="评论千万条，友善第一条"></el-input>
               <el-button type="primary" @click="clickInfoVerifyBtn">发布</el-button>
             </div>
+            <!-- 评论模块 开始 -->
+            <div class="comment-box">
+              <div class="comment-title-box"><span>{{ infoData.comment_num }}</span>评论</div>
+
+              <div class="comment-list-box">
+                <ul>
+                  <li v-for="(items,index) in infoData.comment_list" :key="index">
+                    <div class="title">
+                      <div class="title-left" @click.stop="clickName(items)">
+                        <img :src="items.avatar" alt="" class="avatar-img"/>
+                        <span>{{ items.name }}</span>
+                        <!-- <img src="../../../../assets/image/right-one.png" alt="" class="right-one"/>
+                        <span>小花</span> -->
+                      </div>
+                      <div class="title-t">{{ items.createtime }}</div>
+                    </div>
+                    <div class="items-c-box">
+
+                      <div class="items-c-p">{{ items.content }}</div>
+
+                      <div class="items-bottom-btn">
+                        <div class="bottom-btn-items" @click="clickPoint('commentID',items.id)">
+                          <img src="../../../../assets/image/thumbs-up.png" alt="" />
+                          <span>{{ items.point_num }} {{items.laud_status == 1 ? '已赞':'赞'}}</span>
+                        </div>
+                        <div class="bottom-btn-items">
+                          <img src="../../../../assets/image/comment.png" alt="" />
+                          <span>{{ items.comment_num }} 回复</span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+            <!-- 评论模块 结束 -->
           </div>
         </div>
         <!-- 列表项 结束 -->
@@ -72,8 +109,12 @@ export default {
       is_content: false, // 评论框展示判断
     }
   },
+
   created(){
     this.id = this.$route.query.id;
+   
+  },
+  mounted(){
     //获取职圈详情
     this.getInfoData();
   },
@@ -82,8 +123,8 @@ export default {
   },
   methods: {
     // 获取详情
-    getInfoData(){
-      this.$axios.post('/api/profession-circle/detail',{
+   async getInfoData(){
+      await this.$axios.post('/api/profession-circle/detail',{
         profession_circle_id: this.id
       }).then( res =>{
         if( res.code == 0 ){
@@ -97,16 +138,54 @@ export default {
     clickName(i){
       console.log(i)
       this.$router.push({
-        path:'/myCircle',   //跳转的路径
+        path:'/circleCentre',   //跳转的路径
         query:{           //路由传参时push和query搭配使用 ，作用时传递参数
           id:i.id,
         }
       })
     },
+    // 点击评论
+    clickComment(i){
+      this.is_content = true;
+    },
     // 发布评论
     clickInfoVerifyBtn(){
-
+      let p = {
+        profession_circle_id: this.id,
+        content: this.content
+      }
+      this.$axios.post('/api/profession-circle/comment',p).then( res =>{
+        if( res.code == 0 ){
+          this.content = '';
+          this.is_content = false;
+          //获取职圈详情
+          this.getInfoData();
+        }
+      }).catch( e =>{
+        console.log(e)
+      })
     },
+    // 点击点赞
+    clickPoint(s,id){
+      let infoData = this.infoData;
+      let p = {
+        profession_circle_id: this.id,
+      }
+      if(s == 'commentID'){
+        // 职圈评论id
+        p.comment_id = id;
+      }
+      this.$axios.post('/api/profession-circle/point',p).then( res =>{
+        if( res.code == 0 ){
+          this.content = '';
+          this.is_content = false;
+          infoData.point_num++;
+          this.infoData = infoData;
+        }
+      }).catch( e =>{
+        console.log(e)
+      })
+    }
   },
 };
 </script>
@@ -152,11 +231,16 @@ export default {
                 display: flex;
                 align-items: center;
                 cursor: pointer;
-                img{
+                img.avatar-img{
                   width: 30px;
                   height: 30px;
                   border-radius: 50%;
                   margin-right: 8px;
+                }
+                img.right-one{
+                  width: 16px;
+                  height: 16px;
+                  margin: 0 8px;
                 }
                 span{
                   font-size: 14px;
@@ -227,7 +311,7 @@ export default {
               display: flex;
               align-items: center;
               justify-content: space-between;
-              margin-top: 20px;
+              margin-top: 1rem;
               padding: 0 20px;
               /deep/ .el-button{
                 padding: 0;
@@ -246,6 +330,47 @@ export default {
                 font-size: 0.7rem;
               }
             }
+            .comment-box{
+              width: 100%;
+              margin-top: 2rem;
+              .comment-title-box{
+                font-size: 0.8rem;
+                font-weight: bold;
+                color: $g_textColor;
+                line-height: 24px;
+                position: relative;
+                display: flex;
+                align-items: center;
+                &::after{
+                  width: 3px;
+                  height: 70%;
+                  content: '';
+                  background: $g_bg;
+                  position: absolute;
+                  left: 0;
+                  top: 50%;
+                  transform: translateY(-50%);
+                }
+                span{
+                  padding: 0 0.5rem;
+                }
+              }
+              .comment-list-box{
+                width: 100%;
+                margin-top: 0.8rem;
+                ul{
+                  width: 100%;
+                  li{
+                    width: 100%;
+                    margin-top: 0.8rem;
+                    .items-bottom-btn{
+                      margin-top: 0.4rem;
+                    }
+                  }
+                }
+              }
+            }
+
           }
 
         }

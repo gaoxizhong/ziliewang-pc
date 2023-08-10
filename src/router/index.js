@@ -94,6 +94,15 @@ export const constantRoutes = [
        },
       },
       {
+        path: '/circleCentre',
+        name: 'circleCentre',
+        component: () => import('@/views/talentSide/professionalCircle/circleCentre'),
+        meta: { 
+          title: '个人职圈',
+          keepAlive: true,
+       },
+      },
+      {
         path: '/circleDetails',
         name: 'circleDetails',
         component: () => import('@/views/talentSide/professionalCircle/circleDetails'),
