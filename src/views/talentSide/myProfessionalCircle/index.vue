@@ -59,7 +59,7 @@
             <el-tab-pane label="动态5" name="second"></el-tab-pane>
             <el-tab-pane label="评论5" name="fourth"></el-tab-pane>
           </el-tabs>
-          <div class="fb-btn">发布动态</div>
+          <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
         </div>
         <div class="info-right-container">
           <!-- 列表项 开始 -->
@@ -107,7 +107,14 @@
       <!-- 右侧模块 结束 -->
 
     </div>
-
+    <!-- 、、、、 发布弹窗 、、、、 -->
+    <el-dialog :visible.sync="dialogVisible" width="32rem" :before-close="handleClose">
+      <div>112</div>
+      <div slot="footer" class="dialog-footer">
+        <div><span>1</span><span>2</span><span>3</span></div>
+        <el-button type="primary" @click="clickMaskBtn">发布</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -121,6 +128,7 @@ export default {
     return{
       activeName: 'first',
       infoData:{}, // 信息
+      dialogVisible: false
     }
   },
   computed: {
@@ -131,6 +139,17 @@ export default {
     this.getUserProfile();
   },
   methods: {
+    // 点击发布
+    clickPublishBtn(){
+      this.dialogVisible = true;
+    },  
+    //点击弹窗发布按钮
+    clickMaskBtn(){
+      this.dialogVisible = false;
+    },
+    handleClose(done) {
+      this.dialogVisible = false;
+    },
     logout() {
       // debugger
       setToken('');
@@ -156,6 +175,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../styles/professionalCircle.scss';
-
+  @import '../../../styles/professionalCircle.scss';
+  #myProfessionalCircle /deep/ .el-dialog{
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+  }
 </style>
