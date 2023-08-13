@@ -2,7 +2,7 @@
   <!-- 我的简历页 -->
   <div class="container">
     <div class="tab-box">
-      <div :class="is_titleTab == 1? 'hover':'' " @click="clickTitleTab(1)">预览简历</div>
+      <div :class="is_titleTab == 1? 'hover':'' " @click="clickTitleTab_1(1)">预览简历</div>
       <div :class="is_titleTab == 2? 'hover':'' " @click="clickTitleTab(2)">刷新简历</div>
       <div :class="is_titleTab == 3? 'hover':'' " @click="clickTitleTab(3)">简历优化</div>
     </div>
@@ -52,9 +52,9 @@
 
           <div class="attachments-list-box">
             <div class="list-title">附件管理</div>
-            <div class="list-items" v-if="curriculum_vitae">
-              <span class="items-title">个人简历.pdf</span>
-              <img src="../../../assets/image/delete.png" alt="" class="img" @click="clickVitaeDelet"/>
+            <div class="list-items" v-if="curriculum_vitae != '' ">
+              <span class="items-title" @click.stop="clickVitae(curriculum_vitae)">个人简历.pdf</span>
+              <img src="../../../assets/image/delete.png" alt="" class="img" @click.stop="clickVitaeDelet"/>
             </div>
             <div v-else>
               <span>暂无</span>
@@ -100,6 +100,139 @@
       </div>
       <!-- 右侧模块 结束 -->
     </div>
+
+    <!-- 预览附件简历pdf 弹窗  -->
+    <div class="container-pdf">
+      <el-dialog title="附件预览" :center="false" :visible.sync="dialogVisible" width="800px" :before-close="handleClose">
+        <div class="pdf-preview-box">
+          <div class="pdfViewer" id="viewer">
+            <pdf :src="src" style="width: 100%;" :page="i" v-for="i in numPages" :key="i" ref="pdf"></pdf>
+          </div>
+        </div>
+      </el-dialog>
+    </div>
+    <!-- 预览在线简历 弹窗  -->
+    <div class="container-zx">
+      <el-dialog title="你的简历在BOSS侧展示如下" :center="false" :visible.sync="zx_dialogVisible" width="920px" :before-close="handleClose">
+        <div class="pc-preview-wrapper">
+          <!-- 个人信息 -->
+          <div class="resume-item item-base">
+            <div class="figure J_resume_baseMsg_headImgPreview">
+              <img :src="infoData.basic_info.avatar" alt="" class="cur-default"/>
+            </div>
+            <div class="item-right">
+              <div style="text-align: left;">
+                <h2 class="name">{{ infoData.basic_info.name }}</h2>
+                <div class="info-labels fr">
+                  <span class="label-text">
+                    <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
+                    <span>{{ infoData.basic_info.birth_year_month?infoData.basic_info.birth_year_month:'30岁' }}</span>
+                  </span>
+                  <em class="vline"></em>
+                  <span class="label-text">
+                    <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
+                    <span>{{ infoData.basic_info.work_year?infoData.basic_info.work_year:'6年经验' }}</span>
+                  </span>
+                  <em class="vline"></em>
+                  <span class="label-text">
+                    <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
+                    <span>{{ infoData.basic_info.work_status_desc }}</span>
+                  </span>
+                </div>
+              </div>
+              <div class="text selfDescription">{{ infoData.basic_info.advantages_highlights }}</div>
+            </div>
+          </div>
+          <!-- 期望职位 -->
+          <div class="resume-item">
+            <h3 class="title">期望职位</h3>
+            <div class="item-right">
+
+              <div style="text-align: left;" v-for="(items,idx) in infoData.job_expectation" :key="idx">
+                <div class="info-labels">
+                  <span class="label-text">{{ items.desired_position }}</span>
+                  <em class="vline"></em>
+                  <span class="label-text">{{ items.desired_industry }}</span>
+                  <em class="vline"></em>
+                  <span class="label-text">{{ items.expected_salary }}</span>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          <!-- 工作经历 -->
+          <div class="resume-item">
+            <h3 class="title">工作经历</h3>
+            <div class="item-right">
+              <div class="history-list">
+                <div class="history-item" v-for="(items,idx) in infoData.work_experience" :key="idx">
+                  <span class="period">{{ items.begin_date }} - {{ items.end_date }}</span>
+                  <h4 class="name">
+                    <span>{{ items.company_name }}</span>
+                    <em class="vline"></em>
+                    <span>{{ items.position }}</span>
+                  </h4>
+                  <div class="item-text">
+                    <span class="project-title">内容：</span>
+                    <div class="text" v-html="items.responsibility_performance"></div>
+                    <!-- <p class="tags">
+                      <span></span>
+                    </p> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 项目经历 -->
+          <div class="resume-item">
+            <h3 class="title">项目经历</h3>
+            <div class="item-right">
+              <div class="history-list">
+                <div class="history-item" v-for="(items,idx) in infoData.project_experience" :key="idx">
+                  <span class="period">{{ items.begin_date }} - {{ items.end_date }}</span>
+                  <h4 class="name">
+                    <span>{{ items.project_name }}</span>
+                    <em class="vline"></em>
+                    <span>{{ items.position }}</span>
+                  </h4>
+                  <div class="item-text">
+                    <span class="project-title">内容：</span>
+                    <div class="text" v-html="items.job_content"></div>
+                    <!-- <p class="tags">
+                      <span></span>
+                    </p> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 教育经历 -->
+          <div class="resume-item">
+            <h3 class="title">教育经历</h3>
+            <div class="item-right">
+              <div class="history-list">
+                <div class="history-item" v-for="(items,idx) in infoData.education_experience" :key="idx">
+                  <span class="period">{{ items.school_date }}</span>
+                  <h4 class="name">
+                    <b>{{ items.school }}</b>
+                    <em class="vline"></em> 
+                    <b>{{ items.specialty }}</b>
+                    <em class="vline"></em>
+                    <b>{{ items.education_background }}</b>
+                  </h4>
+                  <!-- <p class="tags school-tags">
+                    <span class="blue">211院校</span>
+                  </p> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
+    </div>
+
+
+    
   </div>
 
 </template>
@@ -110,6 +243,7 @@ import JobExpectation from "../components/myResume/jobExpectation";
 import WorkExperience from "../components/myResume/workExperience";
 import ProjectExperience from "../components/myResume/projectExperience";
 import EducationExperience from "../components/myResume/educationExperience";
+import pdf from 'vue-pdf';
 export default {
   name: 'myResume',
   components: {
@@ -117,7 +251,8 @@ export default {
     JobExpectation,
     WorkExperience,
     ProjectExperience,
-    EducationExperience
+    EducationExperience,
+    pdf,
   },
   data(){
     return{
@@ -125,6 +260,11 @@ export default {
       infoData:{}, // 信息
       accept:'.pdf', // 接受上传文件
       curriculum_vitae: "", // 附件简历
+      dialogVisible: false,
+      zx_dialogVisible: false,
+      pdfUrl:'',
+      src:'',
+      numPages: 0
     }
   },
   computed: {
@@ -138,13 +278,49 @@ export default {
     this.getUserProfile();
   },
   methods: {
-    
+    handleClose(done) {
+      this.dialogVisible = false;
+      this.zx_dialogVisible = false;
+
+    },
+    // 点击附件简历名称---预览
+    clickVitae(url){
+      this.pdfUrl = url;
+      // 有时PDF文件地址会出现跨域的情况,这里最好处理一下
+      this.src = pdf.createLoadingTask(this.pdfUrl);
+      this.getPDFnums(this.pdfUrl);
+      this.dialogVisible = true;
+    },
+
+    //计算pdf页码总数
+    getPDFnums(url) {
+      this.loading = true
+      //let loadURL = pdf.createLoadingTask(url)
+      let loadURL = pdf.createLoadingTask({
+        url: url,//你的pdf地址
+      })
+
+      loadURL.promise.then(pdf => {
+          this.numPages = pdf.numPages
+          this.$set(this, 'docsPDF.numPages', pdf.numPages)
+          this.loading = false
+      }).catch(err => {
+          this.loading = false;
+          this.loadingError = true;
+      })
+    },
     // 刷新信息
     refreshInfo(){
       this.getUserProfile();
     },
-    clickTitleTab(n){
-      this.is_titleTab = n;
+    // clickTitleTab(n){
+    //   this.is_titleTab = n;
+    //   if(n == 1){
+    //     this.zx_dialogVisible = !this.zx_dialogVisible
+    //   }
+    // },
+    clickTitleTab_1(){
+      this.zx_dialogVisible = !this.zx_dialogVisible
     },
     
    // 获取个人信息
@@ -412,6 +588,210 @@ export default {
   }
 
 }
+.container-pdf /deep/ .el-dialog{
+  min-width: 320px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: 0 !important;
+  .el-dialog__header{
+    text-align: left;
+    .el-dialog__title{
+      font-size: 15px;
+      color: $g_textColor;
+    }
+  }
+  .el-dialog__body{
+    height: calc(100vh - 128px);
+    overflow: hidden;
+    padding: 20px;
+    .pdf-preview-box{
+      width: 794px;
+      height: calc(100vh - 172px);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+  
+}
+.container-zx /deep/ .el-dialog{
+  min-width: 320px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-top: 0 !important;
+  .el-dialog__header{
+    text-align: left;
+    .el-dialog__title{
+      font-size: 16px;
+      color: $g_textColor;
+    }
+  }
+  .el-dialog__body{
+    padding: 20px 30px 30px;
+    height: calc(100vh - 128px);
+    overflow: overlay;
+    padding: 20px;
+    .pc-preview-wrapper{
+      border-radius: 4px;
+      border: 1px solid #e3e7ed;
+      padding: 20px 40px;
+      color: #414a60;
+      line-height: 26px;
+      .resume-item{
+        display: block;
+        zoom: 1;
+        position: relative;
+        padding-top: 18px;
+        overflow: hidden;
+        &:first-child {
+          padding-top: 0;
+        }
+        .figure {
+          float: left;
+        }
+        .J_resume_baseMsg_headImgPreview {
+          position: relative;
+          z-index: 99;
+        }
+        img{
+          width: 60px;
+          height: 60px;
+          border-radius: 100%;
+          cursor: default;
+        }
+        .item-right {
+          position: relative;
+          padding-left: 80px;
+          vertical-align: top;
+          padding-top: 2px;
+          h2.name{
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: inline-block;
+            position: relative;
+          }
+          .info-labels {
+            font-size: 0;
+            padding: 0;
+            .label-text{
+              display: inline-block;
+              vertical-align: middle;
+              font-size: 13px;
+              img{
+                width: 14px;
+                height: 14px;
+              }
+            }
+            .vline {
+              margin: 0 0.9rem;
+            }
+            .fz {
+              margin-left: 5px;
+              display: inline-block;
+              width: 16px;
+              vertical-align: middle;
+            }
+          }
+          .fr {
+            float: right;
+          }
+          .text {
+            color: #61687c;
+            font-size: 13px;
+            line-height: 26px;
+            position: relative;
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: pre-line;
+            max-width: 600px;
+            text-align: left;
+          }
 
+          .history-item{
+            padding-top: 20px;
+            position: relative;
+            text-align: left;
+            &:first-child {
+              padding-top: 0;
+            }
+            .period {
+              float: right;
+              color: #9fa3b0;
+              font-size: 12px;
+            }
+            h4.name {
+              font-weight: 500;
+              position: relative;
+              color: #414a60;
+              span,b {
+                font-weight: 500;
+              }
+              .vline {
+                margin: 0 18px;
+              }
+            }
+            .item-text {
+              position: relative;
+              margin-top: 25px;
+              min-height: 26px;
+              color: #9fa3b0;
+              .text {
+                color: #51586d;
+                font-size: 13px;
+                line-height: 26px;
+                position: relative;
+                word-wrap: break-word;
+                word-break: break-all;
+                white-space: pre-line;
+                max-width: 600px;
+                padding-top: 10px;
+              }
+              .tags {
+                margin-top: 15px;
+                padding-bottom: 5px;
+                span {
+                  display: inline-block;
+                  border: 1px solid #e3e7ed;
+                  border-radius: 15px;
+                  margin-right: 12px;
+                  font-size: 12px;
+                  line-height: 22px;
+                  padding: 0 15px;
+                  color: #9fa3b0;
+                }
+              }
+            }
+          }
+          .project-title {
+            font-weight: 500;
+            line-height: 20px;
+            width: 60px;
+            text-align: right;
+            box-sizing: border-box;
+            padding-right: 4px;
+            color: #51586d;
+          }
+          
+        }
+        .title{
+          float: left;
+          font-size: 14px;
+          color: #414a60;
+          width: 70px;
+          font-weight: 500;
+        }
+      }
+     
+
+    }
+  }
+}
+.vline {
+  width: 1px;
+  height: 12px;
+  vertical-align: middle;
+  background: #e0e0e0;
+  margin: 0 10px;
+  display: inline-block;
+}
 
 </style>

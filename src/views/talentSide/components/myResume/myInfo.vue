@@ -25,11 +25,11 @@
           <ul class="info-2">
             <li>
               <img src="../../../../assets/image/Frame_1.png" alt="">
-              <span>{{ data.birth_year_month?data.birth_year_month:'无' }}</span>
+              <span>{{ data.birth_year_month?data.birth_year_month:'30岁' }}</span>
             </li>
             <li>
               <img src="../../../../assets/image/Frame_2.png" alt="">
-              <span>{{ data.work_year?data.work_year:'无' }}</span>
+              <span>{{ data.work_year?data.work_year:'6年经验' }}</span>
             </li>
             <li>
               <img src="../../../../assets/image/Frame_5.png" alt="">
@@ -37,10 +37,7 @@
             </li>
             <li>
               <img src="../../../../assets/image/Frame_5.png" alt="">
-              <span v-if="data.work_status == 2">在职不考虑</span>
-              <span v-else-if="data.work_status == 3">在职，看看新机会</span>
-              <span v-else-if="data.work_status == 4">离职</span>
-              <span v-else>离职</span>
+              <span>{{ data.work_status_desc }}</span>
             </li>
           </ul>
           <ul class="info-2">
@@ -291,6 +288,9 @@ export default {
         phone: this.infoData.real_phone,
         email: this.infoData.real_email,
         work_status: this.infoData.work_status,
+        birth_year_month: this.infoData.birth_year_month,
+        work_year: this.infoData.work_year,
+        location: this.infoData.location
       }
       if(p.name == ''){
         this.$message.warning('姓名不能为空!');

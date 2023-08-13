@@ -6,23 +6,27 @@
       <div class="info-left-box">
         <div class="left-box user-top-box">
           <div class="user-top">
-            <img src="../../../../assets/image/img-user.jpg" alt="" class="user-img"/>
-            <p class="user-name">回忆那么美</p>
-            <div class="gz-sx-btn">
-              <div class="left">
+            <img :src="infoData.avatar" alt="" class="user-img"/>
+            <p class="user-name">{{ infoData.real_name }}</p>
+            <div class="gz-sx-btn" v-if="uid != see_uid">
+              <div class="left" @click="clickAttention" v-if=" infoData.is_already_attention ==  2">
                 <img src="../../../../assets/image/Frame_10.png" alt="" />
                 <span>关注</span>
+              </div>
+              <div class="left" @click="clickCancelAttention" v-if=" infoData.is_already_attention ==  1">
+                <img src="../../../../assets/image/Frame_10.png" alt="" />
+                <span>已关注</span>
               </div>
               <div class="right">发私信</div>
             </div>
           </div>
           <div class="user-top-num">
             <div>
-              <span class="title">2</span>
+              <span class="title">{{ infoData.attention_num }}</span>
               <span class="text">关注</span>
             </div>
             <div>
-              <span class="title">2</span>
+              <span class="title">{{ infoData.fan_num }}</span>
               <span class="text">粉丝</span>
             </div>
           </div>
@@ -32,17 +36,17 @@
           <div class="m-items-box">
             <img src="../../../../assets/image/shopping-mall.png" alt="" />
             <span>就职于</span>
-            <p>宁波荣胜网络科技有限公司</p>
+            <p>{{ infoData.company_name }}</p>
           </div>
           <div class="m-items-box">
             <img src="../../../../assets/image/handbag.png" alt="" />
             <span>职位</span>
-            <p>设计主管</p>
+            <p>{{ infoData.position }}</p>
           </div>
           <div class="m-items-box">
             <img src="../../../../assets/image/user-business.png" alt="" />
             <span>目前状态</span>
-            <p>离职中</p>
+            <p>{{ infoData.work_status_desc }}</p>
           </div>
         </div>
 
@@ -52,44 +56,41 @@
       <div class="info-right-box">
         <div class="info-right-top">
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="全部10" name="first"></el-tab-pane>
-            <el-tab-pane label="动态5" name="second"></el-tab-pane>
-            <el-tab-pane label="评论5" name="fourth"></el-tab-pane>
+            <el-tab-pane :label=" `全部${count_list.all_count}` " name="first"></el-tab-pane>
+            <el-tab-pane :label=" `动态${count_list.dynamic_state_Count}` " name="second"></el-tab-pane>
+            <el-tab-pane :label=" `评论${count_list.comment_count}` " name="fourth"></el-tab-pane>
           </el-tabs>
         </div>
         <div class="info-right-container">
           <!-- 列表项 开始 -->
-          <div class="container-items-box">
-            <div class="right-container-title"><span>回忆那么真</span><span>发布了动态</span></div>
+          <div class="container-items-box" v-for="(item,index) in infoList" :key="index">
+            <!-- <div class="right-container-title"><span>回忆那么真</span><span>发布了动态</span></div> -->
             <div class="right-container-item">
               <div class="title">
                 <div class="title-left">
-                  <img src="../../../../assets/image/img-user.jpg" alt="" />
-                  <span>匿名用户</span>
+                  <img :src="infoData.avatar" alt="" />
+                  <span>{{ infoData.name }}</span>
                 </div>
-                <div class="title-t">2023-02-19</div>
+                <div class="title-t">{{ item.createtime }}</div>
               </div>
 
               <div class="items-c-box">
-                <div class="items-c-p">
-                  如果你没有任何工作经历，还想了解夕阳代加工制造业的兴衰成败，你可以加入这个公司该公司会让你深刻了解体会到***丝公司逆袭成功以后的一系列头疼问题，在这里你体会到的是社会最底层的痛苦挣扎...
-                </div>
+                <div class="items-c-p">{{ item.content }}</div>
                 <div class="items-img-box">
-                  <img src="../../../../assets/image/demo2.png" alt="" />
-                  <img src="../../../../assets/image/demo2.png" alt="" />
+                  <img :src="item.images" alt="" />
                 </div>
                 <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
                     <img src="../../../../assets/image/preview-open.png" alt="" />
-                    <span>1801阅读</span>
+                    <span>{{ item.comment_num }}阅读</span>
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../../assets/image/thumbs-up.png" alt="" />
-                    <span>15点赞</span>
+                    <span>{{ item.point_num }}点赞</span>
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../../assets/image/comment.png" alt="" />
-                    <span>2评论</span>
+                    <span>{{ item.read_num }}评论</span>
                   </div>
                 </div>
               </div>
@@ -117,10 +118,18 @@ export default {
     return{
       activeName: 'first',
       infoData:{}, // 信息
+      infoList:[],
+      count_list:{},
+      see_uid:'',
+      uid:''
     }
   },
   computed: {
     
+  },
+  created(){
+    this.see_uid = this.$route.query.see_uid;
+    this.uid = localStorage.getItem('realUid');
   },
   mounted(){
     // 获取用户信息
@@ -132,9 +141,38 @@ export default {
     },
     // 获取用户信息
     getUserProfile(){
-      this.$axios.post('',{}).then( res =>{
+      this.$axios.post('/api/profession-circle/my',{
+        see_uid: this.see_uid
+      }).then( res =>{
         if(res.code == 0){
-        this.infoData = res.data;
+          this.infoData = res.data.users;
+          this.infoList = res.data.list;
+          this.count_list = res.data.count_list;
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
+    // 点击关注
+    clickAttention(){
+      this.$axios.post('/api/user-attention/attention',{
+        attention_uid: this.see_uid
+      }).then( res =>{
+        if(res.code == 0){
+          this.$message.success('关注成功！');
+          this.getUserProfile();
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
+    // 取消关注
+    clickCancelAttention(){
+      this.$axios.post('/api/user-attention/cancel-attention',{
+        attention_uid: this.see_uid
+      }).then( res =>{
+        if(res.code == 0){
+          this.$message.success('取消成功！');
         }
       }).catch(e =>{
         console.log(e)

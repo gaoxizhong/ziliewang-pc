@@ -112,7 +112,6 @@ export default {
 
   created(){
     this.id = this.$route.query.id;
-   
   },
   mounted(){
     //获取职圈详情
@@ -140,7 +139,7 @@ export default {
       this.$router.push({
         path:'/circleCentre',   //跳转的路径
         query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-          id:i.id,
+          see_uid:i.uid,
         }
       })
     },

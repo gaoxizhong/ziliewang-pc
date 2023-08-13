@@ -31,7 +31,7 @@
         </div>
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
-            <img :src="require('../../../assets/image/img-user.jpg')" class="user-avatar" />
+            <img :src=" avatar ? avatar : require('../../../assets/image/img-user.jpg')" class="user-avatar" />
             <span class="username">{{ name }}</span>
             <i class="el-icon-caret-bottom" />
           </div>
@@ -63,6 +63,9 @@ export default {
     name() {
       return localStorage.getItem('realname')
     },
+    avatar() {
+      return localStorage.getItem('realAvatar')
+    },
     activeMenu() {
       const route = this.$route;
       const { meta, path } = route;
@@ -72,7 +75,9 @@ export default {
       return path;
     },
   },
+  mounted() {
 
+  },
   methods: {
    
     logout() {

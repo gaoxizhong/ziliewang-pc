@@ -12,7 +12,7 @@ export const constantRoutes = [
     hidden: true,
     meta: { 
       title: '登录',
-   },
+    },
   },
 
   {
@@ -37,7 +37,7 @@ export const constantRoutes = [
         meta: { 
           title: '首页',
           keepAlive: true,
-       },
+        },
       },
       {
         path: '/position',
@@ -46,7 +46,7 @@ export const constantRoutes = [
         meta: { 
           title: '职位',
           keepAlive: true,
-       },
+        },
       },
       {
         path: '/myResume',
@@ -55,7 +55,7 @@ export const constantRoutes = [
         meta: { 
           title: '我的简历',
           keepAlive: true,
-       },
+        },
       },
       {
         path: '/myDelivery',
@@ -64,7 +64,7 @@ export const constantRoutes = [
         meta: { 
           title: '我的投递',
           keepAlive: true,
-       },
+        },
       },
       {
         path: '/myProfessionalCircle',
@@ -72,8 +72,8 @@ export const constantRoutes = [
         component: () => import('@/views/talentSide/myProfessionalCircle/index.vue'),
         meta: { 
           title: '我的职圈',
-          keepAlive: true,
-       },
+          // keepAlive: true,
+        },
       },
       {
         path: '/talentSideSettings',
@@ -82,7 +82,7 @@ export const constantRoutes = [
         meta: { 
           title: '设置',
           keepAlive: true,
-       },
+        },
       },
       {
         path: '/professionalCircle',
@@ -91,7 +91,7 @@ export const constantRoutes = [
         meta: { 
           title: '职圈',
           keepAlive: true,
-       },
+        },
       },
       {
         path: '/circleCentre',
@@ -100,7 +100,7 @@ export const constantRoutes = [
         meta: { 
           title: '个人职圈',
           keepAlive: true,
-       },
+        },
       },
       {
         path: '/circleDetails',
@@ -109,7 +109,7 @@ export const constantRoutes = [
         meta: { 
           title: '帖子详情',
           keepAlive: true,
-       },
+        },
       },
     ]
   },
