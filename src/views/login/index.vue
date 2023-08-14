@@ -237,7 +237,7 @@ export default {
         setToken(data.token);   // 缓存
         localStorage.setItem('realname', data.user.real_name); // 缓存
         localStorage.setItem('realAvatar', data.user.avatar); // 缓存
-        localStorage.setItem('realUid', data.user.realUid); // 缓存
+        localStorage.setItem('realUid', data.user.uid); // 缓存
         setTimeout(() => {
           // 此时要判断/login后面的参数redirect，若无参数，进入主页；
           // 若有参数则参数为未有权限的那个路由，跳转到那个路由

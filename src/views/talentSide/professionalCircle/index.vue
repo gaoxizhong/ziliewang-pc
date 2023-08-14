@@ -102,12 +102,19 @@ export default {
     // 点击头像、名称
     clickName(i){
       console.log(i)
-      this.$router.push({
-        path:'/circleCentre',   //跳转的路径
-        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-          id:i.id,
-        }
-      })
+      let uid = localStorage.getItem('realUid');
+      if(uid == i.uid){
+        // 是自己
+        this.$router.push({ path:'/myProfessionalCircle' })
+      }else{
+        this.$router.push({
+          path:'/circleCentre',   //跳转的路径
+          query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+            see_uid:i.uid,
+          }
+        })
+      }
+      
     },
     // 点击列表
     clicklistItems(i){

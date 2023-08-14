@@ -17,11 +17,11 @@
             </div> -->
           </div>
           <div class="user-top-num">
-            <div>
+            <div @click="clickAttention">
               <span class="title">{{ infoData.attention_num }}</span>
               <span class="text">关注</span>
             </div>
-            <div>
+            <div @click="clickFan">
               <span class="title">{{ infoData.fan_num }}</span>
               <span class="text">粉丝</span>
             </div>
