@@ -279,7 +279,7 @@ export default {
       }
     }
     .info-right-box{
-      width: 19rem;
+      width: 380px;
       padding-left: 0.8rem;
     }
   }

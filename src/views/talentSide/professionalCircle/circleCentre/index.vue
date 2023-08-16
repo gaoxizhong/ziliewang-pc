@@ -57,7 +57,7 @@
         <div class="info-right-top">
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane :label=" `全部${count_list.all_count}` " name="first"></el-tab-pane>
-            <el-tab-pane :label=" `动态${count_list.dynamic_state_Count}` " name="second"></el-tab-pane>
+            <el-tab-pane :label=" `动态${count_list.dynamic_state_count}` " name="second"></el-tab-pane>
             <el-tab-pane :label=" `评论${count_list.comment_count}` " name="fourth"></el-tab-pane>
           </el-tabs>
         </div>
@@ -86,7 +86,7 @@
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../../assets/image/thumbs-up.png" alt="" />
-                    <span>{{ item.point_num }}点赞</span>
+                    <span>{{ item.point_num }}赞</span>
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../../assets/image/comment.png" alt="" />

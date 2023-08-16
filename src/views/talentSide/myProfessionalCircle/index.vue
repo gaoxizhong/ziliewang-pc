@@ -56,7 +56,7 @@
         <div class="info-right-top">
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane :label=" `全部${count_list.all_count}` " name="first"></el-tab-pane>
-            <el-tab-pane :label=" `动态${count_list.dynamic_state_Count}` " name="second"></el-tab-pane>
+            <el-tab-pane :label=" `动态${count_list.dynamic_state_count}` " name="second"></el-tab-pane>
             <el-tab-pane :label=" `评论${count_list.comment_count}` " name="fourth"></el-tab-pane>
           </el-tabs>
           <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
@@ -77,7 +77,7 @@
               <div class="items-c-box">
                 <div class="items-c-p">{{ item.content }}</div>
                 <div class="items-img-box">
-                  <img :src="item.images" alt="" />
+                  <img :src="items" alt="" v-for="(items,idx) in item.images" :key="idx"/>
                 </div>
                 <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
@@ -86,7 +86,7 @@
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/thumbs-up.png" alt="" />
-                    <span>{{ item.point_num }}点赞</span>
+                    <span>{{ item.point_num }}赞</span>
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/comment.png" alt="" />
@@ -177,6 +177,15 @@ export default {
     this.getMyProfessionCircle();
   },
   methods: {
+
+    // 点击关注
+    clickAttention(){
+
+    },
+    // 点击粉丝
+    clickFan(){
+
+    },
     // 点击发布
     clickPublishBtn(){
       this.dialogVisible = true;
@@ -188,10 +197,12 @@ export default {
       upImgList.forEach( ele =>{
         images.push(ele.upload_files_path)
       })
+      let str = images.toString(',');
       let p = {
         content: this.textarea,
-        images
+        images: str
       }
+
       if( !this.is_return ){
         return
       }
@@ -242,7 +253,7 @@ export default {
       const formData = new FormData();
       formData.append('file[]',param.file);
       formData.append('pictureCategory','articleCover');
-      formData.append('up_tag','avatar');
+      formData.append('up_tag','other');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
         console.log(res)
         let data = res.data;
