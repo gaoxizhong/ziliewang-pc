@@ -111,6 +111,15 @@ export const constantRoutes = [
           keepAlive: true,
         },
       },
+      {
+        path: '/attentionFans',
+        name: 'attentionFans',
+        component: () => import('@/views/talentSide/attentionFans'),
+        meta: { 
+          title: '关注',
+          // keepAlive: true,
+        },
+      },
     ]
   },
 ];

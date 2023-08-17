@@ -34,8 +34,23 @@
                 <span class="firm-info-2">新能源新三板上市100-499人</span>
               </div>
             </div>
-            <div class="items-right-box">
+            <div class="items-right-box" v-if="tag == 'myDelivery'">
+              <div class="quan"></div>
               <div class="right-c"></div>
+              <div class="right-status-box">
+                <div class="right-status-text">
+                  <span>已投递</span>
+                  <i class="el-icon-arrow-right"></i>
+                </div>
+                <div class="status-time">2023-03-21 14:41</div>
+              </div>
+             
+            </div>
+
+            <div class="items-right-box" style="flex-direction: column;justify-content: center;" v-if="tag == 'myCollection'">
+              <img src="../../../assets/image/img-user.jpg" alt="" class="items-boss-img" />
+              <div class="items-boss-name">刘女士</div>
+              <div class="items-boss-g">人事</div>
             </div>
           </div>
 
@@ -46,7 +61,18 @@
 
       <!-- 右侧模块 开始 -->
       <div class="info-right-box">
-        <div class="right-box">2</div>
+        <div class="right-box">
+          <div class="users-box">
+            <img src="../../../assets/image/img-user.jpg" alt="" class="img-user"/>
+            <div class="users-right">
+              <div class="users-name">
+                <span class="span-1">张三</span>
+                <img src="../../../assets/image/sex-1.png" alt="" class="img-sex"/>
+              </div>
+              <div class="wcd-box">简历完整度75%</div>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- 右侧模块 结束 -->
 
@@ -188,6 +214,9 @@ export default {
           }
           .items-right-box{
             width: 160px;
+            position: relative;
+            display: flex;
+            align-items: center;
             .right-c{
               width: 0;
               height: 100%;
@@ -195,6 +224,55 @@ export default {
               border: 1px dashed;
               border-image: linear-gradient(180deg, rgba(255, 117, 26, 0), rgba(255, 100, 0, 1), rgba(255, 117, 26, 0)) 1 1;
             }
+            .quan{
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              background: #FF751A;
+              position: absolute;
+              left: -3px;
+              top: 50%;
+              transform: translateY(-50%);
+            }
+            .right-status-box{
+              padding-left: 10px;
+              .right-status-text{
+                display: flex;
+                align-items: center;
+                font-size: 14px;
+                font-weight: bold;
+                color: #FF751A;
+                line-height: 22px;
+                cursor: pointer;
+                i{
+                  margin-left: 4px;
+                }
+              }
+              .status-time{
+                font-size: 12px;
+                font-weight: 400;
+                color: #86909C;
+                line-height: 20px;
+              }
+            }
+            .items-boss-img{
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+            }
+            .items-boss-name{
+              font-size: 14px;
+              font-weight: 400;
+              color: #1D2129;
+              line-height: 22px;
+            }
+            .items-boss-g{
+              font-size: 12px;
+              font-weight: 400;
+              color: #86909C;
+              line-height: 20px;
+            }
+           
           }
 
         }
@@ -208,6 +286,46 @@ export default {
         border-radius: 6px ;
         opacity: 1;
         padding: 1.2rem;
+        text-align: left;
+        .users-box{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          img.img-user {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid #F2F3F5;
+          }
+          .users-right{
+            flex: 1;
+            padding-left: 8px;
+            .users-name{
+              display: flex;
+              align-items: center;
+              .span-1{
+                font-size: 20px;
+                font-weight: bold;
+                color: $g_textColor;
+                line-height: 28px;
+              }
+              .img-sex{
+                width: 18px;
+                height: 18px;
+                margin-left: 16px;
+              }
+
+            }
+          }
+
+        }
+        .wcd-box{
+          margin-top: 8px;
+          font-size: 14px;
+          font-weight: 400;
+          color: #86909C;
+          line-height: 22px;
+        }
       }
     }
   }

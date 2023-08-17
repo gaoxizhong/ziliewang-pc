@@ -1,0 +1,319 @@
+<template>
+  <div>
+    <div class="container-title-box">
+      <el-tabs v-model="tag" @tab-click="handleClick">
+        <el-tab-pane label="评论与回复" name="pingl-hf">
+          <div class="container info-box">
+            <!-- 列表项 开始 -->
+            <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
+              <div class="items-left-box">
+                <div class="title-t">{{ item.createtime }}</div>
+                <div class="items-info-box">
+                  <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
+                  <div class="name-corporation">
+                    <div class="text-1"><span class="text-1-span1">{{ item.users.real_name }}</span><span class="text-1-span2">评论了你的动态</span></div>
+                    <div class="text-3">
+                      找工作都快eom了，请问根据我的工作经验，有什么好的推荐吗，UI设计师会被ai取代吗
+                    </div>
+                    <div class="text-2">
+                      <span>丨 目前应该不会，以后难说的很。</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 列表项 结束 -->
+          </div>
+        </el-tab-pane>
+        <!-- 关注 -->
+        <el-tab-pane label="关注" name="attention">
+          <div class="container info-box">
+            <!-- 列表项 开始 -->
+            <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
+              <div class="items-left-box">
+                <div class="title-t">{{ item.createtime }}</div>
+                <div class="items-info-box">
+                  <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
+                  <div class="name-corporation">
+                    <div class="text-1"><span>{{ item.users.real_name }}</span><span class="text-1-span2" v-if="tag == 'fans'">关注了你</span></div>
+                    <div class="text-2">
+                      <span>{{ item.users.company_name?item.users.company_name:'无' }}</span>
+                      <span class="span-2">|</span>
+                      <span>{{ item.users.position?item.users.position:'无'}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="items-right-box">
+                <div class="right-btn type-1" v-if="item.status == 2" @click.stop="addAttention(item)">
+                  <img src="../../../assets/image/icon-plus.png" alt="" />
+                  <span>关注</span>
+                </div>
+                <div class="right-btn type-2" v-if="item.status == 1" @click.stop="cancelAttention(item)">
+                  <span>已关注</span>
+                </div>
+              </div>
+            </div>
+            <!-- 列表项 结束 -->
+          </div>
+        </el-tab-pane>
+        <!-- 粉丝 -->
+        <el-tab-pane label="粉丝" name="fans">
+          <div class="container info-box">
+            <!-- 列表项 开始 -->
+            <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
+              <div class="items-left-box">
+                <div class="title-t">{{ item.createtime }}</div>
+                <div class="items-info-box">
+                  <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
+                  <div class="name-corporation">
+                    <div class="text-1"><span>{{ item.users.real_name }}</span><span class="text-1-span2" v-if="tag == 'fans'">关注了你</span></div>
+                    <div class="text-2">
+                      <span>{{ item.users.company_name?item.users.company_name:'无' }}</span>
+                      <span class="span-2">|</span>
+                      <span>{{ item.users.position?item.users.position:'无'}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="items-right-box">
+                <div class="right-btn type-1" v-if="item.status == 2" @click.stop="addAttention(item)">
+                  <img src="../../../assets/image/icon-plus.png" alt="" />
+                  <span>回关</span>
+                </div>
+                <div class="right-btn type-2" v-if="item.status == 1" @click.stop="cancelAttention(item)">
+                  <span>已关注</span>
+                </div>
+
+              </div>
+            </div>
+            <!-- 列表项 结束 -->
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+  </div>
+
+</template>
+
+<script>
+export default {
+  name: 'attentionFans',
+  components: {
+  },
+  data(){
+    return{
+      tag: 'attention',
+      page: 1,
+      dataList:[],
+      see_uid: '', // 被查看的ID
+    }
+  },
+  computed: {
+    
+  },
+  created(){
+    this.tag = this.$route.query.tag;
+    this.see_uid = this.$route.query.see_uid;
+  }, 
+  mounted(){
+    if(this.tag == 'attention' || this.tag == 'fans'){
+      this.getList();
+    }
+  },
+  methods: {
+    handleClick(tab, event){
+      console.log(tab.name)
+      this.page = 1;
+
+      //  关注/ 粉丝
+      if(tab.name == 'attention' || tab.name == 'fans' ){
+        this.getList();
+      }
+    },
+    getList(){
+      this.$axios.post('/api/user-attention-fans/list',{
+        page: this.page,
+        tag: this.tag,
+        see_uid: this.see_uid
+      }).then(res =>{
+        if(res.code == 0){
+          this.dataList = res.data
+        }
+      })
+    },
+    // 点击头像、名称
+    clickName(i){
+      console.log(i)
+      let uid = localStorage.getItem('realUid');
+      if(uid == i.uid){
+        // 是自己
+        this.$router.push({ path:'/myProfessionalCircle' })
+      }else{
+        this.$router.push({
+          path:'/circleCentre',   //跳转的路径
+          query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+            see_uid:i.uid,
+          }
+        })
+      }
+      
+    },
+    // 关注
+    addAttention(i){
+      this.$axios.post('/api/user-attention/attention',{
+        attention_uid: i.uid
+      }).then( res =>{
+        if(res.code == 0){
+          this.$message.success('关注成功！');
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
+    // 取消关注
+    cancelAttention(i){
+      
+      this.$axios.post('/api/user-attention/cancel-attention',{
+        attention_uid: i.uid
+      }).then( res =>{
+        if(res.code == 0){
+          this.$message.success('取消成功！');
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
+  
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+  .container-title-box{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    /deep/ .el-tabs{
+        height: 100%;
+        width: 100%;
+        .el-tabs__header {
+          height: 100%;
+          background: #FFFFFF;
+          .el-tabs__nav-wrap{
+            height: 100%;
+            line-height: 3rem;
+            &::after{
+              height: 0;
+            }
+            .el-tabs__nav-scroll {
+              height: 100%;
+              padding: 0 20px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              .el-tabs__item.is-active{
+                color: $g_color;
+              }
+              .el-tabs__active-bar{
+                bottom: 1px;
+                background-color: $g_bg;
+              }
+            }
+          }
+        }
+      }
+  }
+  .info-box{
+    width: 1200px !important;
+    margin: 0 auto;
+    width: 100%;
+    text-align: left;
+    padding: 0.8rem;
+    background: #fff;
+    border-radius: 4px;
+    .container-items-box{
+      width: 100%;
+      padding: 0.8rem 1.3rem;
+      display: flex;
+      .items-left-box{
+        flex: 1;
+        .title-t{
+          font-size: 14px;
+          font-weight: 400;
+          color: #86909C;
+          line-height: 22px;
+        }
+        .items-info-box{
+          display: flex;
+          align-items: center;
+          margin-top: 1rem;
+          img{
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+          }
+          .name-corporation{
+            flex: 1;
+            margin-left: 0.8rem;
+            .text-1{
+              font-size: 15px;
+              color: $g_color;
+              .text-1-span2{
+                font-size: 14px;
+                padding-left: 10px;
+                color: $g_textColor;
+              }
+            }
+            .text-2{
+              margin-top: 0.4rem;
+              font-size: 14px;
+              color: #86909C;
+              .span-2{
+                padding: 0 8px;
+              }
+            }
+            .text-3{
+              margin-top: 10px;
+              font-size: 14px;
+              font-weight: 400;
+              color: $g_textColor;
+              line-height: 24px;
+            }
+          }
+        }
+      }
+      .items-right-box{
+        width: auto;
+        display: flex;
+        align-items: center;
+        .right-btn{
+          width: auto;
+          border-radius: 2px ;
+          font-size: 14px;
+          line-height: 22px;
+          padding: 5px 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          img{
+            width: 14px;
+            height: 14px;
+            margin-right: 8px;
+          }
+          &.type-1{
+            color: #4E5969;
+            border: 1px solid #E5E6EB;
+          }
+          &.type-2{
+            color: #fff;
+            background: #86909C;
+          }
+        }
+      }
+    }
+  }
+</style>

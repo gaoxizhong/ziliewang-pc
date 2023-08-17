@@ -17,11 +17,11 @@
             </div> -->
           </div>
           <div class="user-top-num">
-            <div @click="clickAttention">
+            <div @click="clickAttention('attention')">
               <span class="title">{{ infoData.attention_num }}</span>
               <span class="text">关注</span>
             </div>
-            <div @click="clickFan">
+            <div @click="clickAttention('fans')">
               <span class="title">{{ infoData.fan_num }}</span>
               <span class="text">粉丝</span>
             </div>
@@ -178,14 +178,17 @@ export default {
   },
   methods: {
 
-    // 点击关注
-    clickAttention(){
-
+    // 点击关注/粉丝
+    clickAttention(tag){
+      this.$router.push({
+        path:'/attentionFans',   //跳转的路径
+        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+          tag,
+          see_uid: localStorage.getItem('realUid')
+        }
+      })
     },
-    // 点击粉丝
-    clickFan(){
 
-    },
     // 点击发布
     clickPublishBtn(){
       this.dialogVisible = true;
