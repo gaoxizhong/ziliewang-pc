@@ -61,18 +61,7 @@
 
       <!-- 右侧模块 开始 -->
       <div class="info-right-box">
-        <div class="right-box">
-          <div class="users-box">
-            <img src="../../../assets/image/img-user.jpg" alt="" class="img-user"/>
-            <div class="users-right">
-              <div class="users-name">
-                <span class="span-1">张三</span>
-                <img src="../../../assets/image/sex-1.png" alt="" class="img-sex"/>
-              </div>
-              <div class="wcd-box">简历完整度75%</div>
-            </div>
-          </div>
-        </div>
+        <personalInfo />
       </div>
       <!-- 右侧模块 结束 -->
 
@@ -82,9 +71,11 @@
 </template>
 
 <script>
+import personalInfo from '../components/personalInfo.vue'
 export default {
   name: 'myDelivery',
   components: {
+    personalInfo,
   },
   data(){
     return{
@@ -281,52 +272,6 @@ export default {
     .info-right-box{
       width: 380px;
       padding-left: 0.8rem;
-      .right-box{
-        background: #FFFFFF;
-        border-radius: 6px ;
-        opacity: 1;
-        padding: 1.2rem;
-        text-align: left;
-        .users-box{
-          width: 100%;
-          display: flex;
-          align-items: center;
-          img.img-user {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            border: 3px solid #F2F3F5;
-          }
-          .users-right{
-            flex: 1;
-            padding-left: 8px;
-            .users-name{
-              display: flex;
-              align-items: center;
-              .span-1{
-                font-size: 20px;
-                font-weight: bold;
-                color: $g_textColor;
-                line-height: 28px;
-              }
-              .img-sex{
-                width: 18px;
-                height: 18px;
-                margin-left: 16px;
-              }
-
-            }
-          }
-
-        }
-        .wcd-box{
-          margin-top: 8px;
-          font-size: 14px;
-          font-weight: 400;
-          color: #86909C;
-          line-height: 22px;
-        }
-      }
     }
   }
 </style>

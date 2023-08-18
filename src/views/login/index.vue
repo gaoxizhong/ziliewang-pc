@@ -56,7 +56,7 @@
             </form>
             <div class="login-footer-box">
               <div @click="clickUserSign">用户注册</div>
-              <div>忘记密码</div>
+              <div @click="clickChangePassword">忘记密码</div>
             </div>
           </div>
           <!-- 登录模块 结束 -->
@@ -99,7 +99,32 @@
             </div>
           </div>
           <!-- 注册模块 结束 -->
-
+          <!-- 修改密码 开始 -->
+          <div class="signLogin-box" v-if="sign_login == 'changePassword'">
+            <div class="login-type-box">
+              <span class="hover">修改密码</span>
+            </div>
+            <form @submit.prevent="changePassword" autocomplete="off" class="form-container">
+              <div class="form-box sign-form-box">
+                <div class="input-box">
+                  <el-input v-model="change_password.phone" type="tel" name="phone" placeholder="请输入手机号"></el-input>
+                </div>
+                <div class="input-box">
+                  <el-input class="input" maxlength="4" placeholder="短信验证码" v-model="change_password.code" name="code"/>
+                  <div class="send-vcode-btn" :style="{'color': isDisable?'#ababab':'#3377FF'}" :disabled="isDisable" @click.stop="click_code(3)">{{statusMsg}}</div>
+                </div>
+                <div class="input-box">
+                  <el-input v-model="change_password.password" type="password" name="password" placeholder="新密码：8-16位字母、数字、字符，不支持空格" show-password></el-input>
+                </div>
+                <div class="input-box">
+                  <el-input v-model="change_password.password_tow" type="password" name="password_tow" placeholder="请确认新密码" show-password></el-input>
+                </div>
+              </div>
+              <button type="submit" class="login-btn">确认修改</button>
+            </form>
+            <button type="button" class="login-btn-qx" @click="clickUserLogin">取消</button>
+          </div>
+          <!-- 修改密码 结束 -->
 
 
 
@@ -138,7 +163,12 @@ export default {
         email:'',
         signChecked: false,
       },
-      
+      change_password: { // 修改密码
+        phone: '',
+        code:'',
+        password:'',
+        password_tow:'',
+      },
       isDisable: false,
       statusMsg:'获取验证码',
       // zc_statusMsg:'获取验证码',
@@ -190,6 +220,10 @@ export default {
     }, 
     clickUserLogin(){
       this.sign_login = 'login';
+    },
+    // 点击忘记密码
+    clickChangePassword(){
+      this.sign_login = 'changePassword';
     },
     // 用户登录
     LoginUserInfo(e){
@@ -335,12 +369,79 @@ export default {
       })
 
     },  
+    changePassword(e){
+      let that = this;
+      let change_password = that.change_password;
+      if(change_password.phone ==''){
+        that.$message.error({
+          message:'请输入手机号'
+        })
+        return
+      }
+      if(change_password.password ==''){
+        that.$message.error({
+          message:'请输入密码'
+        })
+        return
+      }
+      if(change_password.password_tow ==''){
+        that.$message.error({
+          message:'请再次输入密码'
+        })
+        return
+      }
+    
+      if(change_password.code ==''){
+        that.$message.error({
+          message:'请输入验证码'
+        })
+        return
+      }
+      let p = {
+        phone: change_password.phone,
+        code: change_password.code,
+        password: change_password.password,
+        password_tow: change_password.password_tow,
+
+      };
+
+      that.$axios.post('/api/register',p).then( res =>{
+        if(res.data.code == 0){
+          that.$message.success({
+            message:'修改成功'
+          })
+          setTimeout(()=>{
+            this.sign_login = 'login';
+          },1500)
+          return
+        }
+        if(res.data.code == 1){
+          that.$message.error({
+            message:res.data.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        console.log(e)
+      })
+
+    },  
 
     // 点击注册、登录获取验证码
     click_code(ty){
       let that = this;
-      let type = ty; // 1、注册； 2、登录
-      let phone = type == 1?that.newuser.phone: that.login_user.phone;
+      let type = ty; // 1、注册； 2、登录 3、忘记密码
+      let phone = '';
+      if(type == 1){
+        phone = that.newuser.phone
+      }
+      if(type == 2){
+        phone = that.login_user.phone
+      }
+      if(type == 3){
+        phone = that.change_password.phone
+      }
 
       let event = '';
       if(type == 1){
@@ -458,6 +559,20 @@ $cursor: #000;
     border-radius: 2px 2px 2px 2px;
     opacity: 1;
     border: 1px solid $g_color;
+  }
+  button.login-btn-qx{
+    width: 100%;
+    color: $g_textColor;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    margin-top: 12px;
+    height: 40px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 0px 0px rgba(0,0,0,0.02);
+    border-radius: 2px 2px 2px 2px;
+    opacity: 1;
+    border: 1px solid #E5E6EB;
   }
 }
 .form-container-box{

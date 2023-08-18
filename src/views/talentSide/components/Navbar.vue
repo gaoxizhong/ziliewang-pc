@@ -24,7 +24,7 @@
             <img src="../../../assets/image/nav_1.png" alt="" />
             <span>职圈</span>
           </div>
-          <div>
+          <div @click="clickMessage">
             <img src="../../../assets/image/nav_1.png" alt="" />
             <span>消息</span>
           </div>
@@ -90,6 +90,16 @@ export default {
     // 点击职圈
     clickProfessionalCircle(){
       this.$router.push('/professionalCircle');
+    },
+    // 点击消息
+    clickMessage(){
+      this.$router.push({
+        path:'/attentionFans',   //跳转的路径
+        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+          tag: 'pingl-hf',
+          see_uid: localStorage.getItem('realUid')
+        }
+      })
     }
   },
 };

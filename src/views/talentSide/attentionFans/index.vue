@@ -5,15 +5,15 @@
         <el-tab-pane label="评论与回复" name="pingl-hf">
           <div class="container info-box">
             <!-- 列表项 开始 -->
-            <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
+            <div class="container-items-box" v-for="(item,index) in commentReplyList" :key="index">
               <div class="items-left-box">
                 <div class="title-t">{{ item.createtime }}</div>
                 <div class="items-info-box">
-                  <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
+                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
                   <div class="name-corporation">
-                    <div class="text-1"><span class="text-1-span1">{{ item.users.real_name }}</span><span class="text-1-span2">评论了你的动态</span></div>
+                    <div class="text-1"><span class="text-1-span1">{{ item.real_name?item.real_name:'张三' }}</span><span class="text-1-span2">评论了你的动态</span></div>
                     <div class="text-3">
-                      找工作都快eom了，请问根据我的工作经验，有什么好的推荐吗，UI设计师会被ai取代吗
+                      {{ item.content }}
                     </div>
                     <div class="text-2">
                       <span>丨 目前应该不会，以后难说的很。</span>
@@ -107,6 +107,7 @@ export default {
       page: 1,
       dataList:[],
       see_uid: '', // 被查看的ID
+      commentReplyList: [], // 评论回复列表
     }
   },
   computed: {
@@ -120,16 +121,24 @@ export default {
     if(this.tag == 'attention' || this.tag == 'fans'){
       this.getList();
     }
+    //  评论回复
+    if( this.tag == 'pingl-hf' ){
+        this.getCommentReply();
+      }
   },
   methods: {
     handleClick(tab, event){
       console.log(tab.name)
       this.page = 1;
-
+      //  评论回复
+      if( tab.name == 'pingl-hf' ){
+        this.getCommentReply();
+      }
       //  关注/ 粉丝
       if(tab.name == 'attention' || tab.name == 'fans' ){
         this.getList();
       }
+
     },
     getList(){
       this.$axios.post('/api/user-attention-fans/list',{
@@ -158,6 +167,14 @@ export default {
         })
       }
       
+    },
+    // 获取评论回复
+    getCommentReply(){
+      this.$axios.post('/api/profession-circle/msg/comment-reply',{}).then(res =>{
+        if(res.code == 0){
+          this.commentReplyList = res.data
+        }
+      })
     },
     // 关注
     addAttention(i){
