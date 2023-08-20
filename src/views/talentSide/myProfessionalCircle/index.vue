@@ -55,9 +55,9 @@
       <div class="info-right-box">
         <div class="info-right-top">
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane :label=" `全部${count_list.all_count}` " name="first"></el-tab-pane>
-            <el-tab-pane :label=" `动态${count_list.dynamic_state_count}` " name="second"></el-tab-pane>
-            <el-tab-pane :label=" `评论${count_list.comment_count}` " name="fourth"></el-tab-pane>
+            <!-- <el-tab-pane :label=" `全部${ count_list.all_count?count_list.all_count:0 } ` " name="first"></el-tab-pane> -->
+            <el-tab-pane :label=" `动态${ count_list.dynamic_state_count?count_list.dynamic_state_count:0 }` " name="second"></el-tab-pane>
+            <el-tab-pane :label=" `评论${ count_list.comment_count?count_list.comment_count:0 }` " name="fourth"></el-tab-pane>
           </el-tabs>
           <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
         </div>
@@ -65,7 +65,7 @@
           <!-- 列表项 开始 -->
           <div class="container-items-box" v-for="(item,index) in infoList" :key="index">
             <!-- <div class="right-container-title"><span>回忆那么真</span><span>发布了动态</span></div> -->
-            <div class="right-container-item">
+            <div class="right-container-item" @click.stop="clicklistItems(item)">
               <div class="title">
                 <div class="title-left">
                   <img :src="infoData.avatar" alt="" />
@@ -82,7 +82,7 @@
                 <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/preview-open.png" alt="" />
-                    <span>{{ item.comment_num }}阅读</span>
+                    <span>{{ item.read_num }}阅读</span>
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/thumbs-up.png" alt="" />
@@ -90,7 +90,7 @@
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/comment.png" alt="" />
-                    <span>{{ item.read_num }}评论</span>
+                    <span>{{ item.comment_num}}评论</span>
                   </div>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default {
   },
   data(){
     return{
-      activeName: 'first',
+      activeName: 'second',
       infoData:{}, // 信息
       infoList:[],
       count_list:{},
@@ -177,7 +177,15 @@ export default {
     this.getMyProfessionCircle();
   },
   methods: {
-
+    // 点击列表
+    clicklistItems(i){
+      this.$router.push({
+        path:'/circleDetails',   //跳转的路径
+        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+          id:i.id,
+        }
+      })
+    },
     // 点击关注/粉丝
     clickAttention(tag){
       this.$router.push({

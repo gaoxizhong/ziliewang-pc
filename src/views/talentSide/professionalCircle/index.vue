@@ -15,7 +15,7 @@
             <div class="right-container-item" @click.stop="clicklistItems(item)">
               <div class="title">
                 <div class="title-left" @click.stop="clickName(item)">
-                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg' )" alt="" />
+                  <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" />
                   <span>{{ item.users.name }}</span>
                 </div>
                 <div class="title-t">{{ item.createtime }}</div>
@@ -24,21 +24,25 @@
               <div class="items-c-box">
                 <div>
                   <div class="items-c-p">{{ item.content }}</div>
-                  <!-- <div class="items-img-box" v-if="item.images">
-                    <img :src="img_item" alt="" v-for="(img_item,idx) in item.images" :key="idx"/>
-                  </div> -->
                   <div class="items-img-box" v-if="item.images">
-                    <img :src="item.images" alt="" />
+                    <img :src="img_item" alt="" v-for="(img_item,idx) in item.images" :key="idx"/>
                   </div>
+                  <!-- <div class="items-img-box" v-if="item.images">
+                    <img :src="item.images" alt="" />
+                  </div> -->
                 </div>
                 <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/preview-open.png" alt="" />
                     <span>{{ item.read_num?item.read_num:0 }}阅读</span>
                   </div>
-                  <div class="bottom-btn-items">
+                  <div class="bottom-btn-items" v-if="item.is_point == 2">
                     <img src="../../../assets/image/thumbs-up.png" alt="" />
-                    <span>{{ item.point_num?item.point_num:0 }}点赞</span>
+                    <span>{{ item.point_num?item.point_num:0 }} 赞</span>
+                  </div>
+                  <div class="bottom-btn-items" v-else>
+                    <img src="../../../assets/image/thumbs-up.png" alt="" />
+                    <span class="point-hover">{{ item.point_num?item.point_num:0 }} 已赞</span>
                   </div>
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/comment.png" alt="" />

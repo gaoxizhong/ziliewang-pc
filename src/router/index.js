@@ -1,11 +1,29 @@
 import Vue from 'vue';
-import Router from 'vue-router';
+import VueRouter from 'vue-router';
 import { getToken } from '@/utils/auth'; // get token from cookie
-Vue.use(Router);
 import talentSide from '@/views/talentSide/Mian.vue';
 import getPageTitle from '@/utils/get-page-title';
 
-export const constantRoutes = [
+Vue.use(VueRouter)
+
+// 解决编程式路由往同一地址跳转时会报错的情况
+const originalPush = VueRouter.prototype.push;
+const originalReplace = VueRouter.prototype.replace;
+
+// push
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject);
+  return originalPush.call(this, location).catch(err => err);
+};
+
+//replace
+VueRouter.prototype.replace = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalReplace.call(this, location, onResolve, onReject);
+  return originalReplace.call(this, location).catch(err => err);
+};
+const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -124,7 +142,7 @@ export const constantRoutes = [
   },
 ];
 
-const router = new Router({
+const router = new VueRouter({
     // mode: 'history', // require service support
     scrollBehavior: () => ({ y: 0 }),
     routes: constantRoutes,
@@ -153,7 +171,7 @@ router.beforeEach(async (to, from, next) => {
     // 让 列表页 即不缓存，刷新
     to.meta.keepAlive = false; 
   }
-  next()
+  // next()
   document.title = getPageTitle(to.meta.title);
 
 })

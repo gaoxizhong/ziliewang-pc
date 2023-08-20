@@ -16,31 +16,36 @@
             <div class="items-c-box">
               <div>
                 <div class="items-c-p">{{ infoData.content }}</div>
-                <!-- <div class="items-img-box" v-if="item.images">
-                  <img :src="img_item" alt="" v-for="(img_item,idx) in item.images" :key="idx"/>
-                </div> -->
                 <div class="items-img-box" v-if="infoData.images">
-                  <img :src="infoData.images" alt="" />
+                  <img :src="img_item" alt="" v-for="(img_item,idx) in infoData.images" :key="idx"/>
                 </div>
+                <!-- <div class="items-img-box" v-if="infoData.images">
+                  <img :src="infoData.images" alt="" />
+                </div> -->
               </div>
               <div class="items-bottom-btn">
                 <div class="bottom-btn-items">
                   <img src="../../../../assets/image/preview-open.png" alt="" />
                   <span>{{ infoData.read_num }} 阅读</span>
                 </div>
-                <div class="bottom-btn-items" @click="clickPoint">
+                <div class="bottom-btn-items" @click="clickPoint " v-if="infoData.is_point == 2">
                   <img src="../../../../assets/image/thumbs-up.png" alt="" />
-                  <span>{{ infoData.point_num }} {{infoData.laud_status == 1 ? '已赞':'赞'}}</span>
+                  <span>{{ infoData.point_num }} 赞</span>
                 </div>
-                <div class="bottom-btn-items" @click.stop="clickComment(infoData)">
+                <div class="bottom-btn-items" @click="clickCancelPoint " v-else>
+                  <img src="../../../../assets/image/thumbs-up.png" alt="" />
+                  <span class="point-hover">{{ infoData.point_num }} 已赞</span>
+                </div>
+                
+                <div class="bottom-btn-items">
                   <img src="../../../../assets/image/comment.png" alt="" />
                   <span>{{ infoData.comment_num }} 评论</span>
                 </div>
               </div>
             </div>
-            <div class="fabu-box" v-if="is_content">
+            <div class="fabu-box">
               <el-input type="text" v-model="content" placeholder="评论千万条，友善第一条"></el-input>
-              <el-button type="primary" @click="clickInfoVerifyBtn">发布</el-button>
+              <el-button type="primary" @click="clickInfoVerifyBtn(1)">评论</el-button>
             </div>
             <!-- 评论模块 开始 -->
             <div class="comment-box">
@@ -53,8 +58,8 @@
                       <div class="title-left" @click.stop="clickName(items)">
                         <img :src="items.avatar" alt="" class="avatar-img"/>
                         <span>{{ items.name }}</span>
-                        <!-- <img src="../../../../assets/image/right-one.png" alt="" class="right-one"/>
-                        <span>小花</span> -->
+                        <img src="../../../../assets/image/right-one.png" alt="" class="right-one" v-if="items.reply_id"/>
+                        <span v-if="items.reply_id">{{ items.publish_name }}</span>
                       </div>
                       <div class="title-t">{{ items.createtime }}</div>
                     </div>
@@ -63,11 +68,19 @@
                       <div class="items-c-p">{{ items.content }}</div>
 
                       <div class="items-bottom-btn">
-                        <div class="bottom-btn-items" @click="clickPoint('commentID',items.id)">
+                        <div class="bottom-btn-items" @click="clickPoint">
                           <img src="../../../../assets/image/thumbs-up.png" alt="" />
-                          <span>{{ items.point_num }} {{items.laud_status == 1 ? '已赞':'赞'}}</span>
+                          <span :class=" items.is_point == 1 ? 'point-hover':'' ">{{ items.point_num }} {{items.is_point == 1 ? '已赞':'赞'}}</span>
                         </div>
-                        <div class="bottom-btn-items">
+                        <div class="bottom-btn-items" @click="clickPoint('commentID',items.id) " v-if="items.is_point == 2">
+                          <img src="../../../../assets/image/thumbs-up.png" alt="" />
+                          <span>{{ items.point_num }} 赞</span>
+                        </div>
+                        <div class="bottom-btn-items" @click="clickCancelPoint('commentID',items.id) " v-else>
+                          <img src="../../../../assets/image/thumbs-up.png" alt="" />
+                          <span class="point-hover">{{ items.point_num }} 已赞</span>
+                        </div>
+                        <div class="bottom-btn-items" @click.stop="clickRecover(items)">
                           <img src="../../../../assets/image/comment.png" alt="" />
                           <span>{{ items.comment_num }} 回复</span>
                         </div>
@@ -90,6 +103,22 @@
       <hotRecommendation />
     </div>
     <!-- 右侧模块 结束 -->
+
+
+    <!-- 回复弹窗 -->
+    <div class="recoverVisible">
+      <el-dialog title="回复评论" :visible.sync="recoverVisible" width="482px" :before-close="handleClose">
+        <div class="cententinfo-box">
+          <div class="demo-input-suffix">
+            <el-input v-model="recover_value" type="text" name="recover_value" placeholder="回复评论"></el-input>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="recoverVisible = false">取 消</el-button>
+          <el-button type="primary" @click="clickInfoVerifyBtn(2)">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 
 </template>
@@ -107,6 +136,10 @@ export default {
       content:'',
       id: '',
       is_content: false, // 评论框展示判断
+      recoverVisible: false,
+      recover_value: '',
+      reply_content:'', // 回复弹窗 value
+      reply_id: 0,
     }
   },
 
@@ -121,6 +154,9 @@ export default {
     
   },
   methods: {
+    handleClose(){
+
+    },
     // 获取详情
    async getInfoData(){
       await this.$axios.post('/api/profession-circle/detail',{
@@ -151,21 +187,41 @@ export default {
       
     },
     // 点击评论
-    clickComment(i){
-      this.is_content = true;
-    },
+    // clickComment(i){
+    //   this.is_content = true;
+    // },
     // 发布评论
-    clickInfoVerifyBtn(){
+    clickInfoVerifyBtn(n){
+      let num = n; // 1 评论职圈； 2、回复评论
       let p = {
         profession_circle_id: this.id,
-        content: this.content
+      }
+      if( num == 1){
+        p.content= this.content;
+      }
+      if( num == 2){
+        p.reply_id = this.reply_id;
+        p.content = this.recover_value;
       }
       this.$axios.post('/api/profession-circle/comment',p).then( res =>{
         if( res.code == 0 ){
-          this.content = '';
-          this.is_content = false;
-          //获取职圈详情
-          this.getInfoData();
+          let text = '';
+          if(num == 1){
+            text = '评论成功！';
+            this.content = '';
+          }
+          if(num == 2){
+            text = '回复成功！';
+            this.recoverVisible = true;
+            this.recover_value = '';
+          }
+          this.$message.success(text);
+          setTimeout( ()=>{
+            // this.is_content = false;
+            //获取职圈详情
+            this.getInfoData();
+          },1500)
+          
         }
       }).catch( e =>{
         console.log(e)
@@ -173,6 +229,7 @@ export default {
     },
     // 点击点赞
     clickPoint(s,id){
+      console.log('clickPoint')
       let infoData = this.infoData;
       let p = {
         profession_circle_id: this.id,
@@ -183,15 +240,38 @@ export default {
       }
       this.$axios.post('/api/profession-circle/point',p).then( res =>{
         if( res.code == 0 ){
-          this.content = '';
-          this.is_content = false;
-          infoData.point_num++;
-          this.infoData = infoData;
+           //获取职圈详情
+           this.getInfoData();
         }
       }).catch( e =>{
         console.log(e)
       })
-    }
+    },
+    // 取消
+    clickCancelPoint(s,id){
+      let infoData = this.infoData;
+      let p = {
+        profession_circle_id: this.id,
+      }
+      if(s == 'commentID'){
+        // 职圈评论id
+        p.comment_id = id;
+      }
+      this.$axios.post('/api/profession-circle/cancel-point',p).then( res =>{
+        if( res.code == 0 ){
+          //获取职圈详情
+          this.getInfoData();
+        }
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
+    // 点击评论列表回复
+    clickRecover(item){
+      console.log(item)
+      this.reply_id = item.id;
+      this.recoverVisible = true;
+    },
   },
 };
 </script>
@@ -388,4 +468,89 @@ export default {
       padding-left: 0.8rem;
     }
   }
+
+  .container{
+  /deep/ .el-dialog{
+    min-width: 420px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    .el-dialog__header{
+      text-align: left;
+      .el-dialog__title{
+        font-size: 15px;
+        color: $g_textColor;
+      }
+    }
+    .el-dialog__body{
+      height: auto;
+      overflow: hidden;
+      padding: 20px;
+      .cententinfo-box{
+        width: 100%;
+        margin-top: 10px;
+        .cententinfo-title{
+          font-size: 14px;
+          font-weight: 400;
+          color: $g_textColor;
+          line-height: 22px;
+          text-align: left;
+        }
+        .demo-input-suffix{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          span{
+            width: auto;
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 22px;
+          }
+          .el-input {
+            position: relative;
+            font-size: 14px;
+            flex: 1;
+            margin-left: 10px;
+           }
+          .el-input__inner {
+            font-size: 14px;
+            padding: 14px 10px;
+            width: 100%;
+            border: 1px solid #e9e9e9;
+            border-radius: 4px;
+            outline: none;
+            box-sizing: border-box;
+            display: block;
+            box-shadow: none;
+            transition: border .3s;
+            background-color: #fff;
+            resize: none;
+          }
+          .el-input__inner:hover{
+            border-color: $g_color;
+          }
+          .el-input.is-active .el-input__inner, .el-input__inner:focus{
+            border-color: $g_color;
+            outline: 0;
+          }
+
+        }
+
+      }
+    }
+    .el-button{
+      padding: 0;
+      width: 100px;
+      height: 40px;
+      line-height: 40px;
+    }
+    .el-button--primary{
+      background-color: $g_color;
+      border-color: $g_color;
+    }
+
+    
+  }
+}
 </style>

@@ -11,12 +11,12 @@
                 <div class="items-info-box">
                   <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
                   <div class="name-corporation">
-                    <div class="text-1"><span class="text-1-span1">{{ item.real_name?item.real_name:'张三' }}</span><span class="text-1-span2">评论了你的动态</span></div>
+                    <div class="text-1"><span class="text-1-span1">{{ item.name }}</span><span class="text-1-span2">{{ item.comment_type_desc }}了你的动态</span></div>
                     <div class="text-3">
-                      {{ item.content }}
+                      {{ item.profession_circle_content }}
                     </div>
                     <div class="text-2">
-                      <span>丨 目前应该不会，以后难说的很。</span>
+                      <span>丨 {{ item.content }}</span>
                     </div>
                   </div>
                 </div>

@@ -270,8 +270,9 @@ export default {
       }
     }
     .info-right-box{
-      width: 380px;
+      width: 19rem;
       padding-left: 0.8rem;
     }
   }
+ 
 </style>

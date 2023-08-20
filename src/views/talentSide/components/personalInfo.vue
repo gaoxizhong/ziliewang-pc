@@ -67,17 +67,17 @@ export default {
 
 .right-box{
   background: #FFFFFF;
-  border-radius: 6px ;
+  border-radius: 6px;
   opacity: 1;
-  padding: 1.2rem;
+  padding: 1.5rem 1.2rem;
   text-align: left;
   .users-box{
     width: 100%;
     display: flex;
     align-items: center;
     img.img-user {
-      width: 90px;
-      height: 90px;
+      width: 4.5rem;
+      height: 4.5rem;
       border-radius: 50%;
       border: 3px solid #F2F3F5;
     }
@@ -88,15 +88,15 @@ export default {
         display: flex;
         align-items: center;
         .span-1{
-          font-size: 20px;
+          font-size: 1rem;
           font-weight: bold;
           color: $g_textColor;
-          line-height: 28px;
+          line-height: 1.4rem;
         }
         .img-sex{
-          width: 18px;
-          height: 18px;
-          margin-left: 16px;
+          width: 0.9rem;
+          height: 0.9rem;
+          margin-left: 0.8rem;
         }
 
       }
@@ -105,16 +105,16 @@ export default {
   }
   .wcd-box{
     margin-top: 8px;
-    font-size: 14px;
+    font-size: 0.7rem;
     font-weight: 400;
     color: #86909C;
-    line-height: 22px;
+    line-height: 1.1rem;
   }
   .infoTab-box{
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
+    margin-top: 1.5rem;
     .infoTab-items {
       display: flex;
       flex-direction: column;
@@ -122,23 +122,23 @@ export default {
       justify-content: center;
       cursor: pointer;
       .infoTab-items-num{
-        font-size: 30px;
+        font-size: 1.5rem;
         font-weight: bold;
         color: $g_textColor;
-        line-height: 28px;
+        line-height: 1.4rem;
       }
       .infoTab-items-name{
         font-size: 14px;
         font-weight: 400;
         color: #86909C;
-        line-height: 22px;
+        line-height: 1.1rem;
         margin-top: 6px;
       }
     }
   }
   .setTab-box{
-    margin-top: 30px;
-    padding-top: 30px;
+    margin-top: 2rem;
+    padding-top: 2rem;
     border-top: 1px solid #F2F3F5;
     display: flex;
     justify-content: space-between;
@@ -149,14 +149,14 @@ export default {
       justify-content: center;
       cursor: pointer;
       img{
-        width: 36px;
-        height: 36px;
+        width: 1.8rem;
+        height: 1.8rem;
       }
       .setTab-items-name{
-        font-size: 14px;
+        font-size: 0.7rem;
         font-weight: 400;
         color: $g_textColor;
-        line-height: 22px;
+        line-height: 1.1rem;
         margin-top: 6px;
       }
 

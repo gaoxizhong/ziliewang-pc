@@ -137,7 +137,7 @@ export default {
       width: 80px;
       padding: 0;
       margin-left: 20px;
-      font-size: 0.7rem;
+      font-size: 14px;
     }
     /deep/ .el-menu--horizontal>.el-menu-item.is-active{
       background-color: #000A14 !important;
@@ -160,7 +160,7 @@ export default {
       justify-content: center;
       div{
         margin-right: 30px;
-        font-size: 0.7rem;
+        font-size: 14px;
         display: flex;
         align-items: center;
         cursor: pointer;
