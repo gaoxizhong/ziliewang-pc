@@ -21,7 +21,9 @@
 
     <div class="home-box">
       <!-- 左侧列表模块 开始 -->
-      <div class="info-list-box"></div>
+      <div class="info-list-box">
+        <jobList :data="infoData" :tag="tag"/>
+      </div>
       <!-- 左侧列表模块 结束 -->
       <!-- 右侧 个人信息操作模块 开始 -->
       <div class="info-right-box">
@@ -36,16 +38,22 @@
 </template>
 
 <script>
+import jobList from '../components/jobList.vue'
 import personalInfo from '../components/personalInfo.vue'
 export default {
   name: 'talentHome',
   components: {
+    jobList,
     personalInfo,
   },
   data(){
     return{
       input_name:'', // 搜索框value
       hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
+      tag: '',
+      infoData: {
+        infoList: [{},{}], // 列表
+      }
     }
   },
   computed: {
@@ -133,7 +141,6 @@ export default {
   }
   .home-box{
     width: 100%;
-    margin-top: 1rem;
     display: flex;
     .info-list-box{
       flex: 1;

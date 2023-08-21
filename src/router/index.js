@@ -138,6 +138,15 @@ const constantRoutes = [
           // keepAlive: true,
         },
       },
+      {
+        path: '/JobDetails',
+        name: 'JobDetails',
+        component: () => import('@/views/talentSide/JobDetails'),
+        meta: { 
+          title: '岗位详情',
+          // keepAlive: true,
+        },
+      },
     ]
   },
 ];
