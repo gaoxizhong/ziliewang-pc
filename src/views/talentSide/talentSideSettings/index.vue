@@ -71,7 +71,7 @@
         <div class="container-right-items" id="set_email">
           <div class="title">我的邮箱</div>
           <div class="info-box">当前邮箱: {{ infoData.basic_info.email }}</div>
-          <button>修改邮箱</button>
+          <button  @click="clickSetEmail">修改邮箱</button>
 
         </div>
         <!-- 密码设置 -->
@@ -87,7 +87,7 @@
     <!-- 弹窗功能 -->
       <!-- 屏蔽公司 弹窗 -->
      <div class="setShieldVisible">
-      <el-dialog title="添加公司" :visible.sync="setShieldVisible" width="482px" :before-close="handleClose">
+      <el-dialog title="添加公司" :visible.sync="setShieldVisible" width="500px" :before-close="closeShieldVisible">
         <div class="cententinfo-box">
           <div class="demo-input-suffix">
             <span>公司名称:</span>
@@ -96,13 +96,13 @@
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="setShieldVisible = false">取 消</el-button>
-          <el-button type="primary" @click="clickeShieldCorporationQR">确 定</el-button>
+          <el-button type="primary" @click="clickShieldCorporationQR">确 定</el-button>
         </span>
       </el-dialog>
     </div>
     <!-- 修改手机号 弹窗 -->
     <div class="setPhoneVisible">
-      <el-dialog title="修改手机号" :visible.sync="setPhoneVisible" width="482px" :before-close="handleClose">
+      <el-dialog title="修改手机号" :visible.sync="setPhoneVisible" width="500px" :before-close="closePhoneVisible">
         <div class="cententinfo-box">
           <div class="cententinfo-title">手机号: {{ infoData.basic_info.phone }}</div>
           <div class="demo-input-suffix">
@@ -112,13 +112,25 @@
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="setPhoneVisible = false">取 消</el-button>
-          <el-button type="primary" @click="clickePhoneQR">确 定</el-button>
+          <el-button type="primary" @click="clickPhoneQR">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <!-- 修改邮箱 弹窗 -->
+    <div class="setEmailVisible">
+      <el-dialog title="修改邮箱" :visible.sync="setEmailVisible" width="500px" :before-close="closeEmailVisible">
+        <div class="cententinfo-box">
+         
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setEmailVisible = false">取 消</el-button>
+          <el-button type="primary" @click="clickEmailQR">确 定</el-button>
         </span>
       </el-dialog>
     </div>
     <!-- 修改密码 弹窗 -->
     <div class="setPasswordVisible">
-      <el-dialog title="密码设置" :visible.sync="setPasswordVisible" width="482px" :before-close="handleClose">
+      <el-dialog title="密码设置" :visible.sync="setPasswordVisible" width="500px" :before-close="closePasswordVisible">
         <div class="cententinfo-box">
           <div class="cententinfo-title">手机号: {{ infoData.basic_info.phone }}</div>
           <div class="demo-input-suffix">
@@ -132,7 +144,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="setPasswordVisible = false">取 消</el-button>
-          <el-button type="primary" @click="clickePasswordQR">确 定</el-button>
+          <el-button type="primary" @click="clickPasswordQR">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -159,6 +171,7 @@ export default {
       setType:'',
       setPasswordVisible: false,
       setPhoneVisible: false,
+      setEmailVisible: false,
       setShieldVisible: false, // 屏蔽公司
       password:'',
       phone:'',
@@ -174,6 +187,22 @@ export default {
     this.getUserProfile();
   },
   methods: {
+    // 关闭 屏蔽公司弹窗
+    closeShieldVisible(){
+      this.setShieldVisible = false;
+    },
+    // 关闭 修改手机号码弹窗
+    closePhoneVisible(){
+      this.setPhoneVisible = false;
+    },
+    // 关闭 修改邮箱弹窗
+    closeEmailVisible(){
+      this.setEmailVisible = false;
+    },
+    // 关闭 修改密码弹窗
+    closePasswordVisible(){
+      this.setPasswordVisible = false;
+    },
     //
     clickLeItems(n){
       this.setType = n;
@@ -194,20 +223,24 @@ export default {
     resume_change(e){
       console.log(e)
     },
+    // 点击设置邮箱
+    clickSetEmail(){
+      this.setEmailVisible = true;
+    },
     // 点击设置密码
     clickSetPassword(){
-      this.setPasswordVisible = true
+      this.setPasswordVisible = true;
     },
     // 点击修改手机号
     clickSetPhone(){
-      this.setPhoneVisible = true
+      this.setPhoneVisible = true;
     },
     // 点击添加公司
     clickSetShield(){
-      this.setShieldVisible = true
+      this.setShieldVisible = true;
     },
     // 添加屏蔽的公司
-    clickeShieldCorporationQR(){
+    clickShieldCorporationQR(){
       let that = this;
       let p = {
         corporation: that.corporation,
@@ -236,7 +269,7 @@ export default {
       })
     },
     // 确认修改密码
-    clickePasswordQR(){
+    clickPasswordQR(){
       let that = this;
       let p = {
         password: that.password,
@@ -264,8 +297,37 @@ export default {
         console.log(e)
       })
     },
+    // 确认修改邮箱
+    clickEmailQR(){
+      let that = this;
+      let p = {
+        email: that.email,
+      };
+      that.$axios.post('',p).then( res =>{
+        if(res.data.code == 0){
+          that.$message.success({
+            message:'修改成功'
+          })
+          setTimeout(()=>{
+             // 获取个人信息
+             that.getUserProfile();
+             that.setPhoneVisible = false;
+          },1500)
+          return
+        }
+        if(res.data.code == 1){
+          that.$message.error({
+            message:res.data.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
     // 确认修改手机号
-    clickePhoneQR(){
+    clickPhoneQR(){
       let that = this;
       let p = {
         phone: that.phone,
