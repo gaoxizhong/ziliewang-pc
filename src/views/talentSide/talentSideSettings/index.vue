@@ -120,7 +120,16 @@
     <div class="setEmailVisible">
       <el-dialog title="修改邮箱" :visible.sync="setEmailVisible" width="500px" :before-close="closeEmailVisible">
         <div class="cententinfo-box">
-         
+          <div class="cententinfo-title">请输入新邮箱，修改之后简历与登录邮箱将同步完成修改</div>
+          <div class="demo-input-suffix">
+            <span>新邮箱:</span>
+            <el-input v-model="email" type="email" name="email" placeholder="请输入新的登录邮箱"></el-input>
+          </div>
+          <div class="demo-input-suffix">
+            <span>验证码:</span>
+            <el-input  maxlength="6" placeholder="验证码" v-model="email_code" name="code"/>
+            <div class="send-vcode-btn" :style="{'color': isDisable?'#ababab':'#3377FF'}" :disabled="isDisable" @click.stop="">{{statusMsg}}</div>
+          </div>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="setEmailVisible = false">取 消</el-button>
@@ -175,6 +184,10 @@ export default {
       setShieldVisible: false, // 屏蔽公司
       password:'',
       phone:'',
+      email:'',
+      email_code:'',
+      isDisable: false,
+      statusMsg:'获取验证码',
       corporation:'', // 公司名称
       shieldBossList:[{}]
     }
@@ -534,10 +547,11 @@ export default {
     .el-dialog__body{
       height: auto;
       overflow: hidden;
-      padding: 20px;
+      padding: 20px 0;
+      margin: 0 20px;
+      border-top: 1px solid #F2F3F5;
       .cententinfo-box{
         width: 100%;
-        margin-top: 10px;
         .cententinfo-title{
           font-size: 14px;
           font-weight: 400;
@@ -550,6 +564,24 @@ export default {
           display: flex;
           align-items: center;
           margin-top: 20px;
+          position: relative;
+          .send-vcode-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            color: $g_color;
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+            border: none;
+            padding: 0 10px;
+            outline: none;
+            cursor: pointer;
+            transition: background-color .3s,color .3s;
+            margin-top: 0;
+            font-size: 14px;
+          }
           span{
             width: auto;
             font-size: 14px;

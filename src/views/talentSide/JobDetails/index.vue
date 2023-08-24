@@ -58,7 +58,9 @@
           </div>
           <!-- boss信息 结束 -->
           <!-- 职位介绍 开始 -->
-          <div class="m-box margin-top-20">职位介绍</div>
+          <div class="m-box margin-top-20">
+            <JobDescription />
+          </div>
           <!-- 职位介绍 结束 -->
           <!-- 公司简介 开始 -->
           <div class="m-box margin-top-20">公司简介</div>
@@ -80,11 +82,12 @@
 </template>
 
 <script>
+import JobDescription from "./components/jobDescription";
 
 export default {
   name: 'JobDetails',
   components: {
-
+    JobDescription,
   },
   data(){
     return{
