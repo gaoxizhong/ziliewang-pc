@@ -63,13 +63,15 @@
           </div>
           <!-- 职位介绍 结束 -->
           <!-- 公司简介 开始 -->
-          <div class="m-box margin-top-20">公司简介</div>
+          <div class="m-box margin-top-20">
+            <CompanyProfile />
+          </div>
           <!-- 公司简介 结束 -->
         </div>
         <div class="right">
           <!-- 公司信息 开始 -->
           <div class="m-box">
-            公司信息
+            <CompanyInfo />
           </div>
           <!-- 公司信息 结束 -->
         </div>
@@ -83,11 +85,14 @@
 
 <script>
 import JobDescription from "./components/jobDescription";
-
+import CompanyProfile from "./components/companyProfile";
+import CompanyInfo from "./components/companyInfo"
 export default {
   name: 'JobDetails',
   components: {
     JobDescription,
+    CompanyProfile,
+    CompanyInfo
   },
   data(){
     return{
@@ -104,11 +109,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .container{
+    width: 1200px;
+    margin: 1.2rem auto 0;
+  }
   .container-title-box{
     width: 100%;
     padding: 1.2rem 0;
     background: #fff;
-    font-size: 0.7rem;
+    font-size: 14px;
     .container-titleinfo{
       width: 1200px;
       margin: 0 auto;
@@ -148,7 +157,7 @@ export default {
         .title-tag{
           margin-top: 1rem;
           span{
-            font-size: 0.7rem;
+            font-size: 14px;
             font-weight: 400;
             color: #1D2129;
             padding: 0 1rem;
@@ -179,18 +188,18 @@ export default {
         }
       }
       .titleinfo-right-box{
-        width: 19rem;
+        width: 380px;
         padding-left: 2.5rem;
         .btn-box{
           width: 100%;
           display: flex;
           justify-content: space-between;
           button{
-            width: 8rem;
+            flex: 1;
             height: 40px;
             line-height: 40px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 16px;
             border: none;
             color: #fff;
             border-radius: 20px !important;
@@ -264,7 +273,7 @@ export default {
               line-height: 22px;
               &.info-text-1{
                 .name{
-                  font-size: 0.8rem;
+                  font-size: 16px;
                   font-weight: bold;
                   color: $g_textColor;
                   line-height: 24px;
@@ -294,7 +303,7 @@ export default {
                   font-weight: 400;
                   color: #FA8C16;
                   line-height: 20px;
-                  padding: 2px 8px;
+                  padding: 0.1rem 0.6rem;
                   background: #FFF7E6;
                   border-radius: 2px;
                   border: 1px solid #FFD591;
@@ -312,7 +321,7 @@ export default {
           width: auto;
           padding: 0 0.8rem;
           button{
-            width: 4.5rem;
+            width: 90px;
             height: 36px;
             line-height: 36px;
             text-align: center;
@@ -328,7 +337,7 @@ export default {
 
     }
     .right{
-      width: 19rem;
+      width: 380px;
       padding-left: 0.8rem;
 
     }

@@ -29,11 +29,11 @@
             </li>
             <li>
               <img src="../../../../assets/image/Frame_2.png" alt="">
-              <span>{{ data.work_year?data.work_year:'6年经验' }}</span>
+              <span>{{ data.begin_work_date?data.begin_work_date:'暂无' }}</span>
             </li>
             <li>
               <img src="../../../../assets/image/Frame_5.png" alt="">
-              <span>宁波</span>
+              <span>{{ data.live_city?data.live_city:"暂无" }}</span>
             </li>
             <li>
               <img src="../../../../assets/image/Frame_5.png" alt="">
@@ -79,7 +79,7 @@
             <div class="item-label">参加工作时间</div>
             <div class="item-content">
               <el-date-picker
-                v-model="infoData.work_year"
+                v-model="infoData.begin_work_date"
                 type="month"
                 value-format="yyyy-MM"
                 placeholder="参加工作时间">
@@ -100,7 +100,17 @@
               </el-cascader>
             </div>
           </div>
-
+          <div class="mb20 redact-item">
+            <div class="item-label">生日</div>
+            <div class="item-content">
+              <el-date-picker
+                v-model="infoData.birth_year_month"
+                type="month"
+                value-format="yyyy-MM"
+                placeholder="生日">
+              </el-date-picker>
+            </div>
+          </div>
           <div class="mb20 redact-item">
             <div class="item-label">电话</div>
             <div class="item-content">
@@ -118,17 +128,17 @@
           <div class="mb20 redact-item">
             <div class="item-label">性别</div>
             <div class="item-content">
-              <div class="radio-item" :class="radio == 1 ? 'radio-checked':'' " @click="clickRadio(1)">男</div>
-              <div class="radio-item" :class="radio == 2 ? 'radio-checked':'' " @click="clickRadio(2)">女</div>
+              <div class="radio-item" :class="infoData.sex == 1 ? 'radio-checked':'' " @click="clickRadio(1)">男</div>
+              <div class="radio-item" :class="infoData.sex == 2 ? 'radio-checked':'' " @click="clickRadio(2)">女</div>
             </div>
           </div>
-          
           <div class="form-btns">
             <el-button @click="clickInfoCancelBtn">取消</el-button>
             <el-button type="primary" @click="clickInfoVerifyBtn">确定</el-button>
           </div>
         </el-form>
       </div>
+      <!-- 优势亮点 -->
       <div class="info-title-bottom" v-if="!redact_spot">
         <div class="jobExpectation-title-box">
           <span class="info-t">优势亮点</span>
@@ -136,6 +146,7 @@
         </div>
         <div class="info-title-x">{{ data.advantages_highlights?data.advantages_highlights:'暂无' }}</div>
       </div>
+      <!-- 优势亮点 -- 编辑 -->
       <div class="redact-title-bottom" v-else>
         <div class="jobExpectation-title-box">
           <span class="info-t">优势亮点</span>
@@ -179,7 +190,6 @@ export default {
       redact_info: false, 
       redact_spot: false,
       infoData: {},
-      radio: 0,
       fileList:[],
       imageUrl:'',
       upload_files_path:'',
@@ -192,7 +202,7 @@ export default {
         {value: 4,label: '离职'}
       ],
       options: pcas,
-      selectedOptions: [],
+      selectedOptions: ['北京','北京'],
     }
   },
   mounted(){
@@ -206,7 +216,8 @@ export default {
      handleChange(thsAreaCode) {
       thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
       console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
-      this.infoData.location = thsAreaCode[1];
+      this.selectedOptions = thsAreaCode;
+      this.infoData.live_city = thsAreaCode[1];
     },
     //  修改信息
     setUserSave(data,f){
@@ -262,13 +273,10 @@ export default {
 
     
     clickRadio(n){
-      this.infoData.radio = n;
-      this.radio = n;
-      console.log(this.infoData)
+      this.infoData.sex = n;
     },
     clickRedactBtn(n){
       this.infoData = JSON.parse(JSON.stringify(this.data));
-      this.radio = this.infoData.radio;
       if(n == 1){
         this.redact_info = true;
       }else if(n == 2){
@@ -284,13 +292,13 @@ export default {
     clickInfoVerifyBtn(){
       let p = {
         name: this.infoData.real_name,
-        sex: this.infoData.radio,
+        sex: this.infoData.sex,
         phone: this.infoData.real_phone,
         email: this.infoData.real_email,
         work_status: this.infoData.work_status,
         birth_year_month: this.infoData.birth_year_month,
-        work_year: this.infoData.work_year,
-        location: this.infoData.location
+        begin_work_date: this.infoData.begin_work_date,
+        live_city: this.infoData.live_city
       }
       if(p.name == ''){
         this.$message.warning('姓名不能为空!');
@@ -522,9 +530,9 @@ export default {
         margin-bottom: 0;
       }
       .form-btns{
-        position: absolute;
-        bottom: 26px;
-        right: 15px;
+        // position: absolute;
+        // bottom: 26px;
+        // right: 15px;
         text-align: right;
         padding: 0 15px;
       }

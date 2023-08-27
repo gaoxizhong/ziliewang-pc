@@ -7,8 +7,8 @@
           <ul class="le-ul">
             <li :class="setType =='set_resume'? 'hover': '' " @click="clickLeItems('set_resume')">谁能查看我的简历</li>
             <li :class="setType =='set_shield'? 'hover': '' " @click="clickLeItems('set_shield')">屏蔽公司</li>
-            <li :class="setType =='set_protection'? 'hover': '' " @click="clickLeItems('set_protection')">手机号码保护</li>
-            <li :class="setType =='set_realName'? 'hover': '' " @click="clickLeItems('set_realName')">真实姓名保护</li>
+            <li :class="setType =='phone_protect'? 'hover': '' " @click="clickLeItems('phone_protect')">手机号码保护</li>
+            <li :class="setType =='name_protect'? 'hover': '' " @click="clickLeItems('name_protect')">真实姓名保护</li>
           </ul>
         </div>
         <div class="le-box">
@@ -22,7 +22,7 @@
       </div>
       <div class="container-right-box">
         <!-- 谁能查看我的简历 -->
-        <div class="container-right-items" id="set_resume">
+        <div class="container-right-items" ref="set_resume">
           <div class="title">谁能查看我的简历</div>
           <div class="radio-group-box">
             <el-radio-group v-model="resume_radio" @change="resume_change">
@@ -46,7 +46,7 @@
           </div>
         </div>
         <!-- 屏蔽公司 -->
-        <div class="container-right-items" id="set_shield">
+        <div class="container-right-items" ref="set_shield">
           <div class="title">屏蔽公司</div>
           <div class="info-box">你可以屏蔽HR或猎头所在公司</div>
           <button @click="clickSetShield">
@@ -61,21 +61,39 @@
             </div>
           </div>
         </div>
+         <!-- 手机号码保护 -->
+         <div class="container-right-items" ref="phone_protect">
+          <div class="title">手机号码保护</div>
+          <div class="info-box">开启后，当企业HR和猎头联系你时对其隐藏真实手机号码</div>
+          <div class="phone-protect-box">
+            <span class="phone-protect-title">手机号码保护</span>
+            <el-switch v-model="is_phone_protect" @change="changePhoneProtect"></el-switch>
+          </div>
+        </div>
+        <!-- 手机号码保护 -->
+        <div class="container-right-items" ref="name_protect">
+          <div class="title">真实姓名保护</div>
+          <div class="info-box">开启后对外展示名称将展示 "张**明"</div>
+          <div class="phone-protect-box">
+            <span class="phone-protect-title">真实姓名保护</span>
+            <el-switch v-model="is_name_protect" @change="changeNameProtect"></el-switch>
+          </div>
+        </div>
         <!-- 手机号码 -->
-        <div class="container-right-items" id="set_phone">
+        <div class="container-right-items" ref="set_phone">
           <div class="title">手机号码</div>
           <div class="info-box">当前手机号: {{ infoData.basic_info.phone }}</div>
           <button @click="clickSetPhone">修改手机号</button>
         </div>
         <!-- 我的邮箱 -->
-        <div class="container-right-items" id="set_email">
+        <div class="container-right-items" ref="set_email">
           <div class="title">我的邮箱</div>
           <div class="info-box">当前邮箱: {{ infoData.basic_info.email }}</div>
           <button  @click="clickSetEmail">修改邮箱</button>
 
         </div>
         <!-- 密码设置 -->
-        <div class="container-right-items" id="set_password">
+        <div class="container-right-items" ref="set_password">
           <div class="title">密码设置</div>
           <div class="info-box">当前登录账号: {{ infoData.basic_info.phone }}</div>
           <button @click="clickSetPassword">密码设置</button>
@@ -177,7 +195,7 @@ export default {
     return{
       resume_radio: 1,
       infoData:{},
-      setType:'',
+      setType:'set_resume',
       setPasswordVisible: false,
       setPhoneVisible: false,
       setEmailVisible: false,
@@ -189,7 +207,9 @@ export default {
       isDisable: false,
       statusMsg:'获取验证码',
       corporation:'', // 公司名称
-      shieldBossList:[{}]
+      shieldBossList:[{}],
+      is_phone_protect: true,
+      is_name_protect: true
     }
   },
   computed: {
@@ -200,6 +220,37 @@ export default {
     this.getUserProfile();
   },
   methods: {
+    // 手机号码保护
+    changePhoneProtect(e){
+      let is_phone_protect = e ? 1 : 2;
+      this.$axios.post('/api/user/save',{
+        is_phone_protect,
+      }).then(res =>{
+        if(res.code == 0){
+          this.is_phone_protect = e
+        }else{
+          this.is_phone_protect = !e
+        }
+      }).catch(error =>{
+        console.log(error)
+        this.is_phone_protect = !e
+      })
+    },
+    // 姓名保护
+    changeNameProtect(){
+      this.$axios.post('/api/user/save',{
+        is_name_protect,
+      }).then(res =>{
+        if(res.code == 0){
+         this.is_name_protect = e
+        }else{
+          this.is_name_protect = !e
+        }
+      }).catch(error =>{
+        console.log(error)
+        this.is_name_protect = !e
+      })
+    },
     // 关闭 屏蔽公司弹窗
     closeShieldVisible(){
       this.setShieldVisible = false;
@@ -219,6 +270,12 @@ export default {
     //
     clickLeItems(n){
       this.setType = n;
+      let el = this.$refs[n];
+      el.scrollIntoView({
+        behavior: "auto", //定义动画过渡效果"auto"或 "smooth" 之一。默认为 "auto"。
+        block: "start",//定义垂直方向的对齐， "start", "center", "end", 或 "nearest"之一。默认为 "start"。
+        inline: "nearest"//"start", "center", "end", 或 "nearest"之一。默认为 "nearest"。
+      })
     },  
     // 获取个人信息
     getUserProfile(){
@@ -227,6 +284,18 @@ export default {
         console.log(res.data)
         if(res.code == 0){
           this.infoData = res.data;
+          let is_phone_protect = res.data.basic_info.is_phone_protect;
+          let is_name_protect = res.data.basic_info.is_name_protect;
+          if(is_phone_protect == 1){
+            this.is_phone_protect = true
+          }else{
+            this.is_phone_protect = false
+          }
+          if(is_name_protect == 1){
+            this.is_name_protect = true
+          }else{
+            this.is_name_protect = false
+          }
         }
       }).catch(e =>{
         console.log(e)
@@ -421,6 +490,8 @@ export default {
     flex: 1;
     border: 1px solid #F2F3F5;
     padding: 0 2rem 2rem 2rem;
+    // height: calc(100vh - 80px);
+    // overflow-y: auto;
     .container-right-items{
       width: 100%;
       padding: 2rem 0;
@@ -437,6 +508,24 @@ export default {
         font-weight: 400;
         color: #86909C;
         line-height: 22px;
+      }
+      .phone-protect-box{
+        width: 100%;
+        display: flex;
+        margin-top: 1.5rem;
+        .phone-protect-title{
+          font-size: 14px;
+          font-weight: bold;
+          color: $g_textColor;
+          line-height: 22px;
+        }
+        .el-switch{
+          margin-left: 16.5rem;
+        }
+        /deep/ .el-switch.is-checked .el-switch__core{
+          border-color: $g_color;
+          background-color: $g_bg;
+        }
       }
       button{
         width: auto;

@@ -131,7 +131,7 @@
                   <em class="vline"></em>
                   <span class="label-text">
                     <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData.basic_info.work_year?infoData.basic_info.work_year:'6年经验' }}</span>
+                    <span>{{ infoData.basic_info.begin_work_date?infoData.basic_info.begin_work_date:'暂无' }}</span>
                   </span>
                   <em class="vline"></em>
                   <span class="label-text">

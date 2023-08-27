@@ -62,14 +62,14 @@ export default {
   .info-right-top{
     width: 100%;
     height: auto;
-    padding: 0.8rem 1.1rem;
+    padding: 16px 20px;
     background: #FFFFFF;
     border-radius: 4px 4px 4px 4px;
     .title{
-      font-size: 0.8rem;
+      font-size: 16px;
       font-weight: bold;
       color: $g_textColor;
-      line-height: 1.2rem;
+      line-height: 24px;
     }
     ul{
       margin-top: 1rem;
@@ -77,8 +77,8 @@ export default {
       li{
         width: 100%;
         height: auto;
-        padding: 0.6rem 0.7rem;
-        font-size: 0.7rem;
+        padding: 5px 10px;
+        font-size: 14px;
         cursor: pointer;
         &:hover{
           background: #F4F8FF;
@@ -104,7 +104,7 @@ export default {
           }
         }
         .li-bottom-box{
-          margin-block: 0.8rem;
+          margin-top: 16px;
           display: flex;
           align-items: center;
           justify-content: space-between;
