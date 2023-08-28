@@ -23,6 +23,9 @@ VueRouter.prototype.replace = function push(location, onResolve, onReject) {
     return originalReplace.call(this, location, onResolve, onReject);
   return originalReplace.call(this, location).catch(err => err);
 };
+
+/* Layout */
+// import Layout from '@/views/bossSide/layout'
 const constantRoutes = [
   {
     path: '/login',
@@ -44,7 +47,7 @@ const constantRoutes = [
   //   component:  () => import('@/views/HomeView'),
   // },
   {
-    path: "/",
+    path: "/talentSide",
     component: talentSide,
     redirect: '/talentHome',
     children: [
@@ -149,6 +152,17 @@ const constantRoutes = [
       },
     ]
   },
+  {
+    path: '/bossSide',
+    component: Layout,
+    redirect: '/bossHome',
+    children: [{
+      path: '/bossHome',
+      name: 'bossHome',
+      component: () => import('@/views/bossSide/home/index'),
+      meta: { title: '首页', icon: 'dashboard' }
+    }]
+  }
 ];
 
 const router = new VueRouter({

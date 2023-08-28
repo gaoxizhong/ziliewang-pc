@@ -273,9 +273,20 @@ export default {
         localStorage.setItem('realAvatar', data.user.avatar); // 缓存
         localStorage.setItem('realUid', data.user.uid); // 缓存
         setTimeout(() => {
+          console.log(that.role)
           // 此时要判断/login后面的参数redirect，若无参数，进入主页；
           // 若有参数则参数为未有权限的那个路由，跳转到那个路由
-          this.$router.push(this.redirect || '/talentSide');
+          if(that.role == 1){
+            // 求职者
+            // this.$router.push(this.redirect || '/talentSide');
+            this.$router.push('/talentSide');
+          }
+          if(that.role == 2){
+            // 企业端
+            // this.$router.push(this.redirect || '/bossSide');
+            this.$router.push('/bossSide');
+
+          }
         }, 1000);
       }).catch( e=>{
         console.log(e)
