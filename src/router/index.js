@@ -152,17 +152,17 @@ const constantRoutes = [
       },
     ]
   },
-  {
-    path: '/bossSide',
-    component: Layout,
-    redirect: '/bossHome',
-    children: [{
-      path: '/bossHome',
-      name: 'bossHome',
-      component: () => import('@/views/bossSide/home/index'),
-      meta: { title: '首页', icon: 'dashboard' }
-    }]
-  }
+  // {
+  //   path: '/bossSide',
+  //   component: Layout,
+  //   redirect: '/bossHome',
+  //   children: [{
+  //     path: '/bossHome',
+  //     name: 'bossHome',
+  //     component: () => import('@/views/bossSide/home/index'),
+  //     meta: { title: '首页', icon: 'dashboard' }
+  //   }]
+  // }
 ];
 
 const router = new VueRouter({

@@ -27,11 +27,11 @@
               <span :class=" login_way == 1?'hover':'' " @click="clickTab(1)">快捷登录</span>
               <span :class=" login_way == 2?'hover':'' " @click="clickTab(2)">密码登录</span>
             </div>
-            <form @submit.prevent="LoginUserInfo" autocomplete="off" class="form-container">
+            <form @submit.prevent="LoginUserInfo" class="form-container">
               <!-- 快捷登录  -->
               <div class="form-box" v-if="login_way == 1">
                 <div class="input-box">
-                  <el-input v-model="login_user.phone" type="tel" name="phone" placeholder="请输入手机号"></el-input>
+                  <el-input v-model="login_user.phone" auto-complete="on" type="tel" name="phone" placeholder="请输入手机号"></el-input>
                 </div>
                 <div class="input-box">
                   <el-input class="input" maxlength="4" placeholder="短信验证码" v-model="login_user.code" name="code"/>
