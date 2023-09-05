@@ -1,16 +1,24 @@
-import request from '@/axios/index.js'
+import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/api/login',
+    url: '/user/login',
     method: 'post',
     data
   })
 }
 
-export function getMenu() {
+export function getInfo(token) {
   return request({
-    url: '/admin/site/site_get_menu',
+    url: '/user/info',
+    method: 'get',
+    params: { token }
+  })
+}
+
+export function logout() {
+  return request({
+    url: '/user/logout',
     method: 'post'
   })
 }

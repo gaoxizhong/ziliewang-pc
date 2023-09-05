@@ -30,9 +30,11 @@ service.interceptors.request.use(
         background: 'rgba(0, 0, 0, 0.7)',
       });
     }
-    if (store.getters.getToken) {
-      config.headers['token'] = getToken();
-    }
+    // if (store.getters.getToken) {
+    //   config.headers['token'] = getToken();
+    // }
+    config.headers['token'] = getToken();
+
     loadingCount++;
     // 在请求发送之前做一些处理
     let jsonStr = config.data;

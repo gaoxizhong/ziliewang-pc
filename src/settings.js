@@ -1,5 +1,6 @@
 module.exports = {
-  title: '自猎网',
+
+  title: '猎聘网',
 
   /**
    * @type {boolean} true | false
@@ -11,5 +12,5 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: true,
-};
+  sidebarLogo: false
+}

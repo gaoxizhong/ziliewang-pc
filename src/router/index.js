@@ -1,55 +1,161 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import { getToken } from '@/utils/auth'; // get token from cookie
-import talentSide from '@/views/talentSide/Mian.vue';
-import getPageTitle from '@/utils/get-page-title';
+import Vue from 'vue'
+import Router from 'vue-router'
 
-Vue.use(VueRouter)
-
-// 解决编程式路由往同一地址跳转时会报错的情况
-const originalPush = VueRouter.prototype.push;
-const originalReplace = VueRouter.prototype.replace;
-
-// push
-VueRouter.prototype.push = function push(location, onResolve, onReject) {
-  if (onResolve || onReject)
-    return originalPush.call(this, location, onResolve, onReject);
-  return originalPush.call(this, location).catch(err => err);
-};
-
-//replace
-VueRouter.prototype.replace = function push(location, onResolve, onReject) {
-  if (onResolve || onReject)
-    return originalReplace.call(this, location, onResolve, onReject);
-  return originalReplace.call(this, location).catch(err => err);
-};
+Vue.use(Router)
 
 /* Layout */
-// import Layout from '@/views/bossSide/layout'
-const constantRoutes = [
+import Layout from '@/layout'
+import talentSide from '../views/talentSide/Main.vue';
+
+
+/**
+ * Note: sub-menu only appear when route children.length >= 1
+ * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
+ *
+ * hidden: true                   if set true, item will not show in the sidebar(default is false)
+ * alwaysShow: true               if set true, will always show the root menu
+ *                                if not set alwaysShow, when item has more than one children route,
+ *                                it will becomes nested mode, otherwise not show the root menu
+ * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
+ * name:'router-name'             the name is used by <keep-alive> (must set!!!)
+ * meta : {
+    roles: ['admin','editor']    control the page roles (you can set multiple roles)
+    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
+    icon: 'svg-name'             the icon show in the sidebar
+    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
+    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+  }
+ */
+
+/**
+ * constantRoutes
+ * a base page that does not have permission requirements
+ * all roles can be accessed
+ */
+export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true,
-    meta: { 
-      title: '登录',
-    },
+    hidden: true
   },
 
   {
     path: '/404',
     component: () => import('@/views/404'),
-    hidden: true,
+    hidden: true
   },
-  // {
-  //   path: "/",
-  //   name: "HomeView",
-  //   component:  () => import('@/views/HomeView'),
-  // },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/bossSide/dashboard/index'),
+        meta: { title: '首页', icon: 'dashboard' },
+      },
+    ]
+  },
+  {
+    path: '/jobCenter',
+    component: Layout,
+    redirect: '/jobCenter',
+    children: [
+      {
+        path: '/jobCenter',
+        name: 'JobCenter',
+        component: () => import('@/views/bossSide/jobCenter/index'),
+        meta: { title: '职位中心', icon: 'dashboard' },
+      },
+    ]
+  },
+  {
+    path: '/recommendTalents',
+    component: Layout,
+    redirect: '/recommendTalents',
+    children: [
+      {
+        path: 'recommendTalents',
+        name: 'RecommendTalents',
+        component: () => import('@/views/bossSide/recommendTalents/index'),
+        meta: { title: '推荐人才', icon: 'dashboard' },
+      },
+    ]
+  },
+  {
+    path: '/searchTalent',
+    component: Layout,
+    redirect: '/searchTalent',
+    children: [
+      {
+        path: '/searchTalent',
+        name: 'SearchTalent',
+        component: () => import('@/views/bossSide/searchTalent/index'),
+        meta: { title: '搜索人才', icon: 'dashboard' },
+      },
+    ]
+  },
+  {
+    path: '/interaction',
+    component: Layout,
+    redirect: '/interaction',
+    children: [
+      {
+        path: '/interaction',
+        name: 'Interaction',
+        component: () => import('@/views/bossSide/interaction/index'),
+        meta: { title: '互动', icon: 'dashboard' },
+      },
+    ]
+  },
+  {
+    path: '/talentManagement',
+    component: Layout,
+    redirect: '/talentManagement',
+    children: [
+      {
+        path: '/talentManagement',
+        name: 'TalentManagement',
+        component: () => import('@/views/bossSide/talentManagement/index'),
+        meta: { title: '人才管理', icon: 'dashboard' },
+      },
+    ]
+  },
+  {
+    path: '/myRecruitmentData',
+    component: Layout,
+    redirect: '/myRecruitmentData',
+    children: [
+      {
+        path: '/myRecruitmentData',
+        name: 'MyRecruitmentData',
+        component: () => import('@/views/bossSide/myRecruitmentData/index'),
+        meta: { title: '我的招聘数据', icon: 'dashboard' },
+      },
+    ]
+  },
+  {
+    path: '/myInterviewSchedule',
+    component: Layout,
+    redirect: '/myInterviewSchedule',
+    children: [
+      {
+        path: '/myInterviewSchedule',
+        name: 'MyInterviewSchedule',
+        component: () => import('@/views/bossSide/myInterviewSchedule/index'),
+        meta: { title: '我的面试安排', icon: 'dashboard' },
+      },
+    ]
+  },
+  // 人才端
   {
     path: "/talentSide",
     component: talentSide,
     redirect: '/talentHome',
+    meta: { title: '人才端', icon: 'dashboard' },
+    hidden: true,
     children: [
       {
         path: '/talentHome',
@@ -152,54 +258,22 @@ const constantRoutes = [
       },
     ]
   },
-  // {
-  //   path: '/bossSide',
-  //   component: Layout,
-  //   redirect: '/bossHome',
-  //   children: [{
-  //     path: '/bossHome',
-  //     name: 'bossHome',
-  //     component: () => import('@/views/bossSide/home/index'),
-  //     meta: { title: '首页', icon: 'dashboard' }
-  //   }]
-  // }
-];
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
 
-const router = new VueRouter({
-    // mode: 'history', // require service support
-    scrollBehavior: () => ({ y: 0 }),
-    routes: constantRoutes,
-  });
-  
-const whiteList = ['/login','/404']; // 添加路由白名单
-
-
-//路由判断
-router.beforeEach(async (to, from, next) => {
-  const hasToken = getToken();
-  if(hasToken){
-      // 有路由表直接放行
-      next();
-  }else{
-    if (whiteList.indexOf(to.path) !== -1) {
-      // 在白名单内直接放行
-      next();
-    } else {
-      // 其他没有访问权限的页面将被重定向到登录页面。
-      next(`/login?redirect=${to.path}`);
-    }
-  }
-
-  if(to.path == from.path ){
-    // 让 列表页 即不缓存，刷新
-    to.meta.keepAlive = false; 
-  }
-  // next()
-  document.title = getPageTitle(to.meta.title);
-
+const createRouter = () => new Router({
+  // mode: 'history', // require service support
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRoutes
 })
-  
 
+const router = createRouter()
 
+// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
+}
 
-export default router;
+export default router

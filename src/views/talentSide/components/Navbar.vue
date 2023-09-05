@@ -138,6 +138,8 @@ export default {
       padding: 0;
       margin-left: 20px;
       font-size: 14px;
+      text-align: center;
+      padding: 0;
     }
     /deep/ .el-menu--horizontal>.el-menu-item.is-active{
       background-color: #000A14 !important;

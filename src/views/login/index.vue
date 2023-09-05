@@ -266,8 +266,7 @@ export default {
       }
       that.$axios.post('/api/login',p).then( res =>{
         let data = res.data;
-        that.$store.commit("setToken", res.data.token);  // vuex
-        that.$store.commit("setUserInfo", data.user.real_name); // vuex
+        // that.$store.commit("SET_TOKEN", res.data.token);  // vuex
         setToken(data.token);   // 缓存
         localStorage.setItem('realname', data.user.real_name); // 缓存
         localStorage.setItem('realAvatar', data.user.avatar); // 缓存
@@ -702,6 +701,10 @@ $cursor: #000;
   /deep/ .el-checkbox__input.is-focus .el-checkbox__inner {
     border-color: $g_bg;
   }
+  .el-checkbox{
+    margin-right: 4px;
+    margin-top: -2.5px;
+  }
 }
 .login-footer-box{
   width: 100%;
@@ -772,6 +775,7 @@ $cursor: #000;
       line-height: 32px;
       opacity: 1;
       cursor: pointer;
+      text-align: center;
       
       &:hover{
         background: #F4F8FF;
