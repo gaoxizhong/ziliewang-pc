@@ -77,7 +77,7 @@ export const constantRoutes = [
     redirect: '/recommendTalents',
     children: [
       {
-        path: 'recommendTalents',
+        path: '/recommendTalents',
         name: 'RecommendTalents',
         component: () => import('@/views/bossSide/recommendTalents/index'),
         meta: { title: '推荐人才', icon: 'dashboard' },
@@ -146,6 +146,20 @@ export const constantRoutes = [
         name: 'MyInterviewSchedule',
         component: () => import('@/views/bossSide/myInterviewSchedule/index'),
         meta: { title: '我的面试安排', icon: 'dashboard' },
+      },
+    ]
+  },
+  {
+    path:'/postJob',
+    component: Layout,
+    redirect: '/postJob',
+    hidden: true,
+    children: [
+      {
+        path: '/postJob',
+        name: 'PostJob',
+        component: () => import('@/views/bossSide/postJob/index'),
+        meta: { title: '发布职位' },
       },
     ]
   },

@@ -36,7 +36,10 @@
                 <img src="../../../assets/image/bossSide/handbag.png" alt="" />
                 <span>我的职位</span>
               </div>
-              <div class="right"></div>
+              <div class="right" @click="goToPostJob">
+                <img src="../../../assets/image/bossSide/edit.png" alt="" />
+                <span>发布职位</span>
+              </div>
             </div>
             <div class="data-box">
               <div>
@@ -123,9 +126,13 @@ export default {
     
   },
   methods: {
+    // 点击发布职位
+    goToPostJob(){
+      this.$router.push({ path:'/postJob' })
+    },
     searchEnterFun(e){
       console.log(e)
-  },
+    },
     // input 框搜索按钮
     getExistLabels(){
 
@@ -202,15 +209,33 @@ export default {
       img{
         width: 1.1rem;
         height: 1.1rem;
+        margin-top: -4px;
       }
       span{
         font-size: 0.9rem;
         font-weight: 500;
         color:$g_textColor;
-        line-height: 1.3rem;
+        line-height: 26px;
         padding-left: 10px;
       }
-    }   
+    }  
+    .right{
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      img{
+        width: 12.5px;
+        height: 12.5px;
+        margin-top: -4px;
+      }
+      span{
+        color: $g_color;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        padding-left: 6px;
+      }
+    } 
     
   }
   .data-box{
