@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bossSide-container">
     <!-- 职位中心页 -->
     <div>职位中心</div>
   </div>

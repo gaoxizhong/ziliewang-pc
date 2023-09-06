@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bossSide-container">
     <!-- 互动页 -->
     <div>互动</div>
   </div>

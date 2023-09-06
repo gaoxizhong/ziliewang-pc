@@ -132,9 +132,19 @@ li{
   margin-top: 1rem;
 }
 
-/// 企业端
-.dashboard {
-  &-container {
-    margin: 16px;
+// ================ 企业端  ======================
+.bossSide-container {
+  margin: 1rem 6.25rem;
+  .bossSide-box{
+    width: 100%;
+    display: flex;
+    .bossSide-left-box{
+      flex: 1;
+    }
+    .bossSide-right-box{
+      width: 380px;
+      padding-left: 0.8rem;
+    }
   }
+
 }

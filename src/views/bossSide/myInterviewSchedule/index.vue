@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bossSide-container">
     <!-- 我的面试安排页 -->
     <div>我的面试安排</div>
   </div>

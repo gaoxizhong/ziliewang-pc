@@ -282,8 +282,8 @@ export default {
           }
           if(that.role == 2){
             // 企业端
-            // this.$router.push(this.redirect || '/bossSide');
-            this.$router.push('/bossSide');
+            // this.$router.push(this.redirect || '/dashboard');
+            this.$router.push('/dashboard');
 
           }
         }, 1000);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bossSide-container">
     <!-- 搜索人才页 -->
     <div>搜索人才</div>
   </div>
