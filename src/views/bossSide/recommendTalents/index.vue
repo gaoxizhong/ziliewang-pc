@@ -195,8 +195,8 @@ export default {
         width: auto;
         display: flex;
         .avatar-box{
-          width: 56px;
-          height: 50px;
+          width: 2.8rem;
+          height: 2.8rem;
           border-radius: 50%;
         }
         .left-info-box{
@@ -207,7 +207,7 @@ export default {
           }
           .left-info-t{
             .left-info-name{
-              font-size: 18px;
+              font-size: 16px;
               color: $g_textColor;
               line-height: 24px;
             }
@@ -258,7 +258,7 @@ export default {
       }
       .items-m-box{
         flex: 1;
-        padding-left: 8.6rem;
+        padding-left: 6rem;
         .items-m-p{
           margin-top: 8px;
           &:nth-of-type(1){
@@ -297,7 +297,7 @@ export default {
         border-radius: 2px;
         border: 1px solid $g_color;
         color: $g_color;
-        margin-right: 20px;
+        margin-right: 1rem;
         cursor: pointer;
         &.hover{
           background: $g_bg;

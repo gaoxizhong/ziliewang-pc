@@ -78,9 +78,18 @@
               <img src="../../../assets/image/bossSide/wallet-three.png" alt="" />
               <span>我的资产</span>
             </div>
-            
+            <div class="right zc-box">
+              <span>更多</span>
+              <img src="../../../assets/image/bossSide/right.png" alt="">
+            </div>
           </div>
-
+          <div class="my-goldCoin-box">
+            <div class="goldCoin-title">猎米</div>
+            <div class="goldCoin-num-btn-box">
+              <span>236</span>
+              <button class="goldCoin-btn">购买</button>
+            </div>
+          </div>
         </div>
         <!-- 我的资产 结束 -->
         <!-- 我的权益 开始 -->
@@ -235,7 +244,16 @@ export default {
         line-height: 22px;
         padding-left: 6px;
       }
-    } 
+    }
+    .zc-box{
+      img {
+        margin-top: -2px;
+        margin-left: 4px;
+      }
+      span{
+        color: #4E5969;
+      }
+    }
     
   }
   .data-box{
@@ -259,5 +277,38 @@ export default {
         margin-top: 0.5rem;
       }
     }
+  }
+  .my-goldCoin-box{
+    margin-top: 1.5rem;
+    .goldCoin-title{
+      font-size: 14px;
+      font-weight: 400;
+      color: #86909C;
+      line-height: 22px;
+    }
+    .goldCoin-num-btn-box{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      span{
+        font-size: 24px;
+        font-family: DIN Alternate-Bold, DIN Alternate;
+        font-weight: bold;
+        color: $g_textColor;
+        line-height: 32px;
+      }
+      .goldCoin-btn{
+        background: $g_bg;
+        box-shadow: 0px 2px 0px 0px rgba(0,0,0,0.04);
+        border-radius: 2px;
+        opacity: 1;
+        border: none;
+        padding: 6px 12px;
+        color: #fff;
+      }
+    }
+
   }
 </style>

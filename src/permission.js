@@ -6,6 +6,15 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
+import { bossSideRoutes } from '@/utils/bossSideRoutes' // 企业端路由
+import { talentSideRoutes } from '@/utils/talentSideRoutes' // 人才端路由
+const role = localStorage.getItem('role'); // 类型 企业、人才
+
+console.log(bossSideRoutes)
+console.log(talentSideRoutes)
+console.log(role)
+
+
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist

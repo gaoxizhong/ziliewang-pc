@@ -206,6 +206,7 @@ export default {
     // 切换角色
     clickRole(n){
       this.role = n;
+      localStorage.setItem('role',n);
       this.c_role = false;
     },
     // 点击注册登录框tab
@@ -272,7 +273,6 @@ export default {
         localStorage.setItem('realAvatar', data.user.avatar); // 缓存
         localStorage.setItem('realUid', data.user.uid); // 缓存
         setTimeout(() => {
-          console.log(that.role)
           // 此时要判断/login后面的参数redirect，若无参数，进入主页；
           // 若有参数则参数为未有权限的那个路由，跳转到那个路由
           if(that.role == 1){

@@ -8,6 +8,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src=" avatar ? avatar : require('../../assets/image/img-user.jpg')" class="user-avatar">
+          <span class="username" v-if="name">{{ name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -17,7 +18,7 @@
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">退出</span>
+            <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -29,6 +30,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { setToken } from '@/utils/auth';
 
 export default {
   components: {
@@ -39,6 +41,9 @@ export default {
     ...mapGetters([
       'sidebar',
     ]),
+    name() {
+      return localStorage.getItem('realname')
+    },
     avatar() {
       return localStorage.getItem('realAvatar')
     },
@@ -47,10 +52,13 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
+    logout() {
+      // debugger
+      setToken('');
+      // 清除缓存的权限菜单
+      sessionStorage.removeItem("route")
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    },
   }
 }
 </script>
@@ -111,14 +119,17 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-
+        display: flex;
+        align-items: center;
         .user-avatar {
           cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;
         }
-
+        .username{
+          margin-left: 10px;
+        }
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;

@@ -81,11 +81,11 @@ export default {
   methods: {
    
     logout() {
-    // debugger
-    setToken('');
-    // 清除缓存的权限菜单
-    sessionStorage.removeItem("route")
-    this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      // debugger
+      setToken('');
+      // 清除缓存的权限菜单
+      sessionStorage.removeItem("route")
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
     // 点击职圈
     clickProfessionalCircle(){
