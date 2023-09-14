@@ -15,11 +15,18 @@
       </div>
       <!-- 搜索框模块 j结束 -->
       <!-- 筛选模块 开始-->
-      <div class="filter-box"></div>
+      <div class="filter-box margin-top-20 m-box">
+        <div class="filter-item-box"></div>
+        <div class="filter-item-box"></div>
+        <div class="filter-item-box"></div>
+        <div class="filter-item-box"></div>
+        <div class="filter-item-box"></div>
+        <div class="filter-item-box"></div>
+      </div>
       <!-- 筛选模块 开始-->
     </div>
 
-    <div class="home-box">
+    <div class="home-box margin-top-20">
       <!-- 左侧列表模块 开始 -->
       <div class="info-list-box">
         <jobList :data="infoData" :tag="tag"/>
@@ -148,6 +155,18 @@ export default {
     .info-right-box{
       width: 19rem;
       padding-left: 0.8rem;
+    }
+  }
+
+
+
+  .filter-box{
+    width: 100%;
+    padding: 1rem;
+    .filter-item-box{
+      width: 100%;
+      padding: 10px 0;
+      border-bottom: 1px solid #F2F3F5;
     }
   }
 </style>
