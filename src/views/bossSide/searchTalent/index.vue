@@ -99,7 +99,7 @@ export default {
 <style lang="scss" scoped>
   .searchTalent-top-box{
     .search-box{
-      padding: 0 3rem 0 4.5rem;
+      padding: 0 3rem;
       .search-input-box{
         display: flex;
         align-items: center;
@@ -192,7 +192,7 @@ export default {
       .hotJob-box{
         width: 100%;
         display: flex;
-        margin: 10px 0;
+        margin-top: 10px;
         .hotJob-span{
           width: auto;
           font-size: 14px;
@@ -206,14 +206,14 @@ export default {
           flex-wrap: wrap;
           align-items: center;
           a{
-            padding: 4px 20px;
+            padding: 4px 1rem;
             border-radius: 4px;
             background: #fff;
             text-align: center;
             font-size: 14px;
             color: $g_color;
             margin-left: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
           }
         }
       }

@@ -1,10 +1,31 @@
 <template>
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-
     <breadcrumb class="breadcrumb-container" />
-
     <div class="right-menu">
+      <div class="right-items-box">
+        <div>
+          <img src="../../assets/image/bossSide/icon-zq.png" alt="" />
+          <span>职圈</span>
+        </div>
+        <div>
+          <img src="../../assets/image/bossSide/remind.png" alt="" />
+          <span>通知</span>
+        </div>
+        <div>
+          <img src="../../assets/image/bossSide/questionCircle.png" alt="" />
+          <span>帮助</span>
+        </div>
+        <div>
+          <img src="../../assets/image/bossSide/comment.png" alt="" />
+          <span>面试</span>
+        </div>
+        <div>
+          <img src="../../assets/image/bossSide/icon-frame2.png" alt="" />
+          <span>企业主页</span>
+        </div>
+      </div>
+
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src=" avatar ? avatar : require('../../assets/image/img-user.jpg')" class="user-avatar">
@@ -91,10 +112,28 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
+    display: flex;
+    align-items: center;
     &:focus {
       outline: none;
     }
-
+    .right-items-box{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      div{
+        margin-right: 1.5rem;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        img{
+          width: 14px;
+          height: 14px;
+          margin-right: 4px;
+        }
+      }
+    }
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;
@@ -123,8 +162,8 @@ export default {
         align-items: center;
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
+          width: 2rem;
+          height: 2rem;
           border-radius: 10px;
         }
         .username{
