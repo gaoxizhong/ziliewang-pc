@@ -75,7 +75,23 @@ export default {
       jobList:[{},{}]
     }
   },
+  created(){
+    this.getinfoList();
+  },
   methods:{
+    getinfoList(){
+      let that = this;
+      that.$axios.post('/api/company-position/list',{}).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+         
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
     clickStatus(n){
       this.tabStatus = n;
     },

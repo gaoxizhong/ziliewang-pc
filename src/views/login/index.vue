@@ -269,18 +269,20 @@ export default {
         let data = res.data;
         // that.$store.commit("SET_TOKEN", res.data.token);  // vuex
         setToken(data.token);   // 缓存
-        localStorage.setItem('realname', data.user.real_name); // 缓存
-        localStorage.setItem('realAvatar', data.user.avatar); // 缓存
-        localStorage.setItem('realUid', data.user.uid); // 缓存
+        localStorage.setItem('realname', data.user.real_name); // 用户名缓存
+        localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
+        localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
+        localStorage.setItem('role', data.user.role); // 用户身份 1、人才端 2、企业端缓存
+
         setTimeout(() => {
           // 此时要判断/login后面的参数redirect，若无参数，进入主页；
           // 若有参数则参数为未有权限的那个路由，跳转到那个路由
-          if(that.role == 1){
+          if(data.user.role == 1){
             // 求职者
             // this.$router.push(this.redirect || '/talentSide');
             this.$router.push('/talentSide');
           }
-          if(that.role == 2){
+          if(data.user.role == 2){
             // 企业端
             // this.$router.push(this.redirect || '/dashboard');
             this.$router.push('/dashboard');

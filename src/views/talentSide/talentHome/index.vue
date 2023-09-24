@@ -15,14 +15,14 @@
       </div>
       <!-- 搜索框模块 j结束 -->
       <!-- 筛选模块 开始-->
-      <div class="filter-box margin-top-20 m-box">
+      <!-- <div class="filter-box margin-top-20 m-box">
         <div class="filter-item-box"></div>
         <div class="filter-item-box"></div>
         <div class="filter-item-box"></div>
         <div class="filter-item-box"></div>
         <div class="filter-item-box"></div>
         <div class="filter-item-box"></div>
-      </div>
+      </div> -->
       <!-- 筛选模块 开始-->
     </div>
 

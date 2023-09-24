@@ -36,6 +36,9 @@
             <i class="el-icon-caret-bottom" />
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
+            <router-link to="/">
+              <el-dropdown-item>企业端</el-dropdown-item>
+            </router-link>
             <router-link to="/talentSideSettings">
               <el-dropdown-item>设置</el-dropdown-item>
             </router-link>

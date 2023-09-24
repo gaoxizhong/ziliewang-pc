@@ -7,31 +7,31 @@
         <div class="title">发布职位</div>
         <div class="postJob-form-box">
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-            <el-form-item label="职位名称" prop="postJob_name">
-              <el-input v-model="ruleForm.postJob_name" placeholder="请输入"></el-input>
+            <el-form-item label="职位名称" prop="position_name">
+              <el-input v-model="ruleForm.position_name" placeholder="请输入"></el-input>
             </el-form-item>
 
-            <el-form-item label="工作性质" prop="natureWork">
-              <el-radio-group v-model="ruleForm.natureWork">
-                <el-radio label="全职"></el-radio>
-                <el-radio label="兼职"></el-radio>
-                <el-radio label="实习"></el-radio>
-                <el-radio label="校园"></el-radio>
+            <el-form-item label="工作性质" prop="work_type">
+              <el-radio-group v-model="ruleForm.work_type">
+                <el-radio label="全职" value="1" @click.stop="radioGroup(1)"></el-radio>
+                <el-radio label="兼职" value="2" @click.stop="radioGroup(3)"></el-radio>
+                <el-radio label="实习" value="3" @click.stop="radioGroup(3)"></el-radio>
+                <el-radio label="校园" value="4" @click.stop="radioGroup(4)"></el-radio>
               </el-radio-group>
             </el-form-item>
 
-            <el-form-item label="职位描述" prop="job_desc">
+            <el-form-item label="职位描述" prop="position_desc">
               <span class="desc-title">请勿输入邮箱、电话、链接,请不要包含性别歧视语 请参考职位描述规范</span>
-              <el-input type="textarea" :rows="9" v-model="ruleForm.job_desc" :placeholder="desc_placeholder"></el-input>
+              <el-input type="textarea" :rows="9" v-model="ruleForm.position_desc" :placeholder="desc_placeholder"></el-input>
             </el-form-item>
 
-            <el-form-item label="职位亮点" prop="job_highlight">
+            <el-form-item label="职位亮点" prop="position_lightspot">
               <span class="desc-title">求职端展示效果，向求职者介绍您的职位亮点，增加独特的吸引力，让您的职位脱颖而出!</span>
-              <el-input type="textarea" :rows="3" v-model="ruleForm.job_highlight" :placeholder="hight_placeholder"></el-input>
+              <el-input type="textarea" :rows="3" v-model="ruleForm.position_lightspot" :placeholder="hight_placeholder"></el-input>
             </el-form-item>
 
-            <el-form-item label="职位类别" prop="job_category">
-              <el-select v-model="ruleForm.job_category" placeholder="请选择职位类别">
+            <el-form-item label="职位类别" prop="position_type">
+              <el-select v-model="ruleForm.position_type" placeholder="请选择职位类别">
                 <el-option label="UI设计师" value="UI设计师"></el-option>
                 <el-option label="前端开发" value="前端开发"></el-option>
               </el-select>
@@ -46,7 +46,7 @@
 
             <el-form-item label="学习经历" required>
               <el-col :span="7">
-                <el-form-item prop="xl_1">
+                <el-form-item prop="educational_experience">
                   <el-select v-model="ruleForm.xl_1" placeholder="请选择">
                     <el-option label="博士" value="博士"></el-option>
                     <el-option label="研究生" value="研究生"></el-option>
@@ -82,22 +82,73 @@
                 <el-option label="后端" value="后端"></el-option>
               </el-select>
             </el-form-item>
-
-            <el-form-item label="工作地址" prop="working_address">
-              <el-input v-model="ruleForm.working_address" placeholder="请输入工作地址"></el-input>
+            <el-form-item label="工作地址" prop="work_address">
+              <el-input v-model="ruleForm.work_address" placeholder="请输入工作地址"></el-input>
             </el-form-item>
 
-            <el-form-item label="补充信息" prop="supplementary_info">
-              <el-checkbox-group v-model="ruleForm.supplementary_info">
+            <el-form-item label="新资范围" required>
+              <el-col :span="7">
+                <el-input v-model="ruleForm.xz_status" placeholder="新资范围"></el-input>
+              </el-col>
+              <el-col class="line" :span="1" style="font-size: 14px;"> 至 </el-col>
+              <el-col :span="7">
+                <el-input v-model="ruleForm.xz_end" placeholder="新资范围"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="职位福利" prop="job_benefits">
+              <el-col :span="15">
+                <el-select v-model="ruleForm.job_benefits" multiple placeholder="请选择" style="width: 100%;">
+                  <el-option label="五险一金" value="五险一金"></el-option>
+                  <el-option label="绩效奖金" value="绩效奖金"></el-option>
+                  <el-option label="餐补" value="餐补"></el-option>
+                  <el-option label="交通补" value="交通补"></el-option>
+                  <el-option label="住房补" value="住房补"></el-option>
+                </el-select>
+              </el-col>
+              
+            </el-form-item>
+            
+            <el-form-item label="招聘人数" prop="need_nums">
+              <el-col :span="7">
+                <el-input v-model="ruleForm.need_nums" placeholder="招聘人数"></el-input>
+              </el-col>
+              <span style="padding-left: 10px;font-size: 14px;">人</span>
+            </el-form-item>
+
+            <el-form-item label="简历同步至" prop="swne_workmate">
+              <span class="desc-title">我的同事 TA将与您一起管理该职位，可以通过平台和邮箱接收简历</span>
+              <el-col :span="15">
+                <el-select v-model="ruleForm.swne_workmate" multiple placeholder="请选择" style="width: 100%;">
+                  <el-option label="张三" value="1"></el-option>
+                  <el-option label="李四" value="2"></el-option>
+                  <el-option label="王五" value="3"></el-option>
+                  <el-option label="麻六" value="4"></el-option>
+                </el-select>
+              </el-col>
+              
+            </el-form-item>
+            <el-form-item label="简历要求" prop="resume_demand">
+              <span class="desc-title">设置后，不满足要求的简历，将被自动标记为不合适，该部分简历可在下人才管理-不合适，中查看!</span>
+              <el-col :span="15">
+                <el-select v-model="ruleForm.resume_demand" multiple placeholder="设置期望简历要求" style="width: 100%;">
+                  <el-option label="三年" value="三年"></el-option>
+                  <el-option label="北京" value="北京"></el-option>
+                  <el-option label="本科" value="本科"></el-option>
+                </el-select>
+              </el-col>
+              
+            </el-form-item>
+            <el-form-item label="补充信息" prop="supplementary_information">
+              <el-checkbox-group v-model="ruleForm.supplementary_information">
                 <el-checkbox label="可转正" name="可转正"></el-checkbox>
                 <el-checkbox label="可远程实习" name="可远程实习"></el-checkbox>
                 <el-checkbox label="提供实习证明" name="提供实习证明"></el-checkbox>
               </el-checkbox-group>
             </el-form-item>
             
-            <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')">发布</el-button>
-              <el-button @click="resetForm('ruleForm')">重置</el-button>
+            <el-form-item class="btn-box">
+              <el-button type="primary" @click="submitForm">发布</el-button>
+              <el-button @click="resetForm">重置</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -112,18 +163,23 @@ export default {
   data() {
     return {
       ruleForm: {
-        postJob_name: '', // 职位名称
-        natureWork: '', // 工作性质
-        job_desc: '', // 职位描述
-        job_highlight:'', // 职位亮点
-        job_category:'', // 职位类别
+        position_name: '', // 职位名称
+        work_type: '', // 工作性质
+        position_desc: '', // 职位描述
+        position_lightspot:'', // 职位亮点
+        position_type:'', // 职位类别
         industry_requirement:'', // 行业要求
         xl_1:'',
         xl_2:'',
         job_preference:'', // 职位偏好
-        working_address:'', // 工作地址
-        supplementary_info: [], // 补充信息
-
+        work_address:'', // 工作地址
+        xz_status:'',
+        xz_end:'',
+        supplementary_information: [], // 补充信息
+        swne_workmate:'', // 同事
+        need_nums:'', // 招聘人数
+        job_benefits:'', // 职位福利
+        resume_demand: '', // 简历要求
         region: '',
         date1: '',
         date2: '',
@@ -131,49 +187,44 @@ export default {
         type: [],
       },
       rules: {  // 必填提示
-        postJob_name: [
+        position_name: [
           { required: true, message: '请输入职位名称', trigger: 'blur' }
         ],
-        working_address: [
+        work_address: [
           { required: true, message: '请输入工作地址', trigger: 'blur' }
         ],
-        natureWork: [
+        work_type: [
           { required: true, message: '请选择工作性质', trigger: 'change' }
         ],
-        job_desc: [
+        position_desc: [
           { required: true, message: '请填写职位描述', trigger: 'blur' }
         ],
-        job_category: [
+        position_type: [
           { required: true, message: '请选择职位类别', trigger: 'change' }
         ],
         industry_requirement: [
           { required: true, message: '请选择行业要求', trigger: 'change' }
         ],
         xl_1: [
-          { required: true, message: '请选择学习经历', trigger: 'change' }
+          { required: true, message: '请选择开始学习经历', trigger: 'change' }
         ],
         xl_2: [
           { required: true, message: '请选择学习经历', trigger: 'change' }
         ],
+        xz_status: [
+          { required: true, message: '请填写薪资范围', trigger: 'blur' }
+        ],
+        xz_end: [
+          { required: true, message: '请填写薪资范围', trigger: 'blur' }
+        ],
+        need_nums: [
+          { required: true, message: '请填写招聘人数', trigger: 'blur' }
+        ],
         job_preference: [
           { required: true, message: '请选择职位偏好', trigger: 'change' }
         ],
-
-
-
-
-
-        type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-        ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
-        ],
-        date1: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-        ],
-        date2: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+        job_preference: [
+          { required: true, message: '请选择职位偏好', trigger: 'change' }
         ],
       },
       desc_placeholder:`请输入岗位职责、任职要求等描述，至少10个字，建议使用以下格式逐条列出岗位职责
@@ -189,6 +240,70 @@ export default {
 2. 建议填写调薪机制&晋升通道、是否牛人带队、团队氛围、企业发展潜力等.
       `,
     }
+  },
+  methods:{
+    radioGroup(v){
+      console.log(e)
+    },
+    // 点击重置
+    resetForm(){
+      this.ruleForm= {
+        position_name: '', // 职位名称
+        work_type: '', // 工作性质
+        position_desc: '', // 职位描述
+        position_lightspot:'', // 职位亮点
+        position_type:'', // 职位类别
+        industry_requirement:'', // 行业要求
+        xl_1:'',
+        xl_2:'',
+        job_preference:'', // 职位偏好
+        work_address:'', // 工作地址
+        xz_status:'',
+        xz_end:'',
+        supplementary_information: [], // 补充信息
+        need_nums:'', // 招聘人数
+        job_benefits:'', // 职位福利
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+      }
+    },
+    // 点击提交
+    submitForm(){
+      let that = this;
+      let ruleForm = that.ruleForm;
+      let p = {
+        position_name: ruleForm.position_name,
+        work_type: ruleForm.work_type,
+        position_desc: ruleForm.position_desc,
+        position_lightspot: ruleForm.position_lightspot,
+        position_type: ruleForm.position_type,
+        industry_requirement: ruleForm.industry_requirement,
+        educational_experience:ruleForm.xl_1 +' - ' + ruleForm.xl_2,
+        job_preference: ruleForm.job_preference,
+        work_address: ruleForm.work_address,
+        salary: ruleForm.xz_status + ' - ' + ruleForm.xz_end,
+        job_benefits: ruleForm.job_benefits.join(','),
+        need_nums: ruleForm.need_nums,
+        supplementary_information: ruleForm.supplementary_information.join(','),
+        swne_workmate: ruleForm.swne_workmate.join(','),
+        resume_demand: ruleForm.resume_demand.join(','),
+
+      };
+      
+      that.$axios.post('/api/company-position/publish',p).then( res =>{
+        console.log(res)
+        if(res.data.code == 0){
+          that.$message.success(' 发布成功！');
+        }else{
+          that.$message.error({
+            message:res.data.msg
+          })
+        }
+      })
+    },
   },
 }
 </script>
@@ -244,5 +359,23 @@ export default {
         line-height: 32px;
       }
     }
+  }
+  .btn-box{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    & /deep/ .el-form-item__content{
+      margin-left: 40px !important;
+    }
+   & /deep/ .el-button{
+    width: 114px;
+    height: 40px;
+    margin-right: 20px;
+   }
+   & /deep/ .el-button--primary{
+    background-color:$g_bg;
+    border-color: $g_color;
+   }
+
   }
 </style>

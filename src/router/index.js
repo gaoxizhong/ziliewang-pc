@@ -46,7 +46,7 @@ export const constantRoutes = [
   },
 
   {
-    path: '/',
+    path: '/',  // 企业端
     component: Layout,
     redirect: '/dashboard',
     children: [
@@ -163,7 +163,49 @@ export const constantRoutes = [
       },
     ]
   },
-  // 人才端
+  {
+    path:'/corporateHome',
+    component: Layout,
+    redirect: '/corporateHome',
+    hidden: true,
+    children: [
+      {
+        path: '/corporateHome',
+        name: 'corporateHome',
+        component: () => import('@/views/bossSide/corporateHome/index'),
+        meta: { title: '企业主页' },
+      },
+    ]
+  },
+  {
+    path:'/perfectInfoPage',
+    component: Layout,
+    redirect: '/perfectInfoPage',
+    hidden: true,
+    children: [
+      {
+        path: '/perfectInfoPage',
+        name: 'perfectInfoPage',
+        component: () => import('@/views/bossSide/corporateHome/perfectInfoPage.vue'),
+        meta: { title: '完善信息' },
+      },
+    ]
+  },
+  {
+    path:'/enterpriseInfoRequest',
+    component: Layout,
+    redirect: '/enterpriseInfoRequest',
+    hidden: true,
+    children: [
+      {
+        path: '/enterpriseInfoRequest',
+        name: 'enterpriseInfoRequest',
+        component: () => import('@/views/bossSide/corporateHome/enterpriseInfoRequest.vue'),
+        meta: { title: '企业申请' },
+      },
+    ]
+  },
+  //---- 人才端
   {
     path: "/talentSide",
     component: talentSide,
