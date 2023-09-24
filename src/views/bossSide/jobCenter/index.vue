@@ -84,7 +84,7 @@ export default {
       that.$axios.post('/api/company-position/list',{}).then( res =>{
         console.log(res)
         if(res.code == 0){
-         
+          that.jobList = res.data
         }else{
           that.$message.error({
             message:res.msg

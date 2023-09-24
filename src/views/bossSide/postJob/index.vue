@@ -13,10 +13,10 @@
 
             <el-form-item label="工作性质" prop="work_type">
               <el-radio-group v-model="ruleForm.work_type">
-                <el-radio label="全职" value="1" @click.stop="radioGroup(1)"></el-radio>
-                <el-radio label="兼职" value="2" @click.stop="radioGroup(3)"></el-radio>
-                <el-radio label="实习" value="3" @click.stop="radioGroup(3)"></el-radio>
-                <el-radio label="校园" value="4" @click.stop="radioGroup(4)"></el-radio>
+                <el-radio label="1">全职</el-radio>
+                <el-radio label="2">兼职</el-radio>
+                <el-radio label="3">实习</el-radio>
+                <el-radio label="4">校园</el-radio>
               </el-radio-group>
             </el-form-item>
 
@@ -85,7 +85,6 @@
             <el-form-item label="工作地址" prop="work_address">
               <el-input v-model="ruleForm.work_address" placeholder="请输入工作地址"></el-input>
             </el-form-item>
-
             <el-form-item label="新资范围" required>
               <el-col :span="7">
                 <el-input v-model="ruleForm.xz_status" placeholder="新资范围"></el-input>
@@ -93,6 +92,29 @@
               <el-col class="line" :span="1" style="font-size: 14px;"> 至 </el-col>
               <el-col :span="7">
                 <el-input v-model="ruleForm.xz_end" placeholder="新资范围"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="工作时间" required>
+              <el-col :span="5">
+                <el-select v-model="ruleForm.sx_status" placeholder="实习总时长" style="width: 100%;">
+                  <el-option label="1天" value="1天"></el-option>
+                  <el-option label="10天" value="10天"></el-option>
+                  <el-option label="30天" value="30天"></el-option>
+                  <el-option label="90天" value="90天"></el-option>
+                  <el-option label="180天" value="180天"></el-option>
+                </el-select>
+              </el-col>
+              <el-col class="line" :span="1" style="font-size: 14px;"> 至 </el-col>
+              <el-col :span="5">
+                <el-select v-model="ruleForm.sx_end" placeholder="每周实习天数" style="width: 100%;">
+                  <el-option label="1天" value="1天"></el-option>
+                  <el-option label="2天" value="2天"></el-option>
+                  <el-option label="3天" value="3天"></el-option>
+                  <el-option label="4天" value="4天"></el-option>
+                  <el-option label="5天" value="5天"></el-option>
+                  <el-option label="6天" value="6天"></el-option>
+                  <el-option label="7天" value="7天"></el-option>
+                </el-select>
               </el-col>
             </el-form-item>
             <el-form-item label="职位福利" prop="job_benefits">
@@ -175,6 +197,8 @@ export default {
         work_address:'', // 工作地址
         xz_status:'',
         xz_end:'',
+        sx_status:'',
+        sx_end:'',
         supplementary_information: [], // 补充信息
         swne_workmate:'', // 同事
         need_nums:'', // 招聘人数
@@ -243,7 +267,7 @@ export default {
   },
   methods:{
     radioGroup(v){
-      console.log(e)
+      console.log(v)
     },
     // 点击重置
     resetForm(){
@@ -260,9 +284,13 @@ export default {
         work_address:'', // 工作地址
         xz_status:'',
         xz_end:'',
+        sx_status:'',
+        sx_end:'',
         supplementary_information: [], // 补充信息
+        swne_workmate:'', // 同事
         need_nums:'', // 招聘人数
         job_benefits:'', // 职位福利
+        resume_demand: '', // 简历要求
         region: '',
         date1: '',
         date2: '',
@@ -281,22 +309,26 @@ export default {
         position_lightspot: ruleForm.position_lightspot,
         position_type: ruleForm.position_type,
         industry_requirement: ruleForm.industry_requirement,
-        educational_experience:ruleForm.xl_1 +' - ' + ruleForm.xl_2,
+        educational_experience:ruleForm.xl_1 +',' + ruleForm.xl_2,
         job_preference: ruleForm.job_preference,
         work_address: ruleForm.work_address,
-        salary: ruleForm.xz_status + ' - ' + ruleForm.xz_end,
+        salary: ruleForm.xz_status + ',' + ruleForm.xz_end,
         job_benefits: ruleForm.job_benefits.join(','),
         need_nums: ruleForm.need_nums,
         supplementary_information: ruleForm.supplementary_information.join(','),
         swne_workmate: ruleForm.swne_workmate.join(','),
         resume_demand: ruleForm.resume_demand.join(','),
+        work_times: ruleForm.sx_status + ',' + ruleForm.sx_end,
 
       };
       
       that.$axios.post('/api/company-position/publish',p).then( res =>{
         console.log(res)
-        if(res.data.code == 0){
+        if(res.code == 0){
           that.$message.success(' 发布成功！');
+          setTimeout( ()=>{
+            that.resetForm();
+          },1500)
         }else{
           that.$message.error({
             message:res.data.msg
