@@ -12,7 +12,7 @@
               <div class="input-add-box"><img src="../../../assets/image/bossSide/icon-local-two.png" alt=""><span>宁波</span></div>
               <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词"></el-input>
             </div>
-            <button class="input-button">搜索</button>
+            <button class="input-button" @click="getSearchinfo">搜索</button>
           </div>
 
           <div class="search-input-tab">
@@ -49,15 +49,15 @@
           <img src="../../../assets/image/bossSide/img-user.png" alt="" class="avatar-box">
           <div class="left-info-box">
             <div class="left-info-t">
-              <span class="left-info-name">单女士</span>
-              <img src="../../../assets/image/bossSide/icon-sex.png" alt="" >
+              <span class="left-info-name">{{ item.name }}</span>
+              <img :src="item.avatar?item.avatar:require('../../../assets/image/bossSide/icon-sex.png')" alt="" >
               <span class="icon-span">今日活跃</span>
             </div>
-            <div class="sub-title">35岁 工作11年 硕士 北京</div>
-            <div class="sub-title">求职期望: <span style="color:#FF4D4F;">UI设计师</span></div>
+            <div class="sub-title"> {{ item.birth_year_month }} 参加工作：{{ begin_work_date }} {{ item.Usereducationexperience.education_background }} {{ item.live_city }}</div>
+            <div class="sub-title">求职期望: <span style="color:#FF4D4F;">{{ item.position }}</span></div>
             <div class="bottom-box">
               <span>房地产开发经营</span>
-              <span>融资</span>
+              <!-- <span>融资</span> -->
             </div>
           </div>
         </div>
@@ -91,7 +91,33 @@ export default {
       search_value:'',
       hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
       jobList:[{},{},{},{}],  // 列表
+      page: 1,
+      pagesize: 20,
     }
+  },
+  created(){
+    this.getSearchinfo();
+  },
+  methods:{
+    // 搜索
+    getSearchinfo(){
+      let that = this;
+      let p = {
+        page: that.page,
+        pagesize: that.pagesize,
+        search: that.search_value,
+      }
+      that.$axios.post('/api/company-position/search',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.jobList = res.data
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
   }
 }
 </script>

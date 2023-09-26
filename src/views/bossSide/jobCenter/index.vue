@@ -32,12 +32,12 @@
           <div></div>
           <div class="left-info-box">
             <div class="info-title">
-              <div class="title-name">UI设计师</div>
-              <div class="title-subname">1.8万-2.6万 3-5年 工作城市:宁波-鄞州区</div>
+              <div class="title-name">{{ item.position_name }}</div>
+              <div class="title-subname">{{ item.salary }} 3-5年 工作城市: {{ item.work_address }}</div>
             </div>
             <div class="info-bott">
               <img src="../../../assets/image/bossSide/img-user.png" alt="">
-              <span>彭讲建  2023.01.31 ( 30天后下线)</span>
+              <span>彭讲建  {{ item.createtime }} ( 30天后下线)</span>
             </div>
           </div>
         </div>
@@ -69,6 +69,7 @@
 export default {
   data() {
     return {
+      role: localStorage.getItem('role'),
       tabStatus: 1,
       activeName: 'unlimited',
       seach_input:'',
@@ -97,7 +98,16 @@ export default {
     },
     // 点击发布职位
     goToPostJob(){
-      this.$router.push({ path:'/postJob' })
+      if(this.role == 1){
+        this.$message.error({
+          message: "请先去注册企业信息后在发布职位！"
+        })
+        setTimeout( ()=>{
+          this.$router.push('/enterpriseInfoRequest')
+        },1500)
+      }else{
+        this.$router.push({ path:'/postJob' })
+      }
     },
     handleClick(tab, event) {
       console.log(tab, event);

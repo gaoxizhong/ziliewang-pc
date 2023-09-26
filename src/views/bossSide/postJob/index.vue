@@ -83,7 +83,15 @@
               </el-select>
             </el-form-item>
             <el-form-item label="工作地址" prop="work_address">
-              <el-input v-model="ruleForm.work_address" placeholder="请输入工作地址"></el-input>
+              <!-- <el-input v-model="ruleForm.work_address" placeholder="请输入工作地址"></el-input> -->
+              <el-cascader
+                :options="ruleForm.options"
+                ref="cascaderAddr" 
+                v-model="ruleForm.selectedOptions"
+                :props="{ value: 'label' }"
+                :show-all-levels="false" placeholder="请选择城市"
+                @change="handleChange">
+              </el-cascader>
             </el-form-item>
             <el-form-item label="新资范围" required>
               <el-col :span="7">
@@ -104,7 +112,7 @@
                   <el-option label="180天" value="180天"></el-option>
                 </el-select>
               </el-col>
-              <el-col class="line" :span="1" style="font-size: 14px;"> 至 </el-col>
+              <el-col class="line" :span="1" style="font-size: 14px;"> - </el-col>
               <el-col :span="5">
                 <el-select v-model="ruleForm.sx_end" placeholder="每周实习天数" style="width: 100%;">
                   <el-option label="1天" value="1天"></el-option>
@@ -137,10 +145,10 @@
               <span style="padding-left: 10px;font-size: 14px;">人</span>
             </el-form-item>
 
-            <el-form-item label="简历同步至" prop="swne_workmate">
+            <el-form-item label="简历同步至" prop="sync_workmate">
               <span class="desc-title">我的同事 TA将与您一起管理该职位，可以通过平台和邮箱接收简历</span>
               <el-col :span="15">
-                <el-select v-model="ruleForm.swne_workmate" multiple placeholder="请选择" style="width: 100%;">
+                <el-select v-model="ruleForm.sync_workmate" multiple placeholder="请选择" style="width: 100%;">
                   <el-option label="张三" value="1"></el-option>
                   <el-option label="李四" value="2"></el-option>
                   <el-option label="王五" value="3"></el-option>
@@ -181,6 +189,8 @@
   </div>
 </template>
 <script>
+import pcas from '../../../assets/json/pc-code.json'
+
 export default {
   data() {
     return {
@@ -200,7 +210,7 @@ export default {
         sx_status:'',
         sx_end:'',
         supplementary_information: [], // 补充信息
-        swne_workmate:'', // 同事
+        sync_workmate:'', // 同事
         need_nums:'', // 招聘人数
         job_benefits:'', // 职位福利
         resume_demand: '', // 简历要求
@@ -209,6 +219,8 @@ export default {
         date2: '',
         delivery: false,
         type: [],
+        options: pcas,  // 地址数据
+        selectedOptions: [], // 选中的地址
       },
       rules: {  // 必填提示
         position_name: [
@@ -266,6 +278,14 @@ export default {
     }
   },
   methods:{
+  // 获取省市区地址级联
+    handleChange(thsAreaCode) {
+      // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
+      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
+      this.selectedOptions = thsAreaCode;
+      console.log(this.selectedOptions)
+
+    },
     radioGroup(v){
       console.log(v)
     },
@@ -287,7 +307,7 @@ export default {
         sx_status:'',
         sx_end:'',
         supplementary_information: [], // 补充信息
-        swne_workmate:'', // 同事
+        sync_workmate:'', // 同事
         need_nums:'', // 招聘人数
         job_benefits:'', // 职位福利
         resume_demand: '', // 简历要求
@@ -309,16 +329,16 @@ export default {
         position_lightspot: ruleForm.position_lightspot,
         position_type: ruleForm.position_type,
         industry_requirement: ruleForm.industry_requirement,
-        educational_experience:ruleForm.xl_1 +',' + ruleForm.xl_2,
+        educational_experience:ruleForm.xl_1 +'-' + ruleForm.xl_2,
         job_preference: ruleForm.job_preference,
-        work_address: ruleForm.work_address,
-        salary: ruleForm.xz_status + ',' + ruleForm.xz_end,
+        work_address: ruleForm.selectedOptions.join('/'),
+        salary: ruleForm.xz_status + '-' + ruleForm.xz_end,
         job_benefits: ruleForm.job_benefits.join(','),
         need_nums: ruleForm.need_nums,
         supplementary_information: ruleForm.supplementary_information.join(','),
-        swne_workmate: ruleForm.swne_workmate.join(','),
+        sync_workmate: ruleForm.sync_workmate.join(','),
         resume_demand: ruleForm.resume_demand.join(','),
-        work_times: ruleForm.sx_status + ',' + ruleForm.sx_end,
+        work_times: ruleForm.sx_status + '-' + ruleForm.sx_end,
 
       };
       

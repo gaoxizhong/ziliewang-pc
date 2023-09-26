@@ -124,6 +124,7 @@ export default {
   name: 'Dashboard',
   data(){
     return{
+      role: localStorage.getItem('role'),
       input_name:'', // 搜索框value
       tag: '',
       infoData: {
@@ -137,7 +138,16 @@ export default {
   methods: {
     // 点击发布职位
     goToPostJob(){
-      this.$router.push({ path:'/postJob' })
+      if(this.role == 1){
+        this.$message.error({
+          message: "请先去注册企业信息后在发布职位！"
+        })
+        setTimeout( ()=>{
+          this.$router.push('/enterpriseInfoRequest')
+        },1500)
+      }else{
+        this.$router.push({ path:'/postJob' })
+      }
     },
     searchEnterFun(e){
       console.log(e)

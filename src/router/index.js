@@ -205,6 +205,20 @@ export const constantRoutes = [
       },
     ]
   },
+  {
+    path:'/individualCenter',
+    component: Layout,
+    redirect: '/individualCenter',
+    hidden: true,
+    children: [
+      {
+        path: '/individualCenter',
+        name: 'individualCenter',
+        component: () => import('@/views/bossSide/individualCenter/index'),
+        meta: { title: '个人中心' },
+      },
+    ]
+  },
   //---- 人才端
   {
     path: "/talentSide",
