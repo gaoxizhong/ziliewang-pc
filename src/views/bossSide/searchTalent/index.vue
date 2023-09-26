@@ -46,29 +46,29 @@
       <div v-for="(item,index) in jobList" :key="index" class="jobList-items m-box margin-top-20">
         <div class="items-left-box">
           <div></div>
-          <img src="../../../assets/image/bossSide/img-user.png" alt="" class="avatar-box">
+          <img :src="item.avatar?item.avatar:require('../../../assets/image/bossSide/img-user.png')" alt="" class="avatar-box">
           <div class="left-info-box">
             <div class="left-info-t">
               <span class="left-info-name">{{ item.name }}</span>
-              <img :src="item.avatar?item.avatar:require('../../../assets/image/bossSide/icon-sex.png')" alt="" >
+              <img src="../../../assets/image/bossSide/icon-sex.png" alt="" >
               <span class="icon-span">今日活跃</span>
             </div>
-            <div class="sub-title"> {{ item.birth_year_month }} 参加工作：{{ begin_work_date }} {{ item.Usereducationexperience.education_background }} {{ item.live_city }}</div>
-            <div class="sub-title">求职期望: <span style="color:#FF4D4F;">{{ item.position }}</span></div>
-            <div class="bottom-box">
-              <span>房地产开发经营</span>
+            <div class="sub-title" v-if="item.birth_year_month">生日：{{ item.birth_year_month }}</div>
+            
+            <div class="sub-title" v-if="item.begin_work_date">参加工作：{{ item.begin_work_date }} {{ item.live_city }}</div>
+            <div class="sub-title" v-if="item.position">求职期望：<span style="color:#FF4D4F;">{{ item.position }}</span></div>
+            <div class="bottom-box" v-if=" item.userjobexpectation.length > 0">
+              <span>{{ item.userjobexpectation[0].desired_industry }}</span>
               <!-- <span>融资</span> -->
             </div>
           </div>
         </div>
         <div class="items-m-box">
           <div class="items-m-p professional">
-            <div>北京联东投资(集团)有限公司<span style="color:#FF4D4F;">·UI设计师</span><span class="time-span">2019.08-至今（3年6个月）</span></div>
-            <div>北京联东投资(集团)有限公司<span style="color:#FF4D4F;">·UI设计师</span><span class="time-span">2019.08-至今（3年6个月）</span></div>
+            <div v-for="(work_item,work_index) in item.userworkexperience" :key="work_index">{{ work_item.company_name}}<span style="color:#FF4D4F;">·{{ work_item.position }}</span><span class="time-span">{{ work_item.begin_date }}-{{ work_item.end_date }}</span></div>
           </div>
           <div class="items-m-p educational">
-            <div>中国人民大学·金融学·硕士·非统招<span class="time-span">2013.08-2016.07（3年6个月）</span></div>
-            <div>烟台大学·公共事业管理·本科·统招<span class="time-span">2006.09-2010.07 (4年）</span></div>
+            <div v-for="(ex_item,ex_index) in item.usereducationexperience" :key="ex_index">{{ ex_item.school }}·{{ ex_item.specialty }}·{{ ex_item.education_background }}<span class="time-span">{{ ex_item.school_date }}</span></div>
           </div>
         </div>
         <div class="items-right-box">
@@ -76,41 +76,58 @@
           <div>电话沟通</div>
         </div>
       </div>
+      <div class="nolist-box" v-if="jobList.length <= 0">暂无数据....</div>
     </div>
     <!-- 列表模块 结束  -->
 
-
+     <!-- 分页控制 -->
+     <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged"></mPagination>
 
   </div>
 </template>
 
 <script>
+import mPagination from '@/components/m-pagination';
+
 export default {
+  name: 'searchTalent',
+  components: {
+    mPagination,
+  },
   data(){
     return {
       search_value:'',
       hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
-      jobList:[{},{},{},{}],  // 列表
-      page: 1,
-      pagesize: 20,
+      jobList:[],  // 列表
+      // 分页数据
+      paginationData: {
+        total: 10,
+        currentPage: 1,
+        pageSize: 20,
+      },
     }
   },
   created(){
     this.getSearchinfo();
   },
   methods:{
+    // 分页事件
+    pageHasChanged() {
+      this.getSearchinfo();
+    },
     // 搜索
     getSearchinfo(){
       let that = this;
       let p = {
-        page: that.page,
-        pagesize: that.pagesize,
+        page: that.paginationData.currentPage,
+        pagesize: that.paginationData.pageSize,
         search: that.search_value,
       }
       that.$axios.post('/api/company-position/search',p).then( res =>{
         console.log(res)
         if(res.code == 0){
-          that.jobList = res.data
+          that.jobList = res.data.list;
+          that.paginationData.total = res.data.total;
         }else{
           that.$message.error({
             message:res.msg
@@ -373,6 +390,7 @@ export default {
             }
             .time-span{
               color: #86909C;
+              padding-left: 6px;
             }
           }
 
@@ -407,4 +425,5 @@ export default {
     }
 
   }
+
 </style>
