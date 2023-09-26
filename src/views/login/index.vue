@@ -24,8 +24,8 @@
           <!-- 登录模块 开始 -->
           <div class="signLogin-box" v-if="sign_login == 'login'">
             <div class="login-type-box">
-              <span :class=" login_way == 1?'hover':'' " @click="clickTab(1)">快捷登录</span>
               <span :class=" login_way == 2?'hover':'' " @click="clickTab(2)">密码登录</span>
+              <span :class=" login_way == 1?'hover':'' " @click="clickTab(1)">快捷登录</span>
             </div>
             <form @submit.prevent="LoginUserInfo" class="form-container">
               <!-- 快捷登录  -->
@@ -147,7 +147,7 @@ export default {
       role: 1,
       login_bgurl:{},
       sign_login: 'login', // sign、注册； login、登录
-      login_way: 1, // 登录方式 1、快捷登录 2、密码登录
+      login_way: 2, // 登录方式 1、快捷登录 2、密码登录
       login_user: { // 登录信息
         phone: '',
         password:'',
