@@ -21,84 +21,87 @@
         </div>
       </div>
       <div class="container-right-box">
-        <!-- 谁能查看我的简历 -->
-        <div class="container-right-items" ref="set_resume">
+        <div style="height: auto;">
+          <!-- 谁能查看我的简历 -->
+          <div class="container-right-items" ref="set_resume">
           <div class="title">谁能查看我的简历</div>
-          <div class="radio-group-box">
-            <el-radio-group v-model="resume_radio" @change="resume_change">
-              <el-radio :label="1">
-                <h2>企业HR、猎头</h2>
-                <span>系统会将您的简历推给HR或猎头，找工作选此选项</span>
-              </el-radio>
-              <el-radio :label="2">
-                <h2>猎头</h2>
-                <span>系统只会将您的简历推给猎头，但您主动投递时，HR可以查看您的简历</span>
-              </el-radio>
-              <el-radio :label="3">
-                <h2>企业HR</h2>
-                <span>系统只会将您的简历推给HR，但您主动投递时，猎头可以查看您的简历</span>
-              </el-radio>
-              <el-radio :label="4">
-                <h2>均不可查看</h2>
-                <span>除非您主动投递，招聘方将看不到您的简历。记得寻找工作机会时及时开放您的简历</span>
-              </el-radio>
-            </el-radio-group>
-          </div>
-        </div>
-        <!-- 屏蔽公司 -->
-        <div class="container-right-items" ref="set_shield">
-          <div class="title">屏蔽公司</div>
-          <div class="info-box">你可以屏蔽HR或猎头所在公司</div>
-          <button @click="clickSetShield">
-            <img src="../../../assets/image/Frame_11.png" alt="" />
-            <span>添加屏蔽公司</span>
-          </button>
-
-          <div class="shield-boss-box">
-            <div v-for="(item,index) in shieldBossList" :key="index" class="items-box">
-              <span class="items-name">南京金碧房地产开发有限公司</span>
-              <span class="items-cancel">取消屏蔽</span>
+            <div class="radio-group-box">
+              <el-radio-group v-model="resume_radio" @change="resume_change">
+                <el-radio :label="1">
+                  <h2>企业HR、猎头</h2>
+                  <span>系统会将您的简历推给HR或猎头，找工作选此选项</span>
+                </el-radio>
+                <el-radio :label="2">
+                  <h2>猎头</h2>
+                  <span>系统只会将您的简历推给猎头，但您主动投递时，HR可以查看您的简历</span>
+                </el-radio>
+                <el-radio :label="3">
+                  <h2>企业HR</h2>
+                  <span>系统只会将您的简历推给HR，但您主动投递时，猎头可以查看您的简历</span>
+                </el-radio>
+                <el-radio :label="4">
+                  <h2>均不可查看</h2>
+                  <span>除非您主动投递，招聘方将看不到您的简历。记得寻找工作机会时及时开放您的简历</span>
+                </el-radio>
+              </el-radio-group>
             </div>
           </div>
-        </div>
-         <!-- 手机号码保护 -->
-         <div class="container-right-items" ref="phone_protect">
-          <div class="title">手机号码保护</div>
-          <div class="info-box">开启后，当企业HR和猎头联系你时对其隐藏真实手机号码</div>
-          <div class="phone-protect-box">
-            <span class="phone-protect-title">手机号码保护</span>
-            <el-switch v-model="is_phone_protect" @change="changePhoneProtect"></el-switch>
+          <!-- 屏蔽公司 -->
+          <div class="container-right-items" ref="set_shield">
+            <div class="title">屏蔽公司</div>
+            <div class="info-box">你可以屏蔽HR或猎头所在公司</div>
+            <button @click="clickSetShield">
+              <img src="../../../assets/image/Frame_11.png" alt="" />
+              <span>添加屏蔽公司</span>
+            </button>
+
+            <div class="shield-boss-box">
+              <div v-for="(item,index) in shieldBossList" :key="index" class="items-box">
+                <span class="items-name">南京金碧房地产开发有限公司</span>
+                <span class="items-cancel">取消屏蔽</span>
+              </div>
+            </div>
+          </div>
+          <!-- 手机号码保护 -->
+          <div class="container-right-items" ref="phone_protect">
+            <div class="title">手机号码保护</div>
+            <div class="info-box">开启后，当企业HR和猎头联系你时对其隐藏真实手机号码</div>
+            <div class="phone-protect-box">
+              <span class="phone-protect-title">手机号码保护</span>
+              <el-switch v-model="is_phone_protect" @change="changePhoneProtect"></el-switch>
+            </div>
+          </div>
+          <!-- 手机号码保护 -->
+          <div class="container-right-items" ref="name_protect">
+            <div class="title">真实姓名保护</div>
+            <div class="info-box">开启后对外展示名称将展示 "张**明"</div>
+            <div class="phone-protect-box">
+              <span class="phone-protect-title">真实姓名保护</span>
+              <el-switch v-model="is_name_protect" @change="changeNameProtect"></el-switch>
+            </div>
+          </div>
+          <!-- 手机号码 -->
+          <div class="container-right-items" ref="set_phone">
+            <div class="title">手机号码</div>
+            <div class="info-box">当前手机号: {{ infoData.basic_info.phone }}</div>
+            <button @click="clickSetPhone">修改手机号</button>
+          </div>
+          <!-- 我的邮箱 -->
+          <div class="container-right-items" ref="set_email">
+            <div class="title">我的邮箱</div>
+            <div class="info-box">当前邮箱: {{ infoData.basic_info.email }}</div>
+            <button  @click="clickSetEmail">修改邮箱</button>
+
+          </div>
+          <!-- 密码设置 -->
+          <div class="container-right-items" ref="set_password">
+            <div class="title">密码设置</div>
+            <div class="info-box">当前登录账号: {{ infoData.basic_info.phone }}</div>
+            <button @click="clickSetPassword">密码设置</button>
+
           </div>
         </div>
-        <!-- 手机号码保护 -->
-        <div class="container-right-items" ref="name_protect">
-          <div class="title">真实姓名保护</div>
-          <div class="info-box">开启后对外展示名称将展示 "张**明"</div>
-          <div class="phone-protect-box">
-            <span class="phone-protect-title">真实姓名保护</span>
-            <el-switch v-model="is_name_protect" @change="changeNameProtect"></el-switch>
-          </div>
-        </div>
-        <!-- 手机号码 -->
-        <div class="container-right-items" ref="set_phone">
-          <div class="title">手机号码</div>
-          <div class="info-box">当前手机号: {{ infoData.basic_info.phone }}</div>
-          <button @click="clickSetPhone">修改手机号</button>
-        </div>
-        <!-- 我的邮箱 -->
-        <div class="container-right-items" ref="set_email">
-          <div class="title">我的邮箱</div>
-          <div class="info-box">当前邮箱: {{ infoData.basic_info.email }}</div>
-          <button  @click="clickSetEmail">修改邮箱</button>
-
-        </div>
-        <!-- 密码设置 -->
-        <div class="container-right-items" ref="set_password">
-          <div class="title">密码设置</div>
-          <div class="info-box">当前登录账号: {{ infoData.basic_info.phone }}</div>
-          <button @click="clickSetPassword">密码设置</button>
-
-        </div>
+        
       </div>
     </div>
 
@@ -490,8 +493,9 @@ export default {
     flex: 1;
     border: 1px solid #F2F3F5;
     padding: 0 2rem 2rem 2rem;
-    // height: calc(100vh - 80px);
-    // overflow-y: auto;
+    height: calc(100vh - 85px);
+    overflow-y: auto;
+
     .container-right-items{
       width: 100%;
       padding: 2rem 0;

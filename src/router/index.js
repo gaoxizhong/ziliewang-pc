@@ -192,6 +192,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path:'/enterpriseInfoEdit',
+    component: Layout,
+    redirect: '/enterpriseInfoEdit',
+    hidden: true,
+    children: [
+      {
+        path: '/enterpriseInfoEdit',
+        name: 'enterpriseInfoEdit',
+        component: () => import('@/views/bossSide/corporateHome/enterpriseInfoEdit.vue'),
+        meta: { title: '企业信息修改' },
+      },
+    ]
+  },
+  {
     path:'/enterpriseInfoRequest',
     component: Layout,
     redirect: '/enterpriseInfoRequest',
