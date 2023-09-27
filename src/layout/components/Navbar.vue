@@ -33,14 +33,19 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
+          <!-- <router-link to="/">
             <el-dropdown-item>
               首页
             </el-dropdown-item>
-          </router-link>
+          </router-link> -->
           <router-link to="/individualCenter">
             <el-dropdown-item>
               个人中心
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/talentSide">
+            <el-dropdown-item>
+              人才端
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided>

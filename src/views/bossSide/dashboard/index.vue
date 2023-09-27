@@ -317,6 +317,8 @@ export default {
         border: none;
         padding: 6px 12px;
         color: #fff;
+        font-size: 16px;
+        border-radius: 4px;
       }
     }
 

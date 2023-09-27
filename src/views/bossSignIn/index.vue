@@ -1,6 +1,6 @@
 <template>
   <div class="boss-container">
-    <!-- 我的招聘数据页 -->
+    <!-- 企业信息注册页 -->
     <div>boss注册</div>
   </div>
 </template>
