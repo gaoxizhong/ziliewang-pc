@@ -5,18 +5,16 @@
       <div class="container-titleinfo">
         <div class="titleinfo-left-box">
           <div class="title-box">
-            <div class="title-text">工程项目财务主管-北京未来科创建筑有限公司-北京未来科创建筑有限公司</div>
-            <div class="pay-box">12-20k</div>
+            <div class="title-text" v-if="company.company_name">{{ infoData.job_preference }}-{{ infoData?company.company_name:'' }}</div>
+            <div class="pay-box">{{ infoData.salary }}</div>
           </div>
           <div class="title-tag">
-            <span>北京-通州区</span>
-            <span>5-10年</span>
-            <span>统招本科</span>
+            <span>{{ infoData.work_address }}</span>
+            <span>{{ infoData.work_times }}</span>
+            <span>{{ infoData.educational_experience }}</span>
           </div>
           <div class="title-subtag">
-            <span>绩效奖金</span>
-            <span>带薪年假</span>
-            <span>双休</span>
+            <span v-for="(item,index) in infoData.job_benefits" :key="index">{{ item }}</span>
           </div>
         </div>
         <div class="titleinfo-right-box">
@@ -49,7 +47,7 @@
               <div class="img-box"><img src="../../../assets/image/img-user.jpg" alt="" /></div>
               <div class="info-text">
                 <div class="info-text-1"><span class="name">袁女士</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
-                <div class="info-text-2"><span>招聘专员</span><span>·北京市建筑设计研究院有限公司</span></div>
+                <div class="info-text-2"><span>招聘专员·</span><span v-if="company.company_name">{{ company.company_name }}</span></div>
               </div>
             </div>
             <div class="boss-info-btn">
@@ -59,7 +57,7 @@
           <!-- boss信息 结束 -->
           <!-- 职位介绍 开始 -->
           <div class="m-box margin-top-20">
-            <JobDescription />
+            <JobDescription :infoData="infoData"/>
           </div>
           <!-- 职位介绍 结束 -->
           <!-- 公司简介 开始 -->
@@ -96,14 +94,39 @@ export default {
   },
   data(){
     return{
-      
+      infoData: {},
+      company:{}
     }
+  },
+  created(){
+    this.id = this.$route.query.id;
+  },
+  mounted(){
+    this.getInfo();
   },
   computed: {
     
   },
   methods: {
-    
+    async getInfo(){
+      let that = this;
+      let p = {
+        position_id: that.id,
+      }
+      await that.$axios.post('/api/company-position/detail',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          let infoData = res.data;
+          infoData.job_benefits = infoData.job_benefits.split(',');
+          that.infoData = infoData;
+          that.company = infoData.company;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
   },
 };
 </script>

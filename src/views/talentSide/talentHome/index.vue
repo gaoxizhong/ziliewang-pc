@@ -4,7 +4,7 @@
       <!-- 搜索框模块 开始 -->
       <div class="search-box">
         <el-input placeholder="搜索职位/公司/内容关键词" v-model="input_name" class="input-with-select" @keydown.enter.native="searchEnterFun($event)">
-          <el-button slot="append" @click="getExistLabels">搜索</el-button>
+          <el-button slot="append" @click="getSearchinfo">搜索</el-button>
         </el-input>
       </div>
       <div class="hotJob-box">
@@ -30,6 +30,9 @@
       <!-- 左侧列表模块 开始 -->
       <div class="info-list-box">
         <jobList :data="infoData" :tag="tag"/>
+            
+        <!-- 分页控制 -->
+        <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged"></mPagination>
       </div>
       <!-- 左侧列表模块 结束 -->
       <!-- 右侧 个人信息操作模块 开始 -->
@@ -45,13 +48,16 @@
 </template>
 
 <script>
-import jobList from '../components/jobList.vue'
-import personalInfo from '../components/personalInfo.vue'
+import jobList from '../components/jobList.vue';
+import personalInfo from '../components/personalInfo.vue';
+import mPagination from '@/components/m-pagination';
+
 export default {
   name: 'talentHome',
   components: {
     jobList,
     personalInfo,
+    mPagination,
   },
   data(){
     return{
@@ -59,17 +65,46 @@ export default {
       hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
       tag: '',
       infoData: {
-        infoList: [{},{}], // 列表
-      }
+        infoList: [], // 列表
+      },
+      // 分页数据
+      paginationData: {
+        total: 10,
+        currentPage: 1,
+        pageSize: 20,
+      },
     }
+  },
+  created(){
+    this.getSearchinfo();
   },
   computed: {
     
   },
   methods: {
-    // input 框搜索按钮
-    getExistLabels(){
-
+    // 分页事件
+    pageHasChanged() {
+      this.getSearchinfo();
+    },
+    // 搜索
+    getSearchinfo(){
+      let that = this;
+      let p = {
+        page: that.paginationData.currentPage,
+        pagesize: that.paginationData.pageSize,
+        search: that.input_name,
+      }
+      that.$axios.post('/api/talents/index',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.infoData.infoList = res.data.list;
+          that.paginationData.total = res.data.total;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
     },
   },
 };

@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '猎聘网',
+  title: '自猎网',
 
   /**
    * @type {boolean} true | false

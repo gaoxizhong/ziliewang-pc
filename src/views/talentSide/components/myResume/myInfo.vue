@@ -81,6 +81,7 @@
               <el-date-picker
                 v-model="infoData.begin_work_date"
                 type="month"
+                format="yyyy-MM"
                 value-format="yyyy-MM"
                 placeholder="参加工作时间">
               </el-date-picker>
@@ -106,6 +107,7 @@
               <el-date-picker
                 v-model="infoData.birth_year_month"
                 type="month"
+                format="yyyy-MM"
                 value-format="yyyy-MM"
                 placeholder="生日">
               </el-date-picker>

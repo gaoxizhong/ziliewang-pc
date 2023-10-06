@@ -9,7 +9,7 @@ const Version = new Date().getTime();
 
 const scssVariables = require('./src/styles/variables.scss.js'); // 引入全局scss
 
-const name = defaultSettings.title || '猎聘网' // page title
+const name = defaultSettings.title || '自猎网' // page title
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run

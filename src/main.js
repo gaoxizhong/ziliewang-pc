@@ -33,7 +33,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+// Vue.use(ElementUI, { locale })
+// 如果想使用中文版，按以下声明
+Vue.use(ElementUI)
+
 
 Vue.config.productionTip = false
 

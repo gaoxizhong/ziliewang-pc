@@ -22,7 +22,50 @@
           <div class="title"><span>* </span>组织代码</div>
           <el-input v-model="organization_code" placeholder="组织代码"></el-input>
         </div>
-
+        <div class="items-box">
+          <div class="title"><span>* </span>所属主行业</div>
+          <el-select v-model="industry" placeholder="请选择主行业">
+            <el-option
+              v-for="item in industryList"
+              :key="item.industry"
+              :label="item.industry"
+              :value="item.industry">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="items-box">
+          <div class="title"><span>* </span>企业性质</div>
+          <el-select v-model="business_nature" placeholder="请选择企业性质">
+            <el-option
+              v-for="item in natureList"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="items-box">
+          <div class="title"><span>* </span>规模</div>
+          <el-select v-model="company_scale" placeholder="请选择规模">
+            <el-option
+              v-for="item in scaleList"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="items-box">
+          <div class="title"><span>* </span>上市/投融资状态</div>
+          <el-select v-model="corporate_finance" placeholder="请选择上市/投融资状态">
+            <el-option
+              v-for="item in listingList"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </div>
         <div class="items-box">
           <div class="title"><span>* </span>企业logo</div>
           <div class="z_file fl">
@@ -73,18 +116,59 @@ export default {
       legal_person: '', //法人
       company_register_address: '', // 注册地址
       organization_code: '',  //组织代码
+      industry:'', // 所属主行业
+      business_nature:'', // 企业性质
+      company_scale:'', // 规模
+      corporate_finance:'', //上市/投融资状态
       business_license:'', // 营业执照照片
       logo: '', //logo
       upload_files_path:'',
       uploadData:{
         up_tag: 'business_license'
       },
+      natureList: [
+        {id:1,name:'有限责任'},
+        {id:2,name:'股份制'},
+        {id:3,name:'国有企业'},
+        {id:4,name:'合伙企业'},
+        {id:5,name:'个体工商户'},
+        {id:6,name:'私营企业'},
+      ],  
+      scaleList: [
+        {id:1,name:'0-20人'},
+        {id:2,name:'20-50人'},
+        {id:3,name:'50-99人'},
+        {id:4,name:'100-599人'},
+        {id:5,name:'599-1999人'},
+        {id:6,name:'1999人以上'},
+      ],
+      listingList:[
+        {id:1,name:'天使轮'},
+        {id:2,name:'A轮'},
+        {id:3,name:'B轮'},
+        {id:4,name:'C轮'},
+        {id:5,name:'已上市'},
+        {id:6,name:'未上市'},
+      ],
     }
+  },
+  created(){
+    // 获取行业列表信息
+    this.getIndustryList();
   },
   methods:{
      // 选择的文件超出限制的文件总数量时触发
      limitCheck() {
       this.$message.warning('每次只能上传一个文件')
+    },
+    // 获取行业列表信息
+    getIndustryList(){
+      let that = this;
+      that.$axios.post('/api/industry/list',{}).then( res =>{
+        that.industryList = res.data;
+      }).catch( e=>{
+        console.log(e)
+      })
     },
     //公司logo
     up_logo_img(param){
@@ -143,6 +227,10 @@ export default {
         organization_code: that.organization_code, // 组织代码
         business_license: that.business_license, //营业执照
         logo: that.logo, //公司logo
+        industry: that.industry, // 所属主页
+        business_nature: that.business_nature, // 企业性质
+        company_scale: that.company_scale, // 企业规模
+        corporate_finance: that.corporate_finance, // 上市状态
       }
       if(p.company_name == ''){
         that.$message.warning('公司名称不能为空!');
@@ -189,6 +277,10 @@ export default {
       this.organization_code = '';  //组织代码
       this.business_license = ''; // 营业执照照片
       this.logo = ''; //logo
+      this.industry = '';  // 所属主页
+      this.business_nature = '';  // 企业性质
+      this.company_scale = '';  // 企业规模
+      this.corporate_finance = '';  // 上市状态
     }
   }
 }
@@ -210,9 +302,9 @@ export default {
         margin-top: 0px;
       }
       .title{
-        width: 120px;
+        width: 140px;
         height: 24px;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 400;
         color: $g_textColor;
         line-height: 24px;
@@ -222,6 +314,13 @@ export default {
           font-size: 18px;
           font-weight: bold;
         }
+      }
+      & /deep/ .el-select, & /deep/ .el-input__inner {
+        height: 32px;
+        line-height: 32px;
+      }
+      & /deep/ .el-select{
+        margin-left: 40px;
       }
       .avatar-box{
         width: 68px;
@@ -253,7 +352,12 @@ export default {
       & .el-input{
         margin-left: 40px;
         width: 30rem;
+        & /deep/ .el-input__inner {
+          height: 32px;
+          line-height: 32px;
+        }
       }
+      
       & /deep/ .el-input.is-active .el-input__inner, & /deep/ .el-input__inner:focus{
         border-color: $g_bg;
       }

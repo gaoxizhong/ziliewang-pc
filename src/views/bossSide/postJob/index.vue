@@ -22,7 +22,7 @@
 
             <el-form-item label="职位描述" prop="position_desc">
               <span class="desc-title">请勿输入邮箱、电话、链接,请不要包含性别歧视语 请参考职位描述规范</span>
-              <el-input type="textarea" :rows="9" v-model="ruleForm.position_desc" :placeholder="desc_placeholder"></el-input>
+              <el-input type="textarea" :rows="10" v-model="ruleForm.position_desc" :placeholder="desc_placeholder"></el-input>
             </el-form-item>
 
             <el-form-item label="职位亮点" prop="position_lightspot">
@@ -44,10 +44,10 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="学习经历" required>
+            <el-form-item label="学历要求" required>
               <el-col :span="7">
                 <el-form-item prop="educational_experience">
-                  <el-select v-model="ruleForm.xl_1" placeholder="请选择">
+                  <el-select v-model="ruleForm.educational_experience" placeholder="请选择学历要求">
                     <el-option label="博士" value="博士"></el-option>
                     <el-option label="研究生" value="研究生"></el-option>
                     <el-option label="本科" value="本科"></el-option>
@@ -56,22 +56,6 @@
                     <el-option label="初中" value="初中"></el-option>
                     <el-option label="最低学历" value="最低学历"></el-option>
                   </el-select>
-                </el-form-item>
-
-              </el-col>
-              <el-col class="line" :span="1">-</el-col>
-              <el-col :span="7">
-                <el-form-item prop="xl_2">
-                  <el-select v-model="ruleForm.xl_2" placeholder="请选择">
-                  <el-option label="博士" value="博士"></el-option>
-                  <el-option label="研究生" value="研究生"></el-option>
-                  <el-option label="本科" value="本科"></el-option>
-                  <el-option label="大专" value="大专"></el-option>
-                  <el-option label="高中" value="高中"></el-option>
-                  <el-option label="初中" value="初中"></el-option>
-                  <el-option label="最低学历" value="最低学历"></el-option>
-                  <el-option label="无经验" value="无经验"></el-option>
-                </el-select>
                 </el-form-item>
               </el-col>
             </el-form-item>
@@ -104,24 +88,13 @@
             </el-form-item>
             <el-form-item label="工作时间" required>
               <el-col :span="5">
-                <el-select v-model="ruleForm.sx_status" placeholder="实习总时长" style="width: 100%;">
-                  <el-option label="1天" value="1天"></el-option>
-                  <el-option label="10天" value="10天"></el-option>
-                  <el-option label="30天" value="30天"></el-option>
-                  <el-option label="90天" value="90天"></el-option>
-                  <el-option label="180天" value="180天"></el-option>
-                </el-select>
-              </el-col>
-              <el-col class="line" :span="1" style="font-size: 14px;"> - </el-col>
-              <el-col :span="5">
-                <el-select v-model="ruleForm.sx_end" placeholder="每周实习天数" style="width: 100%;">
-                  <el-option label="1天" value="1天"></el-option>
-                  <el-option label="2天" value="2天"></el-option>
-                  <el-option label="3天" value="3天"></el-option>
-                  <el-option label="4天" value="4天"></el-option>
-                  <el-option label="5天" value="5天"></el-option>
-                  <el-option label="6天" value="6天"></el-option>
-                  <el-option label="7天" value="7天"></el-option>
+                <el-select v-model="ruleForm.work_times" placeholder="工作时间" style="width: 100%;">
+                  <el-option label="无经验要求" value="无经验要求"></el-option>
+                  <el-option label="0-1年" value="0-1年"></el-option>
+                  <el-option label="1-3年" value="1-3年"></el-option>
+                  <el-option label="3-5年" value="3-5年"></el-option>
+                  <el-option label="5-7年" value="5-7年"></el-option>
+                  <el-option label="7年以上" value="7年以上"></el-option>
                 </el-select>
               </el-col>
             </el-form-item>
@@ -201,14 +174,12 @@ export default {
         position_lightspot:'', // 职位亮点
         position_type:'', // 职位类别
         industry_requirement:'', // 行业要求
-        xl_1:'',
-        xl_2:'',
+        educational_experience:'',
         job_preference:'', // 职位偏好
         work_address:'', // 工作地址
         xz_status:'',
         xz_end:'',
-        sx_status:'',
-        sx_end:'',
+        work_times:'',
         supplementary_information: [], // 补充信息
         sync_workmate:'', // 同事
         need_nums:'', // 招聘人数
@@ -241,11 +212,11 @@ export default {
         industry_requirement: [
           { required: true, message: '请选择行业要求', trigger: 'change' }
         ],
-        xl_1: [
-          { required: true, message: '请选择开始学习经历', trigger: 'change' }
+        educational_experience: [
+          { required: true, message: '请选择学历要求', trigger: 'change' }
         ],
-        xl_2: [
-          { required: true, message: '请选择学习经历', trigger: 'change' }
+        work_times: [
+          { required: true, message: '请选择工作时间', trigger: 'change' }
         ],
         xz_status: [
           { required: true, message: '请填写薪资范围', trigger: 'blur' }
@@ -264,9 +235,10 @@ export default {
         ],
       },
       desc_placeholder:`请输入岗位职责、任职要求等描述，至少10个字，建议使用以下格式逐条列出岗位职责
+      职责描述:
       1...
       2...
-      任职要求
+      任职要求:
       1...
       2...
       补充说明
@@ -298,14 +270,12 @@ export default {
         position_lightspot:'', // 职位亮点
         position_type:'', // 职位类别
         industry_requirement:'', // 行业要求
-        xl_1:'',
-        xl_2:'',
+        educational_experience:'', // 学历要求
         job_preference:'', // 职位偏好
         work_address:'', // 工作地址
         xz_status:'',
         xz_end:'',
-        sx_status:'',
-        sx_end:'',
+        work_times:'', // 工作要求
         supplementary_information: [], // 补充信息
         sync_workmate:'', // 同事
         need_nums:'', // 招聘人数
@@ -329,7 +299,7 @@ export default {
         position_lightspot: ruleForm.position_lightspot,
         position_type: ruleForm.position_type,
         industry_requirement: ruleForm.industry_requirement,
-        educational_experience:ruleForm.xl_1 +'-' + ruleForm.xl_2,
+        educational_experience:ruleForm.educational_experience,
         job_preference: ruleForm.job_preference,
         work_address: ruleForm.selectedOptions.join('/'),
         salary: ruleForm.xz_status + '-' + ruleForm.xz_end,
@@ -338,7 +308,7 @@ export default {
         supplementary_information: ruleForm.supplementary_information.join(','),
         sync_workmate: ruleForm.sync_workmate.join(','),
         resume_demand: ruleForm.resume_demand.join(','),
-        work_times: ruleForm.sx_status + '-' + ruleForm.sx_end,
+        work_times: ruleForm.work_times,
 
       };
       

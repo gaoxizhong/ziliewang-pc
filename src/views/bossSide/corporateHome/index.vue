@@ -8,7 +8,7 @@
         <div class="sub-title">以下打勾项已成功发布，建议您继续完善其他信息</div>
         <div class="list-box">
           <div class="items-box">
-            <img src="../../../assets/image/bossSide/check-circle.png" alt="" class="status-img"/>
+            <img :src="infoData.company_basic_info == 1?require('../../../assets/image/bossSide/check-circle-1.png'):require('../../../assets/image/bossSide/check-circle.png')" alt="" class="status-img"/>
             <div class="items-m">
               <div class="title">企业基本信息</div>
               <div class="items-icon">
@@ -23,11 +23,11 @@
               </div>
             </div>
             <div class="items-right-box">
-              <img src="../../../assets/image/bossSide/form-xg.png" alt="" @click="goToEnterpriseInfo('jcxx')"/>
+              <img src="../../../assets/image/bossSide/form-xg.png" alt="" @click="goToEnterpriseInfo('basic')"/>
             </div>
           </div>
           <div class="items-box">
-            <img src="../../../assets/image/bossSide/check-circle.png" alt="" class="status-img"/>
+            <img :src="infoData.company_introduction == 1?require('../../../assets/image/bossSide/check-circle-1.png'):require('../../../assets/image/bossSide/check-circle.png')" alt="" class="status-img"/>
             <div class="items-m">
               <div class="title">企业介绍</div>
               <div class="items-icon">
@@ -36,16 +36,15 @@
                 <span>企业官网</span>
                 <span>核心产品</span>
                 <span>企业获奖名称/获奖资讯链接</span>
-                <span>集团旗下相关企业/关系说明</span>
               </div>
             </div>
             <div class="items-right-box">
-              <img src="../../../assets/image/bossSide/form-xg.png" alt=""  @click="goToEnterpriseInfo('qyjx')"/>
+              <img src="../../../assets/image/bossSide/form-xg.png" alt=""  @click="goToEnterpriseInfo('introduction')"/>
             </div>
           </div>
 
           <div class="items-box">
-            <img src="../../../assets/image/bossSide/check-circle.png" alt="" class="status-img"/>
+            <img :src="infoData.company_work_institution == 1?require('../../../assets/image/bossSide/check-circle-1.png'):require('../../../assets/image/bossSide/check-circle.png')" alt="" class="status-img"/>
             <div class="items-m">
               <div class="title">工作制度及福利</div>
               <div class="items-icon">
@@ -53,33 +52,29 @@
                 <span>企业地址</span>
                 <span>工作时间</span>
                 <span>休息时间</span>
-                <span>企业规模</span>
-                <span>企业对外展示名称</span>
               </div>
             </div>
             <div class="items-right-box">
-              <img src="../../../assets/image/bossSide/form-xg.png" alt="" @click="goToEnterpriseInfo('zdfl')"/>
+              <img src="../../../assets/image/bossSide/form-xg.png" alt="" @click="goToEnterpriseInfo('work_system')"/>
             </div>
           </div>
 
           <div class="items-box">
-            <img src="../../../assets/image/bossSide/check-circle.png" alt="" class="status-img"/>
+            <img :src="infoData.company_show == 1?require('../../../assets/image/bossSide/check-circle-1.png'):require('../../../assets/image/bossSide/check-circle.png')" alt="" class="status-img"/>
             <div class="items-m">
               <div class="title">企业形象</div>
               <div class="items-icon">
-                <span>团队牛人</span>
-                <span>团队风格</span>
-                <span>团队结构</span>
-                <span>团队阶段</span>
+                <span>视频</span>
+                <span>美图</span>
               </div>
             </div>
             <div class="items-right-box">
-              <img src="../../../assets/image/bossSide/form-xg.png" alt=""  @click="goToEnterpriseInfo('qyxx')"/>
+              <img src="../../../assets/image/bossSide/form-xg.png" alt=""  @click="goToEnterpriseInfo('show')"/>
             </div>
           </div>
 
           <div class="items-box">
-            <img src="../../../assets/image/bossSide/check-circle.png" alt="" class="status-img"/>
+            <img :src="infoData.company_team == 1?require('../../../assets/image/bossSide/check-circle-1.png'):require('../../../assets/image/bossSide/check-circle.png')" alt="" class="status-img"/>
             <div class="items-m">
               <div class="title">牛人团队</div>
               <div class="items-icon">
@@ -90,7 +85,7 @@
               </div>
             </div>
             <div class="items-right-box">
-              <img src="../../../assets/image/bossSide/form-xg.png" alt="" @click="goToEnterpriseInfo('nrtd')"/>
+              <img src="../../../assets/image/bossSide/form-xg.png" alt="" @click="goToEnterpriseInfo('team')"/>
             </div>
           </div>
 
@@ -105,10 +100,27 @@
 export default {
   data() {
     return {
-
+      infoData: {},
     }
   },
+  created(){
+    this.getInfoStatus();
+  },
   methods:{
+    getInfoStatus(){
+      let that = this;
+      that.$axios.post('/api/company/status/list',{}).then( res =>{
+        if(res.code == 0){
+          that.infoData = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      }).catch( e=>{
+        console.log(e)
+      })
+    },
     goToEnterpriseInfo(t){
       this.$router.push({
         path:'/enterpriseInfoEdit',

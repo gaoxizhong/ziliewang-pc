@@ -37,7 +37,7 @@
           <div class="mb20 redact-item">
             <div class="item-label">项目名称</div>
             <div class="item-content">
-              <el-input v-model="infoData.project_name" placeholder="例如: 猎聘网"></el-input>
+              <el-input v-model="infoData.project_name" placeholder="例如: 自猎网"></el-input>
             </div>
           </div>
 

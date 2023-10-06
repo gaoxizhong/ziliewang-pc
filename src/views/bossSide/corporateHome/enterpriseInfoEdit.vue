@@ -2,109 +2,66 @@
   <div class="bossSide-container">
     <!-- 企业主页---信息修改页 -->
     <div class="m-box page-box">
-      <el-tabs :tab-position="tabPosition">
-        <el-tab-pane label="企业基本信息">
-          <div class="label-items-box">
-            <div class="items-box">
-              <div class="title">企业logo</div>
-              <div class="avatar-box">
-                <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
-              </div>
-            </div>
-            <div class="items-box">
-              <div class="title">所属主行业</div>
-              <el-input v-model="nickname" placeholder="所属主行业"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">所属副行业</div>
-              <el-input v-model="job" placeholder="所属副行业"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">企业性质</div>
-              <el-input v-model="nickname" placeholder="企业性质"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">企业规模</div>
-              <el-input v-model="job" placeholder="企业规模"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">上市/投融资状态</div>
-              <el-input v-model="nickname" placeholder="上市/投融资状态"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">企业注册地</div>
-              <el-input v-model="job" placeholder="企业注册地"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">企业对外展示名称</div>
-              <el-input v-model="job" placeholder="企业对外展示名称"></el-input>
-            </div>
-            <div class="btn-box">
-              <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-              <!-- <el-button @click="resetForm('ruleForm')">取消</el-button> -->
-            </div>
-          </div>
+      <el-tabs :tab-position="tabPosition" v-model="tabType">
+        <el-tab-pane label="企业基本信息" name="basic">
+          <companyBasic />
         </el-tab-pane>
-        <el-tab-pane label="企业介绍">
-          <div class="label-items-box">
-            <div class="items-box">
-              <div class="title">企业基本介绍</div>
-              <el-input v-model="nickname" placeholder="企业基本介绍"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">企业成立时间</div>
-              <el-input v-model="job" placeholder="企业成立时间"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">企业官网</div>
-              <el-input v-model="nickname" placeholder="企业官网"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">核心产品</div>
-              <el-input v-model="job" placeholder="核心产品"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">企业获奖名称/获奖资讯链接</div>
-              <el-input v-model="nickname" placeholder="企业获奖名称/获奖资讯链接"></el-input>
-            </div>
-            <div class="items-box">
-              <div class="title">集团旗下相关企业/关系说明</div>
-              <el-input v-model="job" placeholder="集团旗下相关企业/关系说明"></el-input>
-            </div>
-            <div class="btn-box">
-              <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-              <!-- <el-button @click="resetForm('ruleForm')">取消</el-button> -->
-            </div>
-          </div>
+        <el-tab-pane label="企业介绍" name="introduction">
+          <introduction  />
         </el-tab-pane>
-        <el-tab-pane label="工作制度及福利">工作制度及福利</el-tab-pane>
-        <el-tab-pane label="企业形象">企业形象</el-tab-pane>
-        <el-tab-pane label="牛人团队">牛人团队</el-tab-pane>
+        <el-tab-pane label="工作制度及福利" name="work_system">
+          <workSystem  />
+        </el-tab-pane>
+        <el-tab-pane label="企业形象" name="show">
+          <companyShow  />
+        </el-tab-pane>
+        <el-tab-pane label="牛人团队" name="team">
+          <teamGenius  />
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  data(){
-    return {
-      tabPosition: 'left', //标签一共有四个方向的设置 tabPosition="left|right|top|bottom"
-      type:'',
-    }
-  },
-  created(){
-    this.type = this.$route.query.type;
-  },
-  methods:{
+  import companyShow from "../components/corporateHome/companyShow";
+  import workSystem from "../components/corporateHome/workSystem";
+  import teamGenius from "../components/corporateHome/teamGenius";
+  import introduction from "../components/corporateHome/introduction";
+  import companyBasic from "../components/corporateHome/companyBasic";
 
+  export default {
+    components: {
+      companyShow,
+      workSystem,
+      teamGenius,
+      introduction,
+      companyBasic
+    },
+    data(){
+      return {
+        tabPosition: 'left', //标签一共有四个方向的设置 tabPosition="left|right|top|bottom"
+        tabType:'basic',
+       
+        uploadData:{
+          up_tag: 'business_license'
+        },
+        
+      }
+    },
+    created(){
+      this.tabType = this.$route.query.type;
+    },
+    methods:{
+
+    }
   }
-}
 </script>
 
 <style lang="scss" scoped>
   .page-box{
     height: calc(100vh - 90px);
+    padding-right: 1rem;
     & /deep/ .el-tabs--left{
       height: 100%;
     }
@@ -117,10 +74,15 @@ export default {
     & /deep/ .el-tabs--left .el-tabs__item.is-left{
       font-size: 16px;
       font-weight: bold;
-      margin-top: 20px;
       &:nth-of-type(1){
         margin-top: 0;
       }
+    }
+    
+    & /deep/ .el-tabs__content{
+      overflow-y: auto;
+      position: relative;
+      height: 100%;
     }
   }
   .label-items-box{
@@ -128,60 +90,50 @@ export default {
     height: auto;
     font-size: 14px;
     padding-left: 10px;
-    .items-box{
-      width: 100%;
-      display: flex;
-      align-items: center;
-      margin-top: 20px;
-      &:nth-of-type(1){
-        margin-top: 0px;
-      }
-      .title{
-        width: 200px;
-        height: 24px;
-        font-size: 15px;
-        font-weight: 400;
+    padding-right: 1rem;
+    .box-title{
+      margin-top: 10px;
+      .title-1{
+        font-size: 16px;
+        font-weight: bold;
         color: $g_textColor;
         line-height: 24px;
-        text-align: right;
-        &>span{
-          color: #ff0000;
-          font-size: 18px;
-          font-weight: bold;
-        }
       }
-      .avatar-box{
-        width: 68px;
-        height: 68px;
-        border-radius: 50%;
-        position: relative;
-        margin-left: 40px;
-        &>img{
-          width: 100%;
-          height: 100%;
-          display: inline-block;
-        }
-      }
-      &>span.sub-span{
-        width: auto;
-        font-size: 16px;
+      .title-2{
+        margin-top: 8px;
+        font-size: 14px;
         font-weight: 400;
-        color: #C9CDD4;
-        line-height: 24px;
-        margin-left: 15px;
+        color: #4E5969;
+        line-height: 22px;
       }
-      &>span.name-span{
+    }
+    .items-box{
+      width: 100%;
+      margin-top: 16px;
+      .title{
         font-size: 16px;
-        font-weight: 400;
-        color: #1F2E4D;
+        font-weight: bold;
+        color: $g_textColor;
         line-height: 24px;
-        margin-left: 40px;
       }
-      & .el-input{
-        margin-left: 40px;
+      .info-box{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        &>div{
+          margin-top: 10px;
+          margin-right: 12px;
+          width: 200px;
+          height: 140px;
+          position: relative;
+        }
+
+      }
+    }
+    & .el-input{
         width: 30rem;
       }
-      & /deep/ .el-input.is-active .el-input__inner, & /deep/ .el-input__inner:focus{
+    & /deep/ .el-input.is-active .el-input__inner, & /deep/ .el-input__inner:focus{
         border-color: $g_bg;
       }
       /deep/ .el-form-item__content{
@@ -198,14 +150,25 @@ export default {
       /deep/ .el-input__icon{
         line-height: 32px;
       }
+    & /deep/ .el-form-item {
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
     }
+    & /deep/ .el-form-item__content{
+      margin: 0 !important;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
   }
   .btn-box{
     display: flex;
     align-items: center;
     margin-top: 20px;
     padding: 20px 40px;
-   &>.el-button{
+   & .el-button{
     width: 114px;
     height: 40px;
     margin-right: 20px;
@@ -214,6 +177,33 @@ export default {
     background-color:$g_bg;
     border-color: $g_color;
    }
-
+ 
+  }
+  .avatar-box{
+    width: 128px;
+    height: 128px;
+    margin-left: 40px;
+    position: relative;
+    .add-img{
+      display: block;
+      width: 128px;
+      height: 128px;
+      border: none;
+    }
+    .avatar-uploader{
+      width: 100%;
+      height: 100%;
+      &::v-deep .el-upload {
+        width: 100%;
+        height: 100%;
+      }
+      &::v-deep .el-upload-dragger{
+        width: 100%;
+        height: 100%;
+      }
+      &::v-deep .el-upload-dragger .el-icon-camera{
+        font-size: 28px;
+      }
+    }
   }
 </style>

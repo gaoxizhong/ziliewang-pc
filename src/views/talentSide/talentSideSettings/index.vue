@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="container-box">
+    <div class="container-box" v-if="infoData">
       <div class="container-left-box">
         <div class="le-box">
           <div class="le-box-title">求职隐私</div>
@@ -281,9 +281,9 @@ export default {
       })
     },  
     // 获取个人信息
-    getUserProfile(){
+    async getUserProfile(){
       let that = this;
-      that.$axios.post('/api/user/profile',{}).then(res =>{
+      await that.$axios.post('/api/user/profile',{}).then(res =>{
         console.log(res.data)
         if(res.code == 0){
           this.infoData = res.data;

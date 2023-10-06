@@ -2,14 +2,14 @@
   <div>
     <div class="list-items" v-for="(item,index) in infoList" :key="index">
       <div class="items-left-box" @click.stop="clickItems(item)">
-        <p class="items-title">导电浆料研发工程师【南通】 <span class="items-title-span">15-18K</span></p>
+        <p class="items-title">{{ item.position_name }} <span class="items-title-span">{{ item.salary }}</span></p>
         <div class="items-tag-box">
-          <el-tag>3-5年</el-tag>
-          <el-tag>硕士</el-tag>
+          <el-tag>{{ item.resume_demand }}</el-tag>
+          <el-tag>{{ item.educational_experience }}</el-tag>
         </div>
         <div class="items-firm-info">
-          <span class="firm-info-1">南通天盛新能源股份有限公司</span>
-          <span class="firm-info-2">新能源新三板上市100-499人</span>
+          <span class="firm-info-1">{{ item.company.company_name }}</span>
+          <span class="firm-info-2">{{ item.company.corporate_finance }}{{ item.company.company_scale }}</span>
         </div>
       </div>
       <div class="items-right-box" v-if="tag == 'myDelivery'">

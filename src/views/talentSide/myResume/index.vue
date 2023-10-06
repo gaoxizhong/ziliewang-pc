@@ -794,4 +794,5 @@ export default {
   display: inline-block;
 }
 
+
 </style>
