@@ -9,7 +9,9 @@
 
           <div class="input-box">
             <div class="input-left-box">
-              <div class="input-add-box"><img src="../../../assets/image/bossSide/icon-local-two.png" alt=""><span>宁波</span></div>
+              <div class="input-add-box"><img src="../../../assets/image/bossSide/icon-local-two.png" alt="">
+                <span>宁波</span>
+              </div>
               <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词"></el-input>
             </div>
             <button class="input-button" @click="getSearchinfo">搜索</button>
