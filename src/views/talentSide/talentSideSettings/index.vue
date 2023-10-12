@@ -331,7 +331,7 @@ export default {
         corporation: that.corporation,
       };
       that.$axios.post('',p).then( res =>{
-        if(res.data.code == 0){
+        if(res.code == 0){
           that.$message.success({
             message:'添加成功'
           })
@@ -344,7 +344,7 @@ export default {
         }
         if(res.data.code == 1){
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
           return
         }
@@ -360,7 +360,7 @@ export default {
         password: that.password,
       };
       that.$axios.post('/api/user/change-pwd',p).then( res =>{
-        if(res.data.code == 0){
+        if(res.code == 0){
           that.$message.success({
             message:'修改成功'
           })
@@ -370,10 +370,9 @@ export default {
              that.setPasswordVisible = false;
           },1500)
           return
-        }
-        if(res.data.code == 1){
+        }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
           return
         }
@@ -389,7 +388,7 @@ export default {
         email: that.email,
       };
       that.$axios.post('',p).then( res =>{
-        if(res.data.code == 0){
+        if(res.code == 0){
           that.$message.success({
             message:'修改成功'
           })
@@ -400,9 +399,9 @@ export default {
           },1500)
           return
         }
-        if(res.data.code == 1){
+        if(res.code == 1){
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
           return
         }

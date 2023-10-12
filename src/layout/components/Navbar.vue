@@ -5,18 +5,14 @@
     <div class="right-menu">
       <div class="right-items-box">
         <div>
-          <img src="../../assets/image/bossSide/icon-zq.png" alt="" />
-          <span>职圈</span>
-        </div>
-        <div>
           <img src="../../assets/image/bossSide/remind.png" alt="" />
           <span>通知</span>
         </div>
-        <div>
+        <div @click="gotoassist">
           <img src="../../assets/image/bossSide/questionCircle.png" alt="" />
           <span>帮助</span>
         </div>
-        <div>
+        <div @click="gotoMyInterviewSchedule">
           <img src="../../assets/image/bossSide/comment.png" alt="" />
           <span>面试</span>
         </div>
@@ -112,6 +108,12 @@ export default {
         console.log(e)
       })
     },
+    gotoMyInterviewSchedule(){
+      this.$router.push('/myInterviewSchedule');
+    },
+    gotoassist(){
+      this.$router.push('/assist')
+    }
   }
 }
 </script>

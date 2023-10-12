@@ -292,7 +292,21 @@ export default {
     },
     // 点击列表
     clickItems(i){
-      this.zx_dialogVisible = !this.zx_dialogVisible;
+      let that = this;
+      
+      that.$axios.post('/api/company/resume/detail',{
+        uid: i.uid
+      }).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.infoData = res.data;
+          that.zx_dialogVisible = true;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
     },
   }
 }

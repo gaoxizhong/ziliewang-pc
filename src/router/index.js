@@ -110,19 +110,19 @@ export const constantRoutes = [
       },
     ]
   },
-  {
-    path: '/talentManagement',
-    component: Layout,
-    redirect: '/talentManagement',
-    children: [
-      {
-        path: '/talentManagement',
-        name: 'TalentManagement',
-        component: () => import('@/views/bossSide/talentManagement/index'),
-        meta: { title: '人才管理', icon: 'dashboard' },
-      },
-    ]
-  },
+  // {
+  //   path: '/talentManagement',
+  //   component: Layout,
+  //   redirect: '/talentManagement',
+  //   children: [
+  //     {
+  //       path: '/talentManagement',
+  //       name: 'TalentManagement',
+  //       component: () => import('@/views/bossSide/talentManagement/index'),
+  //       meta: { title: '人才管理', icon: 'dashboard' },
+  //     },
+  //   ]
+  // },
   {
     path: '/myRecruitmentData',
     component: Layout,
@@ -233,6 +233,21 @@ export const constantRoutes = [
       },
     ]
   },
+  {
+    path:'/assist',
+    component: Layout,
+    redirect: '/assist',
+    hidden: true,
+    children: [
+      {
+        path: '/assist',
+        name: 'assist',
+        component: () => import('@/views/bossSide/assist/index'),
+        meta: { title: '帮助' },
+      },
+    ]
+  },
+  
   //---- 人才端
   {
     path: "/talentSide",

@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-header-box">
       <div class="header-nav-box">
-        <div>logo</div>
+        <img src="../../assets/image/log-2.png" alt="" class="logo"/>
         <div class="select-box">
           <div class="show-select-box">
             <span class="title">{{ role == 1? '我是求职者' : '我是招聘方' }}</span>
@@ -545,6 +545,9 @@ $cursor: #000;
     align-items: center;
     justify-content: space-between;
     padding: 0 50px 0 20px;
+    .logo{
+      height: 36px;
+    }
   }
 }
 .home-container{
