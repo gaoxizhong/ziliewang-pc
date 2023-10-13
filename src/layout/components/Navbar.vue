@@ -4,10 +4,10 @@
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
       <div class="right-items-box">
-        <div>
+        <!-- <div>
           <img src="../../assets/image/bossSide/remind.png" alt="" />
           <span>通知</span>
-        </div>
+        </div> -->
         <div @click="gotoassist">
           <img src="../../assets/image/bossSide/questionCircle.png" alt="" />
           <span>帮助</span>

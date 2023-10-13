@@ -10,7 +10,7 @@
 
     <div class="m-20 m-box inquire-box">
       <div class="inquire-left-box">
-        <el-form :model="ruleForm" ref="ruleForm" label-width="70px" class="demo-ruleForm">
+        <el-form :model="ruleForm" ref="ruleForm" class="demo-ruleForm" label-suffix=":">
           <el-form-item label="面试方式" prop="interview_method">
             <el-select v-model="ruleForm.interview_method" placeholder="面试方式">
               <el-option label="不限" value="不限"></el-option>
@@ -18,25 +18,19 @@
               <el-option label="线下" value="线下"></el-option>
             </el-select>
           </el-form-item>
+
           <el-form-item label="面试职位" prop="interview_position">
             <el-select v-model="ruleForm.interview_position" placeholder="面试职位">
               <el-option label="不限" value="不限"></el-option>
-              <el-option label="线上" value="线上"></el-option>
-              <el-option label="线下" value="线下"></el-option>
+              <el-option label="前端" value="前端"></el-option>
+              <el-option label="后端" value="后端"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="面试者" prop="interviewee">
             <el-select v-model="ruleForm.interviewee" placeholder="面试者">
               <el-option label="不限" value="不限"></el-option>
-              <el-option label="线上" value="线上"></el-option>
-              <el-option label="线下" value="线下"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="联系人" prop="contact_person">
-            <el-select v-model="ruleForm.contact_person" placeholder="联系人">
-              <el-option label="不限" value="不限"></el-option>
-              <el-option label="线上" value="线上"></el-option>
-              <el-option label="线下" value="线下"></el-option>
+              <el-option label="郜喜忠" value="郜喜忠"></el-option>
+              <el-option label="仇登耀" value="仇登耀"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -47,6 +41,31 @@
       </div>
     </div>
 
+    <div class="m-box margin-top-20">
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column
+          type="index"
+          label="序号"
+          width="80"
+          align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.$index + 1 + (tableDataPage.page - 1) * tableDataPage.size }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="a" label="投递人"></el-table-column>
+        <el-table-column prop="b" label="开始时间"></el-table-column>
+        <el-table-column prop="c" label="结束时间"></el-table-column>
+        <el-table-column prop="d" label="面试方式"></el-table-column>
+        <el-table-column prop="e" label="面试职位"></el-table-column>
+        <el-table-column prop="f" label="面试者"></el-table-column>
+        <el-table-column label="操作">
+          <template>
+            <span class="blue">查看详情</span>
+            <span class="blue">导出</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -59,15 +78,40 @@ export default {
         interview_method:'不限',
         interview_position:'不限',
         interviewee:'',
-        contact_person:''
+        contact_person:'',
+        tableData:[
+          {}
+        ],
+        tableDataPage: {
+          page: 1,
+          size: 10,
+          total: 0
+        },
       },
     }
+  },
+  mounted(){
+    this.getSysMsgList();
   },
   methods:{
     clickStatus(n){
       this.tabStatus = n;
     },
-   
+    // 获取聊天列表
+    getSysMsgList(){
+      let that = this;
+      that.$axios.post('/api/company-interview/index',{}).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    
   
     
   }
@@ -132,6 +176,7 @@ export default {
         /deep/ .el-form-item{
           margin: 0;
           padding-left: 10px;
+          display: flex;
           &:nth-of-type(1){
             padding-left: 0;
           }
@@ -147,9 +192,6 @@ export default {
           }
           .el-input__icon{
             line-height: 32px;
-          }
-          .el-select{
-            width: 120px;
           }
         }
       }

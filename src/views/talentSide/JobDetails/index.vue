@@ -19,8 +19,9 @@
         </div>
         <div class="titleinfo-right-box">
           <div class="btn-box">
-            <el-button class="deliver">投简历</el-button>
-            <el-button class="chat">聊一聊</el-button>
+            <el-button class="deliver-1" v-if='infoData.is_deliver == 1'>已投递</el-button>
+            <el-button class="deliver-2" @click="clickDeliver" v-else>投简历</el-button>
+            <!-- <el-button class="chat">聊一聊</el-button> -->
           </div>
           <div class="tag-box">
             <span class="tag-items">
@@ -50,9 +51,9 @@
                 <div class="info-text-2"><span>招聘专员·</span><span v-if="company.company_name">{{ company.company_name }}</span></div>
               </div>
             </div>
-            <div class="boss-info-btn">
+            <!-- <div class="boss-info-btn">
               <el-button class="chat">聊一聊</el-button>
-            </div>
+            </div> -->
           </div>
           <!-- boss信息 结束 -->
           <!-- 职位介绍 开始 -->
@@ -127,6 +128,27 @@ export default {
         }
       })
     },
+    // 投简历
+    clickDeliver(){
+      let that = this;
+      let p = {
+        position_id: that.id,
+        company_id: that.infoData.company_id
+      }
+      that.$axios.post('/api/user/deliver',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.$message.success({
+            message:'投递成功'
+          })
+          that.infoData.is_deliver = 1;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    }
   },
 };
 </script>
@@ -211,7 +233,7 @@ export default {
         }
       }
       .titleinfo-right-box{
-        width: 380px;
+        width: 320px;
         padding-left: 2.5rem;
         .btn-box{
           width: 100%;
@@ -227,8 +249,11 @@ export default {
             color: #fff;
             border-radius: 20px !important;
             padding: 0;
-            &.deliver{
+            &.deliver-1{
               background: #86909C;
+            }
+            &.deliver-2{
+              background: $g_bg;
             }
             &.chat{
               background: $g_bg;

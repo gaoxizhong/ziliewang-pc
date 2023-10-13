@@ -4,7 +4,7 @@
       <img src="../../../assets/image/img-user.jpg" alt="" class="img-user"/>
       <div class="users-right">
         <div class="users-name">
-          <span class="span-1">张三</span>
+          <span class="span-1">{{infoData.basic_info.real_name}}</span>
           <img src="../../../assets/image/sex-1.png" alt="" class="img-sex"/>
         </div>
         <div class="wcd-box">简历完整度75%</div>
@@ -49,16 +49,31 @@ export default {
   },
   data(){
     return{
+      infoData:{}, // 信息
+      
     }
   },
   computed: {
     
   },
   mounted() {
-
+    // 获取个人信息
+    this.getUserProfile();
   },
   methods: {
-   
+    // 获取个人信息
+    getUserProfile(){
+      let that = this;
+      that.$axios.post('/api/user/profile',{}).then(res =>{
+        console.log(res.data)
+        if(res.code == 0){
+          this.infoData = res.data;
+          this.curriculum_vitae = res.data.basic_info.curriculum_vitae;
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
   },
 };
 </script>

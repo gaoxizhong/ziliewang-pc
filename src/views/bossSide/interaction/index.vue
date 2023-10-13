@@ -4,9 +4,9 @@
     <div class="tab-box">
       <div class="tab-left">
         <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">沟通中</div>
-        <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">已约面</div>
+        <!-- <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">已约面</div>
         <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">不合适</div>
-        <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">收藏</div>
+        <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">收藏</div> -->
       </div>
       <!-- <div class="tab-right">
         <span></span>
@@ -17,76 +17,136 @@
         <div class="seach-box"></div>
         <div class="personAbility-box">
 
-          <div class="personAbility-items-box">
+          <div class="personAbility-items-box" :class="selt_index == index?'hover':''" v-for="(item,index) in msgListData" :key="index" @click="clickmsgListData(item,index)">
             <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
             <div class="name-box">
               <div class="name-t">
-                <span class="span-1">康先生</span>
-                <span class="span-2">商办中心负责人</span>
+                <span class="span-1">{{item.name}}</span>
+                <span class="span-2">{{item.job}}</span>
               </div>
-              <div class="sub-title">想了解一下贵公司是否还在招产...</div>
+              <div class="sub-title">{{item.msg}}</div>
             </div>
-            <span class="time">01-11</span>
+            <span class="time">{{item.time}}</span>
           </div>
-
-          <div class="personAbility-items-box">
-            <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
-            <div class="name-box">
-              <div class="name-t">
-                <span class="span-1">康先生</span>
-                <span class="span-2">商办中心负责人</span>
-              </div>
-              <div class="sub-title">想了解一下贵公司是否还在招产...</div>
-            </div>
-            <span class="time">01-11</span>
-          </div>
-
-          <div class="personAbility-items-box">
-            <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
-            <div class="name-box">
-              <div class="name-t">
-                <span class="span-1">康先生</span>
-                <span class="span-2">商办中心负责人</span>
-              </div>
-              <div class="sub-title">想了解一下贵公司是否还在招产...</div>
-            </div>
-            <span class="time">01-11</span>
-          </div>
-
-          <div class="personAbility-items-box">
-            <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
-            <div class="name-box">
-              <div class="name-t">
-                <span class="span-1">康先生</span>
-                <span class="span-2">商办中心负责人</span>
-              </div>
-              <div class="sub-title">想了解一下贵公司是否还在招产...</div>
-            </div>
-            <span class="time">01-11</span>
-          </div>
-
 
         </div>
       </div>
-      <div class="right-box">
+      <div class="right-box center-box">
         <div class="seach-box">
           <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
           <div class="name-t">
-            <div class="span-1">康先生</div>
-            <div class="span-2">商办中心负责人·龙湖地产福州公司</div>
+            <div class="span-1">{{selt_info.name}}</div>
+            <div class="span-2">{{selt_info.job}}-{{selt_info.gs}}</div>
           </div>
         </div>
-        <div class="job-box">
-          <div>
+        <div class="job-box scrollbar" id="content" ref="scrollbar">
+          <div class="job-1">
             <span class="job-title">沟通职位：</span>
-            <span class="blue">厦门产业园投资总经理</span>
+            <span class="blue">{{selt_info.gtzw}}</span>
           </div>
           <div></div>
+          <dl class="messages" style="margin-bottom: 12px;">
+            <dt><h4><a href="javascript:0;" id="show-history"></a></h4></dt>
+            <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
+              <div :class=" !item.isme ?'msg-recv':'msg-send' " class="msg" style="color:#fff">
+                <i class="msg-avatar"></i>
+                <div class="sender">
+                  <!-- <span class="sender-text">{{item.name}}</span> -->
+                  <span class="time-text">{{item.time}}</span>
+                </div>
+                <div class="msg-content-and-after">
+                  <div class="msg-content" v-html="item.content"></div>
+                </div>
+              </div>
+            </dd>
+          </dl>
+          <div id="msg_end" ref="msg_end" style="height:0px; overflow:hidden"></div>
+
         </div>
 
+
+        <div class="theme-c clearfix" id="footer" style="display: block;">
+          <div class="icon-btn-box">
+            <div></div>
+            <div class="footer-right">
+              <div>
+                <img src="../../../assets/image/bossSide/int-qjl.png" alt="" />
+                <span>求简历</span>
+              </div>
+              <div @click="clickYqms">
+                <img src="../../../assets/image/bossSide/int-yqms.png" alt="" />
+                <span>邀面试</span>
+              </div>
+            </div>
+          </div>
+          <div class="ui-editor clearfix">
+            <div class="textbox">
+              <div class="n-input-wrapper">
+                <el-input placeholder="请输入内容..." v-model="originMessage" clearable  @keydown.enter.native="searchEnterFun($event)"></el-input>
+              </div>
+              <el-button class="btn-send" :loading="loading" id="btnSend"
+                :style="{'color': originMessage != ''?'#fff':'#00000040','background-color': originMessage !=''?'rgb(20 184 166)':'#f5f5f5','border-color': originMessage !=''?'rgb(20 184 166)':'#f5f5f5'}"
+                @click="onSendClcik"
+              >
+                <span>发送</span>
+              </el-button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+
+    <!-- 面试邀请弹窗 -->
+    <div class="container-zx">
+      <el-dialog title="邀请面试" :center="false" :visible.sync="zx_dialogVisible" width="800px" :before-close="handleClose">
+        <div class="pc-preview-wrapper m-box">
+          <el-form :model="ruleForm" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+
+            <el-form-item label="面试方式" prop="type">
+              <el-select v-model="ruleForm.type" placeholder="面试方式">
+                <el-option label="线上" value="1"></el-option>
+                <el-option label="线下" value="2"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="开始时间" prop="begin_time">
+              <el-date-picker
+                v-model="ruleForm.begin_time"
+                type="datetime"
+                placeholder="选择日期时间"
+                value-format="yyyy-MM-dd HH:mm"
+                >
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="结束时间" prop="begin_time">
+              <el-date-picker
+                v-model="ruleForm.end_time"
+                type="datetime"
+                placeholder="选择日期时间"
+                value-format="yyyy-MM-dd HH:mm"
+                >
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="企业联系人" prop="staff">
+              <el-input v-model="ruleForm.staff" placeholder="请输入"></el-input>
+            </el-form-item>
+
+            <el-form-item label="联系电话" prop="phone">
+              <el-input v-model="ruleForm.phone" placeholder="请输入"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="ruleForm.remark" placeholder="请输入"></el-input>
+            </el-form-item>
+            
+            <el-form-item class="btn-box">
+              <el-button type="primary" @click="submitForm">发送邀请</el-button>
+              <!-- <el-button @click="resetForm">重置</el-button> -->
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -95,13 +155,126 @@ export default {
   data() {
     return {
       tabStatus: 1,
+      uid: window.localStorage.getItem('uid'),
+      viewHeight:'',
+      textarea: '',
+      // is_kefu:2,  // 1为客服 msg-recv， 2为用户  msg-send
+      originMessage:'',
+      message:[], // 累计对话记录
+      msgList:[],
+      loading: false,
+      dialogVisible: false,
+      numberVisible: false,
+      number: 0, // 提问次数
+      source: null,
+      historyList:[],
+      promptVisible: false,
+      is_retun: true,
+      zx_dialogVisible: false,
+      ruleForm:{
+        type:'',
+        begin_time:'',
+        end_time:'',
+        staff:'',
+        phone:'',
+        remark:''
+      },
+      page: 1,
+      pagesize: 20,
+      msgListData:[
+        {
+          uid:1,
+          name:'康先生',
+          job:'商办中心负责人',
+          gs:'龙湖地产福州公司',
+          gtzw:'投资总经理',
+          msg:'想了解一下贵公司是否还在招产..',
+          time:'09-11'
+        },
+        {
+          uid:2,
+          name:'王先生',
+          job:'商办中心负责人',
+          gs:'龙湖地产福州公司',
+          gtzw:'投资总经理',
+          msg:'想了解一下贵公司是否还在招产..',
+          time:'09-11'
+        },
+      ],
+      selt_index: 0,
+      selt_info: {}
     }
   },
+  mounted(){
+    this.getSysMsgList();
+    this.selt_info = this.msgListData[this.selt_index]
+  },
   methods:{
-   
+    handleClose(done) {
+      this.zx_dialogVisible = false;
+    },
     clickStatus(n){
       this.tabStatus = n;
     },
+    onSendClcik(){
+
+    },
+    clickmsgListData(i,in_dx){
+      let that = this;
+      that.selt_info = i;
+      that.selt_index = in_dx;
+    },
+
+
+    // 邀请面试
+    clickYqms(){
+      this.zx_dialogVisible = true;
+    },
+    // 获取聊天列表
+    getSysMsgList(){
+      let that = this;
+      that.$axios.post('/api/sys-msg/list',{
+        page: that.page,
+        pagesize: that.pagesize
+      }).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    // 点击发送面试邀请
+    submitForm(){
+      let that = this;
+      let selt_info = that.selt_info;
+      let p = {
+        uid: selt_info.uid,
+        company_id: selt_info.company_id,
+        position_id: selt_info.position_id,
+        type: that.ruleForm.type,
+        begin_time: that.ruleForm.begin_time,
+        end_time: that.ruleForm.end_time,
+        staff: that.ruleForm.staff,
+        phone: that.ruleForm.phone,
+        remark: that.ruleForm.remark
+      }
+      console.log(p)
+      that.$axios.post('/api/company-interview/index',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+
+          this.zx_dialogVisible = false;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    }
   
   }
 }
@@ -186,9 +359,16 @@ export default {
           width: 100%;
           padding: 16px 12px;
           display: flex;
+          cursor: pointer;
           &>img{
             width: 40px;
             height: 40px;
+          }
+          &.hover{
+            background: #e1dfdf59;
+          }
+          &:hover{
+            background: #e1dfdf59;
           }
 
           .name-box{
@@ -230,6 +410,11 @@ export default {
     }
     .right-box{
       flex: 1;
+      width: 100%;
+      // height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       .seach-box{
         width: 100%;
         height: 54px;
@@ -259,12 +444,10 @@ export default {
       }
 
       .job-box{
-        margin-top: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 16px;
-        &>div{
+        padding: 10px 30px 30px 30px;
+        background: #fff;
+        flex: 1;
+        div.job-1{
           display: flex;
           align-items: center;
           .job-title{
@@ -281,9 +464,290 @@ export default {
             padding-left: 4px;
           }
         }
+
       }
+
     }
   }
 
+  .scrollbar {
+    overflow: auto;
+  }
+
+  #content, #footer {
+    padding: 12px 16px;
+    width: 100%;
+  }
+  #content {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background: #fff;
+    flex: 1;
+  }
+  dd, dl, dt, li, ol, ul {
+    list-style: none;
+  }
+  .msg {
+    float: right;
+    width: 100%;
+    position: relative;
+    color: #fff;
+    font-size: 14px;
+    word-wrap: break-word;
+    -webkit-border-radius: 18px;
+    border-radius: 18px;
+    text-align: left;
+  }
+
+  .messages {
+    width: 100%;
+    position: relative;
+    padding-top: 0;
+  }
+  .messages dd, .messages dt {
+      margin-top: 10px;
+      overflow: hidden;
+  }
+  .messages dt {
+      text-align: center;
+  }
+  .messages dt:first-child {
+      margin-top: 0;
+  }
+  .messages h3, .messages h4 {
+    color: #999;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .msg-recv {
+    float: left;
+    color: inherit!important;
+  }
+  .messages .msg-recv {
+    color: #222!important;
+    margin-left: 48px;
+  }
+
+  .messages .msg>i {
+    position: absolute;
+    top: 5px;
+    left: -50px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .messages .msg-recv>i {
+      top: 5px;
+      left: -48px;
+      right: auto;
+      background: url(../../../assets/image/bossSide/img-user.jpg) no-repeat;
+      background-size: 40px 40px;
+
+  }
+  .messages .msg-recv>i, .messages .msg-send>i {
+      display: inline-block;
+  }
+  .sender, .msg .sender {
+    font-size: 12px;
+    color: rgba(36,46,51,.4);
+    display: block;
+    min-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+  }
+  .msg-recv .sender {
+    left: 8px;
+    text-align: left;
+  }
+  .msg .msg-content-and-after{
+    display: flex;
+    align-items: center;
+  }
+  .msg-recv .sender .sender-text {
+      display: inline-block;
+  }
+  .msg-recv .sender .time-text {
+      padding-left: 10px;
+  }
+  .msg .msg-content {
+    margin-top: 2px;
+    padding: 8px 12px;
+    word-wrap: break-word;
+    -webkit-border-radius: 18px;
+    border-radius: 8px;
+    -webkit-transition: .2s;
+    transition: .2s;
+    display: inline-block;
+    background-color: #fff;
+    position: relative;
+    max-width: 320px;
+  }
+  .bot .msg .msg-content {
+      float: right;
+      min-height: 32px;
+  }
+  .msg.msg-recv .msg-content {
+    background-color: #f3f5fa;
+    border: unset;
+    color: #000;
+  }
+  .bot .msg.msg-recv .msg-content {
+      float: left;
+  }
+  .bot .msg .more-msg-box {
+      width: 100%;
+      float: left;
+  }
+  .messages .msg-send {
+      margin-right: 48px;
+  }
+  .messages .msg.msg-send>i {
+    top: 0;
+    left: auto;
+    right: -48px;
+    background: url(../../../assets/image/bossSide/img-user.jpg) no-repeat;
+    background-size: 40px 40px;
+  }
+  .msg.msg-send .sender {
+      text-align: right;
+  }
+  .msg.msg-send .msg-content-and-after {
+      flex-flow: row-reverse;
+  }
+  .msg .sender-text {
+      display: none;
+  }
+  .msg.msg-send .msg-content, .msg.robot-msg-send .msg-content {
+      float: right;
+  }
+  .msg.msg-send .msg-content, .msg.robot-msg-send .msg-content {
+      background-color: #14b8a6;
+      border: unset;
+  }
+
+  #show-history {
+    color: #242e3380;
+    color: #242e33\0;
+    font-size: 12px;
+  }
+  #footer {
+    z-index: 1;
+    background-color: #fff;
+    box-shadow: 0 1px 10px 0 #e5e7eb;
+    .icon-btn-box{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 20px;
+      padding-right: 20px;
+      .footer-right{
+        display: flex;
+        align-items: center;
+        &>div{
+          display: flex;
+          align-items: center;
+          margin-left: 10px;
+          cursor: pointer;
+          img{
+            width: 20px;
+            height: 20px;
+          }
+          span{
+            font-size: 14px;
+            font-weight: 400;
+            color: #86909C;
+            line-height: 22px;
+            margin-left: 2px;
+          }
+          &:hover span{
+            color: $g_textColor;
+          }
+        }
+      }
+    }
+  }
+  .ui-editor {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ui-editor .textbox {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1280px;
+  }
+  .ui-editor textarea {
+    display: block;
+    width: 100%;
+    min-height: 40px;
+    max-height: 160px;
+    padding: 0 98px 0 0;
+    color: #242e33;
+    font-size: 14px;
+    outline: 0;
+    resize: none;
+    border: 0;
+    overflow-y: auto;
+    word-wrap: break-word;
+    word-break: break-all;
+    line-height: 20px;
+  }
+  .ui-editor .n-input-wrapper{
+    flex: 1;
+  }
+  .ui-editor .n-input-wrapper >>> .el-input__inner:hover,.ui-editor .n-input-wrapper >>> .el-input__inner:focus{
+    border-color: #14b8a6;
+  }
+  .ui-editor .btn-send {
+    width: auto;
+    z-index: 21;
+    font-size: 14px;
+    padding: 2px 40px;
+    color: #242e33;
+    line-height: 35px;
+    border-radius: 3px;
+    border: 1px solid #e6e6e6;
+    background: #f5f5f5;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+  .container-zx /deep/ .el-dialog{
+    min-width: 320px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    background: #F7F9FC;
+    .el-dialog__header{
+      text-align: left;
+      background: #fff;
+      padding: 16px 20px;
+      .el-dialog__title{
+        font-size: 16px;
+        color: $g_textColor;
+      }
+    }
+    .el-dialog__body{
+      height: auto;
+      overflow: overlay;
+      padding: 16px;
+      display: flex;
+      .pc-preview-wrapper{
+        flex: 1;
+        color: #414a60;
+        line-height: 26px;
+      }
+
+    }
+  }
 
 </style>
