@@ -79,14 +79,12 @@ export default {
         interview_position:'不限',
         interviewee:'',
         contact_person:'',
-        tableData:[
-          {}
-        ],
-        tableDataPage: {
-          page: 1,
-          size: 10,
-          total: 0
-        },
+      },
+      tableData:[],
+      tableDataPage: {
+        page: 1,
+        size: 10,
+        total: 0
       },
     }
   },
@@ -94,6 +92,14 @@ export default {
     this.getSysMsgList();
   },
   methods:{
+    // 重置
+    resetForm(){
+
+    },
+    // 搜索
+    submitForm(){
+
+    },
     clickStatus(n){
       this.tabStatus = n;
     },
@@ -103,7 +109,7 @@ export default {
       that.$axios.post('/api/company-interview/index',{}).then( res =>{
         console.log(res)
         if(res.code == 0){
-
+          that.tableData = res.data;
         }else{
           that.$message.error({
             message:res.msg

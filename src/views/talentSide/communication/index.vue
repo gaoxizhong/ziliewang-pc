@@ -1,18 +1,8 @@
 <template>
-  <div class="bossSide-container interaction-box">
-    <!-- 互动页 -->
-    <div class="tab-box">
-      <div class="tab-left">
-        <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">沟通中</div>
-        <!-- <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">已约面</div>
-        <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">不合适</div>
-        <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">收藏</div> -->
-      </div>
-      <!-- <div class="tab-right">
-        <span></span>
-      </div> -->
-    </div>
-    <div class="chat-window-box margin-top-20 m-box">
+  <!-- 沟通页 -->
+  <div class="container interaction-box">
+    <div class="tab-box"></div>
+    <div class="chat-window-box m-box">
       <div class="left-box">
         <div class="seach-box"></div>
         <div class="personAbility-box">
@@ -40,7 +30,7 @@
               <div class="span-2" v-if="selt_info.user">{{selt_info.user.position}}</div>
             </div>
           </div>
-          <img src="../../../assets/image/bossSide/fileSearch.png" alt="" class="fileSearch-img" @click="onlineResume"/>
+          <!-- <img src="../../../assets/image/bossSide/fileSearch.png" alt="" class="fileSearch-img" @click="onlineResume"/> -->
         </div>
         <div class="job-box scrollbar" id="content" ref="scrollbar">
           <div class="job-1">
@@ -71,20 +61,16 @@
         <div class="theme-c clearfix" id="footer" style="display: block;">
           <div class="icon-btn-box">
             <div></div>
-            <div class="footer-right">
-              <div @click="click_bhs">
-                <img src="../../../assets/image/bossSide/int-qjl.png" alt="" />
-                <span>不合适</span>
-              </div>
+            <!-- <div class="footer-right">
               <div>
                 <img src="../../../assets/image/bossSide/int-qjl.png" alt="" />
                 <span>求简历</span>
               </div>
-              <div @click="clickYqms">
+              <div>
                 <img src="../../../assets/image/bossSide/int-yqms.png" alt="" />
                 <span>邀面试</span>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="ui-editor clearfix">
             <div class="textbox">
@@ -101,119 +87,40 @@
           </div>
         </div>
       </div>
-
       <div class="right-box chat-no-data" v-else>
         <img src="../../../assets/image/bossSide/icon-chat-welcome.png" alt="" />
         <div class="welcome-tips">
-          <p>与您进行过沟通的 人才 都会在左侧列表中显示</p>
+          <p>与您进行过沟通的 Boss 都会在左侧列表中显示</p>
         </div>
       </div>
 
     </div>
-
-
-    <!-- 面试邀请弹窗 开始 -->
-    <div class="container-yqms">
-      <el-dialog title="邀请面试" :center="false" :visible.sync="yqms_dialogVisible" width="800px" :before-close="yqms_handleClose">
-        <div class="pc-preview-wrapper m-box">
-          <el-form :model="ruleForm" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-
-            <el-form-item label="面试方式" prop="type">
-              <el-select v-model="ruleForm.type" placeholder="面试方式">
-                <el-option label="线上" value="1"></el-option>
-                <el-option label="线下" value="2"></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="开始时间" prop="begin_time">
-              <el-date-picker
-                v-model="ruleForm.begin_time"
-                type="datetime"
-                placeholder="选择日期时间"
-                value-format="yyyy-MM-dd HH:mm"
-                >
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="结束时间" prop="begin_time">
-              <el-date-picker
-                v-model="ruleForm.end_time"
-                type="datetime"
-                placeholder="选择日期时间"
-                value-format="yyyy-MM-dd HH:mm"
-                >
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="企业联系人" prop="staff">
-              <el-input v-model="ruleForm.staff" placeholder="请输入"></el-input>
-            </el-form-item>
-
-            <el-form-item label="联系电话" prop="phone">
-              <el-input v-model="ruleForm.phone" placeholder="请输入"></el-input>
-            </el-form-item>
-            <el-form-item label="备注" prop="remark">
-              <el-input v-model="ruleForm.remark" placeholder="请输入"></el-input>
-            </el-form-item>
-            
-            <el-form-item class="btn-box">
-              <el-button type="primary" @click="submitForm">发送邀请</el-button>
-              <!-- <el-button @click="resetForm">重置</el-button> -->
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-dialog>
-    </div>
-    <!-- 面试邀请弹窗 结束 -->
-    <!-- 查看在线简历弹窗 开始 -->
-    <div>
-      <onlineResume :infoData="onlineResumeData" :is_type="is_type" ref="onlineResume"/>
-    </div>
-    <!-- 查看在线简历弹窗 结束 -->
+    
   </div>
 </template>
-
 <script>
-import onlineResume from "../components/onlineResume.vue";
 export default {
-  components: {
-    onlineResume,
-  },
-  data() {
+  data(){
     return {
-      tabStatus: 1,
       uid: window.localStorage.getItem('uid'),
+      viewHeight:'',
       // is_kefu:2,  // 1为客服 msg-recv， 2为用户  msg-send
       originMessage:'',
       message:[], // 累计对话记录
       msgList:[],
       loading: false,
-      yqms_dialogVisible: false,
-      ruleForm:{
-        type:'',
-        begin_time:'',
-        end_time:'',
-        staff:'',
-        phone:'',
-        remark:''
-      },
+      source: null,
       page: 1,
       pagesize: 20,
       msgListData:[], // 左侧信息列表
-      selt_index: -1,
+      selt_index: 0,
       selt_info: '',
-      onlineResumeData:{}, // 在线简历
-      is_type:''
     }
   },
   mounted(){
     this.getSysMsgList();
   },
   methods:{
-    yqms_handleClose(done) {
-      this.yqms_dialogVisible = false;
-    },
-    clickStatus(n){
-      this.tabStatus = n;
-    },
     onSendClcik(){
 
     },
@@ -223,11 +130,6 @@ export default {
       that.selt_index = in_dx;
     },
 
-
-    // 邀请面试
-    clickYqms(){
-      this.yqms_dialogVisible = true;
-    },
     // 获取聊天列表
     getSysMsgList(){
       let that = this;
@@ -238,26 +140,6 @@ export default {
         console.log(res)
         if(res.code == 0){
           that.msgListData = res.data;
-          // that.selt_info = that.msgListData[that.selt_index]
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
-    },
-    // 查看在线简历
-    onlineResume(){
-      let that = this;
-      let selt_info = that.selt_info;
-      that.$axios.post('/api/company/resume/detail',{
-        uid: selt_info.uid
-      }).then( res =>{
-        console.log(res)
-        if(res.code == 0){
-          that.onlineResumeData = res.data;
-          that.$refs.onlineResume._data.zx_dialogVisible = true;
-          // that.zx_dialogVisible = true;
         }else{
           that.$message.error({
             message:res.msg
@@ -270,26 +152,16 @@ export default {
       let that = this;
       let selt_info = that.selt_info;
       let p = {
-        status: 1, //1.待查看2.待参加3.未参加.已参加 5已超时 6.不合适
-        uid: selt_info.uid, // 用户 
-        id: selt_info.company_interview_id, // 面试信息id 
-        company_id: selt_info.company_id, // 企业id
-        position_id: selt_info.position_id,  // 岗位信息id
-        type: that.ruleForm.type,
-        begin_time: that.ruleForm.begin_time,
-        end_time: that.ruleForm.end_time,
-        staff: that.ruleForm.staff,
-        phone: that.ruleForm.phone,
-        remark: that.ruleForm.remark
+        id: selt_info.id, // 消息id 
       }
       console.log(p)
-      that.$axios.post('/api/company-interview/edit',p).then( res =>{
+      that.$axios.post('/api/user/receive-interview-invite',p).then( res =>{
         console.log(res)
         if(res.code == 0){
           that.$message.success({
             message:'发送面试邀请成功'
           })
-          this.yqms_dialogVisible = false;
+          this.zx_dialogVisible = false;
         }else{
           that.$message.error({
             message:res.msg
@@ -297,103 +169,22 @@ export default {
         }
       })
     },
-    // 点击不合适
-    click_bhs(){
-      let that = this;
-      let selt_info = that.selt_info;
-      let p = {
-        status: 6, //1.待查看2.待参加3.未参加.已参加 5已超时 6.不合适
-        uid: selt_info.uid, // 用户 
-        id: selt_info.company_interview_id, // 面试信息id 
-        company_id: selt_info.company_id, // 企业id
-        position_id: selt_info.position_id,  // 岗位信息id
-      }
-      that.$axios.post('/api/company-interview/edit',p).then( res =>{
-        console.log(res)
-        if(res.code == 0){
-          that.$message.success({
-            message:'已添加为不合适'
-          })
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
-    }
-  
   }
 }
 </script>
-
 <style lang="scss" scoped>
   .interaction-box{
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 75px);
-    margin-top: 10px;
-    margin-bottom: 10px;
+    min-height: calc(100vh - 70px);
+    margin: 0 auto;
   }
-  .tab-box{
-    height: auto;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .tab-left{
-      width: auto;
-      display: flex;
-      align-items: center;
-      &>div{
-        width: auto;
-        height: 1.7rem;
-        line-height: 1.7rem;
-        padding: 0 10px;
-        background: #FFFFFF;
-        border-radius: 4px;
-        border: 1px solid #E5E6EB;
-        margin-right: 4px;
-        text-align: center;
-        font-size: 0.7rem;
-        font-weight: 400;
-        color: $g_textColor;
-        cursor: pointer;
-      }
-      &>div.hover-items{
-        color: $g_color;
-        border-color: $g_color;
-      }
-    }
-    .tab-right{
-      width: 124px;
-      height: 32px;
-      line-height: 32px;
-      border-radius: 6px;
-      background: $g_bg;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      img{
-        width: 14.3px;
-        height: 14.3px;
-      }
-      span{
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 22px;
-        padding-left: 4px;
-      }
-    }
-  }
+
   // 聊天页面样式
   .chat-window-box{
     padding: 0;
     width: 100%;
     flex: 1;
     display: flex;
+    height: calc(100vh - 75px);
     .left-box{
       width: 300px;
       border-right: 1px solid #F2F3F5;
@@ -712,8 +503,8 @@ export default {
           margin-left: 10px;
           cursor: pointer;
           img{
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
           }
           span{
             font-size: 14px;

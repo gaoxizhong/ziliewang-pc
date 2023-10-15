@@ -223,8 +223,8 @@ export default {
   methods: {
      // 获取省市区地址级联
      handleChange(thsAreaCode) {
-      thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
-      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
+      // console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
+      // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
       this.infoData.desired_location = thsAreaCode[1];
     },
     clickCreat(){

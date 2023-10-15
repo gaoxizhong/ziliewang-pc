@@ -355,6 +355,16 @@ export const constantRoutes = [
           // keepAlive: true,
         },
       },
+      {
+        path: '/communication',
+        name: 'communication',
+        component: () => import('@/views/talentSide/communication'),
+        meta: { 
+          title: '沟通',
+          // keepAlive: true,
+        },
+      },
+      
     ]
   },
   // 404 page must be placed at the end !!!

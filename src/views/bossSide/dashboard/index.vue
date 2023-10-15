@@ -138,16 +138,24 @@ export default {
   methods: {
     // 点击发布职位
     goToPostJob(){
-      if(this.role == 1){
-        this.$message.error({
-          message: "请先去注册企业信息后在发布职位！"
-        })
-        setTimeout( ()=>{
-          this.$router.push('/enterpriseInfoRequest')
-        },1500)
-      }else{
-        this.$router.push({ path:'/postJob' })
-      }
+      let that = this;
+      that.$axios.post('/api/user/profile',{}).then(res =>{
+        if(res.code == 0){
+          if(res.data.basic_info.role == 1){
+            that.$message.error({
+              message: "请先去注册企业信息后在发布职位！"
+            })
+            setTimeout( ()=>{
+              that.$router.push('/enterpriseInfoRequest')
+            },1500)
+          }else{
+            that.$router.push({ path:'/postJob' })
+          }
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+  
     },
     searchEnterFun(e){
       console.log(e)

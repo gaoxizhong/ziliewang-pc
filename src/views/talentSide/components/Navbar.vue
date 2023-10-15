@@ -23,7 +23,7 @@
             <img src="../../../assets/image/nav_1.png" alt="" />
             <span>职圈</span>
           </div>
-          <div @click="clickMessage">
+          <div @click="clickMessage" :class="activeMenu == '/communication'?'hover':''">
             <img src="../../../assets/image/nav_1.png" alt="" />
             <span>消息</span>
           </div>
@@ -65,6 +65,7 @@ export default {
     name() {
       return localStorage.getItem('realname')
     },
+
     avatar() {
       return localStorage.getItem('realAvatar')
     },
@@ -74,7 +75,8 @@ export default {
       // if (meta.activeMenu) {
       //   return meta.activeMenu;
       // }
-      return path;
+      console.log(path)
+      return '' || path;
     },
   },
   mounted() {
@@ -96,11 +98,12 @@ export default {
     // 点击消息
     clickMessage(){
       this.$router.push({
-        path:'/attentionFans',   //跳转的路径
-        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-          tag: 'pingl-hf',
-          see_uid: localStorage.getItem('realUid')
-        }
+        path:'/communication',   //跳转的路径
+        // path:'/attentionFans',   //跳转的路径
+        // query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+        //   tag: 'pingl-hf',
+        //   see_uid: localStorage.getItem('realUid')
+        // }
       })
     }
   },
@@ -136,12 +139,10 @@ export default {
     /deep/ .el-menu--horizontal>.el-menu-item{
       height: 50px;
       line-height: 50px;
-      width: 80px;
-      padding: 0;
-      margin-left: 20px;
+      min-width: 80px;
       font-size: 14px;
       text-align: center;
-      padding: 0;
+      padding: 0 10px;
     }
     /deep/ .el-menu--horizontal>.el-menu-item.is-active{
       background-color: #000A14 !important;
@@ -162,8 +163,9 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-right: 10px;
       div{
-        margin-right: 30px;
+        padding: 0 12px;
         font-size: 14px;
         display: flex;
         align-items: center;
@@ -173,6 +175,10 @@ export default {
           height: 14px;
           margin-right: 4px;
         }
+      }
+      &>div.hover{
+        background-color: #000A14 !important;
+        border-bottom: 2px solid #37f !important;
       }
     }
     .right-menu-item {

@@ -360,7 +360,8 @@ export default {
       };
 
       that.$axios.post('/api/register',p).then( res =>{
-        if(res.data.code == 0){
+        console.log(res)
+        if(res.code == 0){
           that.$message.success({
             message:'注册成功'
           })
@@ -368,8 +369,7 @@ export default {
             this.sign_login = 'login';
           },1500)
           return
-        }
-        if(res.data.code == 1){
+        }else{
           that.$message.error({
             message:res.data.msg
           })
@@ -418,7 +418,7 @@ export default {
       };
 
       that.$axios.post('/api/register',p).then( res =>{
-        if(res.data.code == 0){
+        if(res.code == 0){
           that.$message.success({
             message:'修改成功'
           })
@@ -427,7 +427,7 @@ export default {
           },1500)
           return
         }
-        if(res.data.code == 1){
+        if(res.code == 1){
           that.$message.error({
             message:res.data.msg
           })

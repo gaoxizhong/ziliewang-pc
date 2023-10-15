@@ -6,7 +6,7 @@
       <div class="info-left-box">
         <div class="left-box user-top-box">
           <div class="user-top">
-            <img :src="infoData.avatar" alt="" class="user-img"/>
+            <img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg' )" alt="" class="user-img"/>
             <p class="user-name">{{ infoData.real_name }}</p>
             <!-- <div class="gz-sx-btn">
               <div class="left">

@@ -5,7 +5,7 @@
       <div class="container-titleinfo">
         <div class="titleinfo-left-box">
           <div class="title-box">
-            <div class="title-text" v-if="company.company_name">{{ infoData.job_preference }}-{{ infoData?company.company_name:'' }}</div>
+            <div class="title-text">{{ infoData.position_name }}- <span v-if="infoData.company">{{infoData.company.company_name }}</span></div>
             <div class="pay-box">{{ infoData.salary }}</div>
           </div>
           <div class="title-tag">
@@ -48,7 +48,7 @@
               <div class="img-box"><img src="../../../assets/image/img-user.jpg" alt="" /></div>
               <div class="info-text">
                 <div class="info-text-1"><span class="name">袁女士</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
-                <div class="info-text-2"><span>招聘专员·</span><span v-if="company.company_name">{{ company.company_name }}</span></div>
+                <div class="info-text-2"><span>招聘专员·</span><span v-if="infoData.company">{{ infoData.company.company_name }}</span></div>
               </div>
             </div>
             <!-- <div class="boss-info-btn">
@@ -120,7 +120,6 @@ export default {
           let infoData = res.data;
           infoData.job_benefits = infoData.job_benefits.split(',');
           that.infoData = infoData;
-          that.company = infoData.company;
         }else{
           that.$message.error({
             message:res.msg

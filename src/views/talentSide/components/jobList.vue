@@ -7,7 +7,7 @@
           <el-tag>{{ item.resume_demand }}</el-tag>
           <el-tag>{{ item.educational_experience }}</el-tag>
         </div>
-        <div class="items-firm-info">
+        <div class="items-firm-info" v-if="item.company">
           <span class="firm-info-1">{{ item.company.company_name }}</span>
           <span class="firm-info-2">{{ item.company.corporate_finance }}{{ item.company.company_scale }}</span>
         </div>

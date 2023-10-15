@@ -3,7 +3,6 @@
     <div class="info-title-box myResume-plate">
       <div class="info-title-top" v-if=" !redact_info ">
         <div class="info-avatar">
-          <img :src=" data.avatar ? data.avatar : require('../../../../assets/image/img-user.jpg' )" alt="" />
           <div class="info-avatar-i">
             <el-upload class="avatar-uploader" 
               drag ref="upload" 
@@ -13,7 +12,8 @@
               :data="uploadData"
               :http-request="uploadArticleCover" 
               >
-              <i class="el-icon-camera"></i>
+              <!-- <i class="el-icon-camera"></i> -->
+              <img :src=" data.avatar ? data.avatar : require('../../../../assets/image/img-user.jpg' )" alt="" />
             </el-upload>
           </div>
         </div>
@@ -216,8 +216,8 @@ export default {
   methods: {
      // 获取省市区地址级联
      handleChange(thsAreaCode) {
-      thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
-      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
+      // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
+      // console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
       this.selectedOptions = thsAreaCode;
       this.infoData.live_city = thsAreaCode[1];
     },
@@ -402,7 +402,7 @@ export default {
           height: 100%;
           background: #898a8b7a;
           font-size: 28px;
-          display: none;
+          // display: none;
           text-align: center;
           line-height: 64px;
           color: #ffffff;
