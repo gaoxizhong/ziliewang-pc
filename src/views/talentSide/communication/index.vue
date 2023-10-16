@@ -38,21 +38,25 @@
             <span class="blue" v-if="selt_info.companyposition">{{selt_info.companyposition.position_name}}</span>
           </div>
           <div></div>
+
           <dl class="messages" style="margin-bottom: 12px;">
             <dt><h4><a href="javascript:0;" id="show-history"></a></h4></dt>
             <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
-              <div :class=" !item.isme ?'msg-recv':'msg-send' " class="msg" style="color:#fff">
-                <i class="msg-avatar"></i>
+              <div :class=" item.msg_type == 1 ?'msg-recv':'msg-send' " class="msg" style="color:#fff">
                 <div class="sender">
                   <!-- <span class="sender-text">{{item.name}}</span> -->
                   <span class="time-text">{{item.time}}</span>
                 </div>
                 <div class="msg-content-and-after">
-                  <div class="msg-content" v-html="item.content"></div>
+                  <div class="msg-content">
+                    <div v-html="item.content"></div>
+                    <div class="msg-btn" v-if="item.msg_type == 1 && item.msg_status == 2" @click="clickAcceptBtn">接收邀请</div>
+                  </div>
                 </div>
               </div>
             </dd>
           </dl>
+
           <div id="msg_end" ref="msg_end" style="height:0px; overflow:hidden"></div>
 
         </div>
@@ -104,16 +108,18 @@ export default {
     return {
       uid: window.localStorage.getItem('uid'),
       viewHeight:'',
-      // is_kefu:2,  // 1为客服 msg-recv， 2为用户  msg-send
       originMessage:'',
       message:[], // 累计对话记录
-      msgList:[],
+      msgList:[   // 1为企业 msg-recv， 2为用户  msg-send
+        {msg_type: 2,msg_status:1,content:'投递简历',time:'2023-10-16 10:00:00'},
+        {msg_type: 1,msg_status:2,content:'发送面试邀请',time:'2023-10-16 10:00:00'},
+      ],
       loading: false,
       source: null,
       page: 1,
       pagesize: 20,
       msgListData:[], // 左侧信息列表
-      selt_index: 0,
+      selt_index: -1,
       selt_info: '',
     }
   },
@@ -147,21 +153,19 @@ export default {
         }
       })
     },
-    // 点击发送面试邀请
-    submitForm(){
+    // 点击接收面试邀请按钮
+    clickAcceptBtn(){
       let that = this;
       let selt_info = that.selt_info;
       let p = {
         id: selt_info.id, // 消息id 
       }
-      console.log(p)
       that.$axios.post('/api/user/receive-interview-invite',p).then( res =>{
         console.log(res)
         if(res.code == 0){
           that.$message.success({
-            message:'发送面试邀请成功'
+            message:'接收面试邀请成功'
           })
-          this.zx_dialogVisible = false;
         }else{
           that.$message.error({
             message:res.msg
@@ -214,10 +218,10 @@ export default {
 
           .name-box{
             flex: 1;
+            padding-left: 6px;
             .name-t{
               display: flex;
               align-items: center;
-              padding-left: 4px;
               .span-1{
                 font-size: 14px;
                 font-weight: 500;
@@ -376,28 +380,9 @@ export default {
   }
   .messages .msg-recv {
     color: #222!important;
-    margin-left: 48px;
   }
 
-  .messages .msg>i {
-    position: absolute;
-    top: 5px;
-    left: -50px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-  .messages .msg-recv>i {
-      top: 5px;
-      left: -48px;
-      right: auto;
-      background: url(../../../assets/image/bossSide/img-user.jpg) no-repeat;
-      background-size: 40px 40px;
 
-  }
-  .messages .msg-recv>i, .messages .msg-send>i {
-      display: inline-block;
-  }
   .sender, .msg .sender {
     font-size: 12px;
     color: rgba(36,46,51,.4);
@@ -415,6 +400,19 @@ export default {
   .msg .msg-content-and-after{
     display: flex;
     align-items: center;
+  }
+  .msg .msg-content-and-after .msg-btn{
+    width: 120px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #fff;
+    background: #14b8a6;
+    margin-top: 8px;
+    cursor: pointer;
   }
   .msg-recv .sender .sender-text {
       display: inline-block;
@@ -445,37 +443,28 @@ export default {
     color: #000;
   }
   .bot .msg.msg-recv .msg-content {
-      float: left;
+    float: left;
   }
   .bot .msg .more-msg-box {
-      width: 100%;
-      float: left;
+    width: 100%;
+    float: left;
   }
-  .messages .msg-send {
-      margin-right: 48px;
-  }
-  .messages .msg.msg-send>i {
-    top: 0;
-    left: auto;
-    right: -48px;
-    background: url(../../../assets/image/bossSide/img-user.jpg) no-repeat;
-    background-size: 40px 40px;
-  }
+
   .msg.msg-send .sender {
-      text-align: right;
+    text-align: right;
   }
   .msg.msg-send .msg-content-and-after {
-      flex-flow: row-reverse;
+    flex-flow: row-reverse;
   }
   .msg .sender-text {
-      display: none;
+    display: none;
   }
   .msg.msg-send .msg-content, .msg.robot-msg-send .msg-content {
-      float: right;
+    float: right;
   }
   .msg.msg-send .msg-content, .msg.robot-msg-send .msg-content {
-      background-color: #14b8a6;
-      border: unset;
+    background-color: #14b8a6;
+    border: unset;
   }
 
   #show-history {
