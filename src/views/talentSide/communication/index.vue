@@ -7,12 +7,12 @@
         <div class="seach-box"></div>
         <div class="personAbility-box">
 
-          <div class="personAbility-items-box" :class="selt_index == index?'hover':''" v-for="(item,index) in msgListData" :key="index" @click="clickmsgListData(item,index)">
+          <div class="personAbility-items-box" :class="selt_index == index?'hover':''" v-for="(item,index) in sysMsgListData" :key="index" @click="clickmsgListData(item,index)">
             <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
             <div class="name-box">
               <div class="name-t">
-                <span class="span-1" v-if="item.user">{{item.user.real_name}}</span>
-                <!-- <span class="span-2">{{item.user.position?item.user.position:'暂无'}}</span> -->
+                <span class="span-1" v-if="item.company">{{item.company.legal_person}}</span>
+                <span class="span-2" v-if="item.company">{{item.company.company_name}}</span>
               </div>
               <div class="sub-title">{{item.msg_content}}</div>
             </div>
@@ -41,6 +41,7 @@
 
           <dl class="messages" style="margin-bottom: 12px;">
             <dt><h4><a href="javascript:0;" id="show-history"></a></h4></dt>
+
             <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
               <div :class=" item.msg_type == 1 ?'msg-recv':'msg-send' " class="msg" style="color:#fff">
                 <div class="sender">
@@ -55,6 +56,23 @@
                 </div>
               </div>
             </dd>
+
+            <!-- 邀请面试 开始-->
+            <dd class="bot clearfix" v-if="selt_info.msg_type == 2 && selt_info.msg_status == 2" >
+              <div class="msg msg-recv" style="color:#fff">
+              <div class="sender">
+                  <span class="time-text">{{selt_info.createtime}}</span>
+                </div>
+                <div class="msg-content-and-after">
+                  <div class="msg-content">
+                    <div>对方向您发送了面试邀请</div>
+                    <div class="msg-btn" @click="clickAcceptBtn">接收邀请</div>
+                  </div>
+                </div>
+              </div>
+            </dd>
+            <!-- 邀请面试 结束 -->
+
           </dl>
 
           <div id="msg_end" ref="msg_end" style="height:0px; overflow:hidden"></div>
@@ -110,15 +128,12 @@ export default {
       viewHeight:'',
       originMessage:'',
       message:[], // 累计对话记录
-      msgList:[   // 1为企业 msg-recv， 2为用户  msg-send
-        {msg_type: 2,msg_status:1,content:'投递简历',time:'2023-10-16 10:00:00'},
-        {msg_type: 1,msg_status:2,content:'发送面试邀请',time:'2023-10-16 10:00:00'},
-      ],
+      msgList:[],  // 1为企业 msg-recv， 2为用户  msg-send
       loading: false,
       source: null,
       page: 1,
       pagesize: 20,
-      msgListData:[], // 左侧信息列表
+      sysMsgListData:[], // 左侧信息列表
       selt_index: -1,
       selt_info: '',
     }
@@ -145,7 +160,7 @@ export default {
       }).then( res =>{
         console.log(res)
         if(res.code == 0){
-          that.msgListData = res.data;
+          that.sysMsgListData = res.data;
         }else{
           that.$message.error({
             message:res.msg
@@ -190,7 +205,7 @@ export default {
     display: flex;
     height: calc(100vh - 75px);
     .left-box{
-      width: 300px;
+      width: 340px;
       border-right: 1px solid #F2F3F5;
       .seach-box{
         width: 100%;
@@ -229,7 +244,7 @@ export default {
                 line-height: 22px;
               }
               .span-2{
-                padding-left: 2px;
+                padding-left: 4px;
                 font-size: 12px;
                 color: #1F2E4D;
                 line-height: 20px;
@@ -411,7 +426,7 @@ export default {
     font-size: 14px;
     color: #fff;
     background: #14b8a6;
-    margin-top: 8px;
+    margin: 20px;
     cursor: pointer;
   }
   .msg-recv .sender .sender-text {

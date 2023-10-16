@@ -17,7 +17,7 @@
         <div class="seach-box"></div>
         <div class="personAbility-box">
 
-          <div class="personAbility-items-box" :class="selt_index == index?'hover':''" v-for="(item,index) in msgListData" :key="index" @click="clickmsgListData(item,index)">
+          <div class="personAbility-items-box" :class="selt_index == index?'hover':''" v-for="(item,index) in sysMsgListData" :key="index" @click="clickmsgListData(item,index)">
             <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
             <div class="name-box">
               <div class="name-t">
@@ -197,7 +197,7 @@ export default {
       },
       page: 1,
       pagesize: 20,
-      msgListData:[], // 左侧信息列表
+      sysMsgListData:[], // 左侧信息列表
       selt_index: -1,
       selt_info: '',
       onlineResumeData:{}, // 在线简历
@@ -237,8 +237,8 @@ export default {
       }).then( res =>{
         console.log(res)
         if(res.code == 0){
-          that.msgListData = res.data;
-          // that.selt_info = that.msgListData[that.selt_index]
+          that.sysMsgListData = res.data;
+          // that.selt_info = that.sysMsgListData[that.selt_index]
         }else{
           that.$message.error({
             message:res.msg
@@ -434,7 +434,7 @@ export default {
                 line-height: 22px;
               }
               .span-2{
-                padding-left: 2px;
+                padding-left: 4px;
                 font-size: 12px;
                 color: #1F2E4D;
                 line-height: 20px;
