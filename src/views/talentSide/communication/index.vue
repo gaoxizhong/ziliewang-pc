@@ -173,7 +173,7 @@ export default {
       let that = this;
       let selt_info = that.selt_info;
       let p = {
-        id: selt_info.id, // 消息id 
+        id: selt_info.company_interview_id, 
       }
       that.$axios.post('/api/user/receive-interview-invite',p).then( res =>{
         console.log(res)
