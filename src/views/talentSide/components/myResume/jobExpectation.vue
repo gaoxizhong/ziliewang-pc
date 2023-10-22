@@ -21,9 +21,9 @@
                 </span>
               </div>
               <div class="info-set">
-                <span>删除</span>
+                <span @click="clickDelete(item.id,index)">删除</span>
                 <span>/</span>
-                <span>编辑</span>
+                <span @click="clickUpdate(item)">编辑</span>
               </div>
             </div>
 
@@ -81,7 +81,7 @@
           </div>
 
           <div class="mb20 redact-item">
-            <div class="item-label">期望薪资</div>
+            <div class="item-label">期望月薪</div>
             <div class="item-content">
               <el-select v-model="expected_salary_st" placeholder="请选择">
                 <el-option
@@ -189,8 +189,8 @@ export default {
       infoData: {
         desired_position: '', // 期待职位
         desired_location:'', // 期望地点
-        desired_industry: '互联网', // 期望行业
-        expected_salary: '', // 期望薪资
+        desired_industry: '', // 期望行业
+        expected_salary: '', // 期望月薪
         job_preference: '', // 职位偏好
       },
       is_creat: false,
@@ -205,11 +205,11 @@ export default {
         industryList:[]
       },
       selt_item: 0,
-      option_salary_st: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K'],
-      option_salary_end: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K'],
+      option_salary_st: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K','50K','100K','150K','200K'],
+      option_salary_end: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K','50K','100K','150K','200K','300K'],
+      options: pcas,
       expected_salary_st:'',
       expected_salary_end:'',
-      options: pcas,
       selectedOptions: [],
     }
   },
@@ -228,7 +228,18 @@ export default {
       this.infoData.desired_location = thsAreaCode[1];
     },
     clickCreat(){
-      this.is_creat = true
+      this.infoData = {
+        desired_position: '', // 期待职位
+        desired_location:'', // 期望地点
+        desired_industry: '', // 期望行业
+        expected_salary: '', // 期望月薪
+        job_preference: '', // 职位偏好
+      },
+      this.dialogVisible_seach = '';
+      this.expected_salary_st = '';
+      this.expected_salary_end = '';
+      this.selectedOptions = [];
+      this.is_creat = true;
     },
     // 点击新建取消按钮
     clickInfoCancelBtn(){
@@ -240,6 +251,7 @@ export default {
       let infoData = this.infoData;
       infoData.expected_salary = this.expected_salary_st+'-'+this.expected_salary_end;
       const p = Object.assign({},this.infoData);
+      console.log(p)
       if(p.desired_position == ''){
         this.$message.warning('期待职位不能为空!');
         return
@@ -253,7 +265,7 @@ export default {
         return
       }
       if(p.expected_salary == ''){
-        this.$message.warning('期望薪资不能为空!');
+        this.$message.warning('期望月薪不能为空!');
         return
       }
       if(p.job_preference == ''){
@@ -292,6 +304,17 @@ export default {
       that.$axios.post(api,p).then( res =>{
         if(res.code == 0){
           that.$message.success( text );
+          that.infoData = {
+            desired_position: '', // 期待职位
+            desired_location:'', // 期望地点
+            desired_industry: '', // 期望行业
+            expected_salary: '', // 期望月薪
+            job_preference: '', // 职位偏好
+          },
+          that.dialogVisible_seach = '';
+          that.expected_salary_st = '';
+          that.expected_salary_end = '';
+          that.selectedOptions = [];
           return f()
         }
       })
@@ -318,7 +341,15 @@ export default {
       for(var key in infoData){
         infoData[key] = obj[key]
       }
+      let e_arr = infoData.expected_salary.split('-');
+      this.expected_salary_st = e_arr[0];
+      this.expected_salary_end = e_arr[1];
       this.infoData = infoData;
+      console.log(this.infoData )
+      let desired_location = this.infoData.desired_location;
+      let selectedOptions = this.selectedOptions;
+      selectedOptions.push(desired_location)
+      this.selectedOptions = selectedOptions;
       this.is_creat = true;
     },
     // 点击选择职位
