@@ -1,7 +1,7 @@
 <template>
   <div class="right-box">
     <div class="users-box">
-      <img src="../../../assets/image/img-user.jpg" alt="" class="img-user"/>
+      <img :src="infoData.basic_info?infoData.basic_info.avatar:require('../../../assets/image/img-user.jpg')" alt="" class="img-user"/>
       <div class="users-right">
         <div class="users-name">
           <span class="span-1" v-if="infoData.basic_info">{{infoData.basic_info.real_name}}</span>

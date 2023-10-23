@@ -144,9 +144,9 @@
                 :show-file-list="false"
                 :before-upload="beforeAvatarUpload"
                 :data="uploadData"
-                :http-request="up_user_img" 
+                :http-request="up_resume_image" 
                 >
-                <img :src="user_img?user_img:require('../../../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
+                <img :src="resume_image?resume_image:require('../../../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
               </el-upload>
               </div>
               
@@ -206,10 +206,10 @@ export default {
   },
   data(){
     return{
-      user_img:'',
       config: config.baseURL.upload,
       redact_info: false, 
       redact_spot: false,
+      resume_image:'',
       infoData: {},
       fileList:[],
       imageUrl:'',
@@ -257,14 +257,17 @@ export default {
       this.$message.warning('每次只能上传一个文件')
     },
     // 上传图片 --- 上传个人图片
-    up_user_img(param){
+    up_resume_image(param){
       const formData = new FormData();
       formData.append('file[]',param.file);
       // formData.append('pictureCategory','articleCover');
       formData.append('up_tag','logo');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
         console.log(res)
-        this.user_img = res.data.upload_files;
+        this.infoData.resume_image = res.data.upload_files;
+        // this.infoData.resume_image = res.data.upload_files_path;
+        this.resume_image = res.data.upload_files;
+        
         this.$refs['upload'].clearFiles();
        
       }).catch( e=>{
@@ -335,7 +338,8 @@ export default {
         work_status: this.infoData.work_status,
         birth_year_month: this.infoData.birth_year_month,
         begin_work_date: this.infoData.begin_work_date,
-        live_city: this.infoData.live_city
+        live_city: this.infoData.live_city,
+        resume_image: this.resume_image
       }
       if(p.name == ''){
         this.$message.warning('姓名不能为空!');
