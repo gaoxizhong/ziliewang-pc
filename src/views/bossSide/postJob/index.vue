@@ -249,6 +249,9 @@ export default {
       `,
     }
   },
+  mounted(){
+    // console.log(this.$root.positionItems);
+  },
   methods:{
   // 获取省市区地址级联
     handleChange(thsAreaCode) {

@@ -134,7 +134,25 @@
               <div class="radio-item" :class="infoData.sex == 2 ? 'radio-checked':'' " @click="clickRadio(2)">女</div>
             </div>
           </div>
-          <div class="form-btns">
+          <div class="mb20 redact-item">
+            <div class="item-label">上传个人照片</div>
+            <div class="item-content">
+              <div class="z_file">
+                <el-upload class="avatar-uploader" 
+                drag ref="upload" 
+                action= "none"
+                :show-file-list="false"
+                :before-upload="beforeAvatarUpload"
+                :data="uploadData"
+                :http-request="up_user_img" 
+                >
+                <img :src="user_img?user_img:require('../../../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
+              </el-upload>
+              </div>
+              
+            </div>
+          </div>
+          <div class="form-btns redact-item">
             <el-button @click="clickInfoCancelBtn">取消</el-button>
             <el-button type="primary" @click="clickInfoVerifyBtn">确定</el-button>
           </div>
@@ -188,6 +206,7 @@ export default {
   },
   data(){
     return{
+      user_img:'',
       config: config.baseURL.upload,
       redact_info: false, 
       redact_spot: false,
@@ -237,11 +256,27 @@ export default {
     limitCheck() {
       this.$message.warning('每次只能上传一个文件')
     },
-    // 上传图片
+    // 上传图片 --- 上传个人图片
+    up_user_img(param){
+      const formData = new FormData();
+      formData.append('file[]',param.file);
+      // formData.append('pictureCategory','articleCover');
+      formData.append('up_tag','logo');
+      this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
+        console.log(res)
+        this.user_img = res.data.upload_files;
+        this.$refs['upload'].clearFiles();
+       
+      }).catch( e=>{
+        console.log('erro')
+        this.$refs['upload'].clearFiles()
+      })
+    },
+    // 上传图片--- 头像
     uploadArticleCover(param){
       console.log(param.file)
       const formData = new FormData();
-      formData.append('file[]',param.file);7
+      formData.append('file[]',param.file);
       formData.append('pictureCategory','articleCover');
       formData.append('up_tag','avatar');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
@@ -262,15 +297,15 @@ export default {
     beforeAvatarUpload(file) {
       console.log(file)
       const isJPG = file.type === 'image/png' || 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isLt3M = file.size / 1024 / 1024 < 3;
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 jpeg 或 png 格式!');
+        this.$message.error('上传图片只能是 jpeg 或 png 格式!');
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
+      if (!isLt3M) {
+        this.$message.error('上传图片大小不能超过 3MB!');
       }
-      return isJPG && isLt2M;
+      return isJPG && isLt3M;
     },
 
     
@@ -527,6 +562,34 @@ export default {
             border-color: $g_color;
           }
         }
+
+        .z_file {
+          width: 168px;
+          height: 168px;
+          margin-left: 40px;
+          position: relative;
+          .add-img{
+            display: block;
+            width: 168px;
+            height: 168px;
+            border: none;
+          }
+          .avatar-uploader{
+            width: 100%;
+            height: 100%;
+            &::v-deep .el-upload {
+              width: 100%;
+              height: 100%;
+            }
+            &::v-deep .el-upload-dragger{
+              width: 100%;
+              height: 100%;
+            }
+            &::v-deep .el-upload-dragger .el-icon-camera{
+              font-size: 28px;
+            }
+          }
+        }
       }
       .redact-item:nth-child(odd) {
         margin-bottom: 0;
@@ -537,6 +600,9 @@ export default {
         // right: 15px;
         text-align: right;
         padding: 0 15px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
       }
     }
     .info-title-bottom{

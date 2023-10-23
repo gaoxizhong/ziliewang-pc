@@ -9,8 +9,17 @@
 
           <div class="input-box">
             <div class="input-left-box">
-              <div class="input-add-box"><img src="../../../assets/image/bossSide/icon-local-two.png" alt="">
-                <span>宁波</span>
+              <div class="input-add-box">
+                <img src="../../../assets/image/bossSide/icon-local-two.png" alt="">
+                <!-- <span></span> -->
+                <el-cascader
+                  :options="pcas"
+                  ref="cascaderAddr" 
+                  v-model="selectedOptions"
+                  :props="{ value: 'label' }"
+                  :show-all-levels="false" placeholder="城市"
+                  @change="handleChange">
+                </el-cascader>
               </div>
               <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词"></el-input>
             </div>
@@ -34,13 +43,13 @@
         <!-- 热门职位 结束 -->
       </div>
       <!-- 检索及热门职位 结束 -->
-      <div class="online-job-box">
+      <!-- <div class="online-job-box">
         <div class="online-job-title">按在线职位搜</div>
         <div class="online-job-tab">
           <span>不限</span>
           <span class="hover">ui设计师| 宁波</span>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="m-box margin-top-20"></div>
     <!-- 列表模块 开始  -->
@@ -238,6 +247,7 @@
 
 <script>
 import mPagination from '@/components/m-pagination';
+import pcas from '../../../assets/json/pc-code.json'
 
 export default {
   name: 'searchTalent',
@@ -246,6 +256,8 @@ export default {
   },
   data(){
     return {
+      pcas:pcas, //  城市数据
+      selectedOptions: [], // 选中的地址
       search_value:'',
       hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
       jobList:[],  // 列表
@@ -256,7 +268,7 @@ export default {
         pageSize: 20,
       },
       zx_dialogVisible: false,
-      infoData:''
+      infoData:'',
     }
   },
   created(){
@@ -270,6 +282,14 @@ export default {
     pageHasChanged() {
       this.getSearchinfo();
     },
+    // 获取省市区地址级联
+    handleChange(thsAreaCode) {
+      // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
+      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
+      this.selectedOptions = thsAreaCode;
+      console.log(this.selectedOptions)
+
+    },
     // 搜索
     getSearchinfo(){
       let that = this;
@@ -279,7 +299,6 @@ export default {
         search: that.search_value,
       }
       that.$axios.post('/api/company-position/search',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.jobList = res.data.list;
           that.paginationData.total = res.data.total;
@@ -344,6 +363,8 @@ export default {
               align-items: center;
               border-right: 1px solid #F2F3F5;
               cursor: pointer;
+              height: 100%;
+              width: 120px;
               img{
                 width: 14px;
                 height: 14px;
@@ -355,6 +376,30 @@ export default {
                 line-height: 22px;
                 padding-left: 8px;
               }
+
+              .el-cascader{
+                font-size: 14px;
+                font-weight: 400;
+                color: #86909C;
+                padding-left: 8px;
+                height: 100%;
+                /deep/ .el-input{
+                  height: 100%;
+                }
+                /deep/ .el-input__inner{
+                  padding: 0;
+                }
+                /deep/ .el-input__suffix{
+                  display: none;
+                }
+                /deep/ .el-cascader__label{
+                  width: 100%;
+                  height: 100%;
+                  display: flex;
+                  align-items: center;
+                }
+              }
+              
             }
             .el-input{
               flex: 1;

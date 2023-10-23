@@ -32,8 +32,8 @@
           <div></div>
           <div class="left-info-box">
             <div class="info-title">
-              <div class="title-name">{{ item.position_name }}</div>
-              <div class="title-subname">{{ item.salary }} 3-5年 工作城市: {{ item.work_address }}</div>
+              <div class="title-name" @click="clickPositionItems(item)">{{ item.position_name }}</div>
+              <div class="title-subname">{{ item.salary }} {{ item.work_times}} 工作城市: {{ item.work_address }}</div>
             </div>
             <div class="info-bott">
               <img src="../../../assets/image/bossSide/img-user.png" alt="">
@@ -95,6 +95,12 @@ export default {
     },
     clickStatus(n){
       this.tabStatus = n;
+    },
+    // 点击列表/ 编辑
+    clickPositionItems(i){
+      let positionItems = i;
+      // this.$root.positionItems = positionItems;
+      this.$router.push('/postJob');
     },
     // 点击发布职位
     goToPostJob(){

@@ -51,6 +51,7 @@ new Vue({
         backgroundRepeat:'no-repeat',
         backgroundSize: '100% 100%',
       },
+      positionItems: {}, // 职位中心选中的信息
     }
   },
   render: h => h(App)
