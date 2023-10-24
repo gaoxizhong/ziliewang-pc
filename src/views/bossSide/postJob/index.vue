@@ -167,6 +167,7 @@ import pcas from '../../../assets/json/pc-code.json'
 export default {
   data() {
     return {
+      id: '',
       ruleForm: {
         position_name: '', // 职位名称
         work_type: '', // 工作性质
@@ -252,7 +253,34 @@ export default {
   mounted(){
     // console.log(this.$root.positionItems);
   },
+  created(){
+    if(this.$route.query.id){
+      this.id = this.$route.query.id;
+      this.getDetails(this.id);
+    }
+
+  },
   methods:{
+    // 获取详情
+    getDetails(i){
+      let that = this;
+      let id = i;
+      let p = {
+        position_id:id,
+      }
+      that.$axios.post('/api/company-position/detail',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          let data = res.data;
+          this.ruleForm = JSON.parse(JSON.stringify(data));
+        }else{
+          that.$message.error({
+            message:res.data.msg
+          })
+        }
+      })
+
+    },
   // 获取省市区地址级联
     handleChange(thsAreaCode) {
       // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值

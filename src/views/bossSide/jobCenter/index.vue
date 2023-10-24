@@ -53,7 +53,7 @@
             <div>上线</div>
           </div>
           <div class="icon-box">
-            <div v-if="tabStatus == 1"><img src="../../../assets/image/bossSide/form-xg.png" alt=""><span>修改</span></div>
+            <div v-if="tabStatus == 1" @click.stop="clickPositionItems(item)"><img src="../../../assets/image/bossSide/form-xg.png" alt=""><span>修改</span></div>
             <div v-if="tabStatus == 2"><img src="../../../assets/image/bossSide/copy.png" alt=""><span>复制</span></div>
           </div>
         </div>
@@ -98,9 +98,9 @@ export default {
     },
     // 点击列表/ 编辑
     clickPositionItems(i){
-      let positionItems = i;
+      // let positionItems = i;
       // this.$root.positionItems = positionItems;
-      this.$router.push('/postJob');
+      this.$router.push('/postJob?id=' + i.id);
     },
     // 点击发布职位
     goToPostJob(){

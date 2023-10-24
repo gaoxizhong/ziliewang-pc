@@ -264,7 +264,7 @@ export default {
       formData.append('up_tag','logo');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
         console.log(res)
-        this.infoData.resume_image = res.data.upload_files;
+        this.infoData.resume_image = res.data.upload_files_path;
         // this.infoData.resume_image = res.data.upload_files_path;
         this.resume_image = res.data.upload_files;
         
@@ -300,15 +300,15 @@ export default {
     beforeAvatarUpload(file) {
       console.log(file)
       const isJPG = file.type === 'image/png' || 'image/jpeg';
-      const isLt3M = file.size / 1024 / 1024 < 3;
+      const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
         this.$message.error('上传图片只能是 jpeg 或 png 格式!');
       }
-      if (!isLt3M) {
-        this.$message.error('上传图片大小不能超过 3MB!');
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!');
       }
-      return isJPG && isLt3M;
+      return isJPG && isLt2M;
     },
 
     
@@ -317,6 +317,7 @@ export default {
     },
     clickRedactBtn(n){
       this.infoData = JSON.parse(JSON.stringify(this.data));
+      this.resume_image = this.infoData.resume_image;
       if(n == 1){
         this.redact_info = true;
       }else if(n == 2){
