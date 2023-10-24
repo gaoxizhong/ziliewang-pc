@@ -69,7 +69,7 @@
             <el-form-item label="工作地址" prop="work_address">
               <!-- <el-input v-model="ruleForm.work_address" placeholder="请输入工作地址"></el-input> -->
               <el-cascader
-                :options="ruleForm.options"
+                :options="options"
                 ref="cascaderAddr" 
                 v-model="ruleForm.selectedOptions"
                 :props="{ value: 'label' }"
@@ -191,9 +191,9 @@ export default {
         date2: '',
         delivery: false,
         type: [],
-        options: pcas,  // 地址数据
         selectedOptions: [], // 选中的地址
       },
+      options: pcas,  // 地址数据
       rules: {  // 必填提示
         position_name: [
           { required: true, message: '请输入职位名称', trigger: 'blur' }
@@ -271,8 +271,18 @@ export default {
       that.$axios.post('/api/company-position/detail',p).then( res =>{
         console.log(res)
         if(res.code == 0){
-          let data = res.data;
-          this.ruleForm = JSON.parse(JSON.stringify(data));
+          let ruleForm = JSON.parse(JSON.stringify(res.data));
+          let salary = res.data.salary.split('-');
+          ruleForm.selectedOptions = res.data.work_address.split('/');
+          ruleForm.xz_status = salary[0];
+          ruleForm.xz_end = salary[1];
+          ruleForm.job_benefits = res.data.job_benefits.split(',');
+          ruleForm.supplementary_information = res.data.supplementary_information.split(',');
+          ruleForm.sync_workmate = res.data.sync_workmate.split(',');
+          ruleForm.resume_demand = res.data.resume_demand.split(',');
+          ruleForm.work_type = res.data.work_type+'';
+
+          this.ruleForm = ruleForm;
         }else{
           that.$message.error({
             message:res.data.msg
@@ -342,7 +352,8 @@ export default {
         work_times: ruleForm.work_times,
 
       };
-      
+      console.log(p)
+      return
       that.$axios.post('/api/company-position/publish',p).then( res =>{
         console.log(res)
         if(res.code == 0){

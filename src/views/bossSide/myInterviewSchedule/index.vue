@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="m-box margin-top-20">
+    <div class="m-box margin-top-20 tableData-box">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column
           type="index"
@@ -52,20 +52,28 @@
             <span>{{ scope.$index + 1 + (tableDataPage.page - 1) * tableDataPage.size }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="a" label="投递人"></el-table-column>
-        <el-table-column prop="b" label="开始时间"></el-table-column>
-        <el-table-column prop="c" label="结束时间"></el-table-column>
-        <el-table-column prop="d" label="面试方式"></el-table-column>
-        <el-table-column prop="e" label="面试职位"></el-table-column>
-        <el-table-column prop="f" label="面试者"></el-table-column>
+        <el-table-column prop="users.real_name" label="投递人"></el-table-column>
+        <el-table-column prop="begin_time_text" label="开始时间"></el-table-column>
+        <el-table-column prop="end_time_text" label="结束时间"></el-table-column>
+        <el-table-column prop="d" label="面试方式">
+          <template slot-scope="scope">
+            <span>{{ scope.row.type == 1?'线上':'线下' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="companyposition.position_name" label="面试职位"></el-table-column>
+        <el-table-column prop="staff" label="面试者"></el-table-column>
         <el-table-column label="操作">
-          <template>
-            <span class="blue">查看详情</span>
-            <span class="blue">导出</span>
+          <template slot-scope="scope">
+            <span class="blue" @click.stop="clickViewDetails(scope.row)">查看详情</span>
+            <!-- <span class="blue">导出</span> -->
           </template>
         </el-table-column>
       </el-table>
     </div>
+
+    <!-- 查看详情----弹窗 -->
+    
+    
   </div>
 </template>
 
@@ -116,6 +124,11 @@ export default {
           })
         }
       })
+    },
+
+    // 点击查看详情
+    clickViewDetails(i){
+      console.log(i)
     },
     
   
@@ -213,6 +226,16 @@ export default {
         background-color:$g_bg;
         border-color: $g_color;
       }
+    }
+  }
+  .tableData-box{
+
+    .blue {
+      color: $g_color;
+      cursor: pointer;
+    }
+    /deep/ .has-gutter tr{
+      background: #F7F9FC !important;
     }
   }
 </style>

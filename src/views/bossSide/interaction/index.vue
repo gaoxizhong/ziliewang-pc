@@ -4,9 +4,9 @@
     <div class="tab-box">
       <div class="tab-left">
         <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">沟通中</div>
-        <!-- <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">已约面</div>
-        <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">不合适</div>
-        <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">收藏</div> -->
+        <!-- <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">已约面</div> -->
+        <!-- <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">不合适</div> -->
+        <!-- <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">收藏</div> -->
       </div>
       <!-- <div class="tab-right">
         <span></span>
@@ -16,7 +16,6 @@
       <div class="left-box">
         <div class="seach-box"></div>
         <div class="personAbility-box">
-
           <div class="personAbility-items-box" :class="selt_index == index?'hover':''" v-for="(item,index) in sysMsgListData" :key="index" @click="clickmsgListData(item,index)">
             <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
             <div class="name-box">
@@ -179,7 +178,7 @@ export default {
   },
   data() {
     return {
-      tabStatus: 1,
+      tabStatus: 1, //消息类型 1.投递 2.邀请 3.不合适 4.其他
       uid: window.localStorage.getItem('uid'),
       // is_kefu:2,  // 1为客服 msg-recv， 2为用户  msg-send
       originMessage:'',
@@ -270,11 +269,13 @@ export default {
       let that = this;
       let selt_info = that.selt_info;
       let p = {
-        status: 1, //1.待查看2.待参加3.未参加.已参加 5已超时 6.不合适
+        status: 2, //1.待查看2.发送邀请 3.不合适 4.已参加 5已超时
         uid: selt_info.uid, // 用户 
         id: selt_info.company_interview_id, // 面试信息id 
         company_id: selt_info.company_id, // 企业id
         position_id: selt_info.position_id,  // 岗位信息id
+        system_msg_id: selt_info.id,  // 消息id
+        type_id:  selt_info.type_id,
         type: that.ruleForm.type,
         begin_time: that.ruleForm.begin_time,
         end_time: that.ruleForm.end_time,
@@ -302,11 +303,13 @@ export default {
       let that = this;
       let selt_info = that.selt_info;
       let p = {
-        status: 6, //1.待查看2.待参加3.未参加.已参加 5已超时 6.不合适
+        status: 3, //1.待查看2.待参加3.未参加.已参加 5已超时 6.不合适
         uid: selt_info.uid, // 用户 
         id: selt_info.company_interview_id, // 面试信息id 
         company_id: selt_info.company_id, // 企业id
         position_id: selt_info.position_id,  // 岗位信息id
+        system_msg_id: selt_info.id,  // 消息id
+        type_id:  selt_info.type_id,
       }
       that.$axios.post('/api/company-interview/edit',p).then( res =>{
         console.log(res)
