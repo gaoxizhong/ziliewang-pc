@@ -70,7 +70,7 @@
         <div class="right">
           <!-- 公司信息 开始 -->
           <div class="m-box">
-            <CompanyInfo />
+            <CompanyInfo :infoData="infoData.company"/>
           </div>
           <!-- 公司信息 结束 -->
         </div>

@@ -97,7 +97,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 52px;
-  padding-right: 40px;
+  // padding-right: 40px;
   .total-current {
     display: flex;
     color: #666666;
