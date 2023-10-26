@@ -8,6 +8,7 @@
         <div class="com-name">{{ infoData.company_name }}</div>
         <div class="com-job-num">在招职位<span>135</span>个</div>
       </div>
+      
     </div>
   </div>  
 </template>

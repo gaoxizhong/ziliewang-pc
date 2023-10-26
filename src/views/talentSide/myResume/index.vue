@@ -126,7 +126,7 @@
                 <div class="info-labels fr">
                   <span class="label-text">
                     <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData.basic_info.birth_year_month?infoData.basic_info.birth_year_month:'30岁' }}</span>
+                    <span>{{ infoData.basic_info.birth_year_month?infoData.basic_info.birth_year_month:'20岁' }}</span>
                   </span>
                   <em class="vline"></em>
                   <span class="label-text">

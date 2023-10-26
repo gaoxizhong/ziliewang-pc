@@ -4,7 +4,7 @@
     <div class="m-box">
 
       <div class="postJob-box ">
-        <div class="title">发布职位</div>
+        <div class="title">{{position_id?'修改职位':'发布职位'}}</div>
         <div class="postJob-form-box">
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
             <el-form-item label="职位名称" prop="position_name">
@@ -150,7 +150,7 @@
             </el-form-item>
             
             <el-form-item class="btn-box">
-              <el-button type="primary" @click="submitForm">发布</el-button>
+              <el-button type="primary" @click="submitForm">{{position_id?'修改':'发布'}}</el-button>
               <el-button @click="resetForm">重置</el-button>
             </el-form-item>
           </el-form>
@@ -167,7 +167,7 @@ import pcas from '../../../assets/json/pc-code.json'
 export default {
   data() {
     return {
-      id: '',
+      position_id: '',
       ruleForm: {
         position_name: '', // 职位名称
         work_type: '', // 工作性质
@@ -255,8 +255,8 @@ export default {
   },
   created(){
     if(this.$route.query.id){
-      this.id = this.$route.query.id;
-      this.getDetails(this.id);
+      this.position_id = this.$route.query.id;
+      this.getDetails(this.position_id);
     }
 
   },
@@ -294,10 +294,7 @@ export default {
   // 获取省市区地址级联
     handleChange(thsAreaCode) {
       // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
-      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
       this.selectedOptions = thsAreaCode;
-      console.log(this.selectedOptions)
-
     },
     radioGroup(v){
       console.log(v)
@@ -352,10 +349,19 @@ export default {
         work_times: ruleForm.work_times,
 
       };
+      let url = '';
+      let position_id = that.position_id;
+      if(position_id){
+        // 修改编辑
+        p.position_id = position_id;
+        url = '/api/company-position/edit'
+      }else{
+        // 新发布
+        url = '/api/company-position/publish';
+      }
       console.log(p)
       return
-      that.$axios.post('/api/company-position/publish',p).then( res =>{
-        console.log(res)
+      that.$axios.post(url,p).then( res =>{
         if(res.code == 0){
           that.$message.success(' 发布成功！');
           setTimeout( ()=>{
