@@ -24,9 +24,9 @@
             <!-- <el-button class="chat">聊一聊</el-button> -->
           </div>
           <div class="tag-box">
-            <span class="tag-items">
+            <span class="tag-items" @click="collection">
               <img src="../../../assets/image/icon-collect.png" alt="" />
-              <span>收藏</span>
+              <span :class="infoData.is_collection == 1?'hover':''"> {{ infoData.is_collection == 1?"已收藏":'收藏' }}</span>
             </span>
             <span class="tag-items">
               <img src="../../../assets/image/icon-wechat.png" alt="" />
@@ -147,7 +147,36 @@ export default {
           })
         }
       })
-    }
+    },
+    // 点击收藏
+    collection(){
+      let that = this;
+      let url = '';
+      let infoData = that.infoData;
+      if( infoData.is_collection == 1){
+        // 取消收藏
+        url = '/api/user/cancelcollection'
+      }else{
+        //收藏
+        url = '/api/user/collection'
+      }
+      that.$axios.post(url,{
+        position_id: infoData.id,
+        company_id: infoData.company_id,
+      }).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:res.msg
+          })
+        infoData.is_collection == 1?infoData.is_collection = 2 : infoData.is_collection = 1;
+        that.infoData = infoData;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
   },
 };
 </script>
@@ -279,6 +308,11 @@ export default {
               width: 14px;
               height: 14px;
               margin-right: 5px;
+            }
+            span{
+              &.hover{
+                color: $g_color;
+              }
             }
           }
         }

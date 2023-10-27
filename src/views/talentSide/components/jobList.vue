@@ -2,10 +2,10 @@
   <div>
     <div class="list-items" v-for="(item,index) in infoList" :key="index">
       <div class="items-left-box" @click.stop="clickItems(item)">
-        <p class="items-title">{{ item.position_name }} <span class="items-title-span">{{ item.salary }}</span></p>
-        <div class="items-tag-box">
-          <el-tag>{{ item.resume_demand }}</el-tag>
-          <el-tag>{{ item.educational_experience }}</el-tag>
+        <p class="items-title" v-if="item.companyposition">{{ item.companyposition.position_name }} <span class="items-title-span">{{ item.companyposition.salary }}</span></p>
+        <div class="items-tag-box" v-if="item.companyposition">
+          <el-tag>{{ item.companyposition.resume_demand }}</el-tag>
+          <el-tag>{{ item.companyposition.educational_experience }}</el-tag>
         </div>
         <div class="items-firm-info" v-if="item.company">
           <span class="firm-info-1">{{ item.company.company_name }}</span>
@@ -77,7 +77,7 @@ export default {
       this.$router.push({
         path:'/JobDetails',
         query:{
-          id: i.id
+          id: i.companyposition.id
         }
       })
     }

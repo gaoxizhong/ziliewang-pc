@@ -206,15 +206,16 @@ export default {
     beforeAvatarUpload(file) {
       console.log(file)
       const isJPG = file.type === 'image/png' || 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      // const isLt2M = file.size / 1024 / 1024 < 2;
+      const isLt500Kb = file.size / 1024 <= 500;
 
       if (!isJPG) {
         this.$message.error('上传头像图片只能是 jpeg 或 png 格式!');
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
+      if (!isLt500Kb) {
+        this.$message.error('上传头像图片大小不能超过 500Kb!');
       }
-      return isJPG && isLt2M;
+      return isJPG && isLt500Kb;
     },
 
     // 点击提交

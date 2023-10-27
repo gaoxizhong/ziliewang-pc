@@ -52,8 +52,8 @@ export default {
       tag: 'myDelivery',
       sub_tag: 0,
       infoData: {
-        infoList: [{},{}], // 列表
-      }
+        infoList: [], // 列表
+      },
     }
   },
   computed: {
@@ -61,13 +61,51 @@ export default {
   },
   methods: {
     handleClick(tab, event){
-      console.log(tab)
+      console.log(tab.name)
+      this.infoData.infoList =[];// 列表
+      if(tab.name == 'myDelivery'){
+        // 我的投递
+        this.getUserMyDeliverList();
+      }
+      if(tab.name == 'myCollection'){
+        // 我的收藏
+        this.getUserCollectionList();
+      }
     },
 
     // 点击我的投递--子标签
     clickSubTag(n){
       this.sub_tag = n;
+    },
+    // 我的投递
+    getUserMyDeliverList(){
+      let that = this;
+      that.$axios.post('/api/user/my-deliver-list',{}).then( res =>{
+        if(res.code == 0){
+          let infoList = res.data;
+          that.infoData.infoList = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    
+    // 我的收藏
+    getUserCollectionList(){
+      let that = this;
+      that.$axios.post('/api/user/collection-list',{}).then( res =>{
+        if(res.code == 0){
+          that.infoData.infoList = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
     }
+
   },
 };
 </script>

@@ -28,7 +28,7 @@
 
           <div class="search-input-tab">
             <div><span>展开高级搜索</span><img src="../../../assets/image/bossSide/icon-down.png" alt=""></div>
-            <div><img src="../../../assets/image/bossSide/icon-heart.png" alt=""><span>我的收藏</span></div>
+            <div @click.stop="myCollection"><img src="../../../assets/image/bossSide/icon-heart.png" alt=""><span>我的收藏</span></div>
           </div>
 
         </div>
@@ -225,9 +225,9 @@
                 <img src="../../../assets/image/bossSide/icon-shareAlt-1.png" alt="" />
                 <span>转发给同事</span>
               </div>
-              <div>
+              <div @click="collection">
                 <img src="../../../assets/image/bossSide/icon-star-1.png" alt="" />
-                <span>收藏</span>
+                <span :class="infoData.is_collection == 1?'hover':''"> {{ infoData.is_collection == 1?"已收藏":'收藏' }}</span>
               </div>
               <div>
                 <img src="../../../assets/image/bossSide/icon-download-1.png" alt="" />
@@ -327,6 +327,38 @@ export default {
         }
       })
     },
+    // 点击收藏
+    collection(){
+      let that = this;
+      let url = '';
+      let infoData = that.infoData;
+      if( infoData.is_collection == 1){
+        // 取消收藏
+        url = '/api/company-collection/cancelcollection'
+      }else{
+        //收藏
+        url = '/api/company-collection/collection'
+      }
+      that.$axios.post(url,{
+        uid: infoData.basic_info.uid,
+      }).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:res.msg
+          })
+        infoData.is_collection == 1?infoData.is_collection = 2 : infoData.is_collection = 1;
+        that.infoData = infoData;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    // 点击我的收藏 --- 跳转到我的收藏
+    myCollection(){
+      this.$router.push('/myCollection');
+    }
   }
 }
 </script>
@@ -437,6 +469,7 @@ export default {
             font-weight: 400;
             color: $g_textColor;
             line-height: 22px;
+            cursor: pointer;
             img{
               width: 12px;
               height: 12px;
@@ -869,6 +902,9 @@ export default {
               color: #86909C;
               line-height: 20px;
               padding-top: 6px;
+              &.hover{
+                color: $g_color;
+              }
             }
           }
         }

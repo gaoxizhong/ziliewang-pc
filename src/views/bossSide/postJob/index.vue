@@ -353,20 +353,24 @@ export default {
       let position_id = that.position_id;
       if(position_id){
         // 修改编辑
-        p.position_id = position_id;
+        p.id = position_id;
         url = '/api/company-position/edit'
       }else{
         // 新发布
         url = '/api/company-position/publish';
       }
       console.log(p)
-      return
       that.$axios.post(url,p).then( res =>{
         if(res.code == 0){
-          that.$message.success(' 发布成功！');
-          setTimeout( ()=>{
-            that.resetForm();
-          },1500)
+          if(position_id){
+            that.$message.success(' 发布成功！');
+            setTimeout( ()=>{
+              that.resetForm();
+            },1500)
+          }else{
+            that.$message.success(' 修改成功！');
+          }
+          
         }else{
           that.$message.error({
             message:res.data.msg
