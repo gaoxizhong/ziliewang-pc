@@ -247,6 +247,20 @@ export const constantRoutes = [
       },
     ]
   },
+  {
+    path:'/myCollect',
+    component: Layout,
+    redirect: 'myCollect',
+    hidden: true,
+    children: [
+      {
+        path: '/myCollect',
+        name: 'assist',
+        component: () => import('@/views/bossSide/myCollect/index'),
+        meta: { title: '我收藏的' },
+      },
+    ]
+  },
   
   //-------------------- 人才端
   {
@@ -364,7 +378,15 @@ export const constantRoutes = [
           // keepAlive: true,
         },
       },
-      
+      {
+        path: 'enterpriseInfoRequest',
+        name: 'enterpriseInfoRequest',
+        component: () => import('@/views/bossSide/corporateHome/enterpriseInfoRequest.vue'),
+        meta: { 
+          title: '企业申请',
+          // keepAlive: true,
+        },
+      },
     ]
   },
   // 404 page must be placed at the end !!!

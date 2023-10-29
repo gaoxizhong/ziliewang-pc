@@ -17,10 +17,12 @@
         <div class="right-c"></div>
         <div class="right-status-box">
           <div class="right-status-text">
-            <span>已投递</span>
-            <i class="el-icon-arrow-right"></i>
+            <span v-if="item.status == 1">已投递</span>
+            <span v-if="item.status == 2">面试邀请</span>
+            <span v-if="item.status == 3">不合适</span>
+            <!-- <i class="el-icon-arrow-right"></i> -->
           </div>
-          <div class="status-time">2023-03-21 14:41</div>
+          <div class="status-time">{{item.createtime}}</div>
         </div>
         
       </div>
@@ -31,6 +33,7 @@
         <div class="items-boss-g">人事</div>
       </div>
     </div>
+    <el-empty description="暂无数据..." v-if="infoList.length == 0"></el-empty>
   </div>
 </template>
 
@@ -53,6 +56,12 @@ export default {
       type: String,
       default() {
         return ''
+      }
+    },
+    sub_tag: {
+      type: Number,
+      default() {
+        return 0
       }
     },
   },

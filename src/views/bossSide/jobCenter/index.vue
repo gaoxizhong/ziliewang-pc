@@ -3,10 +3,10 @@
   <div class="bossSide-container">
     <div class="tab-box">
       <div class="tab-left">
-        <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">在线中·1</div>
-        <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">未上线·1</div>
-        <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">审核中</div>
-        <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">审核未通过</div>
+        <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">在线中·{{jobList.length}}</div>
+        <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">未上线·0</div>
+        <!-- <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">审核中</div> -->
+        <!-- <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">审核未通过</div> -->
       </div>
       <div class="tab-right" @click="goToPostJob">
         <img src="../../../assets/image/bossSide/edit.png" alt="" />
@@ -37,15 +37,15 @@
             </div>
             <div class="info-bott">
               <img src="../../../assets/image/bossSide/img-user.png" alt="">
-              <span>彭讲建  {{ item.createtime }} ( 30天后下线)</span>
+              <span>{{ item.publish_name }}  {{ item.createtime }} ( 30天后下线)</span>
             </div>
           </div>
         </div>
 
         <div class="items-right-box">
           <div class="right-btn-box box-1" v-if="tabStatus == 1">
-            <div class="hover">职位置顶</div>
-            <div>职位刷新</div>
+            <div class="hover" @click="jobPinned">职位置顶</div>
+            <div @click="jobRefresh">职位刷新</div>
           </div>
           <div class="right-btn-box box-2" v-if="tabStatus == 2">
             <div class="hover">删除</div>
@@ -60,6 +60,7 @@
 
       </div>
       <!-- 列表项 结束 -->
+      <el-empty description="暂无数据..." v-if="jobList.length == 0"></el-empty>
 
     </div>
   </div>
@@ -80,6 +81,14 @@ export default {
     this.getinfoList();
   },
   methods:{
+    // 点击职位刷新
+    jobRefresh(){
+      this.$message.success('刷新成功！');
+    },
+    // 职位置顶
+    jobPinned(){
+      this.$message.success('置顶成功！');
+    },
     getinfoList(){
       let that = this;
       that.$axios.post('/api/company-position/list',{}).then( res =>{
@@ -95,6 +104,13 @@ export default {
     },
     clickStatus(n){
       this.tabStatus = n;
+      this.jobList = [];
+      if(n == 2){
+
+      }else{
+        
+        this.getinfoList();
+      }
     },
     // 点击列表/ 编辑
     clickPositionItems(i){
@@ -238,6 +254,7 @@ export default {
           width: 100%;
           font-size: 14px;
           .info-title{
+            cursor: pointer;
             .title-name{
               font-size: 16px;
               font-weight: bold;
@@ -290,6 +307,7 @@ export default {
             border-radius: 2px;
             border: 1px solid $g_bg;
             margin-left: 10px;
+            cursor: pointer;
           }
           &>div.hover{
             background: $g_bg;

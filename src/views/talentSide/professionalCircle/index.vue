@@ -54,6 +54,7 @@
             </div>
           </div>
           <!-- 列表项 结束 -->
+          <el-empty description="暂无数据..." v-if="dataList.length == 0"></el-empty>
         </div>
       </div>
       <!-- 右侧模块 开始 -->

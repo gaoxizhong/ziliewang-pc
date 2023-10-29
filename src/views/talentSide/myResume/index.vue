@@ -2,9 +2,9 @@
   <!-- 我的简历页 -->
   <div class="container">
     <div class="tab-box">
-      <div :class="is_titleTab == 1? 'hover':'' " @click="clickTitleTab_1(1)">预览简历</div>
-      <div :class="is_titleTab == 2? 'hover':'' " @click="clickTitleTab(2)">刷新简历</div>
-      <div :class="is_titleTab == 3? 'hover':'' " @click="clickTitleTab(3)">简历优化</div>
+      <div :class="is_titleTab == 1? 'hover':'' " @click="clickPreviewResume(1)">预览简历</div>
+      <div :class="is_titleTab == 2? 'hover':'' " @click="clcikRefresh(2)">刷新简历</div>
+      <!-- <div :class="is_titleTab == 3? 'hover':'' " @click="clickTitleTab(3)">简历优化</div> -->
     </div>
     
     <div class="info-box">
@@ -79,13 +79,13 @@
               <div class="up-box-Instructions">必填字段缺失 <span>·1项</span></div>
             </div>
 
-            <div class="i-items">
+            <!-- <div class="i-items">
               <div class="up-att-t">
                 <span class="span-1">工作经历</span>
                 <span class="span-2">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
               </div>
               <div class="up-box-Instructions">宁波...必填字段缺失 <span>·1项</span></div>
-            </div>
+            </div> -->
             
 
           </div>
@@ -118,7 +118,7 @@
           <!-- 个人信息 -->
           <div class="resume-item item-base">
             <div class="figure J_resume_baseMsg_headImgPreview">
-              <img :src="infoData.basic_info.avatar" alt="" class="cur-default"/>
+              <img :src="infoData.basic_info.avatar?infoData.basic_info.avatar:require('../../../assets/image/img-user.jpg' )" alt="" class="cur-default"/>
             </div>
             <div class="item-right">
               <div style="text-align: left;">
@@ -283,6 +283,10 @@ export default {
       this.zx_dialogVisible = false;
 
     },
+    // 点击刷新
+    clcikRefresh(){
+      this.$message.success('刷新成功！');
+    },
     // 点击附件简历名称---预览
     clickVitae(url){
       this.pdfUrl = url;
@@ -319,7 +323,7 @@ export default {
     //     this.zx_dialogVisible = !this.zx_dialogVisible
     //   }
     // },
-    clickTitleTab_1(){
+    clickPreviewResume(){
       this.zx_dialogVisible = !this.zx_dialogVisible
     },
     

@@ -10,9 +10,9 @@
                 <ul>
                   <li :class="sub_tag == 0 ? 'is-active':'' " @click.stop="clickSubTag(0)">全部状态</li>
                   <li :class="sub_tag == 1 ? 'is-active':'' " @click.stop="clickSubTag(1)">已投递</li>
-                  <li :class="sub_tag == 2 ? 'is-active':'' " @click.stop="clickSubTag(2)">已查看</li>
-                  <li :class="sub_tag == 3 ? 'is-active':'' " @click.stop="clickSubTag(3)">面试邀约</li>
-                  <li :class="sub_tag == 4 ? 'is-active':'' " @click.stop="clickSubTag(4)">不合适</li>
+                  <!-- <li :class="sub_tag == 2 ? 'is-active':'' " @click.stop="clickSubTag(2)">已查看</li> -->
+                  <li :class="sub_tag == 2 ? 'is-active':'' " @click.stop="clickSubTag(2)">面试邀约</li>
+                  <li :class="sub_tag == 3 ? 'is-active':'' " @click.stop="clickSubTag(3)">不合适</li>
                 </ul>
               </div>
             </el-tab-pane>
@@ -59,13 +59,16 @@ export default {
   computed: {
     
   },
+  created(){
+    this.getUserMyDeliverList(this.sub_tag);
+  },
   methods: {
     handleClick(tab, event){
       console.log(tab.name)
       this.infoData.infoList =[];// 列表
       if(tab.name == 'myDelivery'){
         // 我的投递
-        this.getUserMyDeliverList();
+        this.getUserMyDeliverList(this.sub_tag);
       }
       if(tab.name == 'myCollection'){
         // 我的收藏
@@ -76,14 +79,27 @@ export default {
     // 点击我的投递--子标签
     clickSubTag(n){
       this.sub_tag = n;
+      this.getUserMyDeliverList(n);
     },
     // 我的投递
-    getUserMyDeliverList(){
+    getUserMyDeliverList(num){
+      console.log(num)
       let that = this;
       that.$axios.post('/api/user/my-deliver-list',{}).then( res =>{
         if(res.code == 0){
           let infoList = res.data;
-          that.infoData.infoList = res.data;
+          let arr = [];
+          if(num == 0){
+            that.infoData.infoList = infoList;
+          }else{
+            infoList.forEach(ele => {
+              if(ele.status == num){
+                arr.push(ele);
+              }
+            });
+            that.infoData.infoList = arr;
+          }
+          console.log(that.infoData.infoList)
         }else{
           that.$message.error({
             message:res.msg

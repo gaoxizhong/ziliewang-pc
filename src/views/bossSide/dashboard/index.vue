@@ -22,11 +22,11 @@
             <div class="data-box">
               <div>
                 <div class="data-t">新招呼人才</div>
-                <div class="data-n">10</div>
+                <div class="data-n">{{ companyCountData.chat_num }}</div>
               </div>
               <div>
                 <div class="data-t">收藏的人才</div>
-                <div class="data-n">32</div>
+                <div class="data-n">{{ companyCountData.collection_num }}</div>
               </div>
             </div>
           </div>
@@ -44,12 +44,12 @@
             <div class="data-box">
               <div>
                 <div class="data-t">在线职位</div>
-                <div class="data-n">26</div>
+                <div class="data-n">{{companyCountData.online_position_num}}</div>
               </div>
-              <div>
+              <!-- <div>
                 <div class="data-t">7天内即将下线</div>
                 <div class="data-n">236</div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -60,10 +60,38 @@
           <div class="title-box">
             <div class="left">
               <img src="../../../assets/image/bossSide/schedule.png" alt="" />
-              <span>我的人才</span>
+              <span>我的面试</span>
             </div>
           </div>
-          
+          <div class="tableData-box">
+              <el-table :data="tableData" style="width: 100%">
+                <el-table-column
+                  type="index"
+                  label="序号"
+                  width="50"
+                  align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.$index + 1 + (tableDataPage.page - 1) * tableDataPage.size }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="users.real_name" label="投递人" width="90"></el-table-column>
+                <el-table-column prop="begin_time_text" label="开始时间"></el-table-column>
+                <el-table-column prop="end_time_text" label="结束时间"></el-table-column>
+                <el-table-column prop="d" label="面试方式" width="90">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.type == 1?'线上':'线下' }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="companyposition.position_name" label="面试职位" width="100"></el-table-column>
+                <!-- <el-table-column prop="staff" label="面试者"></el-table-column> -->
+                <el-table-column label="操作" width="80">
+                  <template slot-scope="scope">
+                    <span class="blue" @click.stop="clickViewDetails(scope.row)">查看详情</span>
+                    <!-- <span class="blue">导出</span> -->
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
         </div>
         <!-- 我的面试 结束 -->
       </div>
@@ -116,6 +144,70 @@
       </div>
       <!-- 右侧 结束 -->
     </div>
+
+
+
+    <!-- 查看详情----弹窗 -->
+    <div class="container-zx">
+      <el-dialog title="面试信息" :center="false" :visible.sync="dialogVisible" width="800px" :before-close="handleClose">
+        <div class="pc-preview-wrapper">
+          <div class="talent-box">
+
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">投递人：</div>
+                <div class="items-text">{{ infoData.users?infoData.users.real_name:'' }}</div>
+              </div>
+              <div class="items items-r" v-if="infoData">
+                <span class="label-text">
+                  <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
+                  <span>{{ infoData.users?infoData.users.birth_year_month:'20岁' }}</span>
+                </span>
+                <em class="vline"></em>
+                <span class="label-text">
+                  <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
+                  <span>{{ infoData.users?infoData.users.begin_work_date:'暂无' }}</span>
+                </span>
+                <em class="vline"></em>
+                <span class="label-text">
+                  <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
+                  <span>{{ infoData.users?infoData.users.work_status_desc:'在职不考虑' }}</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试岗位：</div>
+                <div class="items-text">{{infoData.companyposition?infoData.companyposition.position_name:''}}</div>
+              </div>
+            </div>
+
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试时间：</div>
+                <div class="items-text">{{infoData?infoData.begin_time_text:''}} 至 {{infoData?infoData.end_time_text:''}}</div>
+              </div>
+            </div>
+
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试者：</div>
+                <div class="items-text">{{infoData?infoData.staff:''}}</div>
+              </div>
+            </div>
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">备注：</div>
+                <div class="items-text">{{infoData?infoData.remark:''}}</div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -127,15 +219,41 @@ export default {
       role: localStorage.getItem('role'),
       input_name:'', // 搜索框value
       tag: '',
-      infoData: {
-        infoList: [{},{}], // 列表
-      }
+      companyCountData:{},
+      tableData:[],
+      tableDataPage: {
+        page: 1,
+        size: 10,
+        total: 0
+      },
+      dialogVisible:false,
+      infoData:{},
     }
   },
   computed: {
     
   },
+  created(){
+    this.getCompanyCount();
+    this.getSysMsgList();
+  },
   methods: {
+    handleClose(done) {
+      this.dialogVisible = false;
+    },
+    getCompanyCount(){
+      let that = this;
+      that.$axios.post('/api/company/count',{}).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.companyCountData = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
     // 点击发布职位
     goToPostJob(){
       let that = this;
@@ -163,6 +281,26 @@ export default {
     // input 框搜索按钮
     getExistLabels(){
 
+    },
+    getSysMsgList(){
+      let that = this;
+      that.$axios.post('/api/company-interview/index',{}).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.tableData = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+
+    // 点击查看详情
+    clickViewDetails(i){
+      console.log(i)
+      this.infoData = i;
+      this.dialogVisible = true;
     },
   },
 }
@@ -330,5 +468,92 @@ export default {
       }
     }
 
+  }
+  .tableData-box{
+
+    .blue {
+      color: $g_color;
+      cursor: pointer;
+    }
+    /deep/ .has-gutter tr{
+      background: #F7F9FC !important;
+    }
+  }
+  .container-zx /deep/ .el-dialog{
+    min-width: 320px;
+    max-height: 500px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    .el-dialog__header{
+      text-align: left;
+      .el-dialog__title{
+        font-size: 16px;
+        color: $g_textColor;
+      }
+    }
+    .el-dialog__body{
+      padding: 20px 30px 30px;
+      height: calc(100vh - 128px);
+      overflow: overlay;
+      padding: 10px;
+      .pc-preview-wrapper{
+        border-radius: 4px;
+        padding: 10px 20px;
+        color: $g_textColor;
+        line-height: 26px;
+        
+        .box-items{
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          margin-top: 10px;
+          &:nth-of-type(1){
+            margin-top: 0;
+          }
+          .items{
+            flex: 1;
+            display: flex;
+            align-items: center;
+            .items-label{
+              width: 80px;
+              font-size: 15px;
+              font-weight: bold;
+              text-align: right;
+            }
+            .items-text{
+              font-size: 14px;
+              color: #414a60;
+              padding-left: 4px;
+            }
+            
+          }
+          .items-l{
+            justify-content: flex-start;
+          }
+          .items-r{
+            justify-content: flex-end;
+            .label-text{
+              display: inline-block;
+              vertical-align: middle;
+              font-size: 13px;
+              img{
+                width: 14px;
+                height: 14px;
+              }
+            }
+            .vline {
+              margin: 0 0.9rem;
+            }
+            .fz {
+              margin-left: 5px;
+              display: inline-block;
+              width: 16px;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
   }
 </style>

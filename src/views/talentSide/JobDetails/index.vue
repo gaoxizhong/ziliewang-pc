@@ -21,17 +21,17 @@
           <div class="btn-box">
             <el-button class="deliver-1" v-if='infoData.is_deliver == 1'>已投递</el-button>
             <el-button class="deliver-2" @click="clickDeliver" v-else>投简历</el-button>
-            <!-- <el-button class="chat">聊一聊</el-button> -->
+            <!-- <el-button class="chat" @click="clickChat">聊一聊</el-button> -->
           </div>
           <div class="tag-box">
             <span class="tag-items" @click="collection">
               <img src="../../../assets/image/icon-collect.png" alt="" />
               <span :class="infoData.is_collection == 1?'hover':''"> {{ infoData.is_collection == 1?"已收藏":'收藏' }}</span>
             </span>
-            <span class="tag-items">
+            <!-- <span class="tag-items">
               <img src="../../../assets/image/icon-wechat.png" alt="" />
               <span>微信分享扫描</span>
-            </span>
+            </span> -->
           </div>
         </div>
       </div>
@@ -47,13 +47,13 @@
             <div class="boss-info-left">
               <div class="img-box"><img src="../../../assets/image/img-user.jpg" alt="" /></div>
               <div class="info-text">
-                <div class="info-text-1"><span class="name">袁女士</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
+                <div class="info-text-1"><span class="name">{{ infoData.publish_name }}</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
                 <div class="info-text-2"><span>招聘专员·</span><span v-if="infoData.company">{{ infoData.company.company_name }}</span></div>
               </div>
             </div>
-            <!-- <div class="boss-info-btn">
-              <el-button class="chat">聊一聊</el-button>
-            </div> -->
+            <div class="boss-info-btn">
+              <el-button class="chat" @click="clickChat">聊一聊</el-button>
+            </div>
           </div>
           <!-- boss信息 结束 -->
           <!-- 职位介绍 开始 -->
@@ -132,7 +132,8 @@ export default {
       let that = this;
       let p = {
         position_id: that.id,
-        company_id: that.infoData.company_id
+        company_id: that.infoData.company_id,
+        company_uid: that.infoData.company.uid,
       }
       that.$axios.post('/api/user/deliver',p).then( res =>{
         console.log(res)
@@ -170,6 +171,25 @@ export default {
           })
         infoData.is_collection == 1?infoData.is_collection = 2 : infoData.is_collection = 1;
         that.infoData = infoData;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    // 点击聊一聊
+    clickChat(){
+      let that = this;
+      let p = {
+        position_id: that.id,
+        company_id: that.infoData.company_id,
+        company_uid: that.infoData.company.uid,
+        content:'我对这个职位很感兴趣，希望可以和您聊聊，谢谢！'
+      }
+      that.$axios.post('/api/user/find-company',p).then( res =>{
+        if(res.code == 0){
+          that.$router.push('/communication');
         }else{
           that.$message.error({
             message:res.msg

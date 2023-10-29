@@ -1,7 +1,7 @@
 <template>
   <div class="right-box">
     <div class="users-box">
-      <img :src="infoData.basic_info?infoData.basic_info.avatar:require('../../../assets/image/img-user.jpg')" alt="" class="img-user"/>
+      <img :src="infoData.basic_info.avatar?infoData.basic_info.avatar:require('../../../assets/image/img-user.jpg')" alt="" class="img-user" v-if="infoData.basic_info"/>
       <div class="users-right">
         <div class="users-name">
           <span class="span-1" v-if="infoData.basic_info">{{infoData.basic_info.real_name}}</span>
@@ -25,15 +25,15 @@
       </div>
     </div>
     <div class="setTab-box">
-      <div class="setTab-items">
+      <div class="setTab-items" @click="clcikRefresh">
         <img src="../../../assets/image/Frame_12.png" alt="" />
         <span class="setTab-items-name">刷新简历</span>
       </div>
-      <div class="setTab-items">
+      <div class="setTab-items" @click="goToMyResume">
         <img src="../../../assets/image/Frame_12.png" alt="" />
         <span class="setTab-items-name">查看简历</span>
       </div>
-      <div class="setTab-items">
+      <div class="setTab-items" @click="goTo">
         <img src="../../../assets/image/Frame_12.png" alt="" />
         <span class="setTab-items-name">我的投递</span>
       </div>
@@ -61,6 +61,17 @@ export default {
     this.getUserProfile();
   },
   methods: {
+    goTo(){
+      this.$router.push('/myDelivery');
+    },
+    // 点击我的简历
+    goToMyResume(){
+      this.$router.push('/myResume');
+    },
+    // 点击刷新
+    clcikRefresh(){
+      this.$message.success('刷新成功！');
+    },
     // 获取个人信息
     getUserProfile(){
       let that = this;

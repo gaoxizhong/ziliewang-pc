@@ -62,7 +62,7 @@ service.interceptors.response.use(
       // 如果没有 code 代表这不是项目后端开发的接口 比如可能是 VXAdmin 请求最新版本
       return dataAxios;
     } else {
-      if (code == -1) {
+      if (code == 777) {
         messageOnce.error({
           message: `${dataAxios.msg}`,
           type: 'error',

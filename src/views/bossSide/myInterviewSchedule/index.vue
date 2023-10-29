@@ -306,6 +306,7 @@ export default {
   }
   .container-zx /deep/ .el-dialog{
     min-width: 320px;
+    max-height: 500px;
     top: 50%;
     transform: translateY(-50%);
     margin-top: 0 !important;

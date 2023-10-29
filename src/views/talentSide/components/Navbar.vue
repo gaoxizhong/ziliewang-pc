@@ -35,9 +35,12 @@
             <i class="el-icon-caret-bottom" />
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
-            <router-link to="/">
+            <!-- <router-link to="/">
               <el-dropdown-item>企业端</el-dropdown-item>
-            </router-link>
+            </router-link> -->
+            <el-dropdown-item divided @click.native="getUserProfile">
+              <span style="display: block">企业端</span>
+            </el-dropdown-item>
             <router-link to="/talentSideSettings">
               <el-dropdown-item>设置</el-dropdown-item>
             </router-link>
@@ -105,7 +108,23 @@ export default {
         //   see_uid: localStorage.getItem('realUid')
         // }
       })
-    }
+    },
+  // 获取个人信息
+   getUserProfile(){
+      let that = this;
+      that.$axios.post('/api/user/profile',{}).then(res =>{
+        if(res.code == 0){
+          let role = res.data.basic_info.role;
+          if(role == 1){
+            this.$router.push('/talentSide/enterpriseInfoRequest')
+          }else{
+            this.$router.push('/')
+          }
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
   },
 };
 </script>

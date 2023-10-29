@@ -1,75 +1,27 @@
 <template>
-  <!-- 搜索人才页 -->
   <div class="bossSide-container">
-    <div class="searchTalent-top-box m-box">
-      <!-- 检索及热门职位 开始 -->
-      <div class="search-box">
-        <!-- 搜索框 开始 -->
-        <div class="search-input-box">
-
-          <div class="input-box">
-            <div class="input-left-box">
-              <div class="input-add-box">
-                <img src="../../../assets/image/bossSide/icon-local-two.png" alt="">
-                <!-- <span></span> -->
-                <el-cascader
-                  :options="pcas"
-                  ref="cascaderAddr" 
-                  v-model="selectedOptions"
-                  :props="{ value: 'label' }"
-                  :show-all-levels="false" placeholder="城市"
-                  @change="handleChange">
-                </el-cascader>
-              </div>
-              <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词"></el-input>
-            </div>
-            <button class="input-button" @click="getSearchinfo">搜索</button>
-          </div>
-
-          <div class="search-input-tab">
-            <!-- <div><span>展开高级搜索</span><img src="../../../assets/image/bossSide/icon-down.png" alt=""></div> -->
-            <!-- <div @click.stop="myCollection"><img src="../../../assets/image/bossSide/icon-heart.png" alt=""><span>我的收藏</span></div> -->
-          </div>
-
-        </div>
-        <!-- 搜索框 结束 -->
-        <!-- 热门职位 开始 -->
-        <div class="hotJob-box">
-          <span class="hotJob-span">热门岗位</span>
-          <div class="hotJob-item-box">
-            <a href="javascript:0;" class="hotJob-item" v-for="(item,index) in hotJob_options" :key="index" @click="clickTagname(item)">{{item}}</a>
-          </div>
-        </div>
-        <!-- 热门职位 结束 -->
+    <div class="tab-box">
+      <div class="tab-left">
+        <div>我的收藏</div>
       </div>
-      <!-- 检索及热门职位 结束 -->
-      <!-- <div class="online-job-box">
-        <div class="online-job-title">按在线职位搜</div>
-        <div class="online-job-tab">
-          <span>不限</span>
-          <span class="hover">ui设计师| 宁波</span>
-        </div>
-      </div> -->
     </div>
-    <div class="m-box margin-top-20"></div>
-    <!-- 列表模块 开始  -->
+
     <div class="job-list-box">
       <div v-for="(item,index) in jobList" :key="index" class="jobList-items m-box margin-top-20" @click.stop="clickItems(item)">
-        <div class="items-left-box">
+        <div class="items-left-box" v-if="item.users">
           <div></div>
-          <img :src="item.avatar?item.avatar:require('../../../assets/image/bossSide/img-user.png')" alt="" class="avatar-box">
+          <img :src="item.users.avatar?item.users.avatar:require('../../../assets/image/bossSide/img-user.png')" alt="" class="avatar-box">
           <div class="left-info-box">
             <div class="left-info-t">
-              <span class="left-info-name">{{ item.name }}</span>
+              <span class="left-info-name">{{ item.users.name }}</span>
               <img src="../../../assets/image/bossSide/icon-sex.png" alt="" >
               <span class="icon-span">今日活跃</span>
             </div>
-            <div class="sub-title" v-if="item.birth_year_month">生日：{{ item.birth_year_month }}</div>
+            <div class="sub-title">生日：{{ item.users.birth_year_month }}</div>
             
-            <div class="sub-title" v-if="item.begin_work_date">参加工作：{{ item.begin_work_date }} {{ item.live_city }}</div>
-            <div class="sub-title" v-if="item.position">求职期望：<span style="color:#FF4D4F;">{{ item.position }}</span></div>
-            <div class="bottom-box" v-if=" item.userjobexpectation.length > 0">
-              <!-- <span>{{ item.userjobexpectation[0].desired_industry }}</span> -->
+            <div class="sub-title">参加工作：{{ item.users.begin_work_date }} {{ item.users.live_city }}</div>
+            <div class="sub-title">求职期望：<span style="color:#FF4D4F;">{{ item.users.position }}</span></div>
+            <div class="bottom-box" v-if=" item.userjobexpectation">
               <span v-for="(jobexpect_item,jobexpect_index) in item.userjobexpectation" :key="jobexpect_index">{{ jobexpect_item.desired_industry }}</span>
             </div>
           </div>
@@ -88,17 +40,13 @@
         </div>
       </div>
       <el-empty description="暂无数据..." v-if="jobList.length == 0"></el-empty>
-
+      <!-- 分页控制 -->
+       <!-- <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged"></mPagination> -->
     </div>
-    <!-- 列表模块 结束  -->
-
-     <!-- 分页控制 -->
-     <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged"></mPagination>
-
 
 
      <!-- 预览在线简历 弹窗  -->
-    <div class="container-zx">
+     <div class="container-zx">
       <el-dialog title="简历详情" :center="false" :visible.sync="zx_dialogVisible" width="1100px" :before-close="handleClose">
         <div class="pc-preview-wrapper m-box">
           <!-- 个人信息 -->
@@ -243,25 +191,21 @@
         </div>
       </el-dialog>
     </div>
+
   </div>
 </template>
 
 <script>
 import mPagination from '@/components/m-pagination';
-import pcas from '../../../assets/json/pc-code.json'
 
 export default {
-  name: 'searchTalent',
   components: {
     mPagination,
   },
-  data(){
+  data() {
     return {
-      pcas:pcas, //  城市数据
-      selectedOptions: [], // 选中的地址
-      search_value:'',
-      hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
-      jobList:[],  // 列表
+      tabStatus: 1,
+      jobList:[],
       // 分页数据
       paginationData: {
         total: 10,
@@ -279,57 +223,11 @@ export default {
     handleClose(done) {
       this.zx_dialogVisible = false;
     },
-    // 分页事件
-    pageHasChanged() {
-      this.getSearchinfo();
+    clickStatus(n){
+      this.tabStatus = n;
     },
-    // 获取省市区地址级联
-    handleChange(thsAreaCode) {
-      // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
-      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
-      this.selectedOptions = thsAreaCode;
-      console.log(this.selectedOptions)
-
-    },
-    // 搜索
-    getSearchinfo(){
-      let that = this;
-      let p = {
-        page: that.paginationData.currentPage,
-        pagesize: that.paginationData.pageSize,
-        search: that.search_value,
-      }
-      that.$axios.post('/api/company-position/search',p).then( res =>{
-        if(res.code == 0){
-          that.jobList = res.data.list;
-          that.paginationData.total = res.data.total;
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
-    },
-    // 点击列表
-    clickItems(i){
-      let that = this;
-      
-      that.$axios.post('/api/company/resume/detail',{
-        uid: i.uid
-      }).then( res =>{
-        console.log(res)
-        if(res.code == 0){
-          that.infoData = res.data;
-          that.zx_dialogVisible = true;
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
-    },
-    // 点击收藏
-    collection(){
+     // 点击收藏
+     collection(){
       let that = this;
       let url = '';
       let infoData = that.infoData;
@@ -356,9 +254,23 @@ export default {
         }
       })
     },
-    // 点击我的收藏 --- 跳转到我的收藏
-    myCollection(){
-      this.$router.push('/myCollection');
+    // 点击聊一聊
+    clickChat(i){
+      let that = this;
+      let p = {
+        uid: i.uid || i.basic_info.uid,
+        content:'看过您的简历后，希望可以和您聊聊，谢谢！'
+      }
+      that.$axios.post('/api/company/find-user',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.$router.push('/interaction');
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
     },
     // 点击打电话
     clickMobile(i){
@@ -380,17 +292,23 @@ export default {
         }
       })
     },
-    // 点击聊一聊
-    clickChat(i){
+    handleClick(tab, event) {
+      console.log(tab, event);
+    },
+    // 分页事件
+    pageHasChanged() {
+      this.getSearchinfo();
+    },
+    getSearchinfo(){
       let that = this;
       let p = {
-        uid: i.uid|| i.basic_info.uid,
-        content:'看过您的简历后，希望可以和您聊聊，谢谢！'
+        page: that.paginationData.currentPage,
+        pagesize: that.paginationData.pageSize,
       }
-      that.$axios.post('/api/company/find-user',p).then( res =>{
-        console.log(res)
+      that.$axios.post('/api/company-collection/list',p).then( res =>{
         if(res.code == 0){
-          that.$router.push('/interaction');
+          that.jobList = res.data.list;
+          that.paginationData.total = res.data.total;
         }else{
           that.$message.error({
             message:res.msg
@@ -398,197 +316,128 @@ export default {
         }
       })
     },
+     // 点击列表
+     clickItems(i){
+      let that = this;
+      
+      that.$axios.post('/api/company/resume/detail',{
+        uid: i.uid
+      }).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.infoData = res.data;
+          that.zx_dialogVisible = true;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .searchTalent-top-box{
-    .search-box{
-      padding: 0 3rem;
-      .search-input-box{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        .input-box{
-          flex: 1;
-          height: 48px;
-          line-height: 48px;
-          background: $g_bg;
-          border-radius: 6px;
-          border: 3px solid $g_color;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          .input-left-box{
-            flex: 1;
-            background: #fff;
-            height: 100%;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            .input-add-box{
-              padding: 0 12px;
-              display: flex;
-              align-items: center;
-              border-right: 1px solid #F2F3F5;
-              cursor: pointer;
-              height: 100%;
-              width: 120px;
-              img{
-                width: 14px;
-                height: 14px;
-              }
-              span{
-                font-size: 14px;
-                font-weight: 400;
-                color: #86909C;
-                line-height: 22px;
-                padding-left: 8px;
-              }
-
-              .el-cascader{
-                font-size: 14px;
-                font-weight: 400;
-                color: #86909C;
-                padding-left: 8px;
-                height: 100%;
-                /deep/ .el-input{
-                  height: 100%;
-                }
-                /deep/ .el-input__inner{
-                  padding: 0;
-                }
-                /deep/ .el-input__suffix{
-                  display: none;
-                }
-                /deep/ .el-cascader__label{
-                  width: 100%;
-                  height: 100%;
-                  display: flex;
-                  align-items: center;
-                }
-              }
-              
-            }
-            .el-input{
-              flex: 1;
-            }
-            /deep/ .el-input__inner{
-              height: 100%;
-              line-height: 48px;
-              border: none;
-              font-size: 14px;
-            }
-
-          }
-          button.input-button{
-            width: auto;
-            height: 100%;
-            padding: 0 30px;
-            background: $g_bg;
-            color: #fff;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            border: none;
-            border-color: $g_bg;
-          }
-        }
-
-
-        .search-input-tab{
-          width: auto;
-          display: flex;
-          align-items: center;
-          &>div{
-            margin-left: 1rem;
-            font-size: 14px;
-            font-weight: 400;
-            color: $g_textColor;
-            line-height: 22px;
-            cursor: pointer;
-            img{
-              width: 12px;
-              height: 12px;
-            }
-            span{
-              padding: 0 4px;
-            }
-            &:nth-of-type(2){
-              color: #86909C;
-            }
-          }
-        }
+  .tab-box{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .tab-left{
+      width: auto;
+      display: flex;
+      align-items: center;
+      &>div{
+        width: auto;
+        line-height: 32px;
+        margin-right: 10px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 400;
+        color: $g_textColor;
+        cursor: pointer;
       }
-      .hotJob-box{
-        width: 100%;
-        display: flex;
-        margin-top: 10px;
-        .hotJob-span{
-          width: auto;
-          font-size: 14px;
-          font-weight: bold;
-          color: #1D2129;
-          line-height: 22px;
-        }
-        .hotJob-item-box{
-          flex: 1;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          a{
-            padding: 4px 1rem;
-            border-radius: 4px;
-            background: #fff;
-            text-align: center;
-            font-size: 14px;
-            color: $g_color;
-            margin-left: 8px;
-            margin-bottom: 0.5rem;
+      &>div.hover-items{
+        color: $g_color;
+        font-weight: bold;
+      }
+    }
+    .tab-right{
+      width: 124px;
+      line-height: 32px;
+      color: #4E5969;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      img{
+        width: 14px;
+        height: 14px;
+      }
+      span{
+        font-size: 14px;
+        line-height: 22px;
+        padding-left: 4px;
+      }
+    }
+  }
+  .job-tab-box{
+    width: 100%;
+    height: 2.8rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    /deep/ .el-tabs{
+      height: 100%;
+      .el-tabs__header {
+        height: 100%;
+        .el-tabs__nav-wrap{
+          height: 100%;
+          line-height: 2.8rem;
+          &::after{
+            height: 0;
+          }
+          .el-tabs__nav-scroll {
+            height: 100%;
+            padding: 0 20px;
+            .el-tabs__item.is-active{
+              color: $g_color;
+            }
+            .el-tabs__active-bar{
+              bottom: 1px;
+              background-color: $g_bg;
+            }
           }
         }
       }
     }
-    .online-job-box{
+    .seach-box{
+      width: auto;
+      padding-right: 1.5rem;
+      font-size: 14px;
       display: flex;
       align-items: center;
-      .online-job-title{
-        font-size: 14px;
-        font-weight: 400;
-        color: #4E5969;
-        line-height: 22px;
-      }
-      .online-job-tab{
-        margin-left: 1rem;
+      &>div{
         display: flex;
         align-items: center;
+        margin-left: 20px;
+        cursor: pointer;
+        img{
+          width: 14px;
+          height: 14px;
+        }
         span{
-          height: 28px;
-          border-radius: 4px;
-          border: 1px solid #F2F3F5;
           font-size: 14px;
-          font-weight: 400;
-          color: #86909C;
           line-height: 22px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 1rem;
-          padding: 0 10px;
-          cursor: pointer;
-          &.hover{
-            color: $g_color;
-          }
+          padding-left: 4px;
         }
       }
     }
   }
-
-
-
-  // 列表
   .job-list-box{
     width: 100%;
     .jobList-items{
@@ -713,12 +562,23 @@ export default {
        }
         
       }
+      .close-box{
+        width: auto;
+        height: auto;
+        padding: 6px;
+        position: absolute;
+        top: 0.6rem;
+        right: 0.8rem;
+        cursor: pointer;
+        img{
+          width: 14px;
+          height: 14px;
+          display: inline-block;
+        }
+      }
     }
 
   }
-
-
-
 
   .container-zx /deep/ .el-dialog{
     min-width: 320px;
@@ -958,5 +818,4 @@ export default {
     margin: 0 10px;
     display: inline-block;
   }
-
 </style>

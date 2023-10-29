@@ -29,7 +29,27 @@
     <div class="home-box margin-top-20">
       <!-- 左侧列表模块 开始 -->
       <div class="info-list-box">
-        <jobList :data="infoData" :tag="tag"/>
+        <!-- 列表开始 -->
+        <div class="list-items" v-for="(item,index) in infoList" :key="index">
+          <div class="items-left-box" @click.stop="clickItems(item)">
+            <p class="items-title">{{ item.position_name }} <span class="items-title-span">{{ item.salary }}</span></p>
+            <div class="items-tag-box">
+              <el-tag>{{ item.resume_demand }}</el-tag>
+              <el-tag>{{ item.educational_experience }}</el-tag>
+            </div>
+            <div class="items-firm-info" v-if="item.company">
+              <span class="firm-info-1">{{ item.company.company_name }}</span>
+              <span class="firm-info-2">{{ item.company.corporate_finance }}{{ item.company.company_scale }}</span>
+            </div>
+          </div>
+          <div class="items-right-box" style="flex-direction: column;justify-content: center;">
+            <img src="../../../assets/image/img-user.jpg" alt="" class="items-boss-img" />
+            <div class="items-boss-name">{{ item.publish_name }}</div>
+            <div class="items-boss-g">人事</div>
+          </div>
+        </div>
+        <!-- 列表结束 -->
+        <!-- <jobList :data="infoData" :tag="tag"/> -->
             
         <!-- 分页控制 -->
         <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged"></mPagination>
@@ -48,14 +68,12 @@
 </template>
 
 <script>
-import jobList from '../components/jobList.vue';
 import personalInfo from '../components/personalInfo.vue';
 import mPagination from '@/components/m-pagination';
 
 export default {
   name: 'talentHome',
   components: {
-    jobList,
     personalInfo,
     mPagination,
   },
@@ -64,9 +82,7 @@ export default {
       input_name:'', // 搜索框value
       hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
       tag: '',
-      infoData: {
-        infoList: [], // 列表
-      },
+      infoList: [], // 列表
       // 分页数据
       paginationData: {
         total: 10,
@@ -82,6 +98,14 @@ export default {
     
   },
   methods: {
+    clickItems(i){
+      this.$router.push({
+        path:'/JobDetails',
+        query:{
+          id: i.id
+        }
+      })
+    },
     // 分页事件
     pageHasChanged() {
       this.getSearchinfo();
@@ -97,7 +121,7 @@ export default {
       that.$axios.post('/api/talents/index',p).then( res =>{
         console.log(res)
         if(res.code == 0){
-          that.infoData.infoList = res.data.list;
+          that.infoList = res.data.list;
           that.paginationData.total = res.data.total;
         }else{
           that.$message.error({
@@ -203,5 +227,125 @@ export default {
       padding: 10px 0;
       border-bottom: 1px solid #F2F3F5;
     }
+  }
+
+  .list-items{
+    margin-top: 16px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    cursor: pointer;
+    .items-left-box{
+      flex: 1;
+      text-align: left;
+      .items-title{
+        font-size: 16px;
+        font-weight: bold;
+        color: #000000;
+        line-height: 22px;
+        .items-title-span{
+          color: #FF4D4F;
+          padding-left: 10px;
+        }
+      }
+      .items-tag-box{
+        margin-top: 6px;
+        .el-tag{
+          background-color: #F7F8FA;
+          border-color: #F7F8FA;
+          color: #1F2E4DFF;
+          height: 22px;
+          padding: 0 10px;
+          line-height: 22px;
+          font-size: 12px;
+          border-radius: 2px;
+          margin-left: 10px;
+          &:nth-of-type(1){
+            margin-left: 0;
+          }
+        }
+      }
+      .items-firm-info{
+        margin-top: 20px;
+        .firm-info-1{
+          font-size: 14px;
+          font-weight: 400;
+          color: $g_textColor;
+        }
+        .firm-info-2{
+          margin-left: 16px;
+          font-size: 14px;
+          font-weight: 400;
+          color: #86909C;
+        }
+      }
+    }
+    .items-right-box{
+      width: 160px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      .right-c{
+        width: 0;
+        height: 100%;
+        opacity: 0.5;
+        border: 1px dashed;
+        border-image: linear-gradient(180deg, rgba(255, 117, 26, 0), rgba(255, 100, 0, 1), rgba(255, 117, 26, 0)) 1 1;
+      }
+      .quan{
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #FF751A;
+        position: absolute;
+        left: -3px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .right-status-box{
+        padding-left: 10px;
+        .right-status-text{
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          font-weight: bold;
+          color: #FF751A;
+          line-height: 22px;
+          cursor: pointer;
+          i{
+            margin-left: 4px;
+          }
+        }
+        .status-time{
+          font-size: 12px;
+          font-weight: 400;
+          color: #86909C;
+          line-height: 20px;
+        }
+      }
+      .items-boss-img{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+      .items-boss-name{
+        font-size: 14px;
+        font-weight: 400;
+        color: #1D2129;
+        line-height: 22px;
+      }
+      .items-boss-g{
+        font-size: 12px;
+        font-weight: 400;
+        color: #86909C;
+        line-height: 20px;
+      }
+      
+    }
+
+  }
+  .list-items:nth-of-type(1){
+    margin-top: 0 !important;
   }
 </style>

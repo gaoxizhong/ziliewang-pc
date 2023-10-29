@@ -8,13 +8,13 @@
         <div class="personAbility-box">
 
           <div class="personAbility-items-box" :class="selt_index == index?'hover':''" v-for="(item,index) in sysMsgListData" :key="index" @click="clickmsgListData(item,index)">
-            <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
+            <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" />
             <div class="name-box">
               <div class="name-t">
-                <span class="span-1" v-if="item.company">{{item.company.legal_person}}</span>
+                <span class="span-1">{{item.company_user_name}}</span>
                 <span class="span-2" v-if="item.company">{{item.company.company_name}}</span>
               </div>
-              <div class="sub-title">{{item.msg_content}}</div>
+              <div class="sub-title">{{item.chat_list[item.chat_list.length-1].content}}</div>
             </div>
             <span class="time">{{item.createtime}}</span>
           </div>
@@ -24,10 +24,10 @@
       <div class="right-box center-box" v-if="selt_info">
         <div class="seach-box">
           <div class="seach-box-info">
-            <img src="../../../assets/image/bossSide/img-user.jpg" alt="" />
+            <img :src="selt_info.company_user_avatar?selt_info.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" />
             <div class="name-t">
-              <div class="span-1" v-if="selt_info.user">{{selt_info.user.real_name}}</div>
-              <div class="span-2" v-if="selt_info.user">{{selt_info.user.position}}</div>
+              <div class="span-1">{{selt_info.company_user_name}}</div>
+              <div class="span-2" v-if="selt_info.company">{{selt_info.company.company_name}}</div>
             </div>
           </div>
           <!-- <img src="../../../assets/image/bossSide/fileSearch.png" alt="" class="fileSearch-img" @click="onlineResume"/> -->
@@ -43,22 +43,24 @@
             <dt><h4><a href="javascript:0;" id="show-history"></a></h4></dt>
 
             <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
-              <div :class=" item.msg_type == 1 ?'msg-recv':'msg-send' " class="msg" style="color:#fff">
+              <div :class=" item.type == 1 ?'msg-send':'msg-recv' " class="msg" style="color:#fff">
+                <img :src="item.user_avatar?item.user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-if="item.type == 1"/>
+                <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-else/>
                 <div class="sender">
                   <!-- <span class="sender-text">{{item.name}}</span> -->
-                  <span class="time-text">{{item.time}}</span>
+                  <span class="time-text">{{item.createtime}}</span>
                 </div>
                 <div class="msg-content-and-after">
                   <div class="msg-content">
                     <div v-html="item.content"></div>
-                    <div class="msg-btn" v-if="item.msg_type == 1 && item.msg_status == 2" @click="clickAcceptBtn">接收邀请</div>
+                    <!-- <div class="msg-btn" v-if="item.msg_type == 1 && item.msg_status == 2" @click="clickAcceptBtn">接收邀请</div> -->
                   </div>
                 </div>
               </div>
             </dd>
 
             <!-- 邀请面试 开始-->
-            <dd class="bot clearfix" v-if="selt_info.msg_type == 2 && selt_info.msg_status == 2" >
+            <dd class="bot clearfix" v-if="selt_info.msg_type == 2 || selt_info.msg_type == 5" >
               <div class="msg msg-recv" style="color:#fff">
               <div class="sender">
                   <span class="time-text">{{selt_info.createtime}}</span>
@@ -66,7 +68,8 @@
                 <div class="msg-content-and-after">
                   <div class="msg-content">
                     <div>对方向您发送了面试邀请</div>
-                    <div class="msg-btn" @click="clickAcceptBtn">接收邀请</div>
+                    <div class="msg-btn" @click="clickAcceptBtn" v-if="selt_info.msg_type == 2">接受面试邀请</div>
+                    <div class="msg-btn msg-btn-5" v-if="selt_info.msg_type == 5">已接受</div>
                   </div>
                 </div>
               </div>
@@ -128,12 +131,12 @@ export default {
       viewHeight:'',
       originMessage:'',
       message:[], // 累计对话记录
-      msgList:[],  // 1为企业 msg-recv， 2为用户  msg-send
+      msgList:[],  // type 1为用户 msg-recv， 2为企业 msg-send
+      sysMsgListData:[], // 左侧信息列表
       loading: false,
       source: null,
       page: 1,
       pagesize: 20,
-      sysMsgListData:[], // 左侧信息列表
       selt_index: -1,
       selt_info: '',
     }
@@ -142,13 +145,71 @@ export default {
     this.getSysMsgList();
   },
   methods:{
-    onSendClcik(){
+    /**
+     * 获取当前时间 格式：yyyy-MM-dd HH:MM:SS
+    */
+    getCurrentTime(){
+        var date = new Date();//当前时间
+        var month = this.zeroFill(date.getMonth() + 1);//月
+        var day = this.zeroFill(date.getDate());//日
+        var hour = this.zeroFill(date.getHours());//时
+        var minute = this.zeroFill(date.getMinutes());//分
+        var second = this.zeroFill(date.getSeconds());//秒
 
+        //当前时间
+        var curTime = date.getFullYear() + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        return curTime;
+    },
+
+    /**
+     * 补零
+     */
+    zeroFill(i){
+      if (i >= 0 && i <= 9) {
+          return "0" + i;
+      } else {
+          return i;
+      }
+    },
+    // 回车键点击
+    searchEnterFun(e){
+      var keyCode = window.event?e.keyCode:e.which;
+      if(keyCode == 13){
+        this.onSendClcik();
+      }
+    },
+    onSendClcik(){
+      let that = this;
+      let p = {
+        position_id: that.selt_info.id,
+        company_id: that.selt_info.company_id,
+        company_uid: that.selt_info.company.uid,
+        content: that.originMessage
+      }
+      let showMessage = { // 页面展示的我的提问
+        type:1,
+        content:that.originMessage,
+        createtime: this.getCurrentTime(),
+      }
+      that.$axios.post('/api/user/find-company',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.msgList.push(showMessage);
+          that.originMessage = '';
+          that.scrollBottom(); // 页面滚动到底部
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
     },
     clickmsgListData(i,in_dx){
       let that = this;
       that.selt_info = i;
       that.selt_index = in_dx;
+      that.msgList = i.chat_list;
+      that.scrollBottom(); // 页面滚动到底部
     },
 
     // 获取聊天列表
@@ -172,8 +233,9 @@ export default {
     clickAcceptBtn(){
       let that = this;
       let selt_info = that.selt_info;
+      console.log(selt_info)
       let p = {
-        id: selt_info.company_interview_id, 
+        id: selt_info.type_id, 
       }
       that.$axios.post('/api/user/receive-interview-invite',p).then( res =>{
         console.log(res)
@@ -187,6 +249,14 @@ export default {
           })
         }
       })
+    },
+    //滚动到底部
+    scrollBottom:function(){
+      var that=this;
+      this.$nextTick(function(){
+          var container = that.$refs.scrollbar;
+          container.scrollTop = 999999999;
+      });
     },
   }
 }
@@ -254,7 +324,15 @@ export default {
               font-size: 12px;
               font-weight: 400;
               color: #86909C;
-              line-height: 20px;              
+              line-height: 20px;    
+              text-overflow: ellipsis;
+              overflow: hidden;
+              /*弹性盒模型*/
+              display: -webkit-box;
+              /*上下垂直*/
+              -webkit-box-orient: vertical;
+              /*当属性值为3，表示超出3行隐藏。限制在一个块元素显示的文本的行数，需要和上面两个属性结合*/
+              -webkit-line-clamp: 1;
             }
           }
           .time{
@@ -289,6 +367,7 @@ export default {
           img{
             width: 34px;
             height: 34px;
+            border-radius: 50%;
           }
           .name-t{
             padding-left: 4px;
@@ -300,8 +379,10 @@ export default {
             }
             .span-2{
               font-size: 12px;
-              color: #86909C;
               line-height: 20px;
+              span{
+                color: $g_color;
+              }
             }
           }
         }
@@ -395,9 +476,25 @@ export default {
   }
   .messages .msg-recv {
     color: #222!important;
+    margin-left: 48px;
   }
 
-
+  .messages .msg>img {
+    position: absolute;
+    top: 5px;
+    left: -50px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+  }
+  .messages .msg-recv>img {
+      top: 5px;
+      left: -48px;
+      right: auto;
+  }
+  .messages .msg-recv>img, .messages .msg-send>img {
+      display: inline-block;
+  }
   .sender, .msg .sender {
     font-size: 12px;
     color: rgba(36,46,51,.4);
@@ -428,6 +525,11 @@ export default {
     background: #14b8a6;
     margin: 20px;
     cursor: pointer;
+  }
+  .msg .msg-content-and-after .msg-btn.msg-btn-5{
+    background-color: #07c160;
+    cursor: not-allowed;
+    opacity: 0.5;
   }
   .msg-recv .sender .sender-text {
       display: inline-block;
@@ -464,7 +566,14 @@ export default {
     width: 100%;
     float: left;
   }
-
+  .messages .msg-send {
+    margin-right: 48px;
+  }
+  .messages .msg.msg-send>img {
+    top: 0;
+    left: auto;
+    right: -48px;
+  }
   .msg.msg-send .sender {
     text-align: right;
   }

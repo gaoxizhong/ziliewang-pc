@@ -364,12 +364,15 @@ export default {
         if(res.code == 0){
           if(position_id){
             that.$message.success(' 发布成功！');
-            setTimeout( ()=>{
-              that.resetForm();
-            },1500)
+            // setTimeout( ()=>{
+            //   that.resetForm();
+            // },1500)
           }else{
             that.$message.success(' 修改成功！');
           }
+          setTimeout( ()=>{
+            that.$router.push('/jobCenter')
+          },1500)
           
         }else{
           that.$message.error({
