@@ -111,127 +111,12 @@
         </div>
       </el-dialog>
     </div>
-    <!-- 预览在线简历 弹窗  -->
-    <div class="container-zx">
-      <el-dialog title="你的简历在BOSS侧展示如下" :center="false" :visible.sync="zx_dialogVisible" width="920px" :before-close="handleClose">
-        <div class="pc-preview-wrapper">
-          <!-- 个人信息 -->
-          <div class="resume-item item-base">
-            <div class="figure J_resume_baseMsg_headImgPreview">
-              <img :src="infoData.basic_info.avatar?infoData.basic_info.avatar:require('../../../assets/image/img-user.jpg' )" alt="" class="cur-default"/>
-            </div>
-            <div class="item-right">
-              <div style="text-align: left;">
-                <h2 class="name">{{ infoData.basic_info.name }}</h2>
-                <div class="info-labels fr">
-                  <span class="label-text">
-                    <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData.basic_info.birth_year_month?infoData.basic_info.birth_year_month:'20岁' }}</span>
-                  </span>
-                  <em class="vline"></em>
-                  <span class="label-text">
-                    <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData.basic_info.begin_work_date?infoData.basic_info.begin_work_date:'暂无' }}</span>
-                  </span>
-                  <em class="vline"></em>
-                  <span class="label-text">
-                    <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData.basic_info.work_status_desc }}</span>
-                  </span>
-                </div>
-              </div>
-              <div class="text selfDescription">{{ infoData.basic_info.advantages_highlights }}</div>
-            </div>
-          </div>
-          <!-- 期望职位 -->
-          <div class="resume-item">
-            <h3 class="title">期望职位</h3>
-            <div class="item-right">
 
-              <div style="text-align: left;" v-for="(items,idx) in infoData.job_expectation" :key="idx">
-                <div class="info-labels">
-                  <span class="label-text">{{ items.desired_position }}</span>
-                  <em class="vline"></em>
-                  <span class="label-text">{{ items.desired_industry }}</span>
-                  <em class="vline"></em>
-                  <span class="label-text">{{ items.expected_salary }}</span>
-                </div>
-              </div>
-              
-            </div>
-          </div>
-          <!-- 工作经历 -->
-          <div class="resume-item">
-            <h3 class="title">工作经历</h3>
-            <div class="item-right">
-              <div class="history-list">
-                <div class="history-item" v-for="(items,idx) in infoData.work_experience" :key="idx">
-                  <span class="period">{{ items.begin_date }} - {{ items.end_date }}</span>
-                  <h4 class="name">
-                    <span>{{ items.company_name }}</span>
-                    <em class="vline"></em>
-                    <span>{{ items.position }}</span>
-                  </h4>
-                  <div class="item-text">
-                    <span class="project-title">内容：</span>
-                    <div class="text" v-html="items.responsibility_performance"></div>
-                    <!-- <p class="tags">
-                      <span></span>
-                    </p> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 项目经历 -->
-          <div class="resume-item">
-            <h3 class="title">项目经历</h3>
-            <div class="item-right">
-              <div class="history-list">
-                <div class="history-item" v-for="(items,idx) in infoData.project_experience" :key="idx">
-                  <span class="period">{{ items.begin_date }} - {{ items.end_date }}</span>
-                  <h4 class="name">
-                    <span>{{ items.project_name }}</span>
-                    <em class="vline"></em>
-                    <span>{{ items.position }}</span>
-                  </h4>
-                  <div class="item-text">
-                    <span class="project-title">内容：</span>
-                    <div class="text" v-html="items.job_content"></div>
-                    <!-- <p class="tags">
-                      <span></span>
-                    </p> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 教育经历 -->
-          <div class="resume-item">
-            <h3 class="title">教育经历</h3>
-            <div class="item-right">
-              <div class="history-list">
-                <div class="history-item" v-for="(items,idx) in infoData.education_experience" :key="idx">
-                  <span class="period">{{ items.school_date }}</span>
-                  <h4 class="name">
-                    <b>{{ items.school }}</b>
-                    <em class="vline"></em> 
-                    <b>{{ items.specialty }}</b>
-                    <em class="vline"></em>
-                    <b>{{ items.education_background }}</b>
-                  </h4>
-                  <!-- <p class="tags school-tags">
-                    <span class="blue">211院校</span>
-                  </p> -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </el-dialog>
+    <!-- 查看在线简历弹窗 开始 -->
+    <div>
+      <onlineResume :infoData="infoData" :is_type="is_type" ref="onlineResume"/>
     </div>
-
-
+    <!-- 查看在线简历弹窗 结束 -->
     
   </div>
 
@@ -243,6 +128,7 @@ import JobExpectation from "../components/myResume/jobExpectation";
 import WorkExperience from "../components/myResume/workExperience";
 import ProjectExperience from "../components/myResume/projectExperience";
 import EducationExperience from "../components/myResume/educationExperience";
+import onlineResume from "../../bossSide/components/onlineResume.vue";
 import pdf from 'vue-pdf';
 export default {
   name: 'myResume',
@@ -253,6 +139,7 @@ export default {
     ProjectExperience,
     EducationExperience,
     pdf,
+    onlineResume
   },
   data(){
     return{
@@ -264,7 +151,9 @@ export default {
       zx_dialogVisible: false,
       pdfUrl:'',
       src:'',
-      numPages: 0
+      numPages: 0,
+      onlineResumeData:{}, // 在线简历
+      is_type:'',
     }
   },
   computed: {
@@ -324,7 +213,8 @@ export default {
     //   }
     // },
     clickPreviewResume(){
-      this.zx_dialogVisible = !this.zx_dialogVisible
+      // this.zx_dialogVisible = !this.zx_dialogVisible
+      this.$refs.onlineResume._data.zx_dialogVisible = true;
     },
     
    // 获取个人信息
@@ -657,11 +547,12 @@ export default {
           z-index: 99;
         }
         img{
-          width: 60px;
-          height: 60px;
-          border-radius: 100%;
+          width: 130px;
+          height: 160px;
+          border-radius: 6px;
           cursor: default;
         }
+
         .item-right {
           position: relative;
           padding-left: 80px;
@@ -775,6 +666,9 @@ export default {
             color: #51586d;
           }
           
+        }
+        .item-right.item-right-1{
+          padding-left: 145px;
         }
         .title{
           float: left;

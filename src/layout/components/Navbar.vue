@@ -75,6 +75,12 @@ export default {
       return localStorage.getItem('realAvatar')
     },
   },
+  watch:{
+    avatar() {
+      console.log('realAvatar')
+      return localStorage.getItem('realAvatar')
+    }
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -198,7 +204,7 @@ export default {
           cursor: pointer;
           width: 2rem;
           height: 2rem;
-          border-radius: 10px;
+          border-radius: 50%;
         }
         .username{
           margin-left: 10px;

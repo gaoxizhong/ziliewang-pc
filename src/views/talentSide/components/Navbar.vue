@@ -70,7 +70,8 @@ export default {
     },
 
     avatar() {
-      return localStorage.getItem('realAvatar')
+      // return localStorage.getItem('realAvatar')
+      return this.$store.state.user.realAvatar
     },
     activeMenu() {
       const route = this.$route;
@@ -80,6 +81,13 @@ export default {
       // }
       console.log(path)
       return '' || path;
+    },
+  },
+  watch:{
+    '$store.state.realAvatar'(newVal){
+      console.log('realAvatar')
+        this.avatar = newVal;
+        this.$forceUpdate();// 更新数据
     },
   },
   mounted() {

@@ -59,7 +59,10 @@
                     <span class="time-text">{{item.createtime}}</span>
                   </div>
                   <div class="msg-content-and-after">
-                    <div class="msg-content" v-html="item.content"></div>
+                    <div class="msg-content" v-if="item.type == 1 && item.resume">
+                      <div class="msg-btn" @click="clickVitae(item.resume)">查看对方简历</div>
+                    </div>
+                    <div class="msg-content" v-html="item.content" v-if=" item.type == 1 && !item.resume || (item.type == 2 && !item.resume)"></div>
                   </div>
                 </div>
               </dd>
@@ -169,14 +172,27 @@
       <onlineResume :infoData="onlineResumeData" :is_type="is_type" ref="onlineResume"/>
     </div>
     <!-- 查看在线简历弹窗 结束 -->
+    <!-- 预览附件简历pdf 弹窗  -->
+    <div class="container-pdf">
+      <el-dialog title="附件预览" :center="false" :visible.sync="pdf_dialogVisible" width="800px" :before-close="pdf_handleClose">
+        <div class="pdf-preview-box">
+          <div class="pdfViewer" id="viewer">
+            <pdf :src="src" style="width: 100%;" :page="i" v-for="i in numPages" :key="i" ref="pdf"></pdf>
+          </div>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import onlineResume from "../components/onlineResume.vue";
+import pdf from 'vue-pdf';
+
 export default {
   components: {
     onlineResume,
+    pdf
   },
   data() {
     return {
@@ -201,7 +217,12 @@ export default {
       selt_index: -1,
       selt_info: '',
       onlineResumeData:{}, // 在线简历
-      is_type:''
+      is_type:'',
+      pdfUrl:'',
+      src: "",
+      pdf_dialogVisible: false,
+      numPages: 0
+
     }
   },
   mounted(){
@@ -233,6 +254,9 @@ export default {
       } else {
           return i;
       }
+    },
+    pdf_handleClose(done) {
+      this.pdf_dialogVisible = false;
     },
     yqms_handleClose(done) {
       this.yqms_dialogVisible = false;
@@ -321,6 +345,31 @@ export default {
         }
       })
     },
+    // 点击附件简历名称---预览
+    clickVitae(url){
+      this.pdfUrl = url;
+      // 有时PDF文件地址会出现跨域的情况,这里最好处理一下
+      this.src = pdf.createLoadingTask(this.pdfUrl);
+      this.getPDFnums(this.pdfUrl);
+      this.pdf_dialogVisible = true;
+    },
+    //计算pdf页码总数
+    getPDFnums(url) {
+      this.loading = true
+      //let loadURL = pdf.createLoadingTask(url)
+      let loadURL = pdf.createLoadingTask({
+        url: url,//你的pdf地址
+      })
+
+      loadURL.promise.then(pdf => {
+          this.numPages = pdf.numPages
+          this.$set(this, 'docsPDF.numPages', pdf.numPages)
+          this.loading = false
+      }).catch(err => {
+          this.loading = false;
+          this.loadingError = true;
+      })
+    },
     // 点击发送面试邀请
     submitForm(){
       let that = this;
@@ -389,6 +438,9 @@ export default {
         }
       })
     },
+
+
+
   //滚动到底部
     scrollBottom:function(){
       var that=this;
@@ -470,7 +522,7 @@ export default {
     width: 100%;
     flex: 1;
     display: flex;
-    height: calc(100vh - 115px);
+    height: calc(100vh - 120px);
     margin-top: 15px;
     .left-box{
       width: 300px;
@@ -484,7 +536,7 @@ export default {
       .personAbility-box{
         .personAbility-items-box{
           width: 100%;
-          padding: 0.8rem 0.6rem;
+          padding: 0.8rem 6px;
           display: flex;
           cursor: pointer;
           &>img{
@@ -501,10 +553,10 @@ export default {
 
           .name-box{
             flex: 1;
+            padding-left: 6px;
             .name-t{
               display: flex;
               align-items: center;
-              padding-left: 4px;
               .span-1{
                 font-size: 14px;
                 font-weight: 500;
@@ -565,6 +617,7 @@ export default {
           img{
             width: 34px;
             height: 34px;
+            border-radius: 50%;
           }
           .name-t{
             padding-left: 4px;
@@ -731,6 +784,19 @@ export default {
     position: relative;
     max-width: 320px;
   }
+  .msg-btn{
+    width: 120px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #fff;
+    background: #14b8a6;
+    margin: 20px;
+    cursor: pointer;
+  }
   .bot .msg .msg-content {
       float: right;
       min-height: 32px;
@@ -892,6 +958,32 @@ export default {
       }
 
     }
+  }
+
+  .container-pdf /deep/ .el-dialog{
+    min-width: 320px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    .el-dialog__header{
+      text-align: left;
+      .el-dialog__title{
+        font-size: 15px;
+        color: $g_textColor;
+      }
+    }
+    .el-dialog__body{
+      height: calc(100vh - 128px);
+      overflow: hidden;
+      padding: 20px;
+      .pdf-preview-box{
+        width: 794px;
+        height: calc(100vh - 172px);
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+    }
+    
   }
 
 </style>

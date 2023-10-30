@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="container-zx">
-      <el-dialog title="简历详情" :center="false" :visible.sync="zx_dialogVisible" width="800px" :before-close="handleClose">
+      <el-dialog title="简历详情" :center="false" :visible.sync="zx_dialogVisible" width="920px" :before-close="handleClose">
         <div class="pc-preview-wrapper m-box">
           <!-- 个人信息 -->
           <div class="resume-item item-base" v-if="infoData.basic_info">
             <div class="figure J_resume_baseMsg_headImgPreview">
-              <img :src="infoData.basic_info?infoData.basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default"/>
+              <img :src="infoData.basic_info?infoData.basic_info.resume_image:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default"/>
             </div>
-            <div class="item-right">
+            <div class="item-right item-right-1">
               <div style="text-align: left;">
                 <h2 class="name">{{ infoData.basic_info?infoData.basic_info.name:'暂无' }}</h2>
                 <div class="info-labels fr">
@@ -233,9 +233,9 @@ export default {
             z-index: 99;
           }
           img{
-            width: 60px;
-            height: 60px;
-            border-radius: 100%;
+            width: 130px;
+            height: 160px;
+            border-radius: 6px;
             cursor: default;
           }
           .item-right {
@@ -351,6 +351,9 @@ export default {
               color: #51586d;
             }
             
+          }
+          .item-right.item-right-1{
+            padding-left: 145px;
           }
           .title{
             float: left;

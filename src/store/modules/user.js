@@ -5,7 +5,8 @@ import { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
-  avatar: ''
+  avatar: '',
+  realAvatar: localStorage.getItem('realAvatar') || ''
 }
 
 const mutations = {
@@ -17,10 +18,15 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_realAvatar: (state, realAvatar) => {
+    state.realAvatar = realAvatar
+
   }
 }
 
 const actions = {
+
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo
@@ -78,7 +84,11 @@ const actions = {
       removeToken()
       resolve()
     })
-  }
+  },
+  set_realAvatar({ commit }, data) {
+    commit('SET_realAvatar', data);
+  },
+
 }
 
 export default {

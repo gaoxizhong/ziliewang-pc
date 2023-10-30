@@ -69,13 +69,28 @@
                   <div class="msg-content">
                     <div>对方向您发送了面试邀请</div>
                     <div class="msg-btn" @click="clickAcceptBtn" v-if="selt_info.msg_type == 2">接受面试邀请</div>
-                    <div class="msg-btn msg-btn-5" v-if="selt_info.msg_type == 5">已接受</div>
+                    <div class="msg-btn"  @click="clickViewInterviewInfo" v-if="selt_info.msg_type == 5">已接受，查看面试信息</div>
                   </div>
                 </div>
               </div>
             </dd>
             <!-- 邀请面试 结束 -->
-
+            <!-- 求简历 开始-->
+            <dd class="bot clearfix" v-if="selt_info.msg_type == 2 || selt_info.msg_type == 6" >
+              <div class="msg msg-recv" style="color:#fff">
+              <div class="sender">
+                  <span class="time-text">{{selt_info.createtime}}</span>
+                </div>
+                <div class="msg-content-and-after">
+                  <div class="msg-content">
+                    <div>对方请求获取您的简历</div>
+                    <div class="msg-btn" @click="clickSendResumeBtn" v-if="selt_info.msg_type == 6">发送简历</div>
+                    <div class="msg-btn msg-btn-5" v-if="selt_info.msg_type == 7">已发送</div>
+                  </div>
+                </div>
+              </div>
+            </dd>
+            <!-- 求简历 结束 -->
           </dl>
 
           <div id="msg_end" ref="msg_end" style="height:0px; overflow:hidden"></div>
@@ -250,6 +265,35 @@ export default {
         }
       })
     },
+    //  发送简历
+    clickSendResumeBtn(){
+      let that = this;
+      let selt_info = that.selt_info;
+      console.log(selt_info)
+      let p = {
+        // id: selt_info.type_id, 
+        position_id: selt_info.position_id,
+        company_id: selt_info.company_id,
+        company_uid: selt_info.company.uid,
+      }
+      that.$axios.post('/api/user/send-resume',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.$message.success({
+            message:'发送简历成功！'
+          })
+
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    // 查看面试信息详情
+    clickViewInterviewInfo(){
+
+    },
     //滚动到底部
     scrollBottom:function(){
       var that=this;
@@ -263,7 +307,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .interaction-box{
-    min-height: calc(100vh - 70px);
+    height: calc(100vh - 100px);
     margin: 0 auto;
   }
 
@@ -273,7 +317,8 @@ export default {
     width: 100%;
     flex: 1;
     display: flex;
-    height: calc(100vh - 75px);
+    // height: calc(100vh - 75px);
+    height: 100%;
     .left-box{
       width: 340px;
       border-right: 1px solid #F2F3F5;
