@@ -33,7 +33,7 @@
           <div class="left-info-box">
             <div class="info-title">
               <div class="title-name" @click="clickPositionItems(item)">{{ item.position_name }}</div>
-              <div class="title-subname">{{ item.salary }} {{ item.work_times}} 工作城市: {{ item.work_address }}</div>
+              <div class="title-subname">{{ item.salary }} K {{ item.work_times}} 工作城市: {{ item.work_address }}</div>
             </div>
             <div class="info-bott">
               <img src="../../../assets/image/bossSide/img-user.png" alt="">

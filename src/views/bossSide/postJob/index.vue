@@ -81,10 +81,12 @@
               <el-col :span="7">
                 <el-input v-model="ruleForm.xz_status" placeholder="新资范围"></el-input>
               </el-col>
+              <span class="padding-left-6 span-padd" >K</span>
               <el-col class="line" :span="1" style="font-size: 14px;"> 至 </el-col>
               <el-col :span="7">
                 <el-input v-model="ruleForm.xz_end" placeholder="新资范围"></el-input>
               </el-col>
+              <span class="padding-left-4 span-padd">K</span>
             </el-form-item>
             <el-form-item label="工作时间" required>
               <el-col :span="5">
@@ -418,8 +420,13 @@ export default {
         line-height: 22px;
       }
       .line{
-        text-align: center;
-        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 10px;
+      }
+      .span-padd{
+        float: left;
       }
       /deep/ .el-form-item__content{
         line-height: 32px;
