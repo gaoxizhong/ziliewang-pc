@@ -31,11 +31,11 @@
       </div>
     </div>
       <!-- 支付弹窗 -->
-    <el-dialog title="订单支付" :center="false" :visible.sync="dialogVisible"  height="auto">
+    <el-dialog title="订单支付" :center="false" :visible.sync="dialogVisible" :show-close="false" :close-on-click-modal="false" height="auto">
       <div class="dialog-content-box">
         <div class="dialog-content-left">
           <div>套餐：<span class="text-teal-600">{{ checkInfo.get_num }} 次</span></div>
-          <div>金额：<span class="text-teal-600">{{ checkInfo.recharge_price }} 元</span></div>
+          <div>金额：<span class="text-teal-600">{{ checkInfo.pay_price }} 元</span></div>
           <div>创建时间：<span class="text-teal-600">{{ checkInfo.createtime }}</span></div>
         </div>
         <div class="dialog-content-right" id="qrcode" ref="qrcode">
@@ -151,7 +151,7 @@
         try {
           //调用后端接口，接收返回url
           const res = await that.$axios.post('/api/order/create',p);
-          that.checkInfo = i;
+          that.checkInfo = res.data;
           console.log(res)
           that.order_no = res.data.order_no;
           //清空二维码
