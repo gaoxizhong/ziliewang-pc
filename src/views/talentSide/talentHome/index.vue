@@ -32,7 +32,7 @@
         <!-- 列表开始 -->
         <div class="list-items" v-for="(item,index) in infoList" :key="index">
           <div class="items-left-box" @click.stop="clickItems(item)">
-            <p class="items-title">{{ item.position_name }} <span class="items-title-span">{{ item.salary }}</span></p>
+            <p class="items-title">{{ item.position_name }} <span class="items-title-span">{{ item.salary }}K</span><span class="span-1">/月</span></p>
             <div class="items-tag-box">
               <el-tag>{{ item.resume_demand }}</el-tag>
               <el-tag>{{ item.educational_experience }}</el-tag>
@@ -247,6 +247,11 @@ export default {
         .items-title-span{
           color: #FF4D4F;
           padding-left: 10px;
+        }
+        .span-1{
+          font-size: 12px;
+          color: #999;
+          padding-left: 6px;
         }
       }
       .items-tag-box{

@@ -78,15 +78,83 @@
               </el-cascader>
             </el-form-item>
             <el-form-item label="新资范围" required>
-              <el-col :span="7">
-                <el-input v-model="ruleForm.xz_status" placeholder="新资范围"></el-input>
+              <el-col :span="5" class="xzfw-box">
+                <el-select v-model="ruleForm.xz_status" placeholder="最低月薪">
+                  <el-option label="1K" value="1"></el-option>
+                  <el-option label="2K" value="2"></el-option>
+                  <el-option label="3K" value="3"></el-option>
+                  <el-option label="4K" value="4"></el-option>
+                  <el-option label="5K" value="5"></el-option>
+                  <el-option label="6k" value="6"></el-option> 
+                  <el-option label="7K" value="7"></el-option>
+                  <el-option label="8K" value="8"></el-option>
+                  <el-option label="9K" value="9"></el-option>
+                  <el-option label="10K" value="10"></el-option>
+                  <el-option label="11K" value="11"></el-option>
+                  <el-option label="12K" value="12"></el-option>
+                  <el-option label="13K" value="13"></el-option>
+                  <el-option label="14K" value="14"></el-option>
+                  <el-option label="15K" value="15"></el-option>
+                  <el-option label="16K" value="16"></el-option>
+                  <el-option label="17K" value="17"></el-option>
+                  <el-option label="18K" value="18"></el-option>
+                  <el-option label="19K" value="19"></el-option>
+                  <el-option label="20K" value="20"></el-option>
+                  <el-option label="25K" value="25"></el-option>
+                  <el-option label="30K" value="30"></el-option>
+                  <el-option label="40K" value="40"></el-option>
+                  <el-option label="50K" value="50"></el-option>
+                  <el-option label="70K" value="70"></el-option>
+                  <el-option label="100K" value="100"></el-option>
+                </el-select>
               </el-col>
-              <span class="padding-left-6 span-padd" >K</span>
-              <el-col class="line" :span="1" style="font-size: 14px;"> 至 </el-col>
-              <el-col :span="7">
-                <el-input v-model="ruleForm.xz_end" placeholder="新资范围"></el-input>
+              <el-col :span="5" class="xzfw-box">
+                <el-select v-model="ruleForm.xz_end" placeholder="最高月薪">
+                  <el-option label="2K" value="2"></el-option>
+                  <el-option label="3K" value="3"></el-option>
+                  <el-option label="4K" value="4"></el-option>
+                  <el-option label="5K" value="5"></el-option>
+                  <el-option label="6k" value="6"></el-option> 
+                  <el-option label="7K" value="7"></el-option>
+                  <el-option label="8K" value="8"></el-option>
+                  <el-option label="9K" value="9"></el-option>
+                  <el-option label="10K" value="10"></el-option>
+                  <el-option label="11K" value="11"></el-option>
+                  <el-option label="12K" value="12"></el-option>
+                  <el-option label="13K" value="13"></el-option>
+                  <el-option label="14K" value="14"></el-option>
+                  <el-option label="15K" value="15"></el-option>
+                  <el-option label="16K" value="16"></el-option>
+                  <el-option label="17K" value="17"></el-option>
+                  <el-option label="18K" value="18"></el-option>
+                  <el-option label="19K" value="19"></el-option>
+                  <el-option label="20K" value="20"></el-option>
+                  <el-option label="25K" value="25"></el-option>
+                  <el-option label="30K" value="30"></el-option>
+                  <el-option label="40K" value="40"></el-option>
+                  <el-option label="50K" value="50"></el-option>
+                  <el-option label="70K" value="70"></el-option>
+                  <el-option label="100K" value="100"></el-option>
+                  <el-option label="150K" value="150"></el-option>
+                </el-select>
               </el-col>
-              <span class="padding-left-4 span-padd">K</span>
+              <el-col :span="5" class="xzfw-box">
+                <el-select v-model="ruleForm.month_num" placeholder="请选择">
+                  <el-option label="x12月" value="12"></el-option>
+                  <el-option label="x13月" value="13"></el-option>
+                  <el-option label="x14月" value="14"></el-option>
+                  <el-option label="x15月" value="15"></el-option>
+                  <el-option label="x16月" value="16"></el-option>
+                  <el-option label="x17月" value="17"></el-option> 
+                  <el-option label="x18月" value="18"></el-option>
+                  <el-option label="x19月" value="19"></el-option>
+                  <el-option label="x20月" value="20"></el-option>
+                  <el-option label="x21月" value="21"></el-option>
+                  <el-option label="x22月" value="22"></el-option>
+                  <el-option label="x23月" value="23"></el-option>
+                  <el-option label="x24月" value="24"></el-option>
+                </el-select>
+              </el-col>
             </el-form-item>
             <el-form-item label="工作时间" required>
               <el-col :span="5">
@@ -119,15 +187,20 @@
               </el-col>
               <span style="padding-left: 10px;font-size: 14px;">人</span>
             </el-form-item>
-
+            <el-form-item label="年龄范围" required>
+              <el-col :span="5">
+                <el-input v-model="ruleForm.age_status" placeholder="最低年龄"></el-input>
+              </el-col>
+              <span class="paddng-10"> </span>
+              <el-col :span="5">
+                <el-input v-model="ruleForm.age_end" placeholder="最高年龄"></el-input>
+              </el-col>
+            </el-form-item>
             <el-form-item label="简历同步至" prop="sync_workmate">
               <span class="desc-title">我的同事 TA将与您一起管理该职位，可以通过平台和邮箱接收简历</span>
               <el-col :span="15">
                 <el-select v-model="ruleForm.sync_workmate" multiple placeholder="请选择" style="width: 100%;">
-                  <el-option label="张三" value="1"></el-option>
-                  <el-option label="李四" value="2"></el-option>
-                  <el-option label="王五" value="3"></el-option>
-                  <el-option label="麻六" value="4"></el-option>
+                  <el-option :label="item.staff_name" :value="item.staff_name" v-for="(item,index) in staffList" :key="index"></el-option>
                 </el-select>
               </el-col>
               
@@ -170,6 +243,7 @@ export default {
   data() {
     return {
       position_id: '',
+      staffList:[], // 员工列表
       ruleForm: {
         position_name: '', // 职位名称
         work_type: '', // 工作性质
@@ -182,7 +256,10 @@ export default {
         work_address:'', // 工作地址
         xz_status:'',
         xz_end:'',
+        month_num:'12',
         work_times:'',
+        age_status:'', // 年龄范围
+        age_end:'',
         supplementary_information: [], // 补充信息
         sync_workmate:'', // 同事
         need_nums:'', // 招聘人数
@@ -194,6 +271,7 @@ export default {
         delivery: false,
         type: [],
         selectedOptions: [], // 选中的地址
+        
       },
       options: pcas,  // 地址数据
       rules: {  // 必填提示
@@ -222,10 +300,19 @@ export default {
           { required: true, message: '请选择工作时间', trigger: 'change' }
         ],
         xz_status: [
-          { required: true, message: '请填写薪资范围', trigger: 'blur' }
+          { required: true, message: '请选择薪资范围', trigger: 'change' }
         ],
         xz_end: [
-          { required: true, message: '请填写薪资范围', trigger: 'blur' }
+          { required: true, message: '请选择薪资范围', trigger: 'change' }
+        ],
+        age_status: [
+          { required: true, message: '最低年龄要求', trigger: 'blur' }
+        ],
+        age_end: [
+          { required: true, message: '最高年龄要求', trigger: 'blur' }
+        ],
+        month_num: [
+          { required: true, message: '请选择', trigger: 'change' }
         ],
         need_nums: [
           { required: true, message: '请填写招聘人数', trigger: 'blur' }
@@ -254,6 +341,8 @@ export default {
   },
   mounted(){
     // console.log(this.$root.positionItems);
+     // 获取员工列表
+     this.getStaffList();
   },
   created(){
     if(this.$route.query.id){
@@ -263,6 +352,19 @@ export default {
 
   },
   methods:{
+    // 获取员工列表
+    getStaffList(){
+      let that = this;
+      that.$axios.post('/api/staff/index',{}).then( res =>{
+        if(res.code == 0){
+          that.staffList = res.data
+        }else{
+          that.$message.error({
+            message:res.data.msg
+          })
+        }
+      })
+    },
     // 获取详情
     getDetails(i){
       let that = this;
@@ -283,7 +385,7 @@ export default {
           ruleForm.sync_workmate = res.data.sync_workmate.split(',');
           ruleForm.resume_demand = res.data.resume_demand.split(',');
           ruleForm.work_type = res.data.work_type+'';
-
+          ruleForm.month_num = res.data.month_num?res.data.month_num:'12';
           this.ruleForm = ruleForm;
         }else{
           that.$message.error({
@@ -315,6 +417,7 @@ export default {
         work_address:'', // 工作地址
         xz_status:'',
         xz_end:'',
+        month_num:'12',
         work_times:'', // 工作要求
         supplementary_information: [], // 补充信息
         sync_workmate:'', // 同事
@@ -441,6 +544,12 @@ export default {
       }
       /deep/ .el-input__icon{
         line-height: 32px;
+      }
+      .xzfw-box{
+        margin-left: 12px;
+        &:nth-of-type(1){
+          margin-left: 0;
+        }
       }
     }
   }

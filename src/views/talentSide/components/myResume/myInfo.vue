@@ -248,9 +248,11 @@ export default {
           that.$message.success('修改成功！');
           if(p.avatar){
             console.log(this.data.avatar)
-            // localStorage.setItem('realname', data.user.real_name); // 用户名缓存
+            localStorage.setItem('name', data.user.real_name); // 用户名缓存
             localStorage.setItem('realAvatar', this.data.avatar); // 用户头像缓存
             this.$store.dispatch('user/set_realAvatar', this.data.avatar);
+            this.$store.dispatch('user/SET_NAME', data.user.real_name);
+
           }
           return f()
         }

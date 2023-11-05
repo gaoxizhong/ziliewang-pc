@@ -39,7 +39,7 @@
         </div> -->
         <div class="items-box">
           <div class="title"><span>* </span>姓名</div>
-          <el-input v-model="infoData.real_name" placeholder="姓名"></el-input>
+          <el-input v-model="infoData.staff_name" placeholder="姓名"></el-input>
           <!-- <span class="sub-span">该头像将对求职者可见</span> -->
         </div>
         <!-- <div class="items-box">
@@ -60,7 +60,7 @@
             <img src="../../../assets/image/bossSide/icon-ph.png" alt="" />
             <div class="item-info-box">
               <div class="title">手机号</div>
-              <div class="sub-title">{{ infoData.real_phone }}</div>
+              <div class="sub-title">{{ infoData.phone }}</div>
             </div>
           </div>
           <!-- <div class="right">换绑</div> -->
@@ -70,7 +70,7 @@
             <img src="../../../assets/image/bossSide/icon-sfz.png" alt="" />
             <div class="item-info-box">
               <div class="title">已通过实名认证</div>
-              <div class="sub-title"><span>姓名：{{ infoData.real_name }}</span><span style="padding-left: 10px;">身份证：{{ infoData.id_card }}</span></div>
+              <div class="sub-title"><span>姓名：{{ infoData.staff_name }}</span><span style="padding-left: 10px;">身份证：{{ infoData.id_card }}</span></div>
             </div>
           </div>
           <!-- <div class="right">换绑</div> -->
@@ -109,7 +109,7 @@
           <div class="left">
             <img src="../../../assets/image/bossSide/icon-zjhm.png" alt="" />
             <div class="item-info-box">
-              <div class="title">设置主叫号码 {{ infoData.real_phone }}</div>
+              <div class="title">设置主叫号码 {{ infoData.phone }}</div>
               <div class="sub-title">仅可使用主叫号码联系人才</div>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default {
     return {
       tabStatus: 1,
       infoData:{
-        nickname:"Lucy",
+        staff_name:"Lucy",
         job: "",
         avatar:'',
       },
@@ -147,7 +147,7 @@ export default {
     //  获取信息
     getUserInfo(){
       let that = this;
-      that.$axios.post('/api/company/profile',{}).then( res =>{
+      that.$axios.post('/api/staff/profile',{}).then( res =>{
         console.log(res)
         if(res.code == 0){
           that.infoData = res.data;
@@ -160,12 +160,16 @@ export default {
       // let p = Object.assign({},data);
       let p = {
         avatar: that.upload_files_path,
-        nickname: that.infoData.real_name,
+        staff_name: that.infoData.staff_name,
       }
-      that.$axios.post('/api/company/save',p).then( res =>{
+      that.$axios.post('/api/staff/save',p).then( res =>{
         console.log(res)
         if(res.code == 0){
           that.$message.success('修改成功！');
+          localStorage.setItem('staff_name',p.staff_name); // 用户名缓存
+          localStorage.setItem('staffAvatar', this.infoData.avatar); // 用户头像缓存
+          this.$store.dispatch('user/SET_staffName', p.staff_name); // vuex
+          this.$store.dispatch('user/SET_staffAvatar', this.infoData.avatar); // vuex);
         }
       })
     },

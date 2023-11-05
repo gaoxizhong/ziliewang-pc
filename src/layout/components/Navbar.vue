@@ -39,11 +39,11 @@
               个人中心
             </el-dropdown-item>
           </router-link>
-          <router-link to="/talentSide">
+          <!-- <router-link to="/talentSide">
             <el-dropdown-item>
               人才端
             </el-dropdown-item>
-          </router-link>
+          </router-link> -->
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>
@@ -69,17 +69,24 @@ export default {
       'sidebar',
     ]),
     name() {
-      return localStorage.getItem('realname')
+      return this.$store.state.user.staffName
     },
+
     avatar() {
-      return localStorage.getItem('realAvatar')
+      return this.$store.state.user.staffAvatar
     },
   },
   watch:{
-    avatar() {
-      console.log('realAvatar')
-      return localStorage.getItem('realAvatar')
-    }
+    '$store.state.staffAvatar'(newVal){
+      console.log('staffAvatar')
+        this.avatar = newVal;
+        this.$forceUpdate();// 更新数据
+    },
+    '$store.state.staffName'(newVal){
+      console.log('staffName')
+        this.name = newVal;
+        this.$forceUpdate();// 更新数据
+    },
   },
   methods: {
     toggleSideBar() {
@@ -101,13 +108,15 @@ export default {
      // 获取个人信息
    getUserProfile(){
       let that = this;
+      this.$router.push('/corporateHome')
+      return
       that.$axios.post('/api/user/profile',{}).then(res =>{
         if(res.code == 0){
           let role = res.data.basic_info.role;
           if(role == 1){
             this.$router.push('/enterpriseInfoRequest')
           }else{
-            this.$router.push('/corporateHome')
+            
           }
         }
       }).catch(e =>{

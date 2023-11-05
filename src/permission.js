@@ -8,16 +8,16 @@ import getPageTitle from '@/utils/get-page-title'
 
 import { bossSideRoutes } from '@/utils/bossSideRoutes' // 企业端路由
 import { talentSideRoutes } from '@/utils/talentSideRoutes' // 人才端路由
-const role = localStorage.getItem('role'); // 类型 企业、人才
+const tag = localStorage.getItem('tag'); // 类型 企业、人才
 
-console.log(bossSideRoutes)
-console.log(talentSideRoutes)
-console.log(role)
+// console.log(bossSideRoutes)
+// console.log(talentSideRoutes)
+// console.log(tag)
 
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login','/bossSignIn'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -28,7 +28,6 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page

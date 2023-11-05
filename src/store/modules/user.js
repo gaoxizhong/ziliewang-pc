@@ -4,9 +4,10 @@ import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
-  name: '',
-  avatar: '',
-  realAvatar: localStorage.getItem('realAvatar') || ''
+  name: localStorage.getItem('name') || 'text',
+  staffName: localStorage.getItem('staff_name') || 'text', // 企业的个人姓名
+  staffAvatar: localStorage.getItem('staffAvatar') || '', // 企业的个人头像
+  realAvatar: localStorage.getItem('realAvatar') || '' // 用户端的个人头像
 }
 
 const mutations = {
@@ -16,8 +17,11 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  SET_staffName: (state, staffName) => {
+    state.staffName = staffName
+  },
+  SET_staffAvatar: (state, staffAvatar) => {
+    state.staffAvatar = staffAvatar
   },
   SET_realAvatar: (state, realAvatar) => {
     state.realAvatar = realAvatar
@@ -54,8 +58,6 @@ const actions = {
 
         const { name, avatar } = data
 
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -88,7 +90,15 @@ const actions = {
   set_realAvatar({ commit }, data) {
     commit('SET_realAvatar', data);
   },
-
+  SET_NAME({ commit }, data) {
+    commit('SET_NAME', data);
+  },
+  SET_staffName({ commit }, data) {
+    commit('SET_staffName', data);
+  },
+  SET_staffAvatar({ commit }, data) {
+    commit('SET_staffAvatar', data);
+  },
 }
 
 export default {

@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     name() {
-      return localStorage.getItem('realname')
+      return this.$store.state.user.name
     },
 
     avatar() {
@@ -86,8 +86,13 @@ export default {
   watch:{
     '$store.state.realAvatar'(newVal){
       console.log('realAvatar')
-        this.avatar = newVal;
-        this.$forceUpdate();// 更新数据
+      this.avatar = newVal;
+      this.$forceUpdate();// 更新数据
+    },
+    '$store.state.name'(newVal){
+      console.log('name')
+      this.name = newVal;
+      this.$forceUpdate();// 更新数据
     },
   },
   mounted() {

@@ -114,8 +114,8 @@
           <div class="my-goldCoin-box">
             <div class="goldCoin-title">猎米</div>
             <div class="goldCoin-num-btn-box">
-              <span>236</span>
-              <button class="goldCoin-btn">购买</button>
+              <span>{{ userInfo.zlw_m_num }}</span>
+              <button class="goldCoin-btn" @click="goToTopUpBuy">购买</button>
             </div>
           </div>
         </div>
@@ -228,16 +228,33 @@ export default {
       },
       dialogVisible:false,
       infoData:{},
+      userInfo:{},
     }
   },
   computed: {
     
   },
   created(){
+    //  获取信息
+    this.getUserInfo();
     this.getCompanyCount();
     this.getSysMsgList();
   },
   methods: {
+    //  获取信息
+    getUserInfo(){
+      let that = this;
+      that.$axios.post('/api/staff/profile',{}).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.userInfo = res.data;
+        }
+      })
+    }, 
+    // 点击购买
+    goToTopUpBuy(){
+      this.$router.push('/topUpBuy');
+    },
     handleClose(done) {
       this.dialogVisible = false;
     },
@@ -257,23 +274,7 @@ export default {
     // 点击发布职位
     goToPostJob(){
       let that = this;
-      that.$axios.post('/api/user/profile',{}).then(res =>{
-        if(res.code == 0){
-          if(res.data.basic_info.role == 1){
-            that.$message.error({
-              message: "请先去注册企业信息后在发布职位！"
-            })
-            setTimeout( ()=>{
-              that.$router.push('/enterpriseInfoRequest')
-            },1500)
-          }else{
-            that.$router.push({ path:'/postJob' })
-          }
-        }
-      }).catch(e =>{
-        console.log(e)
-      })
-  
+      that.$router.push({ path:'/postJob' })
     },
     searchEnterFun(e){
       console.log(e)

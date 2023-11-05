@@ -40,11 +40,15 @@ export const constantRoutes = [
   },
 
   {
+    path: '/bossSignIn',
+    component: () => import('@/views/bossSignIn/index'),
+    hidden: true
+  },
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',  // 企业端
     component: Layout,
@@ -261,7 +265,20 @@ export const constantRoutes = [
       },
     ]
   },
-  
+  {
+    path:'/topUpBuy',
+    component: Layout,
+    redirect: 'topUpBuy',
+    hidden: true,
+    children: [
+      {
+        path: '/topUpBuy',
+        name: 'assist',
+        component: () => import('@/views/bossSide/topUpBuy/index'),
+        meta: { title: '充值' },
+      },
+    ]
+  },
   //-------------------- 人才端
   {
     path: "/talentSide",

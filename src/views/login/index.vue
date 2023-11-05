@@ -5,18 +5,18 @@
         <img src="../../assets/image/log-2.png" alt="" class="logo"/>
         <div class="select-box">
           <div class="show-select-box">
-            <span class="title">{{ role == 1? '我是求职者' : '我是招聘方' }}</span>
+            <span class="title">{{ tag == 'user'? '我是求职者' : '我是招聘方' }}</span>
             <img src="../../assets/image/Swap.png" alt="" class=""/>
             <span class="qh" @click="clickCRole">切换</span>
           </div>
           <div class="select-items-box" v-if="c_role">
-            <p :class="role == 1?'hover':'' " @click="clickRole(1)">我是求职者</p>
-            <p :class="role == 2?'hover':'' " @click="clickRole(2)">我是招聘方</p>
+            <p :class="tag == 'user'?'hover':'' " @click="clickRole('user')">我是求职者</p>
+            <p :class="tag == 'company'?'hover':'' " @click="clickRole('company')">我是招聘方</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="home-container" :style="login_bgurl" >
+    <div class="home-container" :style="tag == 'user'? login_bgurl_1 : login_bgurl_2" >
       <div class="home-container-div">
 
         <div class="form-container-box">
@@ -144,8 +144,9 @@ export default {
   data() {
     return {
       c_role: false,
-      role: 1,
-      login_bgurl:{},
+      tag: 'user',
+      login_bgurl_1:{},
+      login_bgurl_2:{},
       sign_login: 'login', // sign、注册； login、登录
       login_way: 2, // 登录方式 1、快捷登录 2、密码登录
       login_user: { // 登录信息
@@ -193,7 +194,8 @@ export default {
     },
   },
   created() {
-    this.login_bgurl = this.$root.login_bgurl;
+    this.login_bgurl_1 = this.$root.login_bgurl_1;
+    this.login_bgurl_2 = this.$root.login_bgurl_2;
     this.$nextTick(() => {
       this.preUrl = !!this.$route.query.preUrl ? this.$route.query.preUrl : undefined
     })
@@ -205,9 +207,12 @@ export default {
     },  
     // 切换角色
     clickRole(n){
-      this.role = n;
-      localStorage.setItem('role',n);
+      this.tag = n;
+      localStorage.setItem('tag',n);
       this.c_role = false;
+      this.sign_login = 'login'; // sign、注册； login、登录
+      this.login_way = 2; // 登录方式 1、快捷登录 2、密码登录
+      
     },
     // 点击注册登录框tab
     clickTab(n){
@@ -217,7 +222,11 @@ export default {
     },
     // 点击用户注册
     clickUserSign(){
-      this.sign_login = 'sign';
+      if(this.tag == 'company'){
+        this.$router.push('/bossSignIn')
+      }else{
+       this.sign_login = 'sign';
+      }
     }, 
     clickUserLogin(){
       this.sign_login = 'login';
@@ -256,7 +265,8 @@ export default {
         return
       }
       let p = {
-        phone:login_user.phone 
+        phone:login_user.phone,
+        tag: that.tag 
       }
       if(login_way == 1){
         p.code = login_user.code,
@@ -267,28 +277,32 @@ export default {
       }
       that.$axios.post('/api/login',p).then( res =>{
         let data = res.data;
-        // that.$store.commit("SET_TOKEN", res.data.token);  // vuex
         setToken(data.token);   // 缓存
-        localStorage.setItem('realname', data.user.real_name); // 用户名缓存
-        localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
-        localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
-        localStorage.setItem('role', data.user.role); // 用户身份 1、人才端 2、企业端缓存
+        localStorage.setItem('tag', data.tag); // 用户身份 user、人才端 company、企业端缓存
+        if(data.tag == 'user'){
+          // 求职者
+          localStorage.setItem('name', data.user.real_name); // 用户名缓存
+          localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
+          localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
+          this.$store.dispatch('user/set_realAvatar', data.user.avatar); // vuex
+          this.$store.dispatch('user/SET_NAME', data.user.real_name);
 
-        setTimeout(() => {
-          // 此时要判断/login后面的参数redirect，若无参数，进入主页；
-          // 若有参数则参数为未有权限的那个路由，跳转到那个路由
-          if(data.user.role == 1){
-            // 求职者
-            // this.$router.push(this.redirect || '/talentSide');
+          setTimeout(() => {
             this.$router.push('/talentSide');
-          }
-          if(data.user.role == 2){
-            // 企业端
-            // this.$router.push(this.redirect || '/dashboard');
+          }, 1000);
+        }
+        if(data.tag == 'company'){
+          // 企业端
+          localStorage.setItem('staff_name', data.user.staff_name); // 用户名缓存
+          localStorage.setItem('staffAvatar', data.user.avatar); // 用户头像缓存
+          localStorage.setItem('realUid', data.user.id); // 用户uid缓存
+          this.$store.dispatch('user/SET_staffName', data.user.avatar); // vuex
+          this.$store.dispatch('user/SET_staffAvatar', data.user.staff_name); // vuex
+          setTimeout(() => {
             this.$router.push('/dashboard');
-
-          }
-        }, 1000);
+          }, 1000);
+        }
+        
       }).catch( e=>{
         console.log(e)
       })
@@ -351,7 +365,7 @@ export default {
         return
       }
       let p = {
-        role: that.role,
+        tag: that.tag,
         name: sign_user.name,
         id_card: sign_user.id_card,
         email: sign_user.email,
@@ -414,6 +428,7 @@ export default {
         code: change_password.code,
         password: change_password.password,
         password_tow: change_password.password_tow,
+        tag: that.tag 
 
       };
 
@@ -487,6 +502,8 @@ export default {
       let p ={
         phone,
         event,
+        tag: that.tag 
+
       }
       that.$axios.post('/api/sms/send',p).then(res =>{
         if(res.code == 0){ 

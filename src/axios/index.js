@@ -21,7 +21,7 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   config => {
-    if (loadingCount == 0) {
+    if (loadingCount == 0 && !config.data.order_no) {
       loadingInstance = Loading.service({
         lock: false,
         customClass: 'z-index999',

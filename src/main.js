@@ -46,8 +46,13 @@ new Vue({
   store,
   data: function(){ // 全局样式
     return {
-      login_bgurl:{
+      login_bgurl_1:{
         backgroundImage:'url(' + require('./assets/image/demo2.png') + ')',
+        backgroundRepeat:'no-repeat',
+        backgroundSize: '100% 100%',
+      },
+      login_bgurl_2:{
+        backgroundImage:'url(' + require('./assets/image/bg_2.jpg') + ')',
         backgroundRepeat:'no-repeat',
         backgroundSize: '100% 100%',
       },
