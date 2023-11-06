@@ -154,6 +154,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/staffManagement',
+    component: Layout,
+    redirect: '/staffManagement',
+    hidden: localStorage.getItem('role_id') == 1?false:true,
+    children: [
+      {
+        path: '/staffManagement',
+        name: 'staffManagement',
+        component: () => import('@/views/bossSide/staffManagement/index'),
+        meta: { title: '员工管理', icon: 'dashboard' },
+      },
+    ],
+  },
+  {
     path:'/postJob',
     component: Layout,
     redirect: '/postJob',
@@ -410,6 +424,7 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
+
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
@@ -417,6 +432,28 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
+// 在某个条件满足时动态加载路由
+// const newRoutes = {
+//     path: '/staffManagement',
+//     component: Layout,
+//     redirect: '/staffManagement',
+//     children: [
+//       {
+//         path: '/staffManagement',
+//         name: 'staffManagement',
+//         component: () => import('@/views/bossSide/staffManagement/index'),
+//         meta: { title: '员工管理', icon: 'dashboard' },
+//       },
+//     ],
+//   }
+// let role_id = localStorage.getItem('role_id');
+// console.log(role_id)
+// if(role_id == 1){
+//   console.log(newRoutes)
+//   router.options.routes.push(newRoutes)
+//   console.log(router)
+
+// }
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {

@@ -296,8 +296,10 @@ export default {
           localStorage.setItem('staff_name', data.user.staff_name); // 用户名缓存
           localStorage.setItem('staffAvatar', data.user.avatar); // 用户头像缓存
           localStorage.setItem('realUid', data.user.id); // 用户uid缓存
-          this.$store.dispatch('user/SET_staffName', data.user.avatar); // vuex
-          this.$store.dispatch('user/SET_staffAvatar', data.user.staff_name); // vuex
+          localStorage.setItem('role_id', data.user.role_id); // 用户企业角色
+          this.$store.dispatch('user/SET_staffName', data.user.staff_name); // vuex
+          this.$store.dispatch('user/SET_staffAvatar', data.user.avatar); // vuex
+
           setTimeout(() => {
             this.$router.push('/dashboard');
           }, 1000);
