@@ -6,7 +6,10 @@
         <div class="titleinfo-left-box">
           <div class="title-box">
             <div class="title-text">{{ infoData.position_name }}- <span v-if="infoData.company">{{infoData.company.company_name }}</span></div>
-            <div class="pay-box">{{ infoData.salary }}K</div>
+            <div class="pay-box">
+              {{ infoData.salary }}K 
+              <span style="padding-left:10px;" v-if="infoData.months != 12 && infoData.months">x {{ infoData.months }}薪</span>
+            </div>
           </div>
           <div class="title-tag">
             <span>{{ infoData.work_address }}</span>

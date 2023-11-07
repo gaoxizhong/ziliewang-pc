@@ -33,7 +33,7 @@
           <el-table-column prop="company_name" label="公司"></el-table-column>
           <el-table-column label="岗位">
             <template slot-scope="scope">
-              <span>{{ scope.row.role_deac?scope.row.role_deac:'暂无' }}</span>
+              <span>{{ scope.row.role_desc?scope.row.role_desc:'暂无' }}</span>
               <!-- <span class="blue">导出</span> -->
             </template>
           </el-table-column>

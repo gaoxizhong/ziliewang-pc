@@ -139,7 +139,7 @@
                 </el-select>
               </el-col>
               <el-col :span="5" class="xzfw-box">
-                <el-select v-model="ruleForm.month_num" placeholder="请选择">
+                <el-select v-model="ruleForm.months" placeholder="请选择">
                   <el-option label="x12月" value="12"></el-option>
                   <el-option label="x13月" value="13"></el-option>
                   <el-option label="x14月" value="14"></el-option>
@@ -255,7 +255,7 @@ export default {
         work_address:'', // 工作地址
         xz_status:'',
         xz_end:'',
-        month_num:'12',
+        months:'12',
         work_times:'',
         age_status:'', // 年龄范围
         age_end:'',
@@ -310,7 +310,7 @@ export default {
         age_end: [
           { required: true, message: '最高年龄要求', trigger: 'blur' }
         ],
-        month_num: [
+        months: [
           { required: true, message: '请选择', trigger: 'change' }
         ],
         need_nums: [
@@ -376,15 +376,18 @@ export default {
         if(res.code == 0){
           let ruleForm = JSON.parse(JSON.stringify(res.data));
           let salary = res.data.salary.split('-');
+          let limit_age = res.data.limit_age.split('-');
           ruleForm.selectedOptions = res.data.work_address.split('/');
           ruleForm.xz_status = salary[0];
           ruleForm.xz_end = salary[1];
+          ruleForm.age_status = limit_age[0];
+          ruleForm.age_end = limit_age[1];
           ruleForm.job_benefits = res.data.job_benefits.split(',');
           ruleForm.supplementary_information = res.data.supplementary_information.split(',');
           ruleForm.sync_workmate = res.data.sync_workmate.split(',');
           ruleForm.resume_demand = res.data.resume_demand.split(',');
           ruleForm.work_type = res.data.work_type+'';
-          ruleForm.month_num = res.data.month_num?res.data.month_num:'12';
+          ruleForm.months = res.data.months?res.data.months:'12';
           this.ruleForm = ruleForm;
         }else{
           that.$message.error({
@@ -416,7 +419,9 @@ export default {
         work_address:'', // 工作地址
         xz_status:'',
         xz_end:'',
-        month_num:'12',
+        age_status:'',
+        age_end:'',
+        months:'12',
         work_times:'', // 工作要求
         supplementary_information: [], // 补充信息
         sync_workmate:'', // 同事
@@ -443,8 +448,10 @@ export default {
         industry_requirement: ruleForm.industry_requirement,
         educational_experience:ruleForm.educational_experience,
         job_preference: ruleForm.job_preference,
+        months: ruleForm.months,
         work_address: ruleForm.selectedOptions.join('/'),
         salary: ruleForm.xz_status + '-' + ruleForm.xz_end,
+        limit_age: ruleForm.age_status + '-' + ruleForm.age_end,
         job_benefits: ruleForm.job_benefits.join(','),
         need_nums: ruleForm.need_nums,
         supplementary_information: ruleForm.supplementary_information.join(','),
