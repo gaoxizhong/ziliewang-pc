@@ -188,11 +188,10 @@
               <span style="padding-left: 10px;font-size: 14px;">人</span>
             </el-form-item>
             <el-form-item label="年龄范围" required>
-              <el-col :span="5">
+              <el-col :span="5" class="xzfw-box">
                 <el-input v-model="ruleForm.age_status" placeholder="最低年龄"></el-input>
               </el-col>
-              <span class="paddng-10"> </span>
-              <el-col :span="5">
+              <el-col :span="5" class="xzfw-box">
                 <el-input v-model="ruleForm.age_end" placeholder="最高年龄"></el-input>
               </el-col>
             </el-form-item>
