@@ -38,9 +38,9 @@
             <!-- <router-link to="/">
               <el-dropdown-item>企业端</el-dropdown-item>
             </router-link> -->
-            <el-dropdown-item divided @click.native="getUserProfile">
+            <!-- <el-dropdown-item divided @click.native="getUserProfile">
               <span style="display: block">企业端</span>
-            </el-dropdown-item>
+            </el-dropdown-item> -->
             <router-link to="/talentSideSettings">
               <el-dropdown-item>设置</el-dropdown-item>
             </router-link>

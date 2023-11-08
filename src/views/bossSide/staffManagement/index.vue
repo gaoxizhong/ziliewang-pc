@@ -63,6 +63,9 @@
           <el-form-item label="电话" prop="phone">
             <el-input v-model="addDialog.form.phone" />
           </el-form-item>
+          <el-form-item label="密码" prop="phone">
+            <el-input v-model="addDialog.form.password" type="password" name="password" placeholder="密码：8-16位字母、数字、字符，不支持空格" show-password></el-input>
+          </el-form-item>
           <el-form-item label="岗位" prop="role_id">
             <el-select
               v-model="addDialog.form.role_id"
@@ -132,6 +135,7 @@ export default {
       addRules: {
         staff_name : [{ required: true, message: '填写姓名', trigger: 'blur' }],
         phone: [{ required: true, message: '填写电话', trigger: 'blur' }],
+        password: [{ required: true, message: '填写密码', trigger: 'blur' }],
       }
     }
   },
@@ -174,6 +178,7 @@ export default {
       this.addDialog.form = {
         staff_name: row.staff_name,
         phone: row.phone,
+        password: row.password,
         role_id: row.role_id,
       }
       this.addDialog.visible = true
@@ -237,6 +242,10 @@ export default {
     background: $g_bg;
     border-color: $g_bg;
   }
+  
 }
+.centent-dialog /deep/ .el-form-item--mini.el-form-item, .centent-dialog /deep/ .el-form-item--small.el-form-item{
+    margin-bottom: 0;
+  }
 
 </style>

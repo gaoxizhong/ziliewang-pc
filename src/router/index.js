@@ -224,20 +224,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path:'/enterpriseInfoRequest',
-    component: Layout,
-    redirect: '/enterpriseInfoRequest',
-    hidden: true,
-    children: [
-      {
-        path: '/enterpriseInfoRequest',
-        name: 'enterpriseInfoRequest',
-        component: () => import('@/views/bossSide/corporateHome/enterpriseInfoRequest.vue'),
-        meta: { title: '企业申请' },
-      },
-    ]
-  },
-  {
     path:'/individualCenter',
     component: Layout,
     redirect: '/individualCenter',
@@ -408,16 +394,7 @@ export const constantRoutes = [
           title: '沟通',
           // keepAlive: true,
         },
-      },
-      {
-        path: 'enterpriseInfoRequest',
-        name: 'enterpriseInfoRequest',
-        component: () => import('@/views/bossSide/corporateHome/enterpriseInfoRequest.vue'),
-        meta: { 
-          title: '企业申请',
-          // keepAlive: true,
-        },
-      },
+      }
     ]
   },
   // 404 page must be placed at the end !!!

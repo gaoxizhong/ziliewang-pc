@@ -46,9 +46,9 @@
           </div>
         </div>
 
-        <div class="left-box user-b-box">
+        <!-- <div class="left-box user-b-box">
           <div @click="logout">退出登录</div>
-        </div>
+        </div> -->
       </div>
       <!-- 左侧模块 结束 -->
       <!-- 右侧模块 开始 -->

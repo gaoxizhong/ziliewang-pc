@@ -5,6 +5,40 @@
     <div class="m-box">
       <div class="title">企业信息</div>
       <div class="info-box">
+
+        <div class="items-box">
+          <div class="title"><span>* </span>营业执照</div>
+          <div class="z_file fl">
+            <el-upload class="avatar-uploader" 
+              drag ref="upload" 
+              action= "none"
+              :show-file-list="false"
+              :before-upload="beforeAvatarUpload"
+              :data="uploadData"
+              :http-request="up_business_license_img" 
+              >
+              <img :src="business_license?business_license:require('../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
+            </el-upload>
+          </div>
+        </div>
+
+        <div class="items-box">
+          <div class="title"><span>* </span>企业logo</div>
+          <div class="z_file fl">
+            <el-upload class="avatar-uploader" 
+              drag ref="upload" 
+              action= "none"
+              :show-file-list="false"
+              :before-upload="beforeAvatarUpload"
+              :data="uploadData"
+              :http-request="up_logo_img" 
+              >
+              <img :src="logo?logo:require('../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
+            </el-upload>
+          </div>
+        </div>
+
+        
         <div class="items-box">
           <div class="title"><span>* </span>公司名称</div>
           <el-input v-model="company_name" placeholder="公司名称"></el-input>
@@ -66,39 +100,8 @@
             </el-option>
           </el-select>
         </div>
-        <div class="items-box">
-          <div class="title"><span>* </span>企业logo</div>
-          <div class="z_file fl">
-            <el-upload class="avatar-uploader" 
-              drag ref="upload" 
-              action= "none"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-              :data="uploadData"
-              :http-request="up_logo_img" 
-              >
-              <img :src="logo?logo:require('../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
-            </el-upload>
-          </div>
-        </div>
 
-        <div class="items-box">
-          <div class="title"><span>* </span>营业执照</div>
-          <div class="z_file fl">
-            <el-upload class="avatar-uploader" 
-              drag ref="upload" 
-              action= "none"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload"
-              :data="uploadData"
-              :http-request="up_business_license_img" 
-              >
-              <img :src="business_license?business_license:require('../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
-            </el-upload>
-          </div>
-        </div>
-
-        <div class="title">个人信息</div>
+        <div class="title" style="margin-top: 16px;">个人信息</div>
         <div class="info-box">
           <div class="items-box">
             <div class="title"><span>* </span>姓名</div>
@@ -128,7 +131,7 @@ export default {
   data(){
     return {
       industryList: [],
-      company_name: '', // 公司名称
+      company_name: '',// 公司名称
       legal_person: '', //法人
       company_register_address: '', // 注册地址
       organization_code: '',  //组织代码
@@ -216,10 +219,31 @@ export default {
         console.log(res)
         this.business_license = res.data.upload_files;
         this.$refs['upload'].clearFiles();
+        this.getInfoData(res.data.upload_files);
+
        
       }).catch( e=>{
         console.log('erro')
         this.$refs['upload'].clearFiles()
+      })
+    },
+    getInfoData(url){
+      let that = this;
+      that.$axios.post('/api/company/check-business-license',{
+        business_license: url
+      }).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.company_name= res.data.company_name; // 公司名称
+          that.legal_person= res.data.legal_person; //法人
+          that.company_register_address= res.data.company_register_address; // 注册地址
+          that.organization_code= res.data.organization_code;  //组织代码
+          
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
       })
     },
     beforeAvatarUpload(file) {
