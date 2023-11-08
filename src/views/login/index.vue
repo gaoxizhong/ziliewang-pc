@@ -50,7 +50,7 @@
               </div>
               <div class="login-check-box">
                 <el-checkbox v-model="login_user.loginChecked"></el-checkbox>
-                <div class="login-check-text">已阅读并同意<span>《用户协议》</span>和<span>《隐私政策》</span></div>
+                <div class="login-check-text">已阅读并同意<span @click.stop="clickUserAgreement">《用户协议》</span>和<span @click.stop="clickPrivacyPolicy">《隐私政策》</span></div>
               </div>
               <button type="submit" class="login-btn">登录</button>
             </form>
@@ -125,22 +125,32 @@
             <button type="button" class="login-btn-qx" @click="clickUserLogin">取消</button>
           </div>
           <!-- 修改密码 结束 -->
-
-
-
         </div>
       </div>
-
     </div>
 
+    <!-- 协议弹窗 -->
+    <!-- 用户协议弹窗 -->
+    <div>
+      <userAgreement ref="userAgreement"/>
+    </div>
+    <!-- 隐私政策弹窗 -->
+    <div>
+      <privacyPolicy ref="privacyPolicy"/>
+    </div>
   </div>
 </template>
 
 <script>
 import { getToken, setToken, removeToken } from '@/utils/auth';
-
+import userAgreement from "../../components/userAgreement.vue";
+import privacyPolicy from "../../components/privacyPolicy.vue";
 export default {
   name: 'Login',
+  components:{
+    userAgreement,
+    privacyPolicy
+  },
   data() {
     return {
       c_role: false,
@@ -537,7 +547,16 @@ export default {
 
       })
     },
-  
+
+    // 点击用户协议
+    clickUserAgreement(){
+      this.$refs.userAgreement._data.dialogVisible = true;
+    },
+    // 点击隐私协议
+    clickPrivacyPolicy(){
+      this.$refs.privacyPolicy._data.dialogVisible = true;
+
+    },
   },
 };
 </script>
@@ -716,6 +735,7 @@ $cursor: #000;
     margin-left: 4px;
     span{
       color: $g_color;
+      cursor: pointer;
     }
   }
   /deep/ .el-checkbox__input.is-checked .el-checkbox__inner{
