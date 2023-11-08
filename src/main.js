@@ -17,6 +17,16 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import axios from '@/axios/index';
 
+// 引入视频直播
+import VueVideoPlayer from 'vue-video-player'
+
+// 引入视频直播样式
+import 'video.js/dist/video-js.css'
+import 'vue-video-player/src/custom-theme.css'
+
+// 使用视频直播组件
+Vue.use(VueVideoPlayer)
+
 Vue.prototype.$axios = axios;
 
 /**
