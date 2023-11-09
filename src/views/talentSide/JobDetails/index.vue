@@ -50,12 +50,13 @@
             <div class="boss-info-left">
               <div class="img-box"><img src="../../../assets/image/img-user.jpg" alt="" /></div>
               <div class="info-text">
-                <div class="info-text-1"><span class="name">{{ infoData.publish_name }}</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
+                <div class="info-text-1"><span class="name">{{ infoData.sync_workmate }}</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
                 <div class="info-text-2"><span>招聘专员·</span><span v-if="infoData.company">{{ infoData.company.company_name }}</span></div>
               </div>
             </div>
             <div class="boss-info-btn">
               <el-button class="chat" @click="clickChat">聊一聊</el-button>
+              <el-button class="chat" @click="clickMobile(infoData)">打电话</el-button>
             </div>
           </div>
           <!-- boss信息 结束 -->
@@ -193,6 +194,31 @@ export default {
       that.$axios.post('/api/user/find-company',p).then( res =>{
         if(res.code == 0){
           that.$router.push('/communication');
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    // 点击打电话
+    clickMobile(i){
+      let that = this;
+      console.log(i)
+      this.$alert(i.company.phone, '电话', {
+        confirmButtonText: '确定',
+      });
+      return
+      let p = {
+        uid: i.company.phone,
+      }
+      that.$axios.post('',p).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          
+          this.$alert(res.data.mobile, '电话', {
+            confirmButtonText: '确定',
+          });
         }else{
           that.$message.error({
             message:res.msg

@@ -1,7 +1,9 @@
 <template>
   <div class="navber-container">
     <div class="navbar">
-      <div class="hospital">自猎网logo</div>
+      <div class="hospital">
+        <img src="../../../assets/image/logo-talentSide.png" alt="">
+      </div>
       <div class="navbar-items-box">
         <el-menu
         :default-active="activeMenu"
