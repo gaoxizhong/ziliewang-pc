@@ -35,8 +35,8 @@
             <p class="items-title">
               {{ item.position_name }} 
               <span class="items-title-span">{{ item.salary }}K 
-                <span class="span-1">/月</span>
-                <span style="padding-left:10px;" v-if="item.months != 12 && item.months">x {{ item.months }}薪</span>
+                <!-- <span class="span-1">/月</span> -->
+                <span v-if="item.months != 12 && item.months">· {{ item.months }}薪</span>
               </span>
             </p>
             <div class="items-tag-box">

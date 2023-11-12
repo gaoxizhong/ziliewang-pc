@@ -259,7 +259,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/myCollect',
-        name: 'assist',
+        name: 'myCollect',
         component: () => import('@/views/bossSide/myCollect/index'),
         meta: { title: '我收藏的' },
       },
@@ -273,7 +273,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/topUpBuy',
-        name: 'assist',
+        name: 'topUpBuy',
         component: () => import('@/views/bossSide/topUpBuy/index'),
         meta: { title: '充值' },
       },

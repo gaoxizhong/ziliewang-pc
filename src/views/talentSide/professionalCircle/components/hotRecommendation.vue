@@ -2,34 +2,17 @@
     <div class="info-right-top">
       <div class="title">热门职位</div>
       <ul>
-        <li>
+        <li v-for="(item,index) in OtherPositionsList" :key="index" @click="clickitems(item)">
           <div class="li-title">
-            <span class="li-text">软件测试/解决方案测试工...</span>
-            <span class="li-xz">25-50K·13薪</span>
+            <span class="li-text">{{ item.position_name }}</span>
+            <span class="li-xz">
+              {{ item.salary }}K
+              <span v-if="item.months != 12 && item.months">·{{ item.months}}薪</span>
+            </span>
           </div>
           <div class="li-bottom-box">
-            <div>华为云</div>
-            <span>宁波</span>
-          </div>
-        </li>
-        <li>
-          <div class="li-title">
-            <span class="li-text">软件测试/解决方案测试工...</span>
-            <span class="li-xz">25-50K·13薪</span>
-          </div>
-          <div class="li-bottom-box">
-            <div>华为云</div>
-            <span>宁波</span>
-          </div>
-        </li>
-        <li>
-          <div class="li-title">
-            <span class="li-text">软件测试/解决方案测试工...</span>
-            <span class="li-xz">25-50K·13薪</span>
-          </div>
-          <div class="li-bottom-box">
-            <div>华为云</div>
-            <span>宁波</span>
+            <div>{{ item.position_type }}</div>
+            <span>{{ item.work_address }}</span>
           </div>
         </li>
       </ul>
@@ -43,17 +26,37 @@ export default {
   },
   data(){
     return{
-
+      OtherPositionsList: [],
     }
   },
   computed: {
     
    
   },
-
+  created(){
+  },
+  mounted(){
+    this.getList();
+  },
   methods: {
-   
-   
+    clickitems(i){
+      this.$router.push({
+        path:'/JobDetails',
+        query:{
+          id: i.id
+        }
+      })
+    },
+    getList(){
+      let that = this;
+      that.$axios.post('/api/profession-circle/hot-recommend-position',{}).then( res =>{
+        if(res.code == 0){
+          that.OtherPositionsList = res.data
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    }
   },
 };
 </script>

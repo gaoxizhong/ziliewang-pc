@@ -1,4 +1,5 @@
 <template>
+  <!-- 个人信息 -->
   <div class="container">
     <div class="container-box" v-if="infoData">
       <div class="container-left-box">

@@ -8,7 +8,7 @@
             <div class="title-text">{{ infoData.position_name }}- <span v-if="infoData.company">{{infoData.company.company_name }}</span></div>
             <div class="pay-box">
               {{ infoData.salary }}K 
-              <span style="padding-left:10px;" v-if="infoData.months != 12 && infoData.months">x {{ infoData.months }}薪</span>
+              <span v-if="infoData.months != 12 && infoData.months">· {{ infoData.months }}薪</span>
             </div>
           </div>
           <div class="title-tag">
@@ -67,7 +67,7 @@
           <!-- 职位介绍 结束 -->
           <!-- 公司简介 开始 -->
           <div class="m-box margin-top-20">
-            <CompanyProfile />
+            <CompanyProfile :infoData="infoData.companyinstroduction"/>
           </div>
           <!-- 公司简介 结束 -->
         </div>
@@ -75,6 +75,11 @@
           <!-- 公司信息 开始 -->
           <div class="m-box">
             <CompanyInfo :infoData="infoData.company"/>
+          </div>
+          <!-- 公司信息 结束 -->
+          <!-- 公司信息 开始 -->
+          <div class="m-box margin-top-20">
+            <OtherPositions :OtherPositionsList="infoData.other_position"/>
           </div>
           <!-- 公司信息 结束 -->
         </div>
@@ -90,17 +95,20 @@
 import JobDescription from "./components/jobDescription";
 import CompanyProfile from "./components/companyProfile";
 import CompanyInfo from "./components/companyInfo"
+import OtherPositions from "./components/otherPositions"
+
 export default {
   name: 'JobDetails',
   components: {
     JobDescription,
     CompanyProfile,
-    CompanyInfo
+    CompanyInfo,
+    OtherPositions
   },
   data(){
     return{
       infoData: {},
-      company:{}
+      company:{},
     }
   },
   created(){

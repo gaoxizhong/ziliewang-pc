@@ -128,7 +128,9 @@
         </div>
       </div>
     </div>
-
+    <!-- 底部 开始  -->
+    <Footer />
+    <!-- 底部 结束  -->
     <!-- 协议弹窗 -->
     <!-- 用户协议弹窗 -->
     <div>
@@ -145,11 +147,14 @@
 import { getToken, setToken, removeToken } from '@/utils/auth';
 import userAgreement from "../../components/userAgreement.vue";
 import privacyPolicy from "../../components/privacyPolicy.vue";
+import Footer from '../../components/footer';
+
 export default {
   name: 'Login',
   components:{
     userAgreement,
-    privacyPolicy
+    privacyPolicy,
+    Footer
   },
   data() {
     return {

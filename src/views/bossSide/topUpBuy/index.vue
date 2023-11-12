@@ -58,7 +58,7 @@
 <script>
   import QRCode from 'qrcode'
   export default {
-    name: 'cost',
+    name: 'topUpBuy',
     data(){
       return{
         uid: window.localStorage.getItem('uid'),

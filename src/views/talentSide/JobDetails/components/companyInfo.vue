@@ -6,9 +6,22 @@
       <img :src="infoData.logo" alt="" class="com-img"/>
       <div class="name-box">
         <div class="com-name">{{ infoData.company_name }}</div>
-        <div class="com-job-num">在招职位<span>135</span>个</div>
+        <div class="com-job-num">在招职位<span>{{ infoData.recruit_position_num }}</span>个</div>
       </div>
-      
+    </div>
+    <div class="info-2-box">
+      <div>
+        <span class="span-t">企业行业:</span>
+        <span class="span-i">{{ infoData.industry_requirement }}/{{ infoData.industry }}</span>
+      </div>
+      <div>
+        <span class="span-t">人数规模:</span>
+        <span class="span-i">{{ infoData.company_scale }}</span>
+      </div>
+      <div>
+        <span class="span-t">职位地址:</span>
+        <span class="span-i">{{ infoData.company_register_address }}</span>
+      </div>
     </div>
   </div>  
 </template>
@@ -38,7 +51,7 @@ export default {
     .info-name-box{
       width: 100%;
       display: flex;
-      margin-top: 24px;
+      margin-top: 10px;
       .com-img{
         width: 54px;
         height: 54px;
@@ -57,6 +70,27 @@ export default {
           font-weight: 400;
           color: #86909C;
           line-height: 22px;
+        }
+      }
+    }
+    .info-2-box{
+      margin-top: 5px;
+      &>div{
+        margin-top: 4px;
+        display: flex;
+        font-size: 13px;
+        .span-t{
+          width: auto;
+          font-weight: 400;
+          color: $g_textColor;
+          line-height: 24px;
+        }
+        .span-i{
+          flex: 1;
+          font-weight: 400;
+          color: #86909C;
+          line-height: 24px;
+          padding-left: 10px;
         }
       }
     }

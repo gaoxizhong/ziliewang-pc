@@ -130,7 +130,7 @@
       <div class="right-box chat-no-data" v-else>
         <img src="../../../assets/image/bossSide/icon-chat-welcome.png" alt="" />
         <div class="welcome-tips">
-          <p>与您进行过沟通的 Boss 都会在左侧列表中显示</p>
+          <p>与Boss沟通，左侧列表中显示</p>
         </div>
       </div>
 
