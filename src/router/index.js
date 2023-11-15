@@ -279,6 +279,20 @@ export const constantRoutes = [
       },
     ]
   },
+  {
+    path:'/liveBroadcast',
+    component: Layout,
+    redirect: 'liveBroadcast',
+    hidden: true,
+    children: [
+      {
+        path: '/liveBroadcast',
+        name: 'liveBroadcast',
+        component: () => import('@/views/bossSide/liveBroadcast/index'),
+        meta: { title: '直播' },
+      },
+    ]
+  },
   //-------------------- 人才端
   {
     path: "/talentSide",
