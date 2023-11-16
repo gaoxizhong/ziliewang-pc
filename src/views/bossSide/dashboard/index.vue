@@ -18,6 +18,9 @@
                 <img src="../../../assets/image/bossSide/user-business.png" alt="" />
                 <span>我的人才</span>
               </div>
+              <!-- <div class="right" @click="goToLiveBroadcast">
+                <span>直播</span>
+              </div> -->
             </div>
             <div class="data-box">
               <div>
@@ -270,6 +273,11 @@ export default {
           })
         }
       })
+    },
+    // 点击直播
+    goToLiveBroadcast(){
+      let that = this;
+      that.$router.push({ path:'/liveBroadcast' })
     },
     // 点击发布职位
     goToPostJob(){

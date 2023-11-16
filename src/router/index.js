@@ -408,7 +408,16 @@ export const constantRoutes = [
           title: '沟通',
           // keepAlive: true,
         },
-      }
+      },
+      {
+        path: 'liveBroadcast',
+        name: 'liveBroadcast',
+        component: () => import('@/views/talentSide/liveBroadcast/index'),
+        meta: { 
+          title: '直播',
+          // keepAlive: true,
+        },
+      },
     ]
   },
   // 404 page must be placed at the end !!!

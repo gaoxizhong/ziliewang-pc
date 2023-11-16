@@ -6,9 +6,10 @@
         <el-tab-pane label="推荐" name="recommend"></el-tab-pane>
         <el-tab-pane label="热门" name="hot"></el-tab-pane>
         <el-tab-pane label="关注" name="attention"></el-tab-pane>
+        <el-tab-pane label="直播" name="live"></el-tab-pane>
       </el-tabs>
     </div>
-    <div class="container info-box">
+    <div class="container info-box" v-if="tag == 'recommend' || tag == 'hot'|| tag == 'attention'">
       <div class="info-left-box">
         <div class="info-right-container">
           <!-- 列表项 开始 -->
@@ -65,16 +66,22 @@
       </div>
       <!-- 右侧模块 结束 -->
     </div>
+    <div class="container info-box" style="justify-content: center;" v-if="tag == 'live'"> 
+      <live />
+    </div>
   </div>
 
 </template>
 
 <script>
 import hotRecommendation from './components/hotRecommendation.vue';
+import live from '../../talentSide/liveBroadcast/index.vue';
+
 export default {
   name: 'myProfessionalCircle',
   components: {
     hotRecommendation,
+    live
   },
   data(){
     return{
@@ -92,8 +99,12 @@ export default {
   methods: {
     handleClick(tab, event){
       console.log(tab)
-      this.page = 1;
-      this.getList();
+      this.tag = tab._props.name;
+      if(this.tag == 'recommend' || this.tag == 'hot'|| this.tag == 'attention'){
+        this.page = 1;
+        this.getList();
+      }
+ 
     },
     getList(){
       this.$axios.post('/api/profession-circle/index',{

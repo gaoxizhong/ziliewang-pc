@@ -16,7 +16,6 @@ export default {
   data(){
     return {
       playUrl:{}, // 播放地址
-      pushUrl:{}, // 推流地址
     }
   },
   methods: {
@@ -30,20 +29,6 @@ export default {
           if( typeof f == 'function'){
             return f(res.data.hls_play_url)
           }
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
-    },
-    // 推流地址
-    getPushUrl(){
-      let that = this;
-      that.$axios.post('/api/live/push-url',{}).then( res =>{
-        console.log(res)
-        if(res.code == 0){
-          that.pushUrl = res.data;
         }else{
           that.$message.error({
             message:res.msg
@@ -78,8 +63,6 @@ export default {
   created(){
    // 播放地址
    this.getPlayUrl(this.live);
-    // 推流地址
-    this.getPushUrl();
   }
 };
 </script>
