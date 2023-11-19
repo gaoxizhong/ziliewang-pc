@@ -75,19 +75,19 @@ export const constantRoutes = [
       },
     ]
   },
-  {
-    path: '/recommendTalents',
-    component: Layout,
-    redirect: '/recommendTalents',
-    children: [
-      {
-        path: '/recommendTalents',
-        name: 'RecommendTalents',
-        component: () => import('@/views/bossSide/recommendTalents/index'),
-        meta: { title: '推荐人才', icon: 'dashboard' },
-      },
-    ]
-  },
+  // {
+  //   path: '/recommendTalents',
+  //   component: Layout,
+  //   redirect: '/recommendTalents',
+  //   children: [
+  //     {
+  //       path: '/recommendTalents',
+  //       name: 'RecommendTalents',
+  //       component: () => import('@/views/bossSide/recommendTalents/index'),
+  //       meta: { title: '推荐人才', icon: 'dashboard' },
+  //     },
+  //   ]
+  // },
   {
     path: '/searchTalent',
     component: Layout,

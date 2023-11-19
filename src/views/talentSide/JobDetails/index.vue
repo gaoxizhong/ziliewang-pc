@@ -87,6 +87,14 @@
     </div>
     <!-- 主题部分 结束 -->
 
+    <div class="chat-box">
+      <el-dialog title="聊一聊" v-dialogDrag :center="false" :modal="false" :close-on-click-modal="false" :visible.sync="dialogVisible" width="800px" :before-close="handleClose">
+        <div class="pc-preview-wrapper m-box">
+          <Chat :is_type="is_type" ref="chat"/>
+        </div>
+      </el-dialog>
+    </div>
+
   </div>
 
 </template>
@@ -96,6 +104,7 @@ import JobDescription from "./components/jobDescription";
 import CompanyProfile from "./components/companyProfile";
 import CompanyInfo from "./components/companyInfo"
 import OtherPositions from "./components/otherPositions"
+import Chat from "../components/chat.vue"
 
 export default {
   name: 'JobDetails',
@@ -103,12 +112,15 @@ export default {
     JobDescription,
     CompanyProfile,
     CompanyInfo,
-    OtherPositions
+    OtherPositions,
+    Chat
   },
   data(){
     return{
       infoData: {},
       company:{},
+      dialogVisible: false,
+      is_type: 'chat'
     }
   },
   created(){
@@ -190,6 +202,9 @@ export default {
         }
       })
     },
+    handleClose(done) {
+      this.dialogVisible = false;
+    },
     // 点击聊一聊
     clickChat(){
       let that = this;
@@ -201,7 +216,8 @@ export default {
       }
       that.$axios.post('/api/user/find-company',p).then( res =>{
         if(res.code == 0){
-          that.$router.push('/communication');
+          that.dialogVisible = true;
+          // that.$router.push('/communication');
         }else{
           that.$message.error({
             message:res.msg
@@ -481,4 +497,33 @@ export default {
     }
   }
  
+
+  .chat-box /deep/ .el-dialog{
+    min-width: 320px;
+    height: 80%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    .el-dialog__header{
+      text-align: left;
+      .el-dialog__title{
+        font-size: 16px;
+        color: $g_textColor;
+      }
+    }
+    .el-dialog__body{
+      padding: 20px 30px 30px;
+      height: calc(100vh - 128px);
+      overflow: overlay;
+      padding: 20px;
+      .pc-preview-wrapper{
+        border-radius: 4px;
+        border: 1px solid #e3e7ed;
+        padding: 20px 40px;
+        color: #414a60;
+        line-height: 26px;
+
+      }
+    }
+  }
 </style>

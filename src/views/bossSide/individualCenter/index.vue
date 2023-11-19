@@ -42,11 +42,14 @@
           <el-input v-model="infoData.staff_name" placeholder="姓名"></el-input>
           <!-- <span class="sub-span">该头像将对求职者可见</span> -->
         </div>
-        <!-- <div class="items-box">
+        <div class="items-box">
+          <div class="title"><span>* </span>公司</div>
+          <el-input v-model="infoData.company_name" placeholder="请输入" disabled></el-input>
+        </div>
+        <div class="items-box">
           <div class="title"><span>* </span>职务</div>
-          <el-input v-model="infoData.job" placeholder="请输入"></el-input>
-          <span class="sub-span">该头像将对求职者可见</span>
-        </div> -->
+          <el-input v-model="infoData.role_desc" placeholder="请输入" disabled></el-input>
+        </div>
         <div class="btn-box">
           <el-button type="primary" @click="setUserSave">保存</el-button>
           <!-- <el-button @click="resetForm('ruleForm')">取消</el-button> -->
@@ -63,7 +66,7 @@
               <div class="sub-title">{{ infoData.phone }}</div>
             </div>
           </div>
-          <!-- <div class="right">换绑</div> -->
+          <div class="right" @click="clickSetPhone">换绑</div>
         </div>
         <div class="list-items-box">
           <div class="left">
@@ -103,7 +106,7 @@
               <div class="sub-title">{{ infoData.real_email }}  可用于找回账号和密码</div>
             </div>
           </div>
-          <!-- <div class="right">换绑</div> -->
+          <div class="right" @click="clickSetEmail">换绑</div>
         </div>
         <div class="list-items-box">
           <div class="left">
@@ -118,6 +121,23 @@
       </div>
       <!-- 账号安全 结束-->
 
+      <!-- 修改手机号 弹窗 -->
+      <div class="setPhoneVisible">
+        <el-dialog title="修改手机号" :visible.sync="setPhoneVisible" width="500px" :before-close="closePhoneVisible">
+          <div class="cententinfo-box">
+            <div class="cententinfo-title">手机号: {{ infoData.phone }}</div>
+            <div class="demo-input-suffix">
+              <span>新手机号:</span>
+              <el-input v-model="new_phone" type="number" name="new_phone" placeholder="新手机号"></el-input>
+            </div>
+          </div>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="setPhoneVisible = false">取 消</el-button>
+            <el-button type="primary" @click="clickPhoneQR">确 定</el-button>
+          </span>
+        </el-dialog>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -129,14 +149,17 @@ export default {
       tabStatus: 1,
       infoData:{
         staff_name:"Lucy",
-        job: "",
+        role_desc: "",
         avatar:'',
+        phone:'',
       },
-      
+      new_phone:'',
       upload_files_path:'',
       uploadData:{
         up_tag: 'avatar'
       },
+      setPhoneVisible: false,
+
     }
   },
   created(){
@@ -144,6 +167,45 @@ export default {
     this.getUserInfo();
   },
   methods:{
+   
+    // 点击修改手机号
+    clickSetPhone(){
+      this.setPhoneVisible = true;
+    },
+    // 关闭 修改手机号码弹窗
+    closePhoneVisible(){
+      this.setPhoneVisible = false;
+    },
+    // 确认修改手机号
+    clickPhoneQR(){
+      let that = this;
+      let p = {
+        phone: that.new_phone,
+      };
+      that.$axios.post('/api/staff/save',p).then( res =>{
+        if(res.code == 0){
+          console.log('修改成功')
+          that.$message.success({
+            message:'修改成功'
+          })
+          setTimeout(()=>{
+             // 获取个人信息
+             that.getUserInfo();
+             that.setPhoneVisible = false;
+          },1500)
+          return
+        }
+        if(res.code == 1){
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
     //  获取信息
     getUserInfo(){
       let that = this;
@@ -386,4 +448,109 @@ export default {
    }
 
   }
+  
+.bossSide-container{
+  /deep/ .el-dialog{
+    min-width: 420px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    .el-dialog__header{
+      text-align: left;
+      .el-dialog__title{
+        font-size: 15px;
+        color: $g_textColor;
+      }
+    }
+    .el-dialog__body{
+      height: auto;
+      overflow: hidden;
+      padding: 20px 0;
+      margin: 0 20px;
+      border-top: 1px solid #F2F3F5;
+      .cententinfo-box{
+        width: 100%;
+        .cententinfo-title{
+          font-size: 14px;
+          font-weight: 400;
+          color: $g_textColor;
+          line-height: 22px;
+          text-align: left;
+        }
+        .demo-input-suffix{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          margin-top: 20px;
+          position: relative;
+          .send-vcode-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            color: $g_color;
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+            border: none;
+            padding: 0 10px;
+            outline: none;
+            cursor: pointer;
+            transition: background-color .3s,color .3s;
+            margin-top: 0;
+            font-size: 14px;
+          }
+          span{
+            width: auto;
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+            line-height: 22px;
+          }
+          .el-input {
+            position: relative;
+            font-size: 14px;
+            flex: 1;
+            margin-left: 10px;
+           }
+          .el-input__inner {
+            font-size: 14px;
+            padding: 14px 10px;
+            width: 100%;
+            border: 1px solid #e9e9e9;
+            border-radius: 4px;
+            outline: none;
+            box-sizing: border-box;
+            display: block;
+            box-shadow: none;
+            transition: border .3s;
+            background-color: #fff;
+            resize: none;
+          }
+          .el-input__inner:hover{
+            border-color: $g_color;
+          }
+          .el-input.is-active .el-input__inner, .el-input__inner:focus{
+            border-color: $g_color;
+            outline: 0;
+          }
+
+        }
+
+      }
+    }
+    .el-button{
+      padding: 0;
+      width: 100px;
+      height: 40px;
+      line-height: 40px;
+    }
+    .el-button--primary{
+      background-color: $g_color;
+      border-color: $g_color;
+    }
+
+    
+  }
+}
 </style>

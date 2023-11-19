@@ -43,15 +43,18 @@
         <!-- 热门职位 结束 -->
       </div>
       <!-- 检索及热门职位 结束 -->
-      <!-- <div class="online-job-box">
-        <div class="online-job-title">按在线职位搜</div>
-        <div class="online-job-tab">
-          <span>不限</span>
-          <span class="hover">ui设计师| 宁波</span>
-        </div>
-      </div> -->
     </div>
-    <div class="m-box margin-top-20"></div>
+    <div class="job-tab-box m-box margin-top-20">
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="智能推荐" name="recommended"></el-tab-pane>
+        <el-tab-pane label="最新" name="latest"></el-tab-pane>
+      </el-tabs>
+      <div class="tab-right" @click="myCollection">
+        <img src="../../../assets/image/bossSide/icon-star.png" alt="" />
+        <span>我的收藏</span>
+      </div>
+    </div>
+    <!-- <div class="m-box margin-top-20"></div> -->
     <!-- 列表模块 开始  -->
     <div class="job-list-box">
       <div v-for="(item,index) in jobList" :key="index" class="jobList-items m-box margin-top-20" @click.stop="clickItems(item)">
@@ -270,12 +273,20 @@ export default {
       },
       zx_dialogVisible: false,
       infoData:'',
+      activeName: 'recommended',
     }
   },
   created(){
     this.getSearchinfo();
   },
   methods:{
+    // 点击我的收藏 --- 跳转到我的收藏
+    myCollection(){
+      this.$router.push('/myCollect');
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
+    },
     handleClose(done) {
       this.zx_dialogVisible = false;
     },
@@ -356,10 +367,6 @@ export default {
         }
       })
     },
-    // 点击我的收藏 --- 跳转到我的收藏
-    myCollection(){
-      this.$router.push('/myCollection');
-    },
     // 点击打电话
     clickMobile(i){
       let that = this;
@@ -404,6 +411,7 @@ export default {
 
 <style lang="scss" scoped>
   .searchTalent-top-box{
+    padding-bottom: 0;
     .search-box{
       padding: 0 3rem;
       .search-input-box{
@@ -598,7 +606,7 @@ export default {
       position: relative;
       cursor: pointer;
       .items-left-box{
-        width: auto;
+        width: 20rem;
         display: flex;
         .avatar-box{
           width: 2.8rem;
@@ -652,7 +660,7 @@ export default {
               text-align: center;
               background: #F7F8FA;
               border-radius: 2px;
-              padding: 0 10px;
+              padding: 0 6px;
               margin-right: 10px;
               color: $g_textColor;
               font-size: 12px;
@@ -958,5 +966,77 @@ export default {
     margin: 0 10px;
     display: inline-block;
   }
-
+  .job-tab-box{
+    width: 100%;
+    height: 2.8rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    /deep/ .el-tabs{
+      height: 100%;
+      .el-tabs__header {
+        height: 100%;
+        .el-tabs__nav-wrap{
+          height: 100%;
+          line-height: 2.8rem;
+          &::after{
+            height: 0;
+          }
+          .el-tabs__nav-scroll {
+            height: 100%;
+            padding: 0 20px;
+            .el-tabs__item.is-active{
+              color: $g_color;
+            }
+            .el-tabs__active-bar{
+              bottom: 1px;
+              background-color: $g_bg;
+            }
+          }
+        }
+      }
+    }
+    .seach-box{
+      width: auto;
+      padding-right: 1.5rem;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      &>div{
+        display: flex;
+        align-items: center;
+        margin-left: 20px;
+        cursor: pointer;
+        img{
+          width: 14px;
+          height: 14px;
+        }
+        span{
+          font-size: 14px;
+          line-height: 22px;
+          padding-left: 4px;
+        }
+      }
+    }
+  }
+  .tab-right{
+    width: 124px;
+    line-height: 32px;
+    color: #4E5969;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    img{
+      width: 14px;
+      height: 14px;
+    }
+    span{
+      font-size: 14px;
+      line-height: 22px;
+      padding-left: 4px;
+    }
+  }
 </style>

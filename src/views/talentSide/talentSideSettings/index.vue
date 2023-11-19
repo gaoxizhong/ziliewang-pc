@@ -343,7 +343,7 @@ export default {
           },1500)
           return
         }
-        if(res.data.code == 1){
+        if(res.code == 1){
           that.$message.error({
             message:res.msg
           })
@@ -418,7 +418,7 @@ export default {
         phone: that.phone,
       };
       that.$axios.post('/api/user/change-phone',p).then( res =>{
-        if(res.data.code == 0){
+        if(res.code == 0){
           that.$message.success({
             message:'修改成功'
           })
@@ -429,9 +429,9 @@ export default {
           },1500)
           return
         }
-        if(res.data.code == 1){
+        if(res.code == 1){
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
           return
         }
