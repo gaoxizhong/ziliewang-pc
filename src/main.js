@@ -17,6 +17,9 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import axios from '@/axios/index';
 
+// 引入弹窗拖拽
+import '@/utils/dialogDrag'
+
 // 引入视频直播
 import VueVideoPlayer from 'vue-video-player'
 

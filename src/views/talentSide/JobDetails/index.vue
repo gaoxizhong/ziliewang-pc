@@ -500,7 +500,7 @@ export default {
 
   .chat-box /deep/ .el-dialog{
     min-width: 320px;
-    height: 80%;
+    height: 70%;
     top: 50%;
     transform: translateY(-50%);
     margin-top: 0 !important;
