@@ -129,7 +129,12 @@
       </div>
     </div>
     <!-- 底部 开始  -->
-    <Footer />
+    <div class="footer-box">
+      <div class="footer-main">
+        <div class="footer-nav"><a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2023022220号-3</a>&nbsp;&nbsp;Copyright&nbsp;&nbsp;@&nbsp;&nbsp;2006-2023&nbsp;&nbsp;自猎网&nbsp;&nbsp;AIl&nbsp;&nbsp;Rights Reserved</div>
+        <div class="footer-certification"><a href="https://www.zilieai.com/images/xkz1.jpg" target="_blank">人才许可证</a> <a href="https://www.zilieai.com/images/yyzz.jpg" target="_blank">营业执照</a> 违法和不良信息举报:&nbsp;&nbsp;<a href="https://www.12377.cn" target="_blank">https://www.12377.cn</a></div>
+      </div>
+    </div>
     <!-- 底部 结束  -->
     <!-- 协议弹窗 -->
     <!-- 用户协议弹窗 -->
@@ -642,7 +647,7 @@ $cursor: #000;
   position: absolute;
   top: 50%;
   right: 20px;
-  transform: translateY(-50%);
+  transform: translateY(-60%);
   padding: 20px 30px;
 }
 .signLogin-box{
@@ -835,7 +840,31 @@ $cursor: #000;
     }
   }
 }
+.footer-box{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: #888;
+  min-width: 1220px;
+  padding-top: 24px;
+  padding-bottom: 24px;
 
+  .footer-main div{
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    padding-top: 10px;
+    line-height: 24px;
+    a{
+      color: #fff;
+      &:hover{
+        color: #fff;
+      }  
+    }
+  }
+}
 
 
 
