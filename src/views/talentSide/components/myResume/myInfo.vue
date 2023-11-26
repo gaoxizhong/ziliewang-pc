@@ -57,7 +57,7 @@
           <div class="mb20 redact-item">
             <div class="item-label">姓名</div>
             <div class="item-content">
-              <el-input v-model="infoData.real_name" placeholder="请输入姓名" clearable></el-input>
+              <el-input v-model="infoData.real_name" disabled placeholder="请输入姓名" clearable></el-input>
             </div>
           </div>
 
@@ -106,7 +106,7 @@
               <el-date-picker
                 v-model="infoData.birth_year_month"
                 type="date"
-                value-format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd" disabled
                 placeholder="生日">
               </el-date-picker>
             </div>
@@ -128,8 +128,8 @@
           <div class="mb20 redact-item">
             <div class="item-label">性别</div>
             <div class="item-content">
-              <div class="radio-item" :class="infoData.sex == 1 ? 'radio-checked':'' " @click="clickRadio(1)">男</div>
-              <div class="radio-item" :class="infoData.sex == 2 ? 'radio-checked':'' " @click="clickRadio(2)">女</div>
+              <div class="radio-item" :class="infoData.sex == 1 ? 'radio-checked':'' ">男</div>
+              <div class="radio-item" :class="infoData.sex == 2 ? 'radio-checked':'' ">女</div>
             </div>
           </div>
           <div class="mb20 redact-item">
@@ -218,7 +218,8 @@ export default {
       work_status_op: [
         {value: 2,label: '在职不考虑'},
         {value: 3,label: '在职，看看新机会'},
-        {value: 4,label: '离职'}
+        {value: 4,label: '离职'},
+        {value: 5,label: '交职业圈好友/寻找商业合作计划'}
       ],
       options: pcas,
       selectedOptions: ['北京','北京'],

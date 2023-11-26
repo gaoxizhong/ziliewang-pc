@@ -3,53 +3,7 @@
 
     <div class="info-box">
       <!-- 左侧模块 开始 -->
-      <div class="info-left-box">
-        <div class="left-box user-top-box">
-          <div class="user-top">
-            <img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg' )" alt="" class="user-img"/>
-            <p class="user-name">{{ infoData.real_name }}</p>
-            <!-- <div class="gz-sx-btn">
-              <div class="left">
-                <img src="../../../assets/image/Frame_10.png" alt="" />
-                <span>关注</span>
-              </div>
-              <div class="right">发私信</div>
-            </div> -->
-          </div>
-          <div class="user-top-num">
-            <div @click="clickAttention('attention')">
-              <span class="title">{{ infoData.attention_num }}</span>
-              <span class="text">关注</span>
-            </div>
-            <div @click="clickAttention('fans')">
-              <span class="title">{{ infoData.fan_num }}</span>
-              <span class="text">粉丝</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="left-box user-m-box">
-          <div class="m-items-box">
-            <img src="../../../assets/image/shopping-mall.png" alt="" />
-            <span>就职于</span>
-            <p>{{ infoData.company_name }}</p>
-          </div>
-          <div class="m-items-box">
-            <img src="../../../assets/image/handbag.png" alt="" />
-            <span>职位</span>
-            <p>{{ infoData.position }}</p>
-          </div>
-          <div class="m-items-box">
-            <img src="../../../assets/image/user-business.png" alt="" />
-            <span>目前状态</span>
-            <p>{{ infoData.work_status_desc }}</p>
-          </div>
-        </div>
-
-        <!-- <div class="left-box user-b-box">
-          <div @click="logout">退出登录</div>
-        </div> -->
-      </div>
+      <myProfessionalCircleLeft :infoData="infoData"/>
       <!-- 左侧模块 结束 -->
       <!-- 右侧模块 开始 -->
       <div class="info-right-box">
@@ -149,9 +103,12 @@
 
 <script>
 import { getToken, setToken, removeToken } from '@/utils/auth';
+import myProfessionalCircleLeft from './components/myProfessionalCircleLeft.vue';
+
 export default {
   name: 'myProfessionalCircle',
   components: {
+    myProfessionalCircleLeft
   },
   data(){
     return{
@@ -186,16 +143,7 @@ export default {
         }
       })
     },
-    // 点击关注/粉丝
-    clickAttention(tag){
-      this.$router.push({
-        path:'/attentionFans',   //跳转的路径
-        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-          tag,
-          see_uid: localStorage.getItem('realUid')
-        }
-      })
-    },
+
 
     // 点击发布
     clickPublishBtn(){
@@ -294,7 +242,166 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../../../styles/professionalCircle.scss';
+  .info-box{
+    width: 100%;
+    display: flex;
+    text-align: left;
+    .info-right-box{
+      flex: 1;
+      padding-left: 0.8rem;
+      .info-right-top{
+        width: 100%;
+        height: 3.6rem;
+        background: #FFFFFF;
+        border-radius: 4px 4px 4px 4px;
+        position: relative;
+        .fb-btn{
+          width: 4.65rem;
+          height: 2rem;
+          line-height: 2rem;
+          background: $g_bg;
+          border-radius: 4px;
+          color: #fff;
+          font-size: 0.7rem;
+          text-align: center;
+          position: absolute;
+          top: 50%;
+          right: 20px;
+          transform: translateY(-50%);
+          cursor: pointer;
+        }
+        /deep/ .el-tabs{
+          height: 100%;
+          .el-tabs__header {
+            height: 100%;
+            .el-tabs__nav-wrap{
+              height: 100%;
+              line-height: 3.6rem;
+              &::after{
+                height: 0;
+              }
+              .el-tabs__nav-scroll {
+                height: 100%;
+                padding: 0 20px;
+                .el-tabs__item.is-active{
+                  color: $g_color;
+                }
+                .el-tabs__active-bar{
+                  bottom: 1px;
+                  background-color: $g_bg;
+                }
+              }
+            }
+          }
+        }
+      }
+      .info-right-container{
+        .container-items-box{
+          background: #fff;
+          margin-top: 0.8rem;
+          .right-container-title{
+            margin-top: 1rem;
+            width: 100%;
+            height: 44px;
+            line-height: 44px;
+            border-bottom: 1px solid #F2F3F5;
+            span{
+              margin-left: 20px;
+              font-size: 14px;
+              color: #86909C;
+              line-height: 22px;
+            }
+
+          }
+          .right-container-item{
+            padding: 1.2rem;
+            margin-top: 0;
+            &:nth-child(1){
+              margin-top: 0;
+            }
+            .title{
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              .title-left{
+                display: flex;
+                align-items: center;
+                img{
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 50%;
+                  margin-right: 8px;
+                }
+                span{
+                  font-size: 14px;
+                  font-weight: 400;
+                  color: #4E5969;
+                  line-height: 22px;
+                }
+              }
+             
+              .title-t{
+                font-size: 14px;
+                font-weight: 400;
+                color: #86909C;
+                line-height: 22px;
+              }
+            }
+            .items-c-box{
+              width: 100%;
+              padding-left: 2rem;
+              .items-c-p{
+                font-size: 14px;
+                font-weight: 400;
+                color: #1F2E4D;
+                line-height: 28px;
+              }
+              .items-img-box{
+                width: 100%;
+                height: auto;
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 0.8rem;
+                img{
+                  width: 140px;
+                  height: 100px;
+                  margin-left: 0.5rem;
+                  &:nth-child(1){
+                    margin: 0;
+                  }
+                }
+              }
+            }
+            .items-bottom-btn{
+              display: flex;
+              align-items: center;
+              margin-top: 0.8rem;
+              .bottom-btn-items{
+                margin-right: 16px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                img{
+                  width: 14px;
+                  height: 14px;
+                  margin-right: 4px;
+                  display: inline-block;
+                }
+                span{
+                  font-size: 14px;
+                  font-weight: 400;
+                  color: #86909C;
+                  line-height: 22px;
+                }
+              }
+            }
+          }
+
+        }
+        
+      }
+    }
+  }
   #myProfessionalCircle /deep/ .el-dialog{
     top: 50%;
     transform: translateY(-50%);

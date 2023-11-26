@@ -67,17 +67,15 @@
             <div class="item-content">
               <el-date-picker
                 v-model="infoData.begin_date"
-                type="month"
-                format="yyyy-MM"
-                value-format="yyyy-MM"
+                type="date"
+                value-format="yyyy-MM-dd"
                 placeholder="开始时间">
               </el-date-picker>
               <span class="span-line"> 至 </span>
               <el-date-picker
                 v-model="infoData.end_date"
-                type="month"
-                format="yyyy-MM"
-                value-format="yyyy-MM"
+                type="date"
+                value-format="yyyy-MM-dd"
                 placeholder="结束时间">
               </el-date-picker>
             </div>

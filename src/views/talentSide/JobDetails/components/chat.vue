@@ -1,138 +1,109 @@
 <template>
-  <div class="chat-window-box m-box">
-    <div class="left-box" v-if="!is_type || is_type == ''">
-      <div class="seach-box"></div>
-      <div class="personAbility-box">
+  <div class="chat-box">
+      <el-dialog title="聊一聊" v-dialogDrag :center="false" :modal="false" :close-on-click-modal="false" :visible.sync="dialogVisible" width="800px" :before-close="handleClose">
+        <div class="pc-preview-wrapper m-box">
+          <div class="chat-window-box m-box">
+            <div class="right-box center-box">
+              <div class="job-box scrollbar" id="content" ref="scrollbar">
+                <div class="job-1">
+                  <span class="job-title">沟通职位：</span>
+                  <span class="blue" v-if="selt_info.companyposition">{{selt_info.companyposition.position_name}}</span>
+                </div>
+                <div></div>
 
-        <div class="personAbility-items-box" :class="id == item.id?'hover':''" v-for="(item,index) in sysMsgListData" :key="index" @click="clickmsgListData(item)">
-          <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" />
-          <div class="name-box">
-            <div class="name-t">
-              <span class="span-1">{{item.company_user_name}}</span>
-              <span class="span-2" v-if="item.company">{{item.company.company_name}}</span>
-            </div>
-            <div class="sub-title">{{item.chat_list[item.chat_list.length-1].content}}</div>
-          </div>
-          <span class="time">{{item.createtime}}</span>
-        </div>
+                <dl class="messages" style="margin-bottom: 12px;">
+                  <dt><h4><a href="javascript:0;" id="show-history"></a></h4></dt>
 
-      </div>
-    </div>
-    <div class="right-box center-box" v-if="selt_info">
-      <div class="seach-box">
-        <div class="seach-box-info">
-          <img :src="selt_info.company_user_avatar?selt_info.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" />
-          <div class="name-t">
-            <div class="span-1">{{selt_info.company_user_name}}</div>
-            <div class="span-2" v-if="selt_info.company">{{selt_info.company.company_name}}</div>
-          </div>
-        </div>
-        <!-- <img src="../../../assets/image/bossSide/fileSearch.png" alt="" class="fileSearch-img" @click="onlineResume"/> -->
-      </div>
-      <div class="job-box scrollbar" id="content" ref="scrollbar">
-        <div class="job-1">
-          <span class="job-title">沟通职位：</span>
-          <span class="blue" v-if="selt_info.companyposition">{{selt_info.companyposition.position_name}}</span>
-        </div>
-        <div></div>
+                  <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
+                    <div :class=" item.type == 1 ?'msg-send':'msg-recv' " class="msg" style="color:#fff" v-if="item.content">
+                      <img :src="item.user_avatar?item.user_avatar:require('../../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-if="item.type == 1"/>
+                      <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-else/>
+                      <div class="sender">
+                        <!-- <span class="sender-text">{{item.name}}</span> -->
+                        <span class="time-text">{{item.createtime}}</span>
+                      </div>
+                      <div class="msg-content-and-after">
+                        <div class="msg-content">
+                          <div v-html="item.content"></div>
+                          <!-- <div class="msg-btn" v-if="item.msg_type == 1 && item.msg_status == 2" @click="clickAcceptBtn">接收邀请</div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </dd>
 
-        <dl class="messages" style="margin-bottom: 12px;">
-          <dt><h4><a href="javascript:0;" id="show-history"></a></h4></dt>
+                  <!-- 邀请面试 开始-->
+                  <dd class="bot clearfix" v-if="selt_info.msg_type == 2 || selt_info.msg_type == 5" >
+                    <div class="msg msg-recv" style="color:#fff">
+                    <div class="sender">
+                        <span class="time-text">{{selt_info.createtime}}</span>
+                      </div>
+                      <div class="msg-content-and-after">
+                        <div class="msg-content">
+                          <div>对方向您发送了面试邀请</div>
+                          <div class="msg-btn" @click="clickAcceptBtn" v-if="selt_info.msg_type == 2">接受面试邀请</div>
+                          <div class="msg-btn"  @click="clickViewInterviewInfo" v-if="selt_info.msg_type == 5">已接受，查看面试信息</div>
+                        </div>
+                      </div>
+                    </div>
+                  </dd>
+                  <!-- 邀请面试 结束 -->
+                  <!-- 求简历 开始-->
+                  <dd class="bot clearfix" v-if="selt_info.msg_type == 2 || selt_info.msg_type == 6" >
+                    <div class="msg msg-recv" style="color:#fff">
+                    <div class="sender">
+                        <span class="time-text">{{selt_info.createtime}}</span>
+                      </div>
+                      <div class="msg-content-and-after">
+                        <div class="msg-content">
+                          <div>对方请求获取您的简历</div>
+                          <div class="msg-btn" @click="clickSendResumeBtn" v-if="selt_info.msg_type == 6">发送简历</div>
+                          <div class="msg-btn msg-btn-5" v-if="selt_info.msg_type == 7">已发送</div>
+                        </div>
+                      </div>
+                    </div>
+                  </dd>
+                  <!-- 求简历 结束 -->
+                </dl>
 
-          <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
-            <div :class=" item.type == 1 ?'msg-send':'msg-recv' " class="msg" style="color:#fff">
-              <img :src="item.user_avatar?item.user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-if="item.type == 1"/>
-              <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-else/>
-              <div class="sender">
-                <!-- <span class="sender-text">{{item.name}}</span> -->
-                <span class="time-text">{{item.createtime}}</span>
+                <div id="msg_end" ref="msg_end" style="height:0px; overflow:hidden"></div>
+
               </div>
-              <div class="msg-content-and-after">
-                <div class="msg-content">
-                  <div v-html="item.content"></div>
-                  <!-- <div class="msg-btn" v-if="item.msg_type == 1 && item.msg_status == 2" @click="clickAcceptBtn">接收邀请</div> -->
+
+
+              <div class="theme-c clearfix" id="footer" style="display: block;">
+                <div class="icon-btn-box">
+                  <div></div>
+                  <!-- <div class="footer-right">
+                    <div>
+                      <img src="../../../assets/image/bossSide/int-qjl.png" alt="" />
+                      <span>求简历</span>
+                    </div>
+                    <div>
+                      <img src="../../../assets/image/bossSide/int-yqms.png" alt="" />
+                      <span>邀面试</span>
+                    </div>
+                  </div> -->
+                </div>
+                <div class="ui-editor clearfix">
+                  <div class="textbox">
+                    <div class="n-input-wrapper">
+                      <el-input placeholder="请输入内容..." v-model="originMessage" clearable  @keydown.enter.native="searchEnterFun($event)"></el-input>
+                    </div>
+                    <el-button class="btn-send" :loading="loading" id="btnSend"
+                      :style="{'color': originMessage != ''?'#fff':'#00000040','background-color': originMessage !=''?'rgb(20 184 166)':'#f5f5f5','border-color': originMessage !=''?'rgb(20 184 166)':'#f5f5f5'}"
+                      @click="onSendClcik"
+                    >
+                      <span>发送</span>
+                    </el-button>
+                  </div>
                 </div>
               </div>
             </div>
-          </dd>
-
-          <!-- 邀请面试 开始-->
-          <dd class="bot clearfix" v-if="selt_info.msg_type == 2 || selt_info.msg_type == 5" >
-            <div class="msg msg-recv" style="color:#fff">
-            <div class="sender">
-                <span class="time-text">{{selt_info.createtime}}</span>
-              </div>
-              <div class="msg-content-and-after">
-                <div class="msg-content">
-                  <div>对方向您发送了面试邀请</div>
-                  <div class="msg-btn" @click="clickAcceptBtn" v-if="selt_info.msg_type == 2">接受面试邀请</div>
-                  <div class="msg-btn"  @click="clickViewInterviewInfo" v-if="selt_info.msg_type == 5">已接受，查看面试信息</div>
-                </div>
-              </div>
-            </div>
-          </dd>
-          <!-- 邀请面试 结束 -->
-          <!-- 求简历 开始-->
-          <dd class="bot clearfix" v-if="selt_info.msg_type == 2 || selt_info.msg_type == 6" >
-            <div class="msg msg-recv" style="color:#fff">
-            <div class="sender">
-                <span class="time-text">{{selt_info.createtime}}</span>
-              </div>
-              <div class="msg-content-and-after">
-                <div class="msg-content">
-                  <div>对方请求获取您的简历</div>
-                  <div class="msg-btn" @click="clickSendResumeBtn" v-if="selt_info.msg_type == 6">发送简历</div>
-                  <div class="msg-btn msg-btn-5" v-if="selt_info.msg_type == 7">已发送</div>
-                </div>
-              </div>
-            </div>
-          </dd>
-          <!-- 求简历 结束 -->
-        </dl>
-
-        <div id="msg_end" ref="msg_end" style="height:0px; overflow:hidden"></div>
-
-      </div>
-
-
-      <div class="theme-c clearfix" id="footer" style="display: block;">
-        <div class="icon-btn-box">
-          <div></div>
-          <!-- <div class="footer-right">
-            <div>
-              <img src="../../../assets/image/bossSide/int-qjl.png" alt="" />
-              <span>求简历</span>
-            </div>
-            <div>
-              <img src="../../../assets/image/bossSide/int-yqms.png" alt="" />
-              <span>邀面试</span>
-            </div>
-          </div> -->
-        </div>
-        <div class="ui-editor clearfix">
-          <div class="textbox">
-            <div class="n-input-wrapper">
-              <el-input placeholder="请输入内容..." v-model="originMessage" clearable  @keydown.enter.native="searchEnterFun($event)"></el-input>
-            </div>
-            <el-button class="btn-send" :loading="loading" id="btnSend"
-              :style="{'color': originMessage != ''?'#fff':'#00000040','background-color': originMessage !=''?'rgb(20 184 166)':'#f5f5f5','border-color': originMessage !=''?'rgb(20 184 166)':'#f5f5f5'}"
-              @click="onSendClcik"
-            >
-              <span>发送</span>
-            </el-button>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="right-box chat-no-data" v-else>
-      <!-- <img src="../../../assets/image/bossSide/icon-chat-welcome.png" alt="" /> -->
-      <!-- <div class="welcome-tips">
-        <p>与Boss沟通，左侧列表中显示</p>
-      </div> -->
-      <el-empty description="与Boss沟通，左侧列表中显示"></el-empty>
+      </el-dialog>
     </div>
 
-  </div>
 </template>
 
 <script>
@@ -145,9 +116,9 @@ export default {
       }
     },
     company_id:{
-      type: String,
+      type: Number,
       default() {
-        return ''
+        return 0
       }
     }
   },
@@ -165,6 +136,8 @@ export default {
       pagesize: 20,
       selt_index: -1,
       selt_info: '',
+      dialogVisible: false,
+      scrollHeight: 9999
     }
   },
   mounted(){
@@ -197,6 +170,9 @@ export default {
       } else {
           return i;
       }
+    },
+    handleClose(done) {
+      this.dialogVisible = false;
     },
     // 回车键点击
     searchEnterFun(e){
@@ -317,8 +293,10 @@ export default {
 
     },
     //滚动到底部
-    scrollBottom:function(){
+    scrollBottom(){
       var that=this;
+      var container = that.$refs.scrollbar;
+      container.scrollTop = 999999999;
       this.$nextTick(function(){
           var container = that.$refs.scrollbar;
           container.scrollTop = 999999999;
@@ -330,6 +308,39 @@ export default {
 
 <style lang="scss" scoped>
   // 聊天页面样式
+  .chat-box /deep/ .el-dialog{
+    min-width: 320px;
+    height: 88%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    display:flex;
+    flex-direction: column;
+    .el-dialog__header{
+      text-align: left;
+      padding: 12px 20px;
+      height: auto;
+      .el-dialog__title{
+        font-size: 16px;
+        color: $g_textColor;
+      }
+    }
+    .el-dialog__body{
+      flex: 1;
+      padding: 10px 20px !important;
+      overflow: overlay;
+      padding: 20px;
+      .pc-preview-wrapper{
+        height: 100%;
+        border-radius: 4px;
+        border: 1px solid #e3e7ed;
+        padding: 0;
+        color: #414a60;
+        line-height: 26px;
+
+      }
+    }
+  }
   .chat-window-box{
     padding: 0;
     width: 100%;
@@ -337,78 +348,6 @@ export default {
     display: flex;
     // height: calc(100vh - 75px);
     height: 100%;
-    .left-box{
-      width: 340px;
-      border-right: 1px solid #F2F3F5;
-      .seach-box{
-        width: 100%;
-        height: 54px;
-        border-bottom: 1px solid #F2F3F5;
-      }
-
-      .personAbility-box{
-        .personAbility-items-box{
-          width: 100%;
-          padding: 0.8rem 0.6rem;
-          display: flex;
-          cursor: pointer;
-          &>img{
-            width: 2rem;
-            height: 2rem;
-            border-radius: 50%;
-          }
-          &.hover{
-            background: #e1dfdf59;
-          }
-          &:hover{
-            background: #e1dfdf59;
-          }
-
-          .name-box{
-            flex: 1;
-            padding-left: 6px;
-            .name-t{
-              display: flex;
-              align-items: center;
-              .span-1{
-                font-size: 14px;
-                font-weight: 500;
-                color: #1F2E4D;
-                line-height: 22px;
-              }
-              .span-2{
-                padding-left: 4px;
-                font-size: 12px;
-                color: #1F2E4D;
-                line-height: 20px;
-              }
-            }
-            .sub-title{
-              font-size: 12px;
-              font-weight: 400;
-              color: #86909C;
-              line-height: 20px;    
-              text-overflow: ellipsis;
-              overflow: hidden;
-              /*弹性盒模型*/
-              display: -webkit-box;
-              /*上下垂直*/
-              -webkit-box-orient: vertical;
-              /*当属性值为3，表示超出3行隐藏。限制在一个块元素显示的文本的行数，需要和上面两个属性结合*/
-              -webkit-line-clamp: 1;
-            }
-          }
-          .time{
-            width: auto;
-            font-size: 12px;
-            font-weight: 400;
-            color: #86909C;
-            line-height: 20px;
-          }
-
-        }
-      }
-    }
     .right-box{
       flex: 1;
       width: 100%;

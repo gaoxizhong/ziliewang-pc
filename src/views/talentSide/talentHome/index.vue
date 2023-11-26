@@ -13,16 +13,10 @@
           <a href="javascript:0;" class="hotJob-item" v-for="(item,index) in hotJob_options" :key="index" @click="clickTagname(item)">{{item}}</a>
         </div>
       </div>
+
       <!-- 搜索框模块 j结束 -->
       <!-- 筛选模块 开始-->
-      <!-- <div class="filter-box margin-top-20 m-box">
-        <div class="filter-item-box"></div>
-        <div class="filter-item-box"></div>
-        <div class="filter-item-box"></div>
-        <div class="filter-item-box"></div>
-        <div class="filter-item-box"></div>
-        <div class="filter-item-box"></div>
-      </div> -->
+      <filterOptionsContainer />
       <!-- 筛选模块 开始-->
     </div>
 
@@ -76,12 +70,14 @@
 <script>
 import personalInfo from '../components/personalInfo.vue';
 import mPagination from '@/components/m-pagination';
+import filterOptionsContainer from '../components/filterOptionsContainer.vue';
 
 export default {
   name: 'talentHome',
   components: {
     personalInfo,
     mPagination,
+    filterOptionsContainer
   },
   data(){
     return{

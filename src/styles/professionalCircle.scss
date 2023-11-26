@@ -13,22 +13,27 @@
       .user-top-box{
         width: 100%;
         .user-top{
-          padding: 1.3rem 3rem;
+          padding: 15px;
           margin: 0 auto;
           text-align: center;
           .user-img{
             width: 5.4rem;
             height: 5.4rem;
             border-radius: 50%;
-            margin: 10px 0;
+            margin-bottom: 10px;
           }
           .user-name{
             color: $g_textColor;
-            font-size: 1rem;
-            line-height: 1.4rem;
+            font-size: 16px;
+            line-height: 28px;
             font-weight: bold;
-            margin-top: 0.6rem;
-            text-align: center;
+            text-align: left;
+          }
+          .user-introduce{
+            font-size: 14px;
+            line-height: 23px;
+            text-align: left;
+            color: rgb(102, 102, 102);
           }
           .gz-sx-btn{
             width: 100%;
@@ -103,13 +108,13 @@
         cursor: pointer;
       }
       .user-m-box{
-        margin-top: 0.8rem;
-        padding: 1.4rem;
+        margin-top: 15px;
+        padding: 16px;
         .m-items-box{
           display: flex;
           align-items: center;
-          margin-top: 0.5rem;
-          font-size: 0.7rem;
+          margin-top: 10px;
+          font-size: 14px;
           img{
             width: 0.8rem;
             height: 0.8rem;

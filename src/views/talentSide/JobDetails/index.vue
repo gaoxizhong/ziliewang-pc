@@ -86,14 +86,7 @@
       </div>
     </div>
     <!-- 主题部分 结束 -->
-
-    <div class="chat-box">
-      <el-dialog title="聊一聊" v-dialogDrag :center="false" :modal="false" :close-on-click-modal="false" :visible.sync="dialogVisible" width="800px" :before-close="handleClose">
-        <div class="pc-preview-wrapper m-box">
-          <Chat :is_type="is_type" ref="chat"/>
-        </div>
-      </el-dialog>
-    </div>
+    <Chat :is_type="is_type" :company_id="infoData.company_id" ref="chat"/>
 
   </div>
 
@@ -104,7 +97,7 @@ import JobDescription from "./components/jobDescription";
 import CompanyProfile from "./components/companyProfile";
 import CompanyInfo from "./components/companyInfo"
 import OtherPositions from "./components/otherPositions"
-import Chat from "../components/chat.vue"
+import Chat from "./components/chat.vue"
 
 export default {
   name: 'JobDetails',
@@ -119,7 +112,6 @@ export default {
     return{
       infoData: {},
       company:{},
-      dialogVisible: false,
       is_type: 'chat'
     }
   },
@@ -202,21 +194,20 @@ export default {
         }
       })
     },
-    handleClose(done) {
-      this.dialogVisible = false;
-    },
+
     // 点击聊一聊
     clickChat(){
       let that = this;
+
       let p = {
         position_id: that.id,
         company_id: that.infoData.company_id,
         company_uid: that.infoData.company.uid,
-        content:'我对这个职位很感兴趣，希望可以和您聊聊，谢谢！'
+        content:''
       }
       that.$axios.post('/api/user/find-company',p).then( res =>{
         if(res.code == 0){
-          that.dialogVisible = true;
+          that.$refs.chat._data.dialogVisible = true;
           // that.$router.push('/communication');
         }else{
           that.$message.error({
@@ -498,32 +489,5 @@ export default {
   }
  
 
-  .chat-box /deep/ .el-dialog{
-    min-width: 320px;
-    height: 70%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-top: 0 !important;
-    .el-dialog__header{
-      text-align: left;
-      .el-dialog__title{
-        font-size: 16px;
-        color: $g_textColor;
-      }
-    }
-    .el-dialog__body{
-      padding: 20px 30px 30px;
-      height: calc(100vh - 128px);
-      overflow: overlay;
-      padding: 20px;
-      .pc-preview-wrapper{
-        border-radius: 4px;
-        border: 1px solid #e3e7ed;
-        padding: 20px 40px;
-        color: #414a60;
-        line-height: 26px;
 
-      }
-    }
-  }
 </style>

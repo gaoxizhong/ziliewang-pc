@@ -68,17 +68,15 @@
             <div class="item-content">
               <el-date-picker
                 v-model="infoData.begin_date"
-                type="year"
-                format="yyyy"
-                value-format="yyyy"
+                type="month"
+                value-format="yyyy-MM-dd"
                 placeholder="开始时间">
               </el-date-picker>
               <span class="span-line"> 至 </span>
               <el-date-picker
                 v-model="infoData.end_date"
-                type="year"
-                format="yyyy"
-                value-format="yyyy"
+                type="month"
+                value-format="yyyy-MM-dd"
                 placeholder="结束时间">
               </el-date-picker>
             </div>
@@ -134,7 +132,7 @@ export default {
         erformance: '', // 在校经历（选填）
       },
       is_creat: false,
-      education_backgroundList: ['初中及一下','中专/中技','高中','大专','本科','硕士','博士'], //学历
+      education_backgroundList: ['博士','硕士','本科','大专','中专/中技','高中','初中及以下'], //学历
       list_id: '', // 选中的列表id
     }
   },
