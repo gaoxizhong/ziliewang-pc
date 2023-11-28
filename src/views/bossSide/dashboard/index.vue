@@ -289,7 +289,8 @@ export default {
     },
     // input 框搜索按钮
     getExistLabels(){
-
+      let input_name = this.input_name;
+      that.$router.push({ path:'/searchTalent?input_name=' + input_name })
     },
     getSysMsgList(){
       let that = this;

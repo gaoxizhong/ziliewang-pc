@@ -277,9 +277,14 @@ export default {
     }
   },
   created(){
+    this.search_value = this.$router.query.input_name;
     this.getSearchinfo();
   },
   methods:{
+    clickTagname(n){
+      this.search_value = n;
+      this.getSearchinfo();
+    },
     // 点击我的收藏 --- 跳转到我的收藏
     myCollection(){
       this.$router.push('/myCollect');
