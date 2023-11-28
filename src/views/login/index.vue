@@ -90,7 +90,7 @@
               </div>
               <div class="login-check-box">
                 <el-checkbox v-model="sign_user.signChecked"></el-checkbox>
-                <div class="login-check-text">已阅读并同意<span>《用户协议》</span>和<span>《隐私政策》</span></div>
+                <div class="login-check-text">已阅读并同意<span @click.stop="clickUserAgreement">《用户协议》</span>和<span @click.stop="clickPrivacyPolicy">《隐私政策》</span></div>
               </div>
               <button type="submit" class="login-btn">免费注册</button>
             </form>
@@ -256,7 +256,7 @@ export default {
       this.sign_login = 'changePassword';
     },
     // 用户登录
-    LoginUserInfo(e){
+    LoginUserInfo(){
       let that = this;
       let login_way = that.login_way;
       let login_user = that.login_user;
@@ -266,12 +266,14 @@ export default {
         })
         return
       }
+        // 1 快捷登录
       if( login_way == 1 && login_user.code ==''){
         that.$message.error({
           message:'请输入验证码'
         })
         return
       }
+       // 2 密码登录
       if( login_way == 2 && login_user.password ==''){
         that.$message.error({
           message:'请输入密码'
@@ -401,9 +403,32 @@ export default {
           that.$message.success({
             message:'注册成功'
           })
-          setTimeout(()=>{
-            this.sign_login = 'login';
-          },1500)
+          
+          that.$axios.post('/api/login',{
+            phone: p.phone,
+            password: p.password,
+            tag: that.tag 
+          }).then( res =>{
+            let data = res.data;
+            setToken(data.token);   // 缓存
+            localStorage.setItem('tag', data.tag); // 用户身份 user、人才端 company、企业端缓存
+            if(data.tag == 'user'){
+              // 求职者
+              localStorage.setItem('name', data.user.real_name); // 用户名缓存
+              localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
+              localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
+              this.$store.dispatch('user/set_realAvatar', data.user.avatar); // vuex
+              this.$store.dispatch('user/SET_NAME', data.user.real_name);
+              setTimeout(() => {
+                this.$router.push('/myResume');
+              }, 1000);
+            }
+          }).catch( e=>{
+            console.log(e)
+          })
+          // setTimeout(()=>{
+          //   this.sign_login = 'login';
+          // },1500)
           return
         }else{
           that.$message.error({

@@ -397,7 +397,7 @@ export default {
       that.$axios.post('/api/company/find-user',p).then( res =>{
         console.log(res)
         if(res.code == 0){
-          that.$router.push('/interaction');
+          that.$router.push('/interaction?user_uid=' + i.uid);
         }else{
           that.$message.error({
             message:res.msg

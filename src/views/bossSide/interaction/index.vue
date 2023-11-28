@@ -16,7 +16,7 @@
       <div class="left-box">
         <div class="seach-box"></div>
         <div class="personAbility-box">
-          <div class="personAbility-items-box" :class="selt_index == index?'hover':''" v-for="(item,index) in sysMsgListData" :key="index" @click="clickmsgListData(item,index)">
+          <div class="personAbility-items-box" :class="user_uid == item.uid?'hover':''" v-for="(item,index) in sysMsgListData" :key="index" @click="clickmsgListData(item)">
             <img :src="item.user.avatar?item.user.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" v-if="item.user"/>
             <div class="name-box">
               <div class="name-t">
@@ -107,10 +107,7 @@
       </div>
 
       <div class="right-box chat-no-data" v-else>
-        <img src="../../../assets/image/bossSide/icon-chat-welcome.png" alt="" />
-        <div class="welcome-tips">
-          <p>与人才沟通，左侧列表中显示</p>
-        </div>
+        <el-empty el-empty description="与人才沟通，左侧列表中显示"></el-empty>
       </div>
 
     </div>
@@ -214,6 +211,7 @@ export default {
       },
       page: 1,
       pagesize: 20,
+      user_uid:'', // 对方uid
       selt_index: -1,
       selt_info: '',
       onlineResumeData:{}, // 在线简历
@@ -224,6 +222,9 @@ export default {
       numPages: 0
 
     }
+  },
+  created(){
+    this.user_uid = this.$route.query.user_uid;
   },
   mounted(){
     this.getSysMsgList();
@@ -295,10 +296,10 @@ export default {
         }
       })
     },
-    clickmsgListData(i,in_dx){
+    clickmsgListData(i){
       let that = this;
       that.selt_info = i;
-      that.selt_index = in_dx;
+      that.user_uid = i.uid;
       that.msgList = i.chat_list;
       that.scrollBottom(); // 页面滚动到底部
     },
@@ -317,7 +318,14 @@ export default {
       }).then( res =>{
         console.log(res)
         if(res.code == 0){
-          that.sysMsgListData = res.data;
+          let sysMsgListData = res.data;
+          that.sysMsgListData = sysMsgListData;
+          sysMsgListData.forEach( ele =>{
+            if(ele.uid == that.user_uid){
+              console.log(ele)
+              that.clickmsgListData(ele)
+            }
+          })
           // that.selt_info = that.sysMsgListData[that.selt_index]
         }else{
           that.$message.error({

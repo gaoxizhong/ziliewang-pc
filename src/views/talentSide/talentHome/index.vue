@@ -100,6 +100,10 @@ export default {
     
   },
   methods: {
+    clickTagname(n){
+      this.input_name = n;
+      this.getSearchinfo();
+    },
     clickItems(i){
       this.$router.push({
         path:'/JobDetails',

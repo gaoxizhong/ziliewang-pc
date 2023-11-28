@@ -273,6 +273,10 @@ export default {
       height: 30px;
       line-height: 30px;
     }
+    /deep/ .el-range-editor.is-active, /deep/ .el-range-editor.is-active:hover,/deep/ .el-select .el-input__inner:focus,/deep/ .el-select .el-input.is-focus .el-input__inner{
+      border-color: $g_color;
+    }
+    
 
   }
   .filter-options-container .selected-options-box .selected-options-title {
