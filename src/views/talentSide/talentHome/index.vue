@@ -10,7 +10,7 @@
       <div class="hotJob-box">
         <span class="hotJob-span">热门岗位</span>
         <div class="hotJob-item-box">
-          <a href="javascript:0;" class="hotJob-item" v-for="(item,index) in hotJob_options" :key="index" @click="clickTagname(item)">{{item}}</a>
+          <a href="javascript:0;" class="hotJob-item" v-for="(item,index) in hotJob_options" :key="index" @click="clickTagname(item.position_name)">{{item.position_name}}</a>
         </div>
       </div>
 
@@ -43,9 +43,9 @@
             </div>
           </div>
           <div class="items-right-box" style="flex-direction: column;justify-content: center;">
-            <img src="../../../assets/image/img-user.jpg" alt="" class="items-boss-img" />
-            <div class="items-boss-name">{{ item.publish_name }}</div>
-            <div class="items-boss-g">人事</div>
+            <img :src="item.avatar?item.avatar:require('../../../assets/image/img-user.jpg')" alt="" class="items-boss-img" />
+            <!-- <div class="items-boss-name">{{ item.publish_name }}</div> -->
+            <div class="items-boss-g">{{ item.role_desc?item.role_desc:'人事' }}</div>
           </div>
         </div>
         <!-- 列表结束 -->
@@ -58,6 +58,12 @@
       <!-- 右侧 个人信息操作模块 开始 -->
       <div class="info-right-box">
         <personalInfo />
+        <div class="m-box margin-top-20">
+          <a href="https://chinese.llama.family/" target="_brak" class="zlhx-box">
+            <p class="p-1">cometgpt</p>
+            <p class="p-2">自猎彗星</p>
+          </a>
+        </div>
       </div>
       <!-- 右侧 个人信息操作模块 结束 -->
     </div>
@@ -82,7 +88,7 @@ export default {
   data(){
     return{
       input_name:'', // 搜索框value
-      hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
+      hotJob_options: [],
       tag: '',
       infoList: [], // 列表
       // 分页数据
@@ -95,6 +101,7 @@ export default {
   },
   created(){
     this.getSearchinfo();
+    this.gethotJobList();
   },
   computed: {
     
@@ -115,6 +122,19 @@ export default {
     // 分页事件
     pageHasChanged() {
       this.getSearchinfo();
+    },
+    gethotJobList(){
+      let that = this;
+      that.$axios.post('/api/company-position/hot',{}).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.hotJob_options = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
     },
     // 搜索
     getSearchinfo(){
@@ -199,7 +219,7 @@ export default {
         flex-wrap: wrap;
         align-items: center;
         a{
-          padding: 4px 20px;
+          padding: 4px 10px;
           border-radius: 4px;
           background: #fff;
           text-align: center;
@@ -220,6 +240,27 @@ export default {
     .info-right-box{
       width: 19rem;
       padding-left: 0.8rem;
+      .zlhx-box{
+        width: 100%;
+        cursor: pointer;
+        &>p{
+          color: transparent;
+          background-image: linear-gradient(45deg, gold, purple, cyan, deeppink);
+          -webkit-background-clip: text;
+          background-clip: text;
+          font-weight: bold;
+        }
+        .p-1{
+          line-height: 22px;
+          font-size: 18px;
+        }
+        .p-2{
+          line-height: 22px;
+          font-size: 20px;
+          margin-top:2px;
+        }
+      }
+        
     }
   }
 
@@ -359,4 +400,5 @@ export default {
   .list-items:nth-of-type(1){
     margin-top: 0 !important;
   }
+
 </style>

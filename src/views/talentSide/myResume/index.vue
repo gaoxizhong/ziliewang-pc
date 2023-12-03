@@ -1,125 +1,144 @@
 <template>
   <!-- 我的简历页 -->
-  <div class="container">
-    <div class="tab-box">
-      <div :class="is_titleTab == 1? 'hover':'' " @click="clickPreviewResume(1)">预览简历</div>
-      <div :class="is_titleTab == 2? 'hover':'' " @click="clcikRefresh(2)">刷新简历</div>
-      <!-- <div :class="is_titleTab == 3? 'hover':'' " @click="clickTitleTab(3)">简历优化</div> -->
-    </div>
-    
-    <div class="info-box">
-      <div class="info-left-box" id="myReaume">
-        <!-- 个人信息 开始 -->
-        <MyInfo :data="infoData.basic_info" @refreshInfo="refreshInfo"/>  
-        <!-- 个人信息 结束 -->
-
-        <!-- 求职期望 开始 -->
-        <JobExpectation :data="infoData.job_expectation" @refreshInfo="refreshInfo"/>  
-        <!-- 求职期望 结束 -->
-        
-        <!-- 工作经历 开始 -->
-        <WorkExperience :data="infoData.work_experience" @refreshInfo="refreshInfo"/>  
-        <!-- 工作经历 结束 -->
-
-        <!-- 项目经历 开始 -->
-        <ProjectExperience :data="infoData.project_experience" @refreshInfo="refreshInfo"/>  
-        <!-- 项目经历 结束 -->
-
-        <!-- 教育经历 开始 -->
-        <EducationExperience :data="infoData.education_experience" @refreshInfo="refreshInfo"/>  
-        <!-- 教育经历 结束 -->
-
+  <div class="container scrollbar-box">
+    <el-scrollbar style="height:100%;" ref="scrollbar">
+      <div class="tab-box">
+        <div :class="is_titleTab == 1? 'hover':'' " @click="clickPreviewResume(1)">预览简历</div>
+        <div :class="is_titleTab == 2? 'hover':'' " @click="clcikRefresh(2)">刷新简历</div>
+        <!-- <div :class="is_titleTab == 3? 'hover':'' " @click="clickTitleTab(3)">简历优化</div> -->
       </div>
-      <!-- 右侧模块 开始 -->
-      <div class="info-right-box">
-        <div class="right-box up-attachments-box">
-          <div class="up-att-t">
-            <span class="span-1">上传附件简历</span>
-            <el-upload class="upload-demo"
-              drag ref="upload" 
-              action= "none"
-              :accept="accept" 
-              :limit="1"
-              :show-file-list="false"
-              multiple
-              :http-request="uploadArticleCover" 
-              :on-exceed='limitCheck'
-            >
-              <span class="span-2">去上传<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
-            </el-upload>
-          </div>
-          <div class="up-box-Instructions">在附件中展示更多优势与特长</div>
+      
+      <div class="info-box">
+        <div class="info-left-box" id="myReaume">
+          <!-- 个人信息 开始 -->
+          <MyInfo :data="infoData.basic_info" @refreshInfo="refreshInfo"/>  
+          <!-- 个人信息 结束 -->
 
-          <div class="attachments-list-box">
-            <div class="list-title">附件管理</div>
-            <div class="list-items" v-if="curriculum_vitae != '' ">
-              <span class="items-title" @click.stop="clickVitae(curriculum_vitae)">个人简历.pdf</span>
-              <img src="../../../assets/image/delete.png" alt="" class="img" @click.stop="clickVitaeDelet"/>
-            </div>
-            <div v-else>
-              <span>暂无</span>
-            </div>
-          </div>
+          <!-- 求职期望 开始 -->
+          <JobExpectation :data="infoData.job_expectation" @refreshInfo="refreshInfo" id="qw"/>  
+          <!-- 求职期望 结束 -->
+          
+          <!-- 工作经历 开始 -->
+          <WorkExperience :data="infoData.work_experience" @refreshInfo="refreshInfo" id="gz"/>  
+          <!-- 工作经历 结束 -->
+
+          <!-- 项目经历 开始 -->
+          <ProjectExperience :data="infoData.project_experience" @refreshInfo="refreshInfo" id="xm"/>  
+          <!-- 项目经历 结束 -->
+
+          <!-- 教育经历 开始 -->
+          <EducationExperience :data="infoData.education_experience" @refreshInfo="refreshInfo" id="jy"/>  
+          <!-- 教育经历 结束 -->
 
         </div>
+        <!-- 右侧模块 开始 -->
+        <div class="info-right-box">
+          <div class="right-box up-attachments-box">
+            <div class="up-att-t">
+              <span class="span-1">上传附件简历</span>
+              <el-upload class="upload-demo"
+                drag ref="upload" 
+                action= "none"
+                :accept="accept" 
+                :limit="1"
+                :show-file-list="false"
+                multiple
+                :http-request="uploadArticleCover" 
+                :on-exceed='limitCheck'
+              >
+                <span class="span-2">去上传<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+              </el-upload>
+            </div>
+            <div class="up-box-Instructions">在附件中展示更多优势与特长</div>
 
-        <div class="right-box resume-improvement-box">
-          <div class="improvement-att-t">
-            <span class="span-1">简历待完善项</span>
-            <img src="../../../assets/image/Frame_9.png" alt="" />
-          </div>
-          <div class="improvement-box-Instructions">完善后获更强竞争力</div>
-
-          <div class="improvement-items-box">
-            <div class="i-items">
-              <div class="up-att-t">
-                <span class="span-1">基本信息</span>
-                <span class="span-2">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+            <div class="attachments-list-box">
+              <div class="list-title">附件管理</div>
+              <div class="list-items" v-if="curriculum_vitae != '' ">
+                <span class="items-title" @click.stop="clickVitae(curriculum_vitae)">个人简历.pdf</span>
+                <img src="../../../assets/image/delete.png" alt="" class="img" @click.stop="clickVitaeDelet"/>
               </div>
-              <div class="up-box-Instructions">必填字段缺失 <span>·1项</span></div>
+              <div v-else>
+                <span>暂无</span>
+              </div>
             </div>
 
-            <!-- <div class="i-items">
-              <div class="up-att-t">
-                <span class="span-1">工作经历</span>
-                <span class="span-2">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
-              </div>
-              <div class="up-box-Instructions">宁波...必填字段缺失 <span>·1项</span></div>
-            </div> -->
-            
-
           </div>
-        </div>
 
-        <div class="right-box integrity-box">
-          <div class="integrity-att-t">中文简历完整度</div>
-          <div></div>
-          <div class="integrity-instructions">完善后获更强竞争力</div>
-        </div>
+          <div class="right-box resume-improvement-box">
+            <div class="improvement-att-t">
+              <span class="span-1">简历待完善项</span>
+              <img src="../../../assets/image/Frame_9.png" alt="" />
+            </div>
+            <div class="improvement-box-Instructions">完善后获更强竞争力</div>
 
+            <div class="improvement-items-box">
+              <!-- <div class="i-items">
+                <div class="up-att-t">
+                  <span class="span-1">基本信息</span>
+                  <span class="span-2">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+                </div>
+                <div class="up-box-Instructions">必填字段缺失 <span>·1项</span></div>
+              </div> -->
+              <div class="i-items" v-if="job_expectation.length <= 0">
+                <div class="up-att-t">
+                  <span class="span-1">求职期望</span>
+                  <span class="span-2" @click="goto('qw')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+                </div>
+                <div class="up-box-Instructions">请补充求职期望 <span>·1项</span></div>
+              </div>
+              <div class="i-items" v-if="work_experience.length <= 0">
+                <div class="up-att-t">
+                  <span class="span-1">工作经历</span>
+                  <span class="span-2" @click="goto('gz')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+                </div>
+                <div class="up-box-Instructions">请补充工作经历 <span>·1项</span></div>
+              </div>
+              <div class="i-items" v-if="project_experience.length <= 0">
+                <div class="up-att-t">
+                  <span class="span-1">项目经历</span>
+                  <span class="span-2" @click="goto('xm')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+                </div>
+                <div class="up-box-Instructions">请补充项目经历 <span>·1项</span></div>
+              </div>
+              <div class="i-items" v-if="education_experience.length <= 0">
+                <div class="up-att-t">
+                  <span class="span-1">教育经历</span>
+                  <span class="span-2" @click="goto('jy')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+                </div>
+                <div class="up-box-Instructions">请补充教育经历 <span>·1项</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-box integrity-box">
+            <div class="integrity-att-t">中文简历完整度</div>
+            <div></div>
+            <div class="integrity-instructions">完善后获更强竞争力</div>
+          </div>
+
+        </div>
+        <!-- 右侧模块 结束 -->
       </div>
-      <!-- 右侧模块 结束 -->
-    </div>
 
-    <!-- 预览附件简历pdf 弹窗  -->
-    <div class="container-pdf">
-      <el-dialog title="附件预览" :center="false" :visible.sync="dialogVisible" width="800px" :before-close="handleClose">
-        <div class="pdf-preview-box">
-          <div class="pdfViewer" id="viewer">
-            <pdf :src="src" style="width: 100%;" :page="i" v-for="i in numPages" :key="i" ref="pdf"></pdf>
+      <!-- 预览附件简历pdf 弹窗  -->
+      <div class="container-pdf">
+        <el-dialog title="附件预览" :center="false" :visible.sync="dialogVisible" width="800px" :before-close="handleClose">
+          <div class="pdf-preview-box">
+            <div class="pdfViewer" id="viewer">
+              <pdf :src="src" style="width: 100%;" :page="i" v-for="i in numPages" :key="i" ref="pdf"></pdf>
+            </div>
           </div>
-        </div>
-      </el-dialog>
-    </div>
+        </el-dialog>
+      </div>
 
-    <!-- 查看在线简历弹窗 开始 -->
-    <div>
-      <onlineResume :infoData="infoData" :is_type="is_type" ref="onlineResume"/>
-    </div>
-    <!-- 查看在线简历弹窗 结束 -->
-    
+      <!-- 查看在线简历弹窗 开始 -->
+      <div>
+        <onlineResume :infoData="infoData" :is_type="is_type" ref="onlineResume"/>
+      </div>
+      <!-- 查看在线简历弹窗 结束 -->
+    </el-scrollbar>
+      
   </div>
-
 </template>
 
 <script>
@@ -145,6 +164,10 @@ export default {
     return{
       is_titleTab: 3,
       infoData:{}, // 信息
+      education_experience: [], // 教育
+      job_expectation: [], //求职期望
+      project_experience: [], // 项目经历
+      work_experience: [], // 工作经历
       accept:'.pdf', // 接受上传文件
       curriculum_vitae: "", // 附件简历
       dialogVisible: false,
@@ -167,6 +190,13 @@ export default {
     this.getUserProfile();
   },
   methods: {
+    goto(el){
+      let that = this;
+      var _dom = document.getElementById(el);
+      setTimeout(() => {
+        that.$refs.scrollbar.wrap.scrollTop = _dom.offsetTop
+      },500);
+    },
     handleClose(done) {
       this.dialogVisible = false;
       this.zx_dialogVisible = false;
@@ -224,6 +254,10 @@ export default {
         console.log(res.data)
         if(res.code == 0){
           this.infoData = res.data;
+          this.education_experience = res.data.education_experience;
+          this.job_expectation = res.data.job_expectation;
+          this.project_experience = res.data.project_experience;
+          this.work_experience = res.data.work_experience;
           this.curriculum_vitae = res.data.basic_info.curriculum_vitae;
         }
       }).catch(e =>{
@@ -282,6 +316,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .container-box .container{
+    margin: 0 auto;
+  }
+  .scrollbar-box{
+    padding-top: 1.2rem;
+    height: calc(100vh - 122px); //一定要设置，保证占满
+    overflow: hidden; //一定要设置，多余的先隐藏
+  }
+  .scrollbar-box /deep/ .el-scrollbar__wrap{
+    overflow: auto;
+  }
  .tab-box{
   width: 100%;
   display: flex;
@@ -412,6 +457,7 @@ export default {
               color: $g_color;
               line-height: 22px;
               margin-left: 10px;
+              cursor: pointer;
             }
           }
           .up-box-Instructions{

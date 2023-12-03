@@ -50,7 +50,7 @@
     </div>
 
     <div class="centent-dialog">
-      <el-dialog title="新增员工" :visible.sync="addDialog.visible" width="600px">
+      <el-dialog :title="dialog_title" :visible.sync="addDialog.visible" width="600px">
         <el-form
           ref="addForm"
           :model="addDialog.form"
@@ -136,7 +136,10 @@ export default {
         staff_name : [{ required: true, message: '填写姓名', trigger: 'blur' }],
         phone: [{ required: true, message: '填写电话', trigger: 'blur' }],
         password: [{ required: true, message: '填写密码', trigger: 'blur' }],
-      }
+      },
+      type:'create', // create 新增；  edit 修改
+      id: '',
+      dialog_title:'新增员工'
     }
   },
   created() {
@@ -178,9 +181,12 @@ export default {
       this.addDialog.form = {
         staff_name: row.staff_name,
         phone: row.phone,
-        password: row.password,
         role_id: row.role_id,
+        password: row.password?row.password:'',
       }
+      this.id = row.id;
+      this.type = 'edit';
+      this.dialog_title = '修改信息';
       this.addDialog.visible = true
     },
     // 分页事件
@@ -188,16 +194,30 @@ export default {
       this.getTableData();
     },
     addAccount() {
-      this.addDialog.visible = true
+      this.dialog_title = '新增员工';
+      this.addDialog.form = {};
+      this.addDialog.visible = true;
       
     },
     handleAddAcount() {
       let that = this;
+      let type = this.type;
       let form = that.addDialog.form;
-      that.$axios.post('/api/staff/create',form).then( res =>{
+      let url = '';
+      let message = '';
+      if(type == 'create'){
+        url = '/api/staff/create';
+        message = '添加成功!';
+      }
+      if(type == 'edit'){
+        url = '/api/staff/edit';
+        message = '修改成功!';
+        form.id = that.id
+      }
+      that.$axios.post(url,form).then( res =>{
         if(res.code == 0){
           that.$message.success({
-            message: '添加成功!'
+            message,
           })
           that.addDialog.visible = false;
           that.getTableData();
@@ -206,6 +226,8 @@ export default {
             message:res.msg
           })
         }
+      }).catch( e =>{
+        console.log(e)
       })
     }
   }

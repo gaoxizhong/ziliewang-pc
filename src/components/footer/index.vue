@@ -26,7 +26,7 @@ export default {
   .footer-box{
     width: 100%;
     background: #061528;
-    padding-bottom: 10px;
+    height: 62px;
     &>div{
       width: 100%;
       text-align: center;

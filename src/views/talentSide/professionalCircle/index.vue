@@ -1,13 +1,16 @@
 <template>
   <!-- 职圈 -->
-  <div>
+  <div id="professionalCircle">
     <div class="container-title-box">
-      <el-tabs v-model="tag" @tab-click="handleClick">
-        <el-tab-pane label="推荐" name="recommend"></el-tab-pane>
-        <el-tab-pane label="热门" name="hot"></el-tab-pane>
-        <el-tab-pane label="关注" name="attention"></el-tab-pane>
-        <el-tab-pane label="直播" name="live"></el-tab-pane>
-      </el-tabs>
+      <div style="width: 1200px; position: relative;">
+        <el-tabs v-model="tag" @tab-click="handleClick">
+          <el-tab-pane label="推荐" name="recommend"></el-tab-pane>
+          <el-tab-pane label="热门" name="hot"></el-tab-pane>
+          <el-tab-pane label="关注" name="attention"></el-tab-pane>
+          <el-tab-pane label="直播" name="live"></el-tab-pane>
+        </el-tabs>
+        <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
+      </div>
     </div>
     <div class="container info-box" v-if="tag == 'recommend' || tag == 'hot'|| tag == 'attention'">
       <div class="info-left-box">
@@ -69,6 +72,49 @@
     <div class="container info-box" style="justify-content: center;" v-if="tag == 'live'"> 
       <live />
     </div>
+
+
+
+    <!-- 、、、、 发布弹窗 、、、、 -->
+    <el-dialog :visible.sync="dialogVisible" width="640px" :before-close="handleClose">
+      <div class="dialog-bodybox">
+        <div class="dialog-img-box">
+
+          <div class="img-item" v-for="(item,index) in upImgList" :key="index">
+            <img :src="item.upload_files" alt="" />
+          </div>
+
+          <div class="img-item add">
+            <el-upload class="avatar-uploader" 
+              ref="upload" 
+              action= "none"
+              multiple
+              :limit="3"
+              :show-file-list="false"
+              :before-upload="beforeAvatarUpload"
+              :data="uploadData"
+              :http-request="uploadArticleCover" 
+              >
+              <i class="el-icon-plus"></i>
+            </el-upload>
+          </div>
+
+        </div>
+        <div class="dialog-content-box">
+          <el-input
+            type="textarea"
+            :rows="8"
+            placeholder="请输入内容"
+            v-model="textarea">
+          </el-input>
+        </div>
+      </div>
+      
+      <div slot="footer" class="dialog-footer">
+        <!-- <div><span>1</span><span>2</span><span>3</span></div> -->
+        <el-button type="primary" @click="clickMaskBtn">发布</el-button>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
@@ -87,7 +133,14 @@ export default {
     return{
       tag: 'recommend',
       page: 1,
-      dataList:[]
+      dataList:[],
+      dialogVisible: false,
+      uploadData:{
+        up_tag: 'other'
+      },
+      textarea:'',
+      upImgList:[],
+      is_return: true,
     }
   },
   computed: {
@@ -141,8 +194,79 @@ export default {
           id:i.id,
         }
       })
-    }
+    },
+     // 点击发布
+    clickPublishBtn(){
+      this.dialogVisible = true;
+    },  
+    //点击弹窗发布按钮
+    clickMaskBtn(){
+      let upImgList = this.upImgList;
+      let images = [];
+      upImgList.forEach( ele =>{
+        images.push(ele.upload_files_path)
+      })
+      let str = images.toString(',');
+      let p = {
+        content: this.textarea,
+        images: str
+      }
+
+      if( !this.is_return ){
+        return
+      }
+      this.is_return = false;
+      this.$axios.post('/api/profession-circle/create',p).then( res =>{
+        if(res.code == 0){
+          this.$message.success('发布成功！');
+          this.dialogVisible = false;
+          this.upImgList = [];
+          // 获取用户职圈信息
+          this.getList();
+        } 
+        this.is_return = true;
+      }).catch(e =>{
+        console.log(e)
+        this.is_return = true;
+      })
+      
+    },
+    handleClose(done) {
+      this.dialogVisible = false;
+    },
+     // 上传图片
+     uploadArticleCover(param){
+      console.log(param.file)
+      const formData = new FormData();
+      formData.append('file[]',param.file);
+      formData.append('pictureCategory','articleCover');
+      formData.append('up_tag','other');
+      this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
+        console.log(res)
+        let data = res.data;
+        this.upImgList.push(data);
+
+        this.$refs['upload'].clearFiles();
+      }).catch( e=>{
+        console.log('erro')
+        this.$refs['upload'].clearFiles()
+      })
+    },
+    beforeAvatarUpload(file) {
+      console.log(file)
+      const isJPG = file.type === 'image/png' || 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 jpeg 或 png 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
   },
+ 
 };
 </script>
 
@@ -159,6 +283,7 @@ export default {
         height: 100%;
         .el-tabs__header {
           height: 100%;
+          margin: 0;
           .el-tabs__nav-wrap{
             height: 100%;
             line-height: 3rem;
@@ -168,6 +293,8 @@ export default {
             .el-tabs__nav-scroll {
               height: 100%;
               padding: 0 20px;
+              display: flex;
+              justify-content: center;
               .el-tabs__item.is-active{
                 color: $g_color;
               }
@@ -298,6 +425,127 @@ export default {
     .info-right-box{
       width: 380px;
       padding-left: 0.8rem;
+    }
+  }
+  .fb-btn{
+    width: 98px;
+    height: 30px;
+    line-height: 30px;
+    background: $g_bg;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  ////// ==========  发圈弹窗样式 ============== 
+  #professionalCircle /deep/ .el-dialog{
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    .dialog-bodybox{
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #E5E6EB;
+      padding: 12px;
+      .dialog-img-box{
+        width: 100%;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        .img-item{
+          width: 76px;
+          height: 76px;
+          background: #f7f8fa;
+          flex-shrink: 0;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          border: 1px solid #dedfe0;
+          margin-left: 0.6rem;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            -o-object-fit: cover;
+            object-fit: cover;
+            display: block;
+          }
+          &:nth-of-type(1){
+            margin-left: 0;
+          }
+        }
+        .img-item.add {
+          transition: all .2s ease-in-out;
+          border: 1px dashed #dedfe0;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          font-weight: bold;
+          color: $g_textColor;
+          .avatar-uploader{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .el-upload {
+              display: inline-block;
+              text-align: center;
+              cursor: pointer;
+              outline: 0;
+              width: 100%;
+              height: 100%;
+              line-height: 76px;
+            }
+            .el-upload-dragger{
+              width: 100%;
+              height: 100%;
+              background: none;
+              border: none;
+            }
+          }
+        }
+
+      }
+      .dialog-content-box{
+        width: 100%;
+        height: 100%;
+        margin-top: 16px;
+        .el-textarea__inner{
+          font-size: 14px;
+          padding: 0;
+          border: none;
+          &:focus{
+            border-color: $g_color;
+          }
+        }
+      }
+    }
+    .el-dialog__body{
+      padding: 30px 20px 0 20px;
+    }
+    .el-button{
+      padding: 0;
+      width: 100px;
+      height: 40px;
+      line-height: 40px;
+    }
+    .el-button--primary{
+      background-color: $g_color;
+      border-color: $g_color;
     }
   }
 </style>

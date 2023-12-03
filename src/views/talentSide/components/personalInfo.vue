@@ -11,16 +11,16 @@
       </div>
     </div>
     <div class="infoTab-box">
-      <div class="infoTab-items">
-        <span class="infoTab-items-num">39</span>
+      <div class="infoTab-items" @click="goTomyProfessionalCircle">
+        <span class="infoTab-items-num">{{ basic_info.see_me_num }}</span>
         <span class="infoTab-items-name">谁看过我</span>
       </div>
-      <div class="infoTab-items">
-        <span class="infoTab-items-num">12</span>
+      <div class="infoTab-items" @click="goTo('myDelivery')">
+        <span class="infoTab-items-num">{{ basic_info.deliver_resume_num }}</span>
         <span class="infoTab-items-name">我的投递</span>
       </div>
-      <div class="infoTab-items">
-        <span class="infoTab-items-num">25</span>
+      <div class="infoTab-items" @click="goTo('myCollection')">
+        <span class="infoTab-items-num">{{ basic_info.collection_num }}</span>
         <span class="infoTab-items-name">我的收藏</span>
       </div>
     </div>
@@ -33,7 +33,7 @@
         <img src="../../../assets/image/Frame_12.png" alt="" />
         <span class="setTab-items-name">查看简历</span>
       </div>
-      <div class="setTab-items" @click="goTo">
+      <div class="setTab-items" @click="goTo('myDelivery')">
         <img src="../../../assets/image/Frame_12.png" alt="" />
         <span class="setTab-items-name">我的投递</span>
       </div>
@@ -50,7 +50,7 @@ export default {
   data(){
     return{
       infoData:{}, // 信息
-      
+      basic_info:{},
     }
   },
   computed: {
@@ -61,8 +61,11 @@ export default {
     this.getUserProfile();
   },
   methods: {
-    goTo(){
-      this.$router.push('/myDelivery');
+    goTomyProfessionalCircle(){
+      this.$router.push('/myProfessionalCircle');
+    },
+    goTo(type){
+      this.$router.push('/myDelivery?tag=' + type);
     },
     // 点击我的简历
     goToMyResume(){
@@ -78,6 +81,7 @@ export default {
       that.$axios.post('/api/user/profile',{}).then(res =>{
         if(res.code == 0){
           this.infoData = res.data;
+          this.basic_info = res.data.basic_info;
           this.curriculum_vitae = res.data.basic_info.curriculum_vitae;
         }
       }).catch(e =>{

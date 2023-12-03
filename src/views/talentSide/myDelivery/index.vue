@@ -60,7 +60,15 @@ export default {
     
   },
   created(){
-    this.getUserMyDeliverList(this.sub_tag);
+    this.tag = this.$route.query?this.$route.query.tag:'myDelivery';
+    if(this.tag == 'myDelivery'){
+        // 我的投递
+        this.getUserMyDeliverList(this.sub_tag);
+      }
+      if(this.tag == 'myCollection'){
+        // 我的收藏
+        this.getUserCollectionList();
+      }
   },
   methods: {
     handleClick(tab, event){

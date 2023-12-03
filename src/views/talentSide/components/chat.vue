@@ -129,7 +129,7 @@
       <!-- <div class="welcome-tips">
         <p>与Boss沟通，左侧列表中显示</p>
       </div> -->
-      <el-empty description="与Boss沟通，左侧列表中显示"></el-empty>
+      <el-empty description="与企业沟通，左侧列表中显示"></el-empty>
     </div>
 
   </div>

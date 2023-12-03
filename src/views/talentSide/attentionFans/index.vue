@@ -23,6 +23,7 @@
               </div>
             </div>
             <!-- 列表项 结束 -->
+            <el-empty description="暂无数据..." v-if="commentReplyList.length<= 0"></el-empty>
           </div>
         </el-tab-pane>
         <!-- 关注 -->
@@ -55,6 +56,7 @@
               </div>
             </div>
             <!-- 列表项 结束 -->
+            <el-empty description="暂无数据..." v-if="dataList.length<= 0"></el-empty>
           </div>
         </el-tab-pane>
         <!-- 粉丝 -->
@@ -88,6 +90,7 @@
               </div>
             </div>
             <!-- 列表项 结束 -->
+            <el-empty description="暂无数据..." v-if="dataList.length<= 0"></el-empty>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -114,7 +117,8 @@ export default {
     
   },
   created(){
-    this.tag = this.$route.query.tag;
+    console.log(this.$route.query)
+    this.tag = this.$route.query.tag?this.$route.query.tag:'attention';
     this.see_uid = this.$route.query.see_uid;
   }, 
   mounted(){

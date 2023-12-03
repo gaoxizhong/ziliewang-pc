@@ -26,7 +26,7 @@
             <span>职圈</span>
           </div>
           <div @click="clickMessage" :class="activeMenu == '/communication'?'hover':''">
-            <img src="../../../assets/image/nav_1.png" alt="" />
+            <img src="../../../assets/image/icon-wechat1.png" alt="" />
             <span>消息</span>
           </div>
         </div>

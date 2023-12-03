@@ -4,7 +4,12 @@
       <div class="user-top">
         <img :src="infoData.avatar?infoData.avatar:require('../../../../assets/image/img-user.jpg' )" alt="" class="user-img"/>
         <p class="user-name">{{ infoData.real_name }}</p>
-        <p class="user-introduce">{{ infoData.position }}&nbsp;&nbsp;{{ infoData.company_name }}&nbsp;&nbsp;已关注<span @click="clickAttention('attention')">{{ infoData.attention_num }}</span>人&nbsp;&nbsp;有<span @click="clickAttention('fans')">{{ infoData.fan_num }}</span>个粉丝</p>
+        <p class="user-introduce">
+          {{ infoData.position }}&nbsp;&nbsp;{{ infoData.company_name }}&nbsp;&nbsp;已关注
+          <span @click="clickAttention('attention')">{{ infoData.attention_num }}</span>
+          人&nbsp;&nbsp;有
+          <span @click="clickAttention('fans')">{{ infoData.fan_num }}</span>个粉丝
+      </p>
       </div>
       <!-- <div class="user-top-num">
         <div @click="clickAttention('attention')">
@@ -22,14 +27,14 @@
       <div class="option-box">
         <div class="option-title">工作经历</div>
         <ul class="row-options-detail-box">
-          <li class="options-item" v-for="(item,index) in work_experience" :key="index">
+          <li class="options-item" v-for="(item,index) in infoData.user_work_experience" :key="index">
             <div class="image-box">
               <img src="../../../../assets/image/work-icon.png" alt="" />
             </div>
             <div class="item-info">
-              <div>总经理</div>
-              <div>北京菁苗科技有限公司</div>
-              <p>2022-05-10 — 至今</p>
+              <div>{{ item.position }}</div>
+              <div>{{item.company_name}}</div>
+              <p>{{ item.begin_date }} — {{ item.end_date }}</p>
             </div>
           </li>
         </ul>
@@ -37,14 +42,14 @@
       <div class="option-box">
         <div class="option-title">教育经历</div>
         <ul class="row-options-detail-box">
-          <li class="options-item" v-for="(item,index) in education_experience" :key="index">
+          <li class="options-item" v-for="(item,index) in infoData.user_education_experience" :key="index">
             <div class="education-image-box">
               <img src="../../../../assets/image/work-icon.png" alt="" />
             </div>
             <div class="item-info">
-              <div>复旦大学</div>
-              <div>硕士 · 管理学</div>
-              <p>2022-05-10 — 至今</p>
+              <div>{{ item.school }}</div>
+              <div>{{ item.education_background }} · {{ item.specialty }}</div>
+              <p>{{ item.school_date }}</p>
             </div>
           </li>
         </ul>
@@ -71,28 +76,24 @@ export default {
   },
   data(){
     return{
-      work_experience:[ {},{}],
-      education_experience: [{},{}]
     }
   },
   mounted(){
   
   },
   computed: {
-    // 点击关注/粉丝
-    clickAttention(tag){
+   
+  },
+  methods: {
+    clickAttention(name){
       this.$router.push({
         path:'/attentionFans',   //跳转的路径
         query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-          tag,
+          tag:name,
           see_uid: localStorage.getItem('realUid')
         }
       })
     },
-  },
-  methods: {
-   
-    
   },
 };
 </script>

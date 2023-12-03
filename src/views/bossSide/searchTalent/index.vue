@@ -277,7 +277,7 @@ export default {
     }
   },
   created(){
-    this.search_value = this.$router.query.input_name;
+    this.search_value = this.$route.query.input_name;
     this.getSearchinfo();
   },
   methods:{
