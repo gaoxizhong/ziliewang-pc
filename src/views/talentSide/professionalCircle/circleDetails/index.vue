@@ -3,11 +3,11 @@
     <div class="info-left-box">
       <div class="info-right-container">
         <!-- 列表项 开始 -->
-        <div class="container-items-box">
+        <div class="container-items-box" v-if="infoData.users">
           <div class="right-container-item">
             <div class="title">
-              <div class="title-left" @click.stop="clickName(infoData)">
-                <img :src="infoData.users.avatar" alt="" class="avatar-img"/>
+              <div class="title-left" @click.stop="clickName(infoData)" >
+                <img :src="infoData.users.avatar?infoData.users.avatar:require('../../../../assets/image/img-user.jpg')" alt="" class="avatar-img"/>
                 <span>{{ infoData.users.name }}</span>
               </div>
               <div class="title-t">{{ infoData.createtime }}</div>
@@ -56,7 +56,7 @@
                   <li v-for="(items,index) in infoData.comment_list" :key="index">
                     <div class="title">
                       <div class="title-left" @click.stop="clickName(items)">
-                        <img :src="items.avatar" alt="" class="avatar-img"/>
+                        <img :src="items.avatar?items.avatar:require('../../../../assets/image/img-user.jpg')" alt="" class="avatar-img"/>
                         <span>{{ items.name }}</span>
                         <img src="../../../../assets/image/right-one.png" alt="" class="right-one" v-if="items.reply_id"/>
                         <span v-if="items.reply_id">{{ items.publish_name }}</span>

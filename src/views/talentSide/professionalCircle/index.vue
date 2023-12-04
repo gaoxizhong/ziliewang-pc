@@ -17,7 +17,7 @@
         <div class="info-right-container">
           <!-- 列表项 开始 -->
           <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
-            <div class="right-container-item" @click.stop="clicklistItems(item)">
+            <div class="right-container-item" @click.stop="clicklistItems(item)" v-if="item.users">
               <div class="title">
                 <div class="title-left" @click.stop="clickName(item)">
                   <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" />

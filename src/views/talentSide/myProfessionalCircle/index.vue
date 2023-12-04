@@ -22,8 +22,8 @@
             <div class="right-container-item" @click.stop="clicklistItems(item)">
               <div class="title">
                 <div class="title-left">
-                  <img :src="infoData.avatar" alt="" />
-                  <span>{{ infoData.name }}</span>
+                  <img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg' )" alt="" />
+                  <span>{{ infoData.real_name }}</span>
                 </div>
                 <div class="title-t">{{ item.createtime }}</div>
               </div>
