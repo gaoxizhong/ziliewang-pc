@@ -19,7 +19,7 @@
         </div>
         <div style="flex: 1;padding-left: 0.9rem;">
           <div class="info-1">
-            <span class="info-name">{{ data.name }}</span>
+            <span class="info-name">{{ data.real_name }}</span>
             <span class="info-set1" @click="clickRedactBtn(1)">编辑</span>
           </div>
           <ul class="info-2">
@@ -43,11 +43,11 @@
           <ul class="info-2">
             <li>
               <img src="../../../../assets/image/Frame_6.png" alt="">
-              <span>{{ data.phone }}</span>
+              <span>{{ data.real_phone }}</span>
             </li>
             <li>
               <img src="../../../../assets/image/Frame_4.png" alt="">
-              <span>{{ data.email }}</span>
+              <span>{{ data.real_email }}</span>
             </li>
           </ul>
         </div>
@@ -251,9 +251,6 @@ export default {
             console.log(this.data.avatar)
             localStorage.setItem('realAvatar', this.data.avatar); // 用户头像缓存
             this.$store.dispatch('user/set_realAvatar', this.data.avatar);
-          }else{
-            localStorage.setItem('name', data.user.real_name); // 用户名缓存
-            this.$store.dispatch('user/SET_NAME', data.user.real_name);
           }
           return f()
         }

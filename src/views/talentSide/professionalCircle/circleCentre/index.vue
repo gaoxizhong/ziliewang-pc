@@ -6,7 +6,7 @@
       <div class="info-left-box">
         <div class="left-box user-top-box">
           <div class="user-top">
-            <img :src="infoData.avatar" alt="" class="user-img"/>
+            <img :src="infoData.avatar?infoData.avatar:require('../../../../assets/image/img-user.jpg')" alt="" class="user-img"/>
             <p class="user-name">{{ infoData.real_name }}</p>
             <div class="gz-sx-btn" v-if="uid != see_uid">
               <div class="left" @click="clickAttention" v-if=" infoData.is_already_attention ==  2">
@@ -68,7 +68,7 @@
             <div class="right-container-item">
               <div class="title">
                 <div class="title-left">
-                  <img :src="infoData.avatar" alt="" />
+                  <img :src="infoData.avatar?infoData.avatar:require('../../../../assets/image/img-user.jpg')" alt="" />
                   <span>{{ infoData.name }}</span>
                 </div>
                 <div class="title-t">{{ item.createtime }}</div>
