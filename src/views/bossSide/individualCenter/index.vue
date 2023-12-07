@@ -172,6 +172,9 @@ export default {
     clickSetPhone(){
       this.setPhoneVisible = true;
     },
+    clickSetEmail(){
+
+    },
     // 关闭 修改手机号码弹窗
     closePhoneVisible(){
       this.setPhoneVisible = false;
@@ -182,29 +185,11 @@ export default {
       let p = {
         phone: that.new_phone,
       };
-      that.$axios.post('/api/staff/save',p).then( res =>{
-        if(res.code == 0){
-          console.log('修改成功')
-          that.$message.success({
-            message:'修改成功'
-          })
-          setTimeout(()=>{
-             // 获取个人信息
-             that.getUserInfo();
-             that.setPhoneVisible = false;
-          },1500)
-          return
-        }
-        if(res.code == 1){
-          that.$message.error({
-            message:res.msg
-          })
-          return
-        }
-
-      }).catch( e =>{
-        console.log(e)
-      })
+      if(!p.phone || p.phone){
+        that.$message.error('请先输入电话！');
+        return
+      }
+      this.setUserSave(p);
     },
     //  获取信息
     getUserInfo(){
@@ -215,23 +200,34 @@ export default {
           that.infoData = res.data;
         }
       })
-    },    
-    //  修改信息
-    setUserSave(){
-      let that = this;
-      // let p = Object.assign({},data);
+    },  
+    SET_staffName(){
       let p = {
         avatar: that.upload_files_path,
         staff_name: that.infoData.staff_name,
       }
-      that.$axios.post('/api/staff/save',p).then( res =>{
+      //  修改信息
+    this.setUserSave(p);
+    },
+    //  修改信息
+    setUserSave(data){
+      let that = this;
+      // let p = Object.assign({},data);
+      that.$axios.post('/api/staff/save',data).then( res =>{
         console.log(res)
         if(res.code == 0){
           that.$message.success('修改成功！');
-          localStorage.setItem('staff_name',p.staff_name); // 用户名缓存
-          localStorage.setItem('staffAvatar', this.infoData.avatar); // 用户头像缓存
-          this.$store.dispatch('user/SET_staffName', p.staff_name); // vuex
-          this.$store.dispatch('user/SET_staffAvatar', this.infoData.avatar); // vuex);
+          if(data.staff_name){
+            localStorage.setItem('staff_name',data.staff_name); // 用户名缓存
+            that.$store.dispatch('user/SET_staffName', data.staff_name); // vuex
+          }
+          if(that.infoData.avatar){
+            localStorage.setItem('staffAvatar', that.infoData.avatar); // 用户头像缓存
+            that.$store.dispatch('user/SET_staffAvatar', that.infoData.avatar); // vuex);
+          }
+          if(that.setPhoneVisible){
+            that.closePhoneVisible();
+          }
         }
       })
     },

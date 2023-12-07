@@ -37,9 +37,10 @@
               <!-- <span class="blue">导出</span> -->
             </template>
           </el-table-column>
-          <el-table-column label="修改" width="80px">
+          <el-table-column label="操作" width="80px">
             <template slot-scope="scope">
               <span class="blue" @click.stop="handleUpdateInfo(scope.row)">修改</span>
+              <span class="blue" @click.stop="deleteDateInfo(scope.row)">删除</span>
               <!-- <span class="blue">导出</span> -->
             </template>
           </el-table-column>
@@ -189,6 +190,34 @@ export default {
       this.dialog_title = '修改信息';
       this.addDialog.visible = true
     },
+    // 删除用户
+    deleteDateInfo(row){
+      console.log(row)
+      let that = this;
+      if(row.is_boss == 1){
+        that.$message.error('BOSS角色信息不可删除！');
+        return
+      }
+      that.$axios.post('/api/staff/delete',{
+        id: row.id
+      }).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message: '删除成功！',
+          })
+          setTimeout(()=>{
+            that.getTableData();
+          },1000)
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      }).catch( e =>{
+        console.log(e)
+      })
+
+    },
     // 分页事件
     pageHasChanged() {
       this.getTableData();
@@ -219,8 +248,10 @@ export default {
           that.$message.success({
             message,
           })
-          that.addDialog.visible = false;
-          that.getTableData();
+          setTimeout(()=>{
+            that.addDialog.visible = false;
+            that.getTableData();
+          },1000)
         }else{
           that.$message.error({
             message:res.msg
