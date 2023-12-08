@@ -14,7 +14,7 @@
                 <span>关注</span>
               </div>
               <div class="left" @click="clickCancelAttention" v-if=" infoData.is_already_attention ==  1">
-                <img src="../../../../assets/image/Frame_10.png" alt="" />
+                <!-- <img src="../../../../assets/image/Frame_10.png" alt="" /> -->
                 <span>已关注</span>
               </div>
               <div class="right">发私信</div>
@@ -174,6 +174,7 @@ export default {
         if(res.code == 0){
           this.$message.success('取消成功！');
         }
+        this.getUserProfile();
       }).catch(e =>{
         console.log(e)
       })

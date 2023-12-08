@@ -23,11 +23,11 @@
               </div> -->
             </div>
             <div class="data-box">
-              <div>
+              <div class="data-box-1" @click="goTo('/interaction')">
                 <div class="data-t">新招呼人才</div>
                 <div class="data-n">{{ companyCountData.chat_num }}</div>
               </div>
-              <div>
+              <div class="data-box-1" @click="goTo('/myCollect')">
                 <div class="data-t">收藏的人才</div>
                 <div class="data-n">{{ companyCountData.collection_num }}</div>
               </div>
@@ -45,7 +45,7 @@
               </div>
             </div>
             <div class="data-box">
-              <div>
+              <div  class="data-box-1" @click="goTo('/jobCenter')">
                 <div class="data-t">在线职位</div>
                 <div class="data-n">{{companyCountData.online_position_num}}</div>
               </div>
@@ -254,6 +254,9 @@ export default {
         }
       })
     }, 
+    goTo(url){
+      this.$router.push(url);
+    },
     // 点击购买
     goToTopUpBuy(){
       this.$router.push('/topUpBuy');
@@ -426,6 +429,9 @@ export default {
     width: 100%;
     margin-top: 1.5rem;
     display: flex;
+    .data-box-1{
+      cursor: pointer;
+    }
     &>div{
       flex: 1;
       .data-t{

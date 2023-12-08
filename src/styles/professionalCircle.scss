@@ -76,8 +76,8 @@
           div{
             flex: 1;
             text-align: center;
-            padding: 0.6rem 0;
-            font-size: 0.7rem;
+            padding: 10px 0;
+            font-size: 14px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -87,13 +87,13 @@
               font-family: DIN Alternate-Bold, DIN Alternate;
               font-weight: bold;
               color: #4E5969;
-              line-height: 1.6rem;
+              line-height: 32px;
             }
             .text{
-              font-size: 0.7rem;
+              font-size: 14px;
               font-weight: 400;
               color: #86909C;
-              line-height: 1.1rem;
+              line-height: 22px;
             }
             &:nth-of-type(1){
               border-right: 1px solid #F2F3F5;
@@ -137,8 +137,8 @@
           cursor: pointer;
           color: $g_color;
           font-weight: bold;
-          font-size: 0.7rem;
-          padding: 0.5rem 0;
+          font-size: 14px;
+          padding: 10px 0;
           text-align: center;
         }
       }
