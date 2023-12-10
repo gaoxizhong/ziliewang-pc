@@ -343,7 +343,7 @@ export const constantRoutes = [
         component: () => import('@/views/talentSide/myProfessionalCircle/index.vue'),
         meta: { 
           title: '我的职圈',
-          // keepAlive: true,
+          keepAlive: false,
         },
       },
       {
@@ -365,21 +365,21 @@ export const constantRoutes = [
         },
       },
       {
-        path: '/circleCentre',
+        path: '/professionalCircle/circleCentre',
         name: 'circleCentre',
         component: () => import('@/views/talentSide/professionalCircle/circleCentre'),
         meta: { 
           title: '个人职圈',
-          keepAlive: true,
+          keepAlive: false,
         },
       },
       {
-        path: '/circleDetails',
+        path: '/professionalCircle/circleDetails',
         name: 'circleDetails',
         component: () => import('@/views/talentSide/professionalCircle/circleDetails'),
         meta: { 
           title: '帖子详情',
-          keepAlive: true,
+          keepAlive: false,
         },
       },
       {

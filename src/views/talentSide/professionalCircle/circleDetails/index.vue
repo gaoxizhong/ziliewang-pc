@@ -178,7 +178,7 @@ export default {
         this.$router.push({ path:'/myProfessionalCircle' })
       }else{
         this.$router.push({
-          path:'/circleCentre',   //跳转的路径
+          path:'/professionalCircle/circleCentre',   //跳转的路径
           query:{           //路由传参时push和query搭配使用 ，作用时传递参数
             see_uid:i.uid,
           }

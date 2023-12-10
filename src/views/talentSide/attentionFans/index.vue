@@ -2,6 +2,7 @@
   <div>
     <div class="container-title-box">
       <el-tabs v-model="tag" @tab-click="handleClick">
+
         <el-tab-pane label="评论与回复" name="pingl-hf">
           <div class="container info-box">
             <!-- 列表项 开始 -->
@@ -34,23 +35,23 @@
               <div class="items-left-box">
                 <div class="title-t">{{ item.createtime }}</div>
                 <div class="items-info-box">
-                  <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
+                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
                   <div class="name-corporation">
-                    <div class="text-1"><span>{{ item.users.real_name }}</span><span class="text-1-span2" v-if="tag == 'fans'">关注了你</span></div>
+                    <div class="text-1"><span>{{ item.real_name }}</span><span class="text-1-span2" v-if="tag == 'fans'">关注了你</span></div>
                     <div class="text-2">
-                      <span>{{ item.users.company_name?item.users.company_name:'无' }}</span>
+                      <span>{{ item.company_name?item.company_name:'无' }}</span>
                       <span class="span-2">|</span>
-                      <span>{{ item.users.position?item.users.position:'无'}}</span>
+                      <span>{{ item.position?item.position:'无'}}</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="items-right-box">
-                <div class="right-btn type-1" v-if="item.status == 2" @click.stop="addAttention(item)">
-                  <img src="../../../assets/image/icon-plus.png" alt="" />
+                <div class="right-btn type-1" v-if="item.status == 2" @click.stop="addAttention(item,index)">
+                  <img src="../../../assets/image/Frame_10.png" alt="" />
                   <span>关注</span>
                 </div>
-                <div class="right-btn type-2" v-if="item.status == 1" @click.stop="cancelAttention(item)">
+                <div class="right-btn type-2" v-if="item.status == 1" @click.stop="cancelAttention(item,index)">
                   <span>已关注</span>
                 </div>
               </div>
@@ -67,18 +68,18 @@
               <div class="items-left-box">
                 <div class="title-t">{{ item.createtime }}</div>
                 <div class="items-info-box">
-                  <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
+                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg' )" alt="" @click.stop="clickName(item)"/>
                   <div class="name-corporation">
-                    <div class="text-1"><span>{{ item.users.real_name }}</span><span class="text-1-span2" v-if="tag == 'fans'">关注了你</span></div>
+                    <div class="text-1"><span>{{ item.real_name }}</span><span class="text-1-span2" v-if="tag == 'fans'">关注了你</span></div>
                     <div class="text-2">
-                      <span>{{ item.users.company_name?item.users.company_name:'无' }}</span>
+                      <span>{{ item.company_name?item.company_name:'无' }}</span>
                       <span class="span-2">|</span>
-                      <span>{{ item.users.position?item.users.position:'无'}}</span>
+                      <span>{{ item.position?item.position:'无'}}</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="items-right-box">
+              <!-- <div class="items-right-box">
                 <div class="right-btn type-1" v-if="item.status == 2" @click.stop="addAttention(item)">
                   <img src="../../../assets/image/icon-plus.png" alt="" />
                   <span>回关</span>
@@ -86,8 +87,7 @@
                 <div class="right-btn type-2" v-if="item.status == 1" @click.stop="cancelAttention(item)">
                   <span>已关注</span>
                 </div>
-
-              </div>
+              </div> -->
             </div>
             <!-- 列表项 结束 -->
             <el-empty description="暂无数据..." v-if="dataList.length<= 0"></el-empty>
@@ -144,6 +144,7 @@ export default {
       }
 
     },
+    // 评论与回复
     getList(){
       this.$axios.post('/api/user-attention-fans/list',{
         page: this.page,
@@ -164,7 +165,7 @@ export default {
         this.$router.push({ path:'/myProfessionalCircle' })
       }else{
         this.$router.push({
-          path:'/circleCentre',   //跳转的路径
+          path:'/professionalCircle/circleCentre',   //跳转的路径
           query:{           //路由传参时push和query搭配使用 ，作用时传递参数
             see_uid:i.uid,
           }
@@ -181,26 +182,33 @@ export default {
       })
     },
     // 关注
-    addAttention(i){
+    addAttention(i,idx){
+      let dataList = this.dataList;
+      let index = idx;
       this.$axios.post('/api/user-attention/attention',{
         attention_uid: i.uid
       }).then( res =>{
         if(res.code == 0){
           this.$message.success('关注成功！');
         }
+        dataList[index].status = 1;
+        this.dataList = dataList;
       }).catch(e =>{
         console.log(e)
       })
     },
     // 取消关注
-    cancelAttention(i){
-      
+    cancelAttention(i,idx){
+      let dataList = this.dataList;
+      let index = idx;
       this.$axios.post('/api/user-attention/cancel-attention',{
         attention_uid: i.uid
       }).then( res =>{
         if(res.code == 0){
           this.$message.success('取消成功！');
         }
+        dataList[index].status = 2;
+        this.dataList = dataList;
       }).catch(e =>{
         console.log(e)
       })
@@ -261,6 +269,7 @@ export default {
       display: flex;
       .items-left-box{
         flex: 1;
+        cursor: pointer;
         .title-t{
           font-size: 14px;
           font-weight: 400;
@@ -320,18 +329,19 @@ export default {
           align-items: center;
           justify-content: center;
           cursor: pointer;
+          border-radius: 4px;
           img{
             width: 14px;
             height: 14px;
             margin-right: 8px;
           }
           &.type-1{
-            color: #4E5969;
-            border: 1px solid #E5E6EB;
+            background: #37f;
+            color: #fff;
           }
           &.type-2{
-            color: #fff;
-            background: #86909C;
+            color: #666;
+            background: #dbdbdb;
           }
         }
       }

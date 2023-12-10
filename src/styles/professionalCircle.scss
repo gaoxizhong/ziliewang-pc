@@ -43,15 +43,15 @@
             margin-top: 0.6rem;
             div{
               flex: 1;
-              padding: 0.5rem;
+              padding: 6px 10px;
               border-radius: 2px;
-              font-size: 0.7rem;
+              font-size: 14px;
               text-align: center;
-              margin: 0 0.4rem;
+              margin: 0 5px;
               cursor: pointer;
               img{
-                width: 0.6rem;
-                height: 0.6rem;
+                width: 12px;
+                height: 12px;
               }
               &.left{
                 background: $g_color;
@@ -87,7 +87,6 @@
               font-family: DIN Alternate-Bold, DIN Alternate;
               font-weight: bold;
               color: #4E5969;
-              line-height: 32px;
             }
             .text{
               font-size: 14px;
