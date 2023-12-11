@@ -17,7 +17,7 @@
               <div>
                 <div class="items-c-p">{{ infoData.content }}</div>
                 <div class="items-img-box" v-if="infoData.images">
-                  <img :src="img_item" alt="" v-for="(img_item,idx) in infoData.images" :key="idx"/>
+                  <img :src="img_item" alt="" v-for="(img_item,idx) in infoData.images" :key="idx" @click="$preview(idx,infoData.images)"/>
                 </div>
                 <!-- <div class="items-img-box" v-if="infoData.images">
                   <img :src="infoData.images" alt="" />
@@ -68,10 +68,6 @@
                       <div class="items-c-p">{{ items.content }}</div>
 
                       <div class="items-bottom-btn">
-                        <div class="bottom-btn-items" @click="clickPoint">
-                          <img src="../../../../assets/image/thumbs-up.png" alt="" />
-                          <span :class=" items.is_point == 1 ? 'point-hover':'' ">{{ items.point_num }} {{items.is_point == 1 ? '已赞':'赞'}}</span>
-                        </div>
                         <div class="bottom-btn-items" @click="clickPoint('commentID',items.id) " v-if="items.is_point == 2">
                           <img src="../../../../assets/image/thumbs-up.png" alt="" />
                           <span>{{ items.point_num }} 赞</span>
@@ -107,7 +103,7 @@
 
     <!-- 回复弹窗 -->
     <div class="recoverVisible">
-      <el-dialog title="回复评论" :visible.sync="recoverVisible" width="482px" :before-close="handleClose">
+      <el-dialog title="回复评论" :visible.sync="recoverVisible" width="482px" :before-close="recoverValueClose">
         <div class="cententinfo-box">
           <div class="demo-input-suffix">
             <el-input v-model="recover_value" type="text" name="recover_value" placeholder="回复评论"></el-input>
@@ -154,7 +150,7 @@ export default {
     
   },
   methods: {
-    handleClose(){
+    recoverValueClose(){
 
     },
     // 获取详情

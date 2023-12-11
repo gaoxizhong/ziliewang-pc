@@ -22,13 +22,19 @@ import '@/utils/dialogDrag'
 
 // 引入视频直播
 import VueVideoPlayer from 'vue-video-player'
+// 使用视频直播组件
+Vue.use(VueVideoPlayer)
 
 // 引入视频直播样式
 import 'video.js/dist/video-js.css'
 import 'vue-video-player/src/custom-theme.css'
 
-// 使用视频直播组件
-Vue.use(VueVideoPlayer)
+
+
+import vPreviewImage from 'v-preview-image'
+Vue.use(vPreviewImage)
+
+
 
 Vue.prototype.$axios = axios;
 
