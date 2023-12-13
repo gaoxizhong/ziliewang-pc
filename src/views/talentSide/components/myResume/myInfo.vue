@@ -216,6 +216,7 @@ export default {
         up_tag: 'avatar'
       },
       work_status_op: [
+        {value: 1,label: '在职'},
         {value: 2,label: '在职不考虑'},
         {value: 3,label: '在职，看看新机会'},
         {value: 4,label: '离职'},

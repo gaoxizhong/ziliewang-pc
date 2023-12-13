@@ -407,7 +407,8 @@ export default {
           that.$axios.post('/api/login',{
             phone: p.phone,
             password: p.password,
-            tag: that.tag 
+            tag: that.tag,
+            login_type: 'pass_login'
           }).then( res =>{
             let data = res.data;
             setToken(data.token);   // 缓存

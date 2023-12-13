@@ -236,8 +236,12 @@ export default {
       }
       this.$axios.post('/api/profession-circle/point',p).then( res =>{
         if( res.code == 0 ){
-           //获取职圈详情
-           this.getInfoData();
+            this.$message.success('点赞成功！');
+            setTimeout( () =>{
+              //获取职圈详情
+              this.getInfoData();
+            },1000)
+           
         }
       }).catch( e =>{
         console.log(e)
@@ -255,8 +259,11 @@ export default {
       }
       this.$axios.post('/api/profession-circle/cancel-point',p).then( res =>{
         if( res.code == 0 ){
-          //获取职圈详情
-          this.getInfoData();
+          this.$message.success('取消成功！');
+          setTimeout( () =>{
+            //获取职圈详情
+            this.getInfoData();
+          },1000)
         }
       }).catch( e =>{
         console.log(e)
