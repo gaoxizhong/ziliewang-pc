@@ -68,7 +68,6 @@
       <!-- 右侧 个人信息操作模块 结束 -->
     </div>
 
-
   </div>
 
 </template>
@@ -77,13 +76,12 @@
 import personalInfo from '../components/personalInfo.vue';
 import mPagination from '@/components/m-pagination';
 import filterOptionsContainer from '../components/filterOptionsContainer.vue';
-
 export default {
   name: 'talentHome',
   components: {
     personalInfo,
     mPagination,
-    filterOptionsContainer
+    filterOptionsContainer,
   },
   data(){
     return{
