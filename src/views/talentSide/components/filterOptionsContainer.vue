@@ -139,7 +139,7 @@
             <div class="right-list-box">
               <div class="category-list-items">
                 <ul>
-                  <li :class="selt_listItems == idx? 'active':'' " v-for="(items,idx) in position_list" :key="idx" @click="click_position_list(items,idx)">{{ items.label }}</li>
+                  <li :class="infoData.city == items.label ? 'active':'' " v-for="(items,idx) in position_list" :key="idx" @click="click_position_list(items,idx)">{{ items.label }}</li>
                 </ul>
               </div>
               
@@ -201,7 +201,7 @@ export default {
   },
   created(){
     console.log(pcas)
-     this.position_list = this.position[this.selt_item].children;
+    //  this.position_list = this.position[this.selt_item].children;
   },
   methods:{
     // 点击城市其他
@@ -216,9 +216,16 @@ export default {
     },
     //
     click_position_list(item,index){
+      console.log(item.label)
       this.selt_cityName = item.label;
       this.infoData.city = item.label;
       this.selt_listItems = index;
+      let showCityList = this.showCityList;
+      showCityList.forEach( ele =>{
+        if(ele.code == item.code){
+          this.showCityList[4] = item;
+        }
+      })
     },
     clickClose(){
       this.dialogVisible = false;

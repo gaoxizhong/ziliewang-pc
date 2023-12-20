@@ -57,7 +57,9 @@
       <!-- 左侧列表模块 结束 -->
       <!-- 右侧 个人信息操作模块 开始 -->
       <div class="info-right-box">
+        
         <personalInfo />
+
         <div class="m-box margin-top-20">
           <a href="https://chinese.llama.family/" target="_brak" class="zlhx-box">
             <p class="p-1">cometgpt</p>
