@@ -25,7 +25,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src=" avatar ? avatar : require('../../assets/image/img-user.jpg')" class="user-avatar">
-          <span class="username" v-if="name">{{ name }}</span>
+          <span class="username">{{ name?name:'text' }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">

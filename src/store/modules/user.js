@@ -1,13 +1,14 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo,getStaffProfileInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
-  name: localStorage.getItem('name') || 'text',
-  staffName: localStorage.getItem('staff_name') || 'text', // 企业的个人姓名
+  name: localStorage.getItem('name') || '',
+  staffName: localStorage.getItem('staff_name') || '', // 企业的个人姓名
   staffAvatar: localStorage.getItem('staffAvatar') || '', // 企业的个人头像
-  realAvatar: localStorage.getItem('realAvatar') || '' // 用户端的个人头像
+  realAvatar: localStorage.getItem('realAvatar') || '', // 用户端的个人头像
+  role: ''
 }
 
 const mutations = {
@@ -26,6 +27,9 @@ const mutations = {
   SET_realAvatar: (state, realAvatar) => {
     state.realAvatar = realAvatar
 
+  },
+  SET_ROLE: (state, role) => {
+    state.role = role
   }
 }
 
@@ -56,8 +60,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
-
+        const { name, avatar} = data
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -65,11 +68,35 @@ const actions = {
     })
   },
 
+  //  企业端个人信息
+  getStaffProfileInfo(){
+    return new Promise((resolve, reject) => {
+      getStaffProfileInfo(state.token).then(response => {
+        const { data } = response
+
+        if (!data) {
+          reject('Verification failed, please Login again.')
+        }
+
+        const { staff_name, avatar,role_desc } = data
+        commit('SET_staffName', staff_name)
+        commit('SET_staffAvatar', avatar)
+        commit('SET_ROLE', role_desc)
+
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
+        commit('SET_staffName', '')
+        commit('SET_staffAvatar', '')
+        commit('SET_ROLE', '')
         removeToken()
         resetRouter()
         resolve()
@@ -83,6 +110,7 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
+      commit('SET_ROLE', '')
       removeToken()
       resolve()
     })
@@ -98,6 +126,9 @@ const actions = {
   },
   SET_staffAvatar({ commit }, data) {
     commit('SET_staffAvatar', data);
+  },
+  SET_ROLE({ commit }, data) {
+    commit('SET_ROLE', data);
   },
 }
 

@@ -1,4 +1,6 @@
 import request from '@/utils/request'
+import axios from '@/axios/index'
+
 
 export function login(data) {
   return request({
@@ -20,5 +22,15 @@ export function logout() {
   return request({
     url: '/user/logout',
     method: 'post'
+  })
+}
+
+
+// 企业端查询个人信息
+export function getStaffProfileInfo() {
+  return request({
+    url: '/api/staff/profile',
+    method: 'POST',
+    params: {}
   })
 }

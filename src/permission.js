@@ -34,15 +34,25 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
+      console.log(1111111)
+      const hasGetUserInfo = store.getters.staffName
+      console.log(hasGetUserInfo)
       if (hasGetUserInfo) {
         next()
       } else {
+      console.log(22222222)
+
         try {
           // get user info
           // await store.dispatch('user/getInfo')
-
-          next()
+          const {role_desc} = await store.dispatch('user/getStaffProfileInfo')
+          // 在角色权限基础上生成动态路由表
+          const accessedRoutes = await store.dispatch('generateRoutes',role_desc)
+          console.log('accessedRoutes-->>',accessedRoutes);
+          for( let i=0; i<accessedRoutes.length; i++){
+            router.addRoute(accessedRoutes[i]);
+          } // 添加路由
+          next({...to,replace:true})
         } catch (error) {
           // remove token and go to login page to re-login
           // await store.dispatch('user/resetToken')

@@ -32,6 +32,8 @@ import talentSide from '../views/talentSide/Main.vue';
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+//所有人可见
+
 export const constantRoutes = [
   {
     path: '/login',
@@ -153,20 +155,7 @@ export const constantRoutes = [
       },
     ]
   },
-  {
-    path: '/staffManagement',
-    component: Layout,
-    redirect: '/staffManagement',
-    hidden: localStorage.getItem('role_id') == 1?false:true,
-    children: [
-      {
-        path: '/staffManagement',
-        name: 'staffManagement',
-        component: () => import('@/views/bossSide/staffManagement/index'),
-        meta: { title: '员工管理', icon: 'dashboard' },
-      },
-    ],
-  },
+  
   {
     path:'/postJob',
     component: Layout,
@@ -423,7 +412,22 @@ export const constantRoutes = [
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
+//相应权限人员可见
+export const asyncRouterMap = [
+  {
+    path: '/staffManagement',
+    component: Layout,
+    children: [
+      {
+        path: '/staffManagement',
+        name: 'staffManagement',
+        component: () => import('@/views/bossSide/staffManagement/index'),
+        meta: { title: '员工管理', icon: 'dashboard',role: ['boss'] },
+      }
+    ]
+  },
 
+]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
@@ -432,30 +436,7 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
-// 在某个条件满足时动态加载路由
-// const newRoutes = {
-//     path: '/staffManagement',
-//     component: Layout,
-//     redirect: '/staffManagement',
-//     children: [
-//       {
-//         path: '/staffManagement',
-//         name: 'staffManagement',
-//         component: () => import('@/views/bossSide/staffManagement/index'),
-//         meta: { title: '员工管理', icon: 'dashboard' },
-//       },
-//     ],
-//   }
-// let role_id = localStorage.getItem('role_id');
-// console.log(role_id)
-// if(role_id == 1){
-//   console.log(newRoutes)
-//   router.options.routes.push(newRoutes)
-//   console.log(router)
 
-// }
-
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
