@@ -282,6 +282,20 @@ export const constantRoutes = [
       },
     ]
   },
+  {
+    path: '/staffManagement',
+    component: Layout,
+    redirect: '/staffManagement',
+    hidden: true,
+    children: [
+      {
+        path: '/staffManagement',
+        name: 'staffManagement',
+        component: () => import('@/views/bossSide/staffManagement/index'),
+        meta: { title: '员工管理', icon: 'dashboard',role: ['boss'] },
+      }
+    ]
+  },
   //-------------------- 人才端
   {
     path: "/talentSide",
@@ -409,14 +423,14 @@ export const constantRoutes = [
       },
     ]
   },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+
 ]
 //相应权限人员可见
 export const asyncRouterMap = [
   {
     path: '/staffManagement',
     component: Layout,
+    redirect: '/staffManagement',
     children: [
       {
         path: '/staffManagement',
@@ -426,7 +440,8 @@ export const asyncRouterMap = [
       }
     ]
   },
-
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

@@ -218,7 +218,6 @@ export default {
         if(res.code == 0){
           that.$message.success('修改成功！');
           if(data.staff_name){
-            localStorage.setItem('staff_name',data.staff_name); // 用户名缓存
             that.$store.dispatch('user/SET_staffName', data.staff_name); // vuex
           }
           if(that.infoData.avatar){

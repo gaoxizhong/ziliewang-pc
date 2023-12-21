@@ -29,18 +29,15 @@
               <span class="desc-title">求职端展示效果，向求职者介绍您的职位亮点，增加独特的吸引力，让您的职位脱颖而出!</span>
               <el-input type="textarea" :rows="3" v-model="ruleForm.position_lightspot" :placeholder="hight_placeholder"></el-input>
             </el-form-item>
-
-            <el-form-item label="职位类别" prop="position_type">
-              <el-select v-model="ruleForm.position_type" placeholder="请选择职位类别">
-                <el-option label="UI设计师" value="UI设计师"></el-option>
-                <el-option label="前端开发" value="前端开发"></el-option>
+            <el-form-item label="行业要求" prop="industry_requirement">
+              <el-select v-model="ruleForm.industry_requirement" placeholder="请选择您期望候选人来自于哪些行业" @change="changeIndustry">
+                <el-option :label="item.industry" :value="item.industry" v-for="(item,index) in industryList" :key="index"></el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label="行业要求" prop="industry_requirement">
-              <el-select v-model="ruleForm.industry_requirement" placeholder="请选择您期望候选人来自于哪些行业">
-                <el-option label="教育" value="教育"></el-option>
-                <el-option label="金融" value="金融"></el-option>
+            <el-form-item label="职位类别" prop="position_type">
+              <el-select v-model="ruleForm.position_type" placeholder="请选择职位类别">
+                <el-option :label="item.category_name" :value="item.category_name"  v-for="(item,index) in category_list" :key="index"></el-option>
               </el-select>
             </el-form-item>
 
@@ -243,6 +240,9 @@ export default {
     return {
       position_id: '',
       staffList:[], // 员工列表
+      industryList:[],//行业列表
+      category_list:[],
+      selt_item: '',
       ruleForm: {
         position_name: '', // 职位名称
         work_type: '', // 工作性质
@@ -270,7 +270,6 @@ export default {
         delivery: false,
         type: [],
         selectedOptions: [], // 选中的地址
-        
       },
       options: pcas,  // 地址数据
       rules: {  // 必填提示
@@ -342,6 +341,10 @@ export default {
     // console.log(this.$root.positionItems);
      // 获取员工列表
      this.getStaffList();
+     // 获取行业列表信息
+    //  this.getIndustryList();
+     // 获取职位列表信息
+     this.getPositionList();
   },
   created(){
     if(this.$route.query.id){
@@ -351,6 +354,39 @@ export default {
 
   },
   methods:{
+    changeIndustry(e){
+      console.log(e)
+      this.selt_item = e;
+      let industryList = this.industryList;
+      industryList.forEach( ele =>{
+        if(ele.industry == e){
+          this.category_list = ele.category_list;
+        }
+      })
+    },
+    // 获取职位列表信息
+    getPositionList(){
+      let that = this;
+      that.$axios.post('/api/position/list',{}).then( res =>{
+        that.industryList = res.data;
+        industryList.forEach( ele =>{
+        if(ele.industry == that.selt_item){
+          that.category_list = ele.category_list;
+        }
+      })
+      }).catch( e=>{
+        console.log(e)
+      })
+    },
+    // 获取行业列表信息
+    // getIndustryList(){
+    //   let that = this;
+    //   that.$axios.post('/api/industry/list',{}).then( res =>{
+    //     that.industryList = res.data;
+    //   }).catch( e=>{
+    //     console.log(e)
+    //   })
+    // },
     // 获取员工列表
     getStaffList(){
       let that = this;

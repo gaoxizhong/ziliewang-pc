@@ -3,7 +3,7 @@
     <div class="info-title-box myResume-plate">
       <div class="info-title-top" v-if=" !redact_info ">
         <div class="info-avatar">
-          <div class="info-avatar-i">
+          <div class="info-avatar-i" @click="clickUpload('avatar')">
             <el-upload class="avatar-uploader" 
               drag ref="upload" 
               action= "none"
@@ -135,16 +135,16 @@
           <div class="mb20 redact-item">
             <div class="item-label">上传个人照片</div>
             <div class="item-content">
-              <div class="z_file">
+              <div class="z_file" @click="clickUpload('resume_image')">
                 <el-upload class="avatar-uploader" 
                 drag ref="upload" 
                 action= "none"
                 :show-file-list="false"
                 :before-upload="beforeAvatarUpload"
                 :data="uploadData"
-                :http-request="up_resume_image" 
+                :http-request="uploadArticleCover" 
                 >
-                <img :src="resume_image?resume_image:require('../../../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
+                <img :src="data.avatar ? data.avatar:require('../../../../assets/image/bossSide/a11.png')" alt="" class="add-img" />
               </el-upload>
               </div>
               
@@ -215,6 +215,7 @@ export default {
       uploadData:{
         up_tag: 'avatar'
       },
+      upload_type:'avatar',
       work_status_op: [
         {value: 1,label: '在职'},
         {value: 2,label: '在职不考虑'},
@@ -233,6 +234,9 @@ export default {
     
   },
   methods: {
+    clickUpload(n){
+      this.upload_type = n;
+    },
      // 获取省市区地址级联
      handleChange(thsAreaCode) {
       // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
@@ -261,25 +265,6 @@ export default {
     limitCheck() {
       this.$message.warning('每次只能上传一个文件')
     },
-    // 上传图片 --- 上传个人图片
-    up_resume_image(param){
-      const formData = new FormData();
-      formData.append('file[]',param.file);
-      // formData.append('pictureCategory','articleCover');
-      formData.append('up_tag','logo');
-      this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
-        this.infoData.resume_image = res.data.upload_files_path;
-        // this.infoData.resume_image = res.data.upload_files_path;
-        this.resume_image = res.data.upload_files;
-        
-        this.$refs['upload'].clearFiles();
-       
-      }).catch( e=>{
-        console.log('erro')
-        this.$refs['upload'].clearFiles()
-      })
-    },
     // 上传图片--- 头像
     uploadArticleCover(param){
       console.log(param.file)
@@ -291,12 +276,15 @@ export default {
         console.log(res)
         this.data.avatar = res.data.upload_files;
         let upload_files_path = res.data.upload_files_path;
+        this.infoData.avatar = upload_files_path;
         this.$refs['upload'].clearFiles();
 
-        let p = {
-          avatar: upload_files_path
+        if(this.upload_type == 'avatar'){
+          let p = {
+            avatar: upload_files_path
+          }
+          this.setUserSave(p);
         }
-        this.setUserSave(p);
       }).catch( e=>{
         console.log('erro')
         this.$refs['upload'].clearFiles()
@@ -345,7 +333,8 @@ export default {
         birth_year_month: this.infoData.birth_year_month,
         begin_work_date: this.infoData.begin_work_date,
         live_city: this.infoData.live_city,
-        resume_image: this.resume_image
+        resume_image: this.resume_image,
+        avatar: this.infoData.avatar,
       }
       if(p.name == ''){
         this.$message.warning('姓名不能为空!');

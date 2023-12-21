@@ -76,12 +76,11 @@
           <div class="items-box">
             <img :src="infoData.company_team == 1?require('../../../assets/image/bossSide/check-circle-1.png'):require('../../../assets/image/bossSide/check-circle.png')" alt="" class="status-img"/>
             <div class="items-m">
-              <div class="title">牛人团队</div>
+              <div class="title">核心团队</div>
               <div class="items-icon">
-                <span>团队风格</span>
-                <span>团队结构</span>
-                <span>团队阶段</span>
-                <span>团队牛人</span>
+                <span>核心成员</span>
+                <span>管理风格</span>
+                <span>成员简介</span>
               </div>
             </div>
             <div class="items-right-box">

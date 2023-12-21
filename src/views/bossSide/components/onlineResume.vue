@@ -6,7 +6,7 @@
           <!-- 个人信息 -->
           <div class="resume-item item-base" v-if="infoData.basic_info">
             <div class="figure J_resume_baseMsg_headImgPreview">
-              <img :src="infoData.basic_info?infoData.basic_info.resume_image:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default"/>
+              <img :src="infoData.basic_info?infoData.basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default"/>
             </div>
             <div class="item-right item-right-1">
               <div style="text-align: left;">

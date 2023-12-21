@@ -105,6 +105,7 @@ export default {
     logout() {
       // debugger
       setToken('');
+      localStorage.setItem('tag', ''); // 用户身份 user、人才端 company、企业端缓存
       // 清除缓存的权限菜单
       sessionStorage.removeItem("route")
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);

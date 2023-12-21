@@ -214,6 +214,7 @@ export default {
     },
   },
   created() {
+    localStorage.setItem('tag', ''); // 用户身份 user、人才端 company、企业端缓存
     this.login_bgurl_1 = this.$root.login_bgurl_1;
     this.login_bgurl_2 = this.$root.login_bgurl_2;
     this.$nextTick(() => {
@@ -316,7 +317,6 @@ export default {
         if(data.tag == 'company'){
           // 企业端
           localStorage.setItem('realUid', data.user.id); // 用户uid缓存
-
           setTimeout(() => {
             this.$router.push('/dashboard');
           }, 1000);

@@ -27,10 +27,10 @@ export function logout() {
 
 
 // 企业端查询个人信息
-export function getStaffProfileInfo() {
-  return request({
+export function getStaffProfileInfo(data) {
+  return axios({
     url: '/api/staff/profile',
     method: 'POST',
-    params: {}
+    data
   })
 }

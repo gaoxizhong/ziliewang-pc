@@ -247,10 +247,13 @@ export default {
     //  获取信息
     getUserInfo(){
       let that = this;
+      // that.userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      // return
       that.$axios.post('/api/staff/profile',{}).then( res =>{
         console.log(res)
         if(res.code == 0){
           that.userInfo = res.data;
+          localStorage.setItem('userInfo',JSON.stringify(res.data))
         }
       })
     }, 

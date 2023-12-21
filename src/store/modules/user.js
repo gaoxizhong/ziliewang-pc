@@ -5,7 +5,7 @@ import { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: localStorage.getItem('name') || '',
-  staffName: localStorage.getItem('staff_name') || '', // 企业的个人姓名
+  staffName:'', // 企业的个人姓名
   staffAvatar: localStorage.getItem('staffAvatar') || '', // 企业的个人头像
   realAvatar: localStorage.getItem('realAvatar') || '', // 用户端的个人头像
   role: ''
@@ -69,20 +69,15 @@ const actions = {
   },
 
   //  企业端个人信息
-  getStaffProfileInfo(){
+  getStaffProfileInfo({ commit, state }){
     return new Promise((resolve, reject) => {
-      getStaffProfileInfo(state.token).then(response => {
+      getStaffProfileInfo({}).then(response => {
         const { data } = response
-
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-
+        // localStorage.setItem('userInfo',JSON.stringify(data))
         const { staff_name, avatar,role_desc } = data
         commit('SET_staffName', staff_name)
         commit('SET_staffAvatar', avatar)
         commit('SET_ROLE', role_desc)
-
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -114,6 +109,9 @@ const actions = {
       removeToken()
       resolve()
     })
+  },
+  SET_TOKEN({ commit }, data) {
+    commit('SET_TOKEN', data);
   },
   set_realAvatar({ commit }, data) {
     commit('SET_realAvatar', data);
