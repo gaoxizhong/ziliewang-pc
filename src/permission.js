@@ -35,25 +35,32 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       const hasGetUserInfo = store.getters.staffName
+      
       if (hasGetUserInfo) {
         next()
       } else {
-
-        try {
-          // get user info
-          // await store.dispatch('user/getInfo')
-          const {role_desc} = await store.dispatch('user/getStaffProfileInfo')
-          // 在角色权限基础上生成动态路由表
-          const accessedRoutes = await store.dispatch('generateRoutes',role_desc)
-          console.log('accessedRoutes-->>',accessedRoutes);
-          for( let i=0; i<accessedRoutes.length; i++){
-            router.addRoute(accessedRoutes[i]);
-          } // 添加路由
-          next({...to,replace:true})
-        } catch (error) {
-          // remove token and go to login page to re-login
-          // await store.dispatch('user/resetToken')
-          next();
+        // user:人才端 company:企业端缓存
+        let tag = localStorage.getItem('tag');
+        if(tag == 'company' ){
+          try {
+            // get user info
+            // await store.dispatch('user/getInfo')
+            const {role_desc} = await store.dispatch('user/getStaffProfileInfo')
+            // 在角色权限基础上生成动态路由表
+            const accessedRoutes = await store.dispatch('generateRoutes',role_desc)
+            console.log('accessedRoutes-->>',accessedRoutes);
+            for( let i=0; i<accessedRoutes.length; i++){
+              router.addRoute(accessedRoutes[i]);
+            } // 添加路由
+            next({...to,replace:true})
+          } catch (error) {
+            // remove token and go to login page to re-login
+            // await store.dispatch('user/resetToken')
+            next();
+            NProgress.done()
+          }
+        }else{
+          next()
           NProgress.done()
         }
       }

@@ -98,7 +98,6 @@ export default {
       this.$store.dispatch('user/SET_staffName', '');
       this.$store.dispatch('user/SET_staffAvatar', '');
       this.$store.dispatch('user/SET_ROLE', '');
-      localStorage.setItem('userInfo','');
       localStorage.setItem('tag', ''); // 用户身份 user、人才端 company、企业端缓存
       setToken('');
       // 清除缓存的权限菜单

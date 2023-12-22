@@ -278,7 +278,6 @@ export default {
         let upload_files_path = res.data.upload_files_path;
         this.infoData.avatar = upload_files_path;
         this.$refs['upload'].clearFiles();
-
         if(this.upload_type == 'avatar'){
           let p = {
             avatar: upload_files_path
@@ -310,6 +309,7 @@ export default {
     },
     clickRedactBtn(n){
       this.infoData = JSON.parse(JSON.stringify(this.data));
+      this.infoData.avatar = '';
       this.resume_image = this.infoData.resume_image;
       if(n == 1){
         this.redact_info = true;
@@ -334,7 +334,9 @@ export default {
         begin_work_date: this.infoData.begin_work_date,
         live_city: this.infoData.live_city,
         resume_image: this.resume_image,
-        avatar: this.infoData.avatar,
+      }
+      if(this.infoData.avatar){
+        p.avatar = this.infoData.avatar;
       }
       if(p.name == ''){
         this.$message.warning('姓名不能为空!');

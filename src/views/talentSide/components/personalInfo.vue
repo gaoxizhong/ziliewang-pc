@@ -7,7 +7,7 @@
           <span class="span-1" v-if="infoData.basic_info">{{infoData.basic_info.real_name}}</span>
           <img src="../../../assets/image/sex-1.png" alt="" class="img-sex"/>
         </div>
-        <div class="wcd-box">简历完整度75%</div>
+        <div class="wcd-box">简历完整度{{ perfection_degree.degree_num }}</div>
       </div>
     </div>
     <div class="infoTab-box">
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { getPerfectionDegree } from "../../../utils/index";
 
 export default {
   components: {
@@ -51,6 +52,7 @@ export default {
     return{
       infoData:{}, // 信息
       basic_info:{},
+      perfection_degree: {},
     }
   },
   computed: {
@@ -83,6 +85,8 @@ export default {
           this.infoData = res.data;
           this.basic_info = res.data.basic_info;
           this.curriculum_vitae = res.data.basic_info.curriculum_vitae;
+          // 简历完善度、
+         that.perfection_degree = getPerfectionDegree(res.data);
         }
       }).catch(e =>{
         console.log(e)

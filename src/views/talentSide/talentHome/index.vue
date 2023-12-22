@@ -78,6 +78,9 @@
 import personalInfo from '../components/personalInfo.vue';
 import mPagination from '@/components/m-pagination';
 import filterOptionsContainer from '../components/filterOptionsContainer.vue';
+
+import { getPerfectionDegree } from "../../../utils/index";
+
 export default {
   name: 'talentHome',
   components: {
