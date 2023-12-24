@@ -105,16 +105,38 @@ export default {
   created(){
     this.getSearchinfo();
     this.gethotJobList();
+    // 获取个人信息
+    this.getUserProfile();
   },
   computed: {
     
   },
   methods: {
+    // 获取个人信息
+    getUserProfile(){
+      let that = this;
+      that.$axios.post('/api/user/profile',{}).then(res =>{
+        if(res.code == 0){
+          this.infoData = res.data;
+          // 简历完善度、
+         that.perfection_degree = getPerfectionDegree(res.data);
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
     clickTagname(n){
       this.input_name = n;
       this.getSearchinfo();
     },
     clickItems(i){
+      let perfection_degree = this.perfection_degree;
+      if(perfection_degree.degree_num != 100){
+        this.$message.error({
+          message: '请先完善个人简历！'
+        })
+        return
+      }
       this.$router.push({
         path:'/JobDetails',
         query:{

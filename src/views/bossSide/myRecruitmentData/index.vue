@@ -94,8 +94,8 @@
       </div>
 
       <div class="tableData-box margin-top-20">    
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="a" label="在招职位"></el-table-column>
+        <el-table :data="company_recruitment_list" style="width: 100%">
+          <el-table-column prop="position_name" label="在招职位"></el-table-column>
           <el-table-column prop="b" label="聊天发起量"></el-table-column>
           <el-table-column prop="c" label="求职者回复量"></el-table-column>
           <el-table-column prop="d" label="求职者投递量"></el-table-column>
@@ -120,6 +120,7 @@ export default {
   data(){
     return {
       formData: {},
+      company_recruitment_list: [],
       tableData: [
         {
           a: 'UI设计师',
@@ -131,6 +132,22 @@ export default {
           e:'0',
         }
       ]
+    }
+  },
+  created(){
+    //  获取信息
+    this.getFormData();
+  },
+  methods:{
+    getFormData(){
+      let that = this;
+      that.$axios.post('/api/company/recruitment',{}).then( res =>{
+        console.log(res)
+        if(res.code == 0){
+          that.formData = res.data;
+          that.company_recruitment_list = res.data.company_recruitment_list.list;
+        }
+      })
     }
   }
 }

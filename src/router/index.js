@@ -414,7 +414,7 @@ export const constantRoutes = [
       },
       {
         path: 'liveBroadcast',
-        name: 'liveBroadcast',
+        name: 'talentSide_liveBroadcast',
         component: () => import('@/views/talentSide/liveBroadcast/index'),
         meta: { 
           title: '直播',

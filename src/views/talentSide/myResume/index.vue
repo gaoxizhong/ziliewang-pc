@@ -11,7 +11,7 @@
       <div class="info-box">
         <div class="info-left-box" id="myReaume">
           <!-- 个人信息 开始 -->
-          <MyInfo :data="infoData.basic_info" @refreshInfo="refreshInfo"/>  
+          <MyInfo :data="infoData.basic_info" @refreshInfo="refreshInfo" id="basic"/>  
           <!-- 个人信息 结束 -->
 
           <!-- 求职期望 开始 -->
@@ -64,7 +64,7 @@
 
           </div>
 
-          <div class="right-box resume-improvement-box">
+          <div class="right-box resume-improvement-box" v-if="perfection_degree.degree_num != 100">
             <div class="improvement-att-t">
               <span class="span-1">简历待完善项</span>
               <img src="../../../assets/image/Frame_9.png" alt="" />
@@ -72,35 +72,44 @@
             <div class="improvement-box-Instructions">完善后获更强竞争力</div>
 
             <div class="improvement-items-box">
-              <!-- <div class="i-items">
+              <div class="i-items" v-if="perfection_degree.basic_info_num != 0">
                 <div class="up-att-t">
-                  <span class="span-1">基本信息</span>
-                  <span class="span-2">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
+                  <span class="span-1">基本信息 <span>·{{ perfection_degree.basic_info_num }}项</span></span>
+                  <span class="span-2"  @click="goto('basic')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
                 </div>
-                <div class="up-box-Instructions">必填字段缺失 <span>·1项</span></div>
-              </div> -->
-              <div class="i-items" v-if="job_expectation.length <= 0">
+                <div class="up-box-Instructions">
+                  <div class="basic-info-text">
+                    <span v-if=" !perfection_degree.basic_info.avatar ">头像缺失</span>
+                    <span v-if=" !perfection_degree.basic_info.begin_work_date ">参加工作时间缺失</span>
+                    <span v-if=" !perfection_degree.basic_info.real_phone ">电话缺失</span>
+                    <span v-if=" !perfection_degree.basic_info.real_email ">邮箱缺失</span>
+                    <span v-if=" !perfection_degree.basic_info.advantages_highlights ">优势亮点缺失</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="i-items" v-if="perfection_degree.job_expectation.length <= 0">
                 <div class="up-att-t">
                   <span class="span-1">求职期望</span>
                   <span class="span-2" @click="goto('qw')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
                 </div>
                 <div class="up-box-Instructions">请补充求职期望 <span>·1项</span></div>
               </div>
-              <div class="i-items" v-if="work_experience.length <= 0">
+              <div class="i-items" v-if="perfection_degree.work_experience.length <= 0">
                 <div class="up-att-t">
                   <span class="span-1">工作经历</span>
                   <span class="span-2" @click="goto('gz')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
                 </div>
                 <div class="up-box-Instructions">请补充工作经历 <span>·1项</span></div>
               </div>
-              <div class="i-items" v-if="project_experience.length <= 0">
+              <div class="i-items" v-if="perfection_degree.project_experience.length <= 0">
                 <div class="up-att-t">
                   <span class="span-1">项目经历</span>
                   <span class="span-2" @click="goto('xm')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
                 </div>
                 <div class="up-box-Instructions">请补充项目经历 <span>·1项</span></div>
               </div>
-              <div class="i-items" v-if="education_experience.length <= 0">
+              <div class="i-items" v-if="perfection_degree.education_experience.length <= 0">
                 <div class="up-att-t">
                   <span class="span-1">教育经历</span>
                   <span class="span-2" @click="goto('jy')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
@@ -111,7 +120,7 @@
           </div>
 
           <div class="right-box integrity-box">
-            <div class="integrity-att-t">中文简历完整度</div>
+            <div class="integrity-att-t">简历完整度 <span>{{ perfection_degree.degree_num }}%</span></div>
             <div></div>
             <div class="integrity-instructions">完善后获更强竞争力</div>
           </div>
@@ -149,6 +158,8 @@ import ProjectExperience from "../components/myResume/projectExperience";
 import EducationExperience from "../components/myResume/educationExperience";
 import onlineResume from "../../bossSide/components/onlineResume.vue";
 import pdf from 'vue-pdf';
+
+import { getPerfectionDegree } from "../../../utils/index";
 export default {
   name: 'myResume',
   components: {
@@ -177,6 +188,7 @@ export default {
       numPages: 0,
       onlineResumeData:{}, // 在线简历
       is_type:'',
+      perfection_degree: {}, // 简历完善度
     }
   },
   computed: {
@@ -259,6 +271,9 @@ export default {
           this.project_experience = res.data.project_experience;
           this.work_experience = res.data.work_experience;
           this.curriculum_vitae = res.data.basic_info.curriculum_vitae;
+
+          // 简历完善度、
+          this.perfection_degree = getPerfectionDegree(res.data);
         }
       }).catch(e =>{
         console.log(e)
@@ -450,6 +465,9 @@ export default {
               font-weight: bold;
               color: $g_textColor;
               line-height: 24px;
+              &>span{
+                color: #FF751A;
+              }
             }
             .span-2{
               font-size: 14px;
@@ -466,7 +484,19 @@ export default {
             color: $g_textColor;
             line-height: 22px;
             text-align: left;
-            span{
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .basic-info-text{
+              display: flex;
+              align-items: center;
+              flex-wrap: wrap;
+              &>span{
+                padding: 0 4px;
+              }
+            }
+            &>span{
               color: #FF751A;
             }
           }
@@ -481,6 +511,10 @@ export default {
         color: $g_textColor;
         line-height: 24px;
         text-align: left;
+        &>span{
+          margin-left: 10px;
+          color: #FF751A;
+        }
       }
       .integrity-instructions{
         font-size: 14px;

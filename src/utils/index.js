@@ -113,6 +113,7 @@ export function getPerfectionDegree(data) {
   let infoData = data;
   let perfection_degree = {};
   let num = 0;
+  let basic_info_num = 0;
   // 基础信息
   let basic_info = {};
   basic_info.avatar =  infoData.basic_info.avatar; // 头像
@@ -122,18 +123,32 @@ export function getPerfectionDegree(data) {
   basic_info.real_email =  infoData.basic_info.real_email; // 邮箱
   if(basic_info.avatar){
     num += 1;
+  }else{
+    basic_info_num += 1
   }
+
   if(basic_info.advantages_highlights){
     num += 1;
+  }else{
+    basic_info_num += 1
   }
+
   if(basic_info.begin_work_date){
     num += 1;
+  }else{
+    basic_info_num += 1
   }
+
   if(basic_info.real_phone){
     num += 1;
+  }else{
+    basic_info_num += 1
   }
+  
   if(basic_info.real_email){
     num += 1;
+  }else{
+    basic_info_num += 1
   }
   //求职期望
   let job_expectation = infoData.job_expectation;
@@ -157,12 +172,14 @@ export function getPerfectionDegree(data) {
   }
   let degree_num = Number(num*100)/9;
   perfection_degree = {
-    degree_num: degree_num.toFixed(0) + '%',
+    degree_num: degree_num.toFixed(0),
+    basic_info_num,
     basic_info,
     job_expectation,
     work_experience,
     project_experience,
     education_experience
   }
+  console.log(perfection_degree)
   return perfection_degree
 }

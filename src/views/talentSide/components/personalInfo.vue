@@ -7,7 +7,7 @@
           <span class="span-1" v-if="infoData.basic_info">{{infoData.basic_info.real_name}}</span>
           <img src="../../../assets/image/sex-1.png" alt="" class="img-sex"/>
         </div>
-        <div class="wcd-box">简历完整度{{ perfection_degree.degree_num }}</div>
+        <div class="wcd-box">简历完整度{{ perfection_degree.degree_num }}%</div>
       </div>
     </div>
     <div class="infoTab-box">
