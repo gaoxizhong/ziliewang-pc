@@ -15,8 +15,11 @@
       <div class="dataInfo-box">
 
         <div>
-          <div class="title"><span>简历浏览量</span><img src="../../../assets/image/bossSide/question-circle.png" alt=""></div>
-          <div class="num">1</div>
+          <div class="title">
+            <span>简历浏览量</span>
+            <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
+          </div>
+          <div class="num">{{ company_recruitment_count.resume_view_num?company_recruitment_count.resume_view_num:0 }}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -24,8 +27,11 @@
           </div>
         </div>
         <div>
-          <div class="title"><span>聊天发起量</span><img src="../../../assets/image/bossSide/question-circle.png" alt=""></div>
-          <div class="num">1</div>
+          <div class="title">
+            <span>聊天发起量</span>
+            <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
+          </div>
+          <div class="num">{{ company_recruitment_count.chat_initiate_num?company_recruitment_count.chat_initiate_num:0 }}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -33,8 +39,11 @@
           </div>
         </div>
         <div>
-          <div class="title"><span>回复处理量</span><img src="../../../assets/image/bossSide/question-circle.png" alt=""></div>
-          <div class="num">1</div>
+          <div class="title">
+            <span>回复处理量</span>
+            <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
+          </div>
+          <div class="num">{{ company_recruitment_count.reply_num?company_recruitment_count.reply_num:0 }}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -42,26 +51,35 @@
           </div>
         </div>
         <div>
-          <div class="title"><span>虚拟号码获取量</span><img src="../../../assets/image/bossSide/question-circle.png" alt=""></div>
-          <div class="num">1</div>
+          <div class="title">
+            <span>虚拟号码获取量</span>
+            <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
+          </div>
+          <div class="num">{{ company_recruitment_count.get_phone_num?company_recruitment_count.get_phone_num:0 }}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
             <span class="sm-t">相比上周期</span>
           </div>
         </div>
-        <div>
-          <div class="title"><span>互动量</span><img src="../../../assets/image/bossSide/question-circle.png" alt=""></div>
-          <div class="num">1</div>
+        <!-- <div>
+          <div class="title">
+            <span>互动量</span>
+            <img src="../../../assets/image/bossSide/question-circle.png" alt="">
+          </div>
+          <div class="num">0</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
             <span class="sm-t">相比上周期</span>
           </div>
-        </div>
+        </div> -->
         <div>
-          <div class="title"><span>面试邀约量</span><img src="../../../assets/image/bossSide/question-circle.png" alt=""></div>
-          <div class="num">1</div>
+          <div class="title">
+            <span>面试邀约量</span>
+            <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
+          </div>
+          <div class="num">{{company_recruitment_count.interview_invite_num?company_recruitment_count.interview_invite_num:0}}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -96,15 +114,15 @@
       <div class="tableData-box margin-top-20">    
         <el-table :data="company_recruitment_list" style="width: 100%">
           <el-table-column prop="position_name" label="在招职位"></el-table-column>
-          <el-table-column prop="b" label="聊天发起量"></el-table-column>
-          <el-table-column prop="c" label="求职者回复量"></el-table-column>
-          <el-table-column prop="d" label="求职者投递量"></el-table-column>
-          <el-table-column prop="e" label="回复处理量"></el-table-column>
-          <el-table-column prop="f" label="虚拟号码获取量"></el-table-column>
-          <el-table-column prop="e" label="互动量"></el-table-column>
+          <el-table-column prop="companypositionaboutcount.chat_initiate_num" label="聊天发起量"></el-table-column>
+          <el-table-column prop="companypositionaboutcount.reply_num" label="求职者回复量"></el-table-column>
+          <el-table-column prop="companypositionaboutcount.deliver_num" label="求职者投递量"></el-table-column>
+          <!-- <el-table-column prop="e" label="回复处理量"></el-table-column> -->
+          <el-table-column prop="companypositionaboutcount.get_phone_num" label="虚拟号码获取量"></el-table-column>
+          <!-- <el-table-column prop="e" label="互动量"></el-table-column> -->
           <el-table-column label="操作">
             <template>
-              <span class="blue">查看详情</span>
+              <!-- <span class="blue">查看详情</span> -->
               <span class="blue">导出</span>
             </template>
           </el-table-column>
@@ -120,6 +138,7 @@ export default {
   data(){
     return {
       formData: {},
+      company_recruitment_count:{},
       company_recruitment_list: [],
       tableData: [
         {
@@ -146,6 +165,7 @@ export default {
         if(res.code == 0){
           that.formData = res.data;
           that.company_recruitment_list = res.data.company_recruitment_list.list;
+          that.company_recruitment_count = res.data.company_recruitment_count;
         }
       })
     }
