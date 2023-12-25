@@ -130,19 +130,29 @@ export default {
       this.getSearchinfo();
     },
     clickItems(i){
-      let perfection_degree = this.perfection_degree;
-      if(perfection_degree.degree_num != 100){
-        this.$message.error({
-          message: '请先完善个人简历！'
-        })
-        return
-      }
-      this.$router.push({
-        path:'/JobDetails',
-        query:{
-          id: i.id
+      let that = this;
+      // 获取个人信息
+      that.$axios.post('/api/user/profile',{}).then(res =>{
+        if(res.code == 0){
+          // 简历完善度、
+          let perfection_degree = getPerfectionDegree(res.data);
+          if(perfection_degree.degree_num != 100){
+            that.$message.error({
+              message: '请先完善个人简历！'
+            })
+            return
+          }
+          that.$router.push({
+            path:'/JobDetails',
+            query:{
+              id: i.id
+            }
+          })
         }
+      }).catch(e =>{
+        console.log(e)
       })
+      
     },
     // 分页事件
     pageHasChanged() {
