@@ -3,27 +3,23 @@
     <div class="login-header-box">
       <div class="header-nav-box">
         <img src="../../assets/image/log-2.png" alt="" class="logo"/>
+        <div class="select-box">
+          <div class="show-select-box">
+            <span class="title">{{ tag == 'user'? '我是求职者' : '我是招聘方' }}</span>
+            <img src="../../assets/image/Swap.png" alt="" class=""/>
+            <span class="qh" @click="clickCRole">切换</span>
+          </div>
+          <div class="select-items-box" v-if="c_role">
+            <p :class="tag == 'user'?'hover':'' " @click="clickRole('user')">我是求职者</p>
+            <p :class="tag == 'company'?'hover':'' " @click="clickRole('company')">我是招聘方</p>
+          </div>
+        </div>
       </div>
     </div>
     <!-- <div class="home-container" :style="tag == 'user'? login_bgurl_1 : login_bgurl_2" > -->
     <div class="home-container" :style="login_bgurl_1">
       <div class="home-container-div">
         <div class="form-container-box">
-
-          <div class="select-box">
-            <div class="show-select-box">
-              <span class="title">当前角色：</span>
-              <span class="title-dec">{{ tag == 'user'? '求职者' : '招聘方' }}</span>
-              <img src="../../assets/image/Swap.png" alt="" class=""  @click="clickCRole"/>
-              <!-- <span class="qh" @click="clickCRole">切换</span> -->
-            </div>
-            <div class="select-items-box" v-if="c_role">
-              <p :class="tag == 'user'?'hover':'' " @click="clickRole('user')">求职者</p>
-              <p :class="tag == 'company'?'hover':'' " @click="clickRole('company')">招聘方</p>
-            </div>
-          </div>
-
-           
           <!-- 登录模块 开始 -->
           <div class="signLogin-box" v-if="sign_login == 'login'">
             <div class="login-type-box">
@@ -232,6 +228,7 @@ export default {
     // 切换角色
     clickRole(n){
       this.tag = n;
+      console.log(this.tag)
       localStorage.setItem('tag',n);
       this.c_role = false;
       this.sign_login = 'login'; // sign、注册； login、登录
@@ -246,6 +243,7 @@ export default {
     },
     // 点击用户注册
     clickUserSign(){
+      console.log(this.tag)
       if(this.tag == 'company'){
         this.$router.push('/bossSignIn')
       }else{
@@ -671,7 +669,8 @@ $cursor: #000;
   position: absolute;
   top: 50%;
   right: 20px;
-  transform: translateY(-60%);
+  z-index: 9999;
+  transform: translateY(-52%);
   padding: 20px 30px;
 
   .select-box{
@@ -701,7 +700,6 @@ $cursor: #000;
 .signLogin-box{
   width: 100%;
   height: 100%;
-  margin-top: 12px;
 }
 .login-type-box{
   width: 100%;
@@ -818,7 +816,7 @@ $cursor: #000;
   div{
     cursor: pointer;
     color: #4E5969;
-    font-size: 0.7rem;
+    font-size: 14px;
     text-align: center;
     &:hover{
       color: $g_color;
@@ -852,7 +850,7 @@ $cursor: #000;
   }
   .select-items-box{
     position: absolute;
-    top: 28px;
+    top: 34px;
     left: 24px;
     width: 144px;
     height: 90px;
@@ -862,7 +860,7 @@ $cursor: #000;
     opacity: 1;
     border: 1px solid #F2F3F5;
     padding: 10px 0;
-    z-index: 9999;
+    z-index: 99999;
     p{
       font-size: 14px;
       font-weight: bold;
@@ -891,14 +889,13 @@ $cursor: #000;
   color: #888;
   min-width: 1220px;
   padding-top: 24px;
-  padding-bottom: 24px;
+  padding-bottom: 6px;
 
   .footer-main div{
     width: 100%;
     text-align: center;
     color: #fff;
     font-size: 14px;
-    padding-top: 10px;
     line-height: 24px;
     a{
       color: #fff;
