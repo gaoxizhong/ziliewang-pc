@@ -3,24 +3,27 @@
     <div class="login-header-box">
       <div class="header-nav-box">
         <img src="../../assets/image/log-2.png" alt="" class="logo"/>
-        <div class="select-box">
-          <div class="show-select-box">
-            <span class="title">{{ tag == 'user'? '我是求职者' : '我是招聘方' }}</span>
-            <img src="../../assets/image/Swap.png" alt="" class=""/>
-            <span class="qh" @click="clickCRole">切换</span>
-          </div>
-          <div class="select-items-box" v-if="c_role">
-            <p :class="tag == 'user'?'hover':'' " @click="clickRole('user')">我是求职者</p>
-            <p :class="tag == 'company'?'hover':'' " @click="clickRole('company')">我是招聘方</p>
-          </div>
-        </div>
       </div>
     </div>
-    <div class="home-container" :style="tag == 'user'? login_bgurl_1 : login_bgurl_2" >
+    <!-- <div class="home-container" :style="tag == 'user'? login_bgurl_1 : login_bgurl_2" > -->
+    <div class="home-container" :style="login_bgurl_1">
       <div class="home-container-div">
-
         <div class="form-container-box">
 
+          <div class="select-box">
+            <div class="show-select-box">
+              <span class="title">当前角色：</span>
+              <span class="title-dec">{{ tag == 'user'? '求职者' : '招聘方' }}</span>
+              <img src="../../assets/image/Swap.png" alt="" class=""  @click="clickCRole"/>
+              <!-- <span class="qh" @click="clickCRole">切换</span> -->
+            </div>
+            <div class="select-items-box" v-if="c_role">
+              <p :class="tag == 'user'?'hover':'' " @click="clickRole('user')">求职者</p>
+              <p :class="tag == 'company'?'hover':'' " @click="clickRole('company')">招聘方</p>
+            </div>
+          </div>
+
+           
           <!-- 登录模块 开始 -->
           <div class="signLogin-box" v-if="sign_login == 'login'">
             <div class="login-type-box">
@@ -670,10 +673,35 @@ $cursor: #000;
   right: 20px;
   transform: translateY(-60%);
   padding: 20px 30px;
+
+  .select-box{
+    padding: 0;
+    position: relative;
+    .show-select-box{
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+      .title{
+        font-weight: bold;
+        color: $g_textColor;
+      }
+      .title-dec{
+        padding: 10px 0;
+        color: $g_color;
+      }
+      &>img{
+        cursor: pointer;
+      }
+    }
+  }
+  // .select-items-box{
+  //   padding-bottom: 20px;
+  // }
 }
 .signLogin-box{
   width: 100%;
   height: 100%;
+  margin-top: 12px;
 }
 .login-type-box{
   width: 100%;
@@ -683,13 +711,13 @@ $cursor: #000;
   span{
     flex: 1;
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     font-family: PingFang SC-Regular, PingFang SC;
     font-weight: 400;
     color: #4E5969;
-    line-height: 26px;
+    line-height: 28px;
     position: relative;
-    padding: 4px 0;
+    padding: 6px 0;
     cursor: pointer;
   }
   span.hover{
@@ -803,18 +831,12 @@ $cursor: #000;
   // background: #F4F8FF;
   border-radius: 2px;
   opacity: 1;
-  padding: 0 10px;
   position: relative;
   .show-select-box{
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
-    span.title{
-      font-size: 14px;
-      font-weight: bold;
-      color: $g_textColor;
-    }
     span.qh{
       font-size: 14px;
       font-weight: 400;
@@ -830,8 +852,8 @@ $cursor: #000;
   }
   .select-items-box{
     position: absolute;
-    bottom: -100px;
-    left: 0;
+    top: 28px;
+    left: 24px;
     width: 144px;
     height: 90px;
     background: #FFFFFF;

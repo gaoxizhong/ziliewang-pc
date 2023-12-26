@@ -36,8 +36,14 @@
             </el-form-item>
 
             <el-form-item label="职位类别" prop="position_type">
-              <el-select v-model="ruleForm.position_type" placeholder="请选择职位类别">
+              <el-select v-model="ruleForm.position_type" placeholder="请选择职位类别" @change="changePositionType">
                 <el-option :label="item.category_name" :value="item.category_name"  v-for="(item,index) in category_list" :key="index"></el-option>
+              </el-select>
+            </el-form-item>
+            
+            <el-form-item label="职位偏好" prop="job_preference">
+              <el-select v-model="ruleForm.job_preference" placeholder="请选择职位偏好，有助于帮您更精准地匹配人才">
+                <el-option :label="item.category_name" :value="item.category_name"  v-for="(item,index) in position_list" :key="index"></el-option>
               </el-select>
             </el-form-item>
 
@@ -56,13 +62,7 @@
                 </el-form-item>
               </el-col>
             </el-form-item>
-
-            <el-form-item label="职位偏好" prop="job_preference">
-              <el-select v-model="ruleForm.job_preference" placeholder="请选择职位偏好，有助于帮您更精准地匹配人才">
-                <el-option label="前端" value="前端"></el-option>
-                <el-option label="后端" value="后端"></el-option>
-              </el-select>
-            </el-form-item>
+         
             <el-form-item label="工作地址" prop="work_address">
               <!-- <el-input v-model="ruleForm.work_address" placeholder="请输入工作地址"></el-input> -->
               <el-cascader
@@ -241,8 +241,10 @@ export default {
       position_id: '',
       staffList:[], // 员工列表
       industryList:[],//行业列表
-      category_list:[],
-      selt_item: '',
+      category_list:[], // 职位列表
+      position_list:[], // 职位偏好
+      selt_industry_item: '',  // 选中的行业名称
+      selt_positionType_item: '',  // 选中的职位名称
       ruleForm: {
         position_name: '', // 职位名称
         work_type: '', // 工作性质
@@ -341,52 +343,73 @@ export default {
     // console.log(this.$root.positionItems);
      // 获取员工列表
      this.getStaffList();
-     // 获取行业列表信息
-    //  this.getIndustryList();
-     // 获取职位列表信息
-     this.getPositionList();
+     
   },
   created(){
     if(this.$route.query.id){
       this.position_id = this.$route.query.id;
-      this.getDetails(this.position_id);
+      this.getDetails(this.position_id,this.getPositionList);
+    }else{
+      // 获取行业列表信息
+      this.getPositionList();
     }
-
+    
   },
   methods:{
+    // 点击选择行业要求
     changeIndustry(e){
-      console.log(e)
-      this.selt_item = e;
+      this.selt_industry_item = e;
       let industryList = this.industryList;
+      this.selt_positionType_item = '';// 选中的职位类别名称
+      this.ruleForm.position_type = '',
+      this.ruleForm.job_preference = '',
+
       industryList.forEach( ele =>{
         if(ele.industry == e){
           this.category_list = ele.category_list;
         }
       })
     },
-    // 获取职位列表信息
-    getPositionList(){
-      let that = this;
-      that.$axios.post('/api/position/list',{}).then( res =>{
-        that.industryList = res.data;
-        industryList.forEach( ele =>{
-        if(ele.industry == that.selt_item){
-          that.category_list = ele.category_list;
+    // 点击选择职位类别
+    changePositionType(e){
+      this.selt_positionType_item = e;
+      let category_list = this.category_list;
+      category_list.forEach( ele =>{
+        if(ele.category_name == e){
+          this.position_list = ele.position_list;
         }
       })
+    },
+    // 获取职位列表信息
+    getPositionList(i){
+      let that = this;
+      that.$axios.post('/api/position/list',{}).then( res =>{
+        let industryList = res.data;
+        if(i){
+          that.industryList = industryList;
+          let ruleForm = that.ruleForm;
+          let selt_industry_item = ruleForm.industry_requirement;// 选中的行业名称
+          let selt_positionType_item = ruleForm.position_type;// 选中的职位类别名称
+          that.selt_industry_item = selt_industry_item;
+          that.selt_positionType_item = selt_positionType_item;
+          industryList.forEach( ele =>{
+            if(ele.industry == selt_industry_item){
+              that.category_list = ele.category_list; // 职位列表
+            }
+          })
+          that.category_list.forEach( ele =>{
+            if(ele.category_name == selt_positionType_item){
+              that.position_list = ele.position_list;
+            }
+          })
+        }else{
+          that.industryList = industryList;
+        }
+        
       }).catch( e=>{
         console.log(e)
       })
     },
-    // 获取行业列表信息
-    // getIndustryList(){
-    //   let that = this;
-    //   that.$axios.post('/api/industry/list',{}).then( res =>{
-    //     that.industryList = res.data;
-    //   }).catch( e=>{
-    //     console.log(e)
-    //   })
-    // },
     // 获取员工列表
     getStaffList(){
       let that = this;
@@ -401,7 +424,7 @@ export default {
       })
     },
     // 获取详情
-    getDetails(i){
+    getDetails(i,f){
       let that = this;
       let id = i;
       let p = {
@@ -424,7 +447,8 @@ export default {
           ruleForm.resume_demand = res.data.resume_demand.split(',');
           ruleForm.work_type = res.data.work_type+'';
           ruleForm.months = res.data.months?res.data.months:'12';
-          this.ruleForm = ruleForm;
+          that.ruleForm = ruleForm;
+          return f(id);
         }else{
           that.$message.error({
             message:res.data.msg
