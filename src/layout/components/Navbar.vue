@@ -106,28 +106,10 @@ export default {
     },
     // 点击企业主页
     goToCorporateHome(){
-      // 获取个人信息
-      this.getUserProfile();
-      
-    },
-     // 获取个人信息
-   getUserProfile(){
-      let that = this;
       this.$router.push('/corporateHome')
       return
-      that.$axios.post('/api/user/profile',{}).then(res =>{
-        if(res.code == 0){
-          let role = res.data.basic_info.role;
-          if(role == 1){
-            this.$router.push('/enterpriseInfoRequest')
-          }else{
-            
-          }
-        }
-      }).catch(e =>{
-        console.log(e)
-      })
     },
+    
     gotoMyInterviewSchedule(){
       this.$router.push('/myInterviewSchedule');
     },

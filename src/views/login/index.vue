@@ -3,7 +3,7 @@
     <div class="login-header-box">
       <div class="header-nav-box">
         <img src="../../assets/image/log-2.png" alt="" class="logo"/>
-        <div class="select-box">
+        <!-- <div class="select-box">
           <div class="show-select-box">
             <span class="title">{{ tag == 'user'? '我是求职者' : '我是招聘方' }}</span>
             <img src="../../assets/image/Swap.png" alt="" class=""/>
@@ -13,7 +13,7 @@
             <p :class="tag == 'user'?'hover':'' " @click="clickRole('user')">我是求职者</p>
             <p :class="tag == 'company'?'hover':'' " @click="clickRole('company')">我是招聘方</p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- <div class="home-container" :style="tag == 'user'? login_bgurl_1 : login_bgurl_2" > -->
@@ -47,6 +47,13 @@
                   <el-input type="password" v-model="login_user.password" name="password" placeholder="请输入密码" show-password></el-input>
                 </div>
               </div>
+              <div class="login-radio-box">
+                <el-radio-group v-model="tag">
+                  <el-radio label="user">求职者</el-radio>
+                  <el-radio label="company">招聘方</el-radio>
+                </el-radio-group>
+              </div>
+
               <div class="login-check-box">
                 <el-checkbox v-model="login_user.loginChecked"></el-checkbox>
                 <div class="login-check-text">已阅读并同意<span @click.stop="clickUserAgreement">《用户协议》</span>和<span @click.stop="clickPrivacyPolicy">《隐私政策》</span></div>
@@ -164,6 +171,7 @@ export default {
     return {
       c_role: false,
       tag: 'user',
+      
       login_bgurl_1:{},
       login_bgurl_2:{},
       sign_login: 'login', // sign、注册； login、登录
@@ -783,8 +791,19 @@ $cursor: #000;
   border-color: $g_color;
   outline: 0;
 }
+.login-radio-box{
+  display: flex;
+  align-items: center;
+  /deep/ .el-radio__input.is-checked+.el-radio__label {
+    color: $g_bg;
+  }
+  /deep/ .el-radio__input.is-checked .el-radio__inner {
+    border-color: $g_bg;
+    background: $g_bg;
+  }
+}
 .login-check-box{
-  margin-top: 20px;
+  margin-top: 14px;
   display: flex;
   align-items: center;
   .login-check-text{

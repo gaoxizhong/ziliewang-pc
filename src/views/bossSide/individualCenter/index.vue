@@ -50,8 +50,12 @@
           <div class="title"><span>* </span>职务</div>
           <el-input v-model="infoData.role_desc" placeholder="请输入" disabled></el-input>
         </div>
+        <div class="items-box">
+          <div class="title"><span>* </span>简介</div>
+          <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 12}" placeholder="请输入个人简介或介绍" v-model="infoData.individual_resume"></el-input>
+        </div>
         <div class="btn-box">
-          <el-button type="primary" @click="setUserSave">保存</el-button>
+          <el-button type="primary" @click="setUserSave_btn">保存</el-button>
           <!-- <el-button @click="resetForm('ruleForm')">取消</el-button> -->
         </div>
       </div>
@@ -78,6 +82,16 @@
           </div>
           <!-- <div class="right">换绑</div> -->
         </div>
+        <div class="list-items-box">
+          <div class="left">
+            <img src="../../../assets/image/bossSide/icon-yx.png" alt="" />
+            <div class="item-info-box">
+              <div class="title">绑定安全邮箱</div>
+              <div class="sub-title">{{ infoData.real_email }}  可用于找回账号和密码</div>
+            </div>
+          </div>
+          <div class="right" @click="clickSetEmail">换绑</div>
+        </div>
         <!-- <div class="list-items-box">
           <div class="left">
             <img src="../../../assets/image/bossSide/icon-zhmm.png" alt="" />
@@ -98,17 +112,7 @@
           </div>
           <div class="right">换绑</div>
         </div> -->
-        <div class="list-items-box">
-          <div class="left">
-            <img src="../../../assets/image/bossSide/icon-yx.png" alt="" />
-            <div class="item-info-box">
-              <div class="title">绑定安全邮箱</div>
-              <div class="sub-title">{{ infoData.real_email }}  可用于找回账号和密码</div>
-            </div>
-          </div>
-          <div class="right" @click="clickSetEmail">换绑</div>
-        </div>
-        <div class="list-items-box">
+        <!-- <div class="list-items-box">
           <div class="left">
             <img src="../../../assets/image/bossSide/icon-zjhm.png" alt="" />
             <div class="item-info-box">
@@ -116,8 +120,8 @@
               <div class="sub-title">仅可使用主叫号码联系人才</div>
             </div>
           </div>
-          <!-- <div class="right">换绑</div> -->
-        </div>
+          <div class="right">换绑</div>
+        </div> -->
       </div>
       <!-- 账号安全 结束-->
 
@@ -152,6 +156,7 @@ export default {
         role_desc: "",
         avatar:'',
         phone:'',
+        individual_resume:''
       },
       new_phone:'',
       upload_files_path:'',
@@ -201,18 +206,37 @@ export default {
         }
       })
     },  
-    SET_staffName(){
+    // SET_staffName(){
+    //   let p = {
+    //     avatar: this.upload_files_path,
+    //     staff_name: this.infoData.staff_name,
+    //   }
+    //   //  修改信息
+    //   this.setUserSave(p);
+    // },
+
+    // 点击基本信息保存
+    setUserSave_btn(){
       let p = {
-        avatar: that.upload_files_path,
-        staff_name: that.infoData.staff_name,
+        avatar: this.upload_files_path,
+        staff_name: this.infoData.staff_name,
+        individual_resume: this.infoData.individual_resume,
+      }
+      if(p.staff_name == '' || !p.staff_name){
+        that.$message.error('姓名不能为空！');
+        return
+      }
+      if(p.individual_resume == '' || !p.individual_resume){
+        that.$message.error('简介不能为空！');
+        return
       }
       //  修改信息
-    this.setUserSave(p);
+      this.setUserSave(p);
     },
     //  修改信息
     setUserSave(data){
       let that = this;
-      // let p = Object.assign({},data);
+      let p = Object.assign({},data);
       that.$axios.post('/api/staff/save',data).then( res =>{
         console.log(res)
         if(res.code == 0){
@@ -221,7 +245,6 @@ export default {
             that.$store.dispatch('user/SET_staffName', data.staff_name); // vuex
           }
           if(that.infoData.avatar){
-            localStorage.setItem('staffAvatar', that.infoData.avatar); // 用户头像缓存
             that.$store.dispatch('user/SET_staffAvatar', that.infoData.avatar); // vuex);
           }
           if(that.setPhoneVisible){
@@ -333,8 +356,8 @@ export default {
         position: relative;
         margin-left: 40px;
         img{
-          width: 100%;
-          height: 100%;
+          width: 68px;
+          height: 68px;
         }
         .info-avatar-i{
           width: 100%;
@@ -383,6 +406,10 @@ export default {
       }
       & /deep/ .el-input.is-active .el-input__inner, & /deep/ .el-input__inner:focus{
         border-color: $g_bg;
+      }
+      & .el-textarea{
+        margin-left: 40px;
+        width: 30rem;
       }
     }
   }
