@@ -1,6 +1,55 @@
 <template>
   <div class="label-items-box">
-    <el-form :model="tdnr_ruleForm" :rules="tdnr_rules" ref="tdnr_ruleForm" label-width="120px" class="demo-ruleForm">
+    <div class="btn">
+      <el-button type="primary" size="small" @click="addAccount">新增团队牛人</el-button>
+    </div>
+    <div class="guildListSection-box">
+     <div class="guildList">
+      <el-row :gutter="24">
+        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+          <div class="grid-content">
+            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
+            <p class="user-name">郜喜忠</p>
+            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
+            <div class="controls-box">
+              <i class="el-icon-view" title="查看"></i>
+              <i class="el-icon-delete" title="删除"></i>
+            </div>
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+          <div class="grid-content">
+            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
+            <p class="user-name">郜喜忠</p>
+            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+          <div class="grid-content">
+            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
+            <p class="user-name">郜喜忠</p>
+            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+          <div class="grid-content">
+            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
+            <p class="user-name">郜喜忠</p>
+            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+          <div class="grid-content">
+            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
+            <p class="user-name">郜喜忠</p>
+            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
+          </div>
+        </el-col>
+      </el-row>
+     </div>
+    </div>
+    
+    <!-- <el-form :model="tdnr_ruleForm" :rules="tdnr_rules" ref="tdnr_ruleForm" label-width="120px" class="demo-ruleForm">
       <el-form-item label="团队牛人" prop="team_genius">
         <el-col :span="16">
           <el-select v-model="tdnr_ruleForm.team_genius" multiple placeholder="团队牛人" style="width: 100%;">
@@ -29,7 +78,7 @@
       <el-form-item class="btn-box">
         <el-button type="primary" @click="submitForm">保存</el-button>
       </el-form-item>
-    </el-form>
+    </el-form> -->
   </div>
 </template>
 
@@ -48,20 +97,15 @@ export default {
   },
   data(){
     return{
-      tdnr_ruleForm:{ // 团队牛人--数据
-        team_genius:'',  //团队牛人
-        team_style:'', // 团队风格
-        team_stage:'', // 团队阶段
-        team_structure:'', // 团队结构
-      },
-      tdnr_rules: {// 团队牛人-- 必填提示
-
-      },
+      useDataList: [],
+      addDialog:{
+        visible: false
+      }
     }
   },
   created(){
-    // 获取信息
-    this.getDetail();
+    // 获取员工列表
+    this.getTableData();
   },
   mounted(){
  
@@ -70,24 +114,24 @@ export default {
     
   },
   methods: {
-    // 获取信息
-    getDetail(){
+    // 获取员工列表
+    getTableData() {
       let that = this;
-      that.$axios.post('/api/company/team/detail',{}).then( res =>{
-        console.log(res)
+      that.$axios.post('/api/staff/index',{
+        type: 1
+      }).then( res =>{
         if(res.code == 0){
-          that.tdnr_ruleForm.team_genius = res.data.team_genius?res.data.team_genius.split(','):[];
-          that.tdnr_ruleForm.team_style =  res.data.team_style;
-          that.tdnr_ruleForm.team_stage =  res.data.team_stage;
-          that.tdnr_ruleForm.team_structure =  res.data.team_structure;
+          that.useDataList = res.data
         }else{
           that.$message.error({
-            message:res.msg
+            message:res.data.msg
           })
         }
-      }).catch( e=>{
-        console.log(e)
       })
+    },
+    addAccount() {
+      this.addDialog.form = {};
+      this.addDialog.visible = true;
     },
     // 点击发布
     submitForm(){
@@ -213,6 +257,13 @@ export default {
     }
 
   }
+  .btn {
+    padding: 10px 0px;
+    & /deep/ .el-button--primary{
+      background: $g_bg;
+      border-color: $g_bg;
+    }
+  }
   .btn-box{
     display: flex;
     align-items: center;
@@ -228,5 +279,66 @@ export default {
     border-color: $g_color;
    }
  
+  }
+  .guildListSection-box{
+    width: 100%;
+    min-width: 580px;
+    .guildList{
+      /deep/ .el-col {
+        border-radius: 4px;
+      }
+      /deep/ .grid-content {
+        width: 100%;
+        border-radius: 4px;
+        min-height: 36px;
+        box-shadow: 0 0 20px 0 #eaeaea;
+        text-decoration: none;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px 10px;
+        margin-top: 14px;
+        .user-img {
+          width: 6.6rem;
+          height: 6.6rem;
+          border-radius: 50%;
+          margin-bottom: 10px;
+        }
+        .user-name {
+          color: $g_textColor;
+          font-size: 16px;
+          line-height: 28px;
+          font-weight: bold;
+          text-align: center;
+        }
+        .user-introduce{
+          font-size: 14px;
+          line-height: 23px;
+          text-align: left;
+          color: #666;
+          display:box;
+          overflow:hidden;
+          text-overflow:ellipsis;
+          box-orient: vertical;
+          line-clamp:3;
+        }
+        .controls-box{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          margin-top: 10px;
+          &> i{
+            margin-right: 14px;
+            font-size: 16px;
+            cursor: pointer;
+            &:hover{
+              color: $g_color;
+            }
+          }
+        }
+      }
+    }
   }
 </style>

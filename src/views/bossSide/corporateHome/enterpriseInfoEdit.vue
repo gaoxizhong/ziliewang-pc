@@ -69,7 +69,7 @@
       color: $g_color;
     }
     & /deep/ .el-tabs__item{
-      padding: 0 30px;
+      padding: 0 30px 0 10px;
     }
     & /deep/ .el-tabs--left .el-tabs__item.is-left{
       font-size: 16px;

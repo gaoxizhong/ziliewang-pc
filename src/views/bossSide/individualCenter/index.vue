@@ -218,16 +218,18 @@ export default {
     // 点击基本信息保存
     setUserSave_btn(){
       let p = {
-        avatar: this.upload_files_path,
         staff_name: this.infoData.staff_name,
         individual_resume: this.infoData.individual_resume,
       }
+      if(this.upload_files_path){
+        p.avatar = this.upload_files_path
+      }
       if(p.staff_name == '' || !p.staff_name){
-        that.$message.error('姓名不能为空！');
+        this.$message.error('姓名不能为空！');
         return
       }
       if(p.individual_resume == '' || !p.individual_resume){
-        that.$message.error('简介不能为空！');
+        this.$message.error('简介不能为空！');
         return
       }
       //  修改信息
