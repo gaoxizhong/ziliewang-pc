@@ -61,13 +61,13 @@
           <el-form-item label="姓名" prop="name">
             <el-input v-model="addDialog.form.staff_name" />
           </el-form-item>
-          <el-form-item label="电话" prop="phone">
+          <el-form-item label="电话" prop="phone" style="margin-top: 12px">
             <el-input v-model="addDialog.form.phone" />
           </el-form-item>
           <el-form-item label="密码" prop="phone">
             <el-input v-model="addDialog.form.password" type="password" name="password" placeholder="密码：8-16位字母、数字、字符，不支持空格" show-password></el-input>
           </el-form-item>
-          <el-form-item label="岗位" prop="role_id">
+          <el-form-item label="岗位" prop="role_id" style="margin-top: 12px">
             <el-select
               v-model="addDialog.form.role_id"
               style="width: 100%"
@@ -80,6 +80,13 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="岗位" prop="role_id" style="margin-top: 12px">
+            <el-radio-group v-model="addDialog.form.is_core_team_member">
+              <el-radio label="2">非核心成员</el-radio>
+              <el-radio label="1">核心成员</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button
@@ -93,7 +100,7 @@
           >确认</el-button>
         </span>
       </el-dialog>
-  </div>
+    </div>
   </div>
 </template>
 
@@ -127,7 +134,7 @@ export default {
       addDialog: {
         visible: false,
         form: {
-         
+
         },
         row: {
           role_value: []
@@ -183,6 +190,7 @@ export default {
         staff_name: row.staff_name,
         phone: row.phone,
         role_id: row.role_id,
+        is_core_team_member:row.is_core_team_member + '', 
         password: row.password?row.password:'',
       }
       this.id = row.id;

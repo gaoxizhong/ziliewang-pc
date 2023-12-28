@@ -62,9 +62,9 @@
           <div class="items-box">
             <img :src="infoData.company_show == 1?require('../../../assets/image/bossSide/check-circle-1.png'):require('../../../assets/image/bossSide/check-circle.png')" alt="" class="status-img"/>
             <div class="items-m">
-              <div class="title">企业形象</div>
+              <div class="title">企业视频介绍</div>
               <div class="items-icon">
-                <span>视频</span>
+                <span>企业可以录制吸纳人才的相关视频介绍，可以设置控制在60秒内</span>
                 <span>美图</span>
               </div>
             </div>
@@ -76,11 +76,9 @@
           <div class="items-box">
             <img :src="infoData.company_team == 1?require('../../../assets/image/bossSide/check-circle-1.png'):require('../../../assets/image/bossSide/check-circle.png')" alt="" class="status-img"/>
             <div class="items-m">
-              <div class="title">核心团队</div>
+              <div class="title">公司核心团队</div>
               <div class="items-icon">
-                <span>核心成员</span>
-                <span>管理风格</span>
-                <span>成员简介</span>
+                <span>核心人员姓名: 职务、个人简介</span>
               </div>
             </div>
             <div class="items-right-box">

@@ -2,21 +2,21 @@
   <div class="bossSide-container">
     <!-- 企业主页---信息修改页 -->
     <div class="m-box page-box">
-      <el-tabs :tab-position="tabPosition" v-model="tabType">
-        <el-tab-pane label="企业基本信息" name="basic">
-          <companyBasic />
+      <el-tabs :tab-position="tabPosition" v-model="tabType" @tab-click="handleClick">
+        <el-tab-pane label="企业基本信息" name="basic" >
+          <companyBasic v-if="tabType == 'basic' "/>
         </el-tab-pane>
         <el-tab-pane label="企业介绍" name="introduction">
-          <introduction  />
+          <introduction v-if="tabType == 'introduction'" />
         </el-tab-pane>
         <el-tab-pane label="工作制度及福利" name="work_system">
-          <workSystem  />
+          <workSystem  v-if="tabType == 'work_system'" />
         </el-tab-pane>
-        <el-tab-pane label="企业形象" name="show">
-          <companyShow  />
+        <el-tab-pane label="企业视频介绍" name="show">
+          <companyShow  v-if="tabType == 'show'" />
         </el-tab-pane>
-        <el-tab-pane label="牛人团队" name="team">
-          <teamGenius  />
+        <el-tab-pane label="公司核心团队" name="team">
+          <teamGenius  v-if="tabType == 'team'" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -42,7 +42,6 @@
       return {
         tabPosition: 'left', //标签一共有四个方向的设置 tabPosition="left|right|top|bottom"
         tabType:'basic',
-       
         uploadData:{
           up_tag: 'business_license'
         },
@@ -53,7 +52,9 @@
       this.tabType = this.$route.query.type;
     },
     methods:{
-
+      handleClick(e){
+        console.log(e)
+      }
     }
   }
 </script>

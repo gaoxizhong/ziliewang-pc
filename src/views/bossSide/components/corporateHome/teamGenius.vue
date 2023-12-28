@@ -1,84 +1,66 @@
 <template>
   <div class="label-items-box">
-    <div class="btn">
+    <!-- <div class="btn">
       <el-button type="primary" size="small" @click="addAccount">新增团队牛人</el-button>
-    </div>
+    </div> -->
     <div class="guildListSection-box">
      <div class="guildList">
       <el-row :gutter="24">
-        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" v-for="(item,index) in useDataList" :key="index">
           <div class="grid-content">
-            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
-            <p class="user-name">郜喜忠</p>
-            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
+            <img class="user-img" :src="item.avatar?item.avatar:require('../../../../assets/image/bossSide/img-user.jpg')" alt="" />
+            <p class="user-name">姓名：{{ item.staff_name }}</p>
+            <p class="user-desc">职务：{{ item.role_desc }}</p>
+            <p class="user-introduce">简介：{{ item.individual_resume?item.individual_resume:'暂无' }}</p>
             <div class="controls-box">
-              <i class="el-icon-view" title="查看"></i>
-              <i class="el-icon-delete" title="删除"></i>
+              <i class="el-icon-view" title="查看" @click="clickLike(item)"></i>
+              <!-- <i class="el-icon-delete" title="移除"></i> -->
             </div>
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-          <div class="grid-content">
-            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
-            <p class="user-name">郜喜忠</p>
-            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-          <div class="grid-content">
-            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
-            <p class="user-name">郜喜忠</p>
-            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-          <div class="grid-content">
-            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
-            <p class="user-name">郜喜忠</p>
-            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-          <div class="grid-content">
-            <img class="user-img" src="https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20231222/adf79811dadb6f5cea85c19e36cc3517.png" alt="" />
-            <p class="user-name">郜喜忠</p>
-            <p class="user-introduce">简介：郜喜忠郜喜忠郜喜忠郜喜忠郜喜忠</p>
           </div>
         </el-col>
       </el-row>
      </div>
     </div>
-    
-    <!-- <el-form :model="tdnr_ruleForm" :rules="tdnr_rules" ref="tdnr_ruleForm" label-width="120px" class="demo-ruleForm">
-      <el-form-item label="团队牛人" prop="team_genius">
-        <el-col :span="16">
-          <el-select v-model="tdnr_ruleForm.team_genius" multiple placeholder="团队牛人" style="width: 100%;">
-            <el-option label="张三" value="张三"></el-option>
-            <el-option label="李四" value="李四"></el-option>
-            <el-option label="王五" value="王五"></el-option>
-            <el-option label="麻六" value="麻六"></el-option>
-          </el-select>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="团队风格" prop="team_style">
-        <el-col :span="16">
-          <el-input v-model="tdnr_ruleForm.team_style" placeholder="团队风格"></el-input>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="团队阶段" prop="team_stage">
-        <el-col :span="16">
-          <el-input v-model="tdnr_ruleForm.team_stage" placeholder="团队阶段"></el-input>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="团队结构" prop="team_structure">
-        <el-col :span="16">
-          <el-input v-model="tdnr_ruleForm.team_structure" placeholder="团队结构"></el-input>
-        </el-col>
-      </el-form-item>
-      <el-form-item class="btn-box">
-        <el-button type="primary" @click="submitForm">保存</el-button>
-      </el-form-item>
-    </el-form> -->
+
+
+    <div class="details-box">
+      <el-dialog title="详情" :center="false" :visible.sync="details_dialogVisible" width="680px" :before-close="details_handleClose">
+        <div class="pc-preview-wrapper m-box">
+          <!-- 个人信息 -->
+          <div class="resume-item item-base">
+            <div class="figure J_resume_baseMsg_headImgPreview">
+              <img :src="infoData.avatar?infoData.avatar:require('../../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default"/>
+            </div>
+            <div class="item-right item-right-1">
+              <div style="text-align: left;">
+                <h2 class="name">{{ infoData.staff_name?infoData.staff_name:'暂无' }}</h2>
+                <!-- <div class="info-labels fr">
+                  <span class="label-text">
+                    <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
+                    <span>{{ infoData.basic_info?infoData.basic_info.birth_year_month:'30岁' }}</span>
+                  </span>
+                  <em class="vline"></em>
+                  <span class="label-text">
+                    <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
+                    <span>{{ infoData.basic_info?infoData.basic_info.begin_work_date:'暂无' }}</span>
+                  </span>
+                </div> -->
+              </div>
+              <div class="text selfDescription">职位：{{ infoData.role_desc?infoData.role_desc:'暂无' }}</div>
+            </div>
+          </div>
+          <!-- 期望职位 -->
+          <div class="resume-item">
+            <h3 class="title">个人简介：</h3>
+            <div class="item-right">
+              {{ infoData.individual_resume?infoData.individual_resume:'暂无' }}
+            </div>
+          </div>
+          
+        </div>
+      </el-dialog>
+    </div>
+
   </div>
 </template>
 
@@ -97,7 +79,9 @@ export default {
   },
   data(){
     return{
+      infoData: {},
       useDataList: [],
+      details_dialogVisible:false,
       addDialog:{
         visible: false
       }
@@ -114,11 +98,14 @@ export default {
     
   },
   methods: {
+    details_handleClose(done) {
+      this.details_dialogVisible = false;
+    },
     // 获取员工列表
     getTableData() {
       let that = this;
       that.$axios.post('/api/staff/index',{
-        type: 1
+        is_core_team_member: 1
       }).then( res =>{
         if(res.code == 0){
           that.useDataList = res.data
@@ -133,32 +120,25 @@ export default {
       this.addDialog.form = {};
       this.addDialog.visible = true;
     },
-    // 点击发布
-    submitForm(){
+    // 点击查看详情
+    clickLike(e){
       let that = this;
-      let p = {
-        team_genius: that.tdnr_ruleForm.team_genius.join(','),
-        team_style: that.tdnr_ruleForm.team_style,
-        team_stage: that.tdnr_ruleForm.team_stage,
-        team_structure: that.tdnr_ruleForm.team_structure,
-
-      };
-      that.$axios.post('/api/company/team/create',p).then( res =>{
-        console.log(res)
+      let item = e;
+      console.log(e)
+      let id = e.id;
+      that.$axios.post('/api/staff/profile',{
+        uid: id
+      }).then( res =>{
         if(res.code == 0){
-          that.$message.success({
-            message: '保存成功!'
-          })
-          that.getDetail();
+          that.infoData = res.data;
+          that.details_dialogVisible = true
         }else{
           that.$message.error({
-            message:res.msg
+            message:res.data.msg
           })
         }
-      }).catch( e=>{
-        console.log(e)
       })
-    },
+    }
 
   },
 };
@@ -283,6 +263,7 @@ export default {
   .guildListSection-box{
     width: 100%;
     min-width: 580px;
+    padding: 0 20px;
     .guildList{
       /deep/ .el-col {
         border-radius: 4px;
@@ -295,8 +276,8 @@ export default {
         text-decoration: none;
         position: relative;
         display: flex;
-        flex-direction: column;
         align-items: center;
+        flex-direction: column;
         padding: 16px 10px;
         margin-top: 14px;
         .user-img {
@@ -307,21 +288,29 @@ export default {
         }
         .user-name {
           color: $g_textColor;
-          font-size: 16px;
+          font-size: 15px;
           line-height: 28px;
           font-weight: bold;
-          text-align: center;
+          text-align: left;
+        }
+        .user-desc{
+          color: $g_textColor;
+          font-size: 15px;
+          line-height: 28px;
+          text-align: left;
         }
         .user-introduce{
+          width: 100%;
           font-size: 14px;
           line-height: 23px;
           text-align: left;
           color: #666;
           display:box;
+          display: -webkit-box;
           overflow:hidden;
-          text-overflow:ellipsis;
-          box-orient: vertical;
-          line-clamp:3;
+          text-overflow: ellipsis;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
         }
         .controls-box{
           width: 100%;
@@ -339,6 +328,127 @@ export default {
           }
         }
       }
+    }
+  }
+
+  // 详情弹窗
+  .details-box{
+    & /deep/ .el-dialog{
+      min-width: 320px;
+      height: 75%;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-top: 0 !important;
+      display: flex;
+      flex-direction: column;
+      .el-dialog__header{
+        text-align: left;
+        height: auto;
+        .el-dialog__title{
+          font-size: 16px;
+          color: $g_textColor;
+        }
+      }
+      .el-dialog__body{
+      flex: 1;
+      padding: 20px 30px 30px;
+      // height: calc(100vh - 80px);
+      overflow: overlay;
+      padding: 20px;
+      .pc-preview-wrapper{
+        height: 100%;
+        border-radius: 4px;
+        border: 1px solid #e3e7ed;
+        padding: 20px;
+        color: #414a60;
+        line-height: 26px;
+        .resume-item{
+          display: block;
+          zoom: 1;
+          position: relative;
+          padding-top: 18px;
+          overflow: hidden;
+          &:first-child {
+            padding-top: 0;
+          }
+          .figure {
+            float: left;
+          }
+          .J_resume_baseMsg_headImgPreview {
+            position: relative;
+            z-index: 99;
+          }
+          img{
+            width: 130px;
+            height: 160px;
+            border-radius: 6px;
+            cursor: default;
+          }
+          .item-right {
+            position: relative;
+            padding-left: 140px;
+            vertical-align: top;
+            padding-top: 2px;
+            font-size: 15px;
+            h2.name{
+              font-size: 18px;
+              font-weight: bold;
+              display: inline-block;
+              position: relative;
+            }
+            .info-labels {
+              font-size: 0;
+              padding: 0;
+              .label-text{
+                display: inline-block;
+                vertical-align: middle;
+                font-size: 13px;
+                img{
+                  width: 14px;
+                  height: 14px;
+                }
+              }
+              .vline {
+                margin: 0 0.9rem;
+              }
+              .fz {
+                margin-left: 5px;
+                display: inline-block;
+                width: 16px;
+                vertical-align: middle;
+              }
+            }
+            .fr {
+              float: right;
+            }
+            .text {
+              color: #61687c;
+              font-size: 13px;
+              line-height: 26px;
+              position: relative;
+              word-wrap: break-word;
+              word-break: break-all;
+              white-space: pre-line;
+              max-width: 600px;
+              text-align: left;
+            }
+            
+          }
+          
+          .title{
+            float: left;
+            font-size: 15px;
+            color: #414a60;
+            font-weight: 500;
+            font-weight: bold;
+          }
+        }
+      
+
+      }
+      
+    }
+
     }
   }
 </style>

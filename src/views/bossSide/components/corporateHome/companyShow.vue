@@ -4,31 +4,36 @@
       <div class="title-1">秀出企业视频与美图</div>
       <div class="title-2">亮眼的视频和图片是企业品牌建设的重要一步</div>
     </div>
-    <!-- <div class="items-box">
+    <div class="items-box">
       <div class="title">企业视频 (选填)</div>
       <div class="info-box">
+        <div class="info-items" v-for="(item,index) in video_files_path" :key="index">
+          <a href="javascript:0;" title="视频" @click="gotoVideo(item)">
+            <video :src="item" style="object-fit: fill;" width="100%" height="100%" ></video>
+          </a>
+        </div>
         <div class="info-items">
           <el-upload class="avatar-uploader" 
-            drag ref="upload" 
+            drag ref="upload_video" 
             action= "none"
-            :accept="video_accept" 
-            :limit="3"
+            :limit="1"
             :show-file-list="false"
             multiple
+            :before-upload="beforeVideoUpload"
             :http-request="up_video" 
             :on-exceed='limitCheck'
             >
             <img src="../../../../assets/image/bossSide/icon-add.png" alt="" class="add-img" />
-            <div class="file-tips">企业视频 (选填)</div>
+            <div class="file-tips">企业视频</div>
           </el-upload>
         </div>
       </div>
-    </div> -->
+    </div>
     <div class="items-box">
       <div class="title">企业美图 (选填)</div>
       <div class="info-box">
         <div class="info-items" v-for="(item,index) in image_files_path" :key="index">
-          <img :src="item" alt="" class="image-box" />
+          <img :src="item" alt="" class="image-box"  @click="$preview(index,image_files_path)"/>
         </div>
         <div class="info-items">
           <el-upload class="avatar-uploader" 
@@ -48,13 +53,17 @@
     <div class="btn-box">
       <el-button type="primary" @click="submitForm">保存</el-button>
     </div>
+
+    <!-- 视频弹窗 -->
+    <videoDialog :infoData="infoData"  ref="video" />
   </div>
 </template>
 
 <script>
-
+import videoDialog from './videoDialog.vue';
 export default {
   components: {
+    videoDialog
   },
   props:{
     data:{
@@ -66,9 +75,9 @@ export default {
   },
   data(){
     return{
-      video_accept:'.mp4', // 接受上传文件
       video_files_path:[],
       image_files_path:[],
+      infoData:{}
     }
   },
   created(){
@@ -82,30 +91,34 @@ export default {
     
   },
   methods: {
+    // 点击视频
+    gotoVideo(url){
+      this.infoData = {
+        video_url: url
+      }
+      this.$refs.video._data.video_dialogVisible = true;
+    },
     // 选择的文件超出限制的文件总数量时触发
     limitCheck() {
-      this.$message.warning('每次最多上传10个文件')
+      this.$message.warning('每次最多上传3个文件')
     },
-    // 点击上传 ----  视频
-    up_video(param){
-      let that = this;
-      console.log(param.file)
-      const formData = new FormData();
-      formData.append('file[]',param.file);
-      formData.append('up_tag','resume');
-      that.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
-        that.video_files_path = res.data.upload_files_path;
-        that.$refs['upload'].clearFiles();
-      }).catch( e=>{
-        console.log(e)
-        that.$refs['upload'].clearFiles()
-      })
+    
+    beforeVideoUpload(file) {
+      console.log(file)
+      const isJPG = file.type === 'video/mp4' || 'video/avi' || 'video/wmv' || 'video/flv' || 'video/rmvb' || 'video/mov';
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (!isJPG) {
+        this.$message.error('上传图片只能是 视频 格式!');
+      }
+      if (!isLt10M) {
+        this.$message.error('上传图片大小不能超过 10MB!');
+      }
+      return isJPG && isLt10M;
     },
     beforeAvatarUpload(file) {
       console.log(file)
       const isJPG = file.type === 'image/png' || 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 10;
+      const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
         this.$message.error('上传图片只能是 jpeg 或 png 格式!');
@@ -115,36 +128,62 @@ export default {
       }
       return isJPG && isLt2M;
     },
+    // 点击上传 ----  视频
+    up_video(param){
+      let data = {
+        file: param.file,
+        up_tag: 'video'
+      }
+      this.uploadFile(data);
+    },
     // 点击上传图片
     up_image(param){
-      if(this.image_files_path.length > 10){
-        that.$message.error({
-          message: '最多上传10条！'
-        })
-        return
+      let data = {
+        file: param.file,
+        up_tag: 'business_license'
       }
+      this.uploadFile(data);
+    },
+    uploadFile(data){
+      let that = this;
+      // if(this.image_files_path.length > 10){
+      //   that.$message.error({
+      //     message: '最多上传10条！'
+      //   })
+      //   return
+      // }
       const formData = new FormData();
-      formData.append('file[]',param.file);
+      formData.append('file[]',data.file);
       // formData.append('pictureCategory','articleCover');
-      formData.append('up_tag','business_license');
-      this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        this.image_files_path.push(res.data.upload_files);
-        this.$refs['upload'].clearFiles();
+      if(data.up_tag == 'business_license'){
+        formData.append('up_tag','business_license');
+      }
+      if(data.up_tag == 'video'){
+        formData.append('up_tag','video');
+      }
+      that.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
+        if(data.up_tag == 'video'){
+          that.video_files_path.push(res.data.upload_files);
+        }
+        if(data.up_tag == 'business_license'){
+          that.image_files_path.push(res.data.upload_files);
+        }
+        that.$refs['upload'].clearFiles();
       
       }).catch( e=>{
         console.log('erro')
-        this.$refs['upload'].clearFiles()
+        that.$refs['upload'].clearFiles()
       })
     },
+
     // 获取信息
     getDetail(){
       let that = this;
       that.$axios.post('/api/company/image/detail',{}).then( res =>{
         console.log(res)
         if(res.code == 0){
-          that.image_files_path =  res.data.images.split(',');
-          that.video_files_path =  res.data.video.split(',');
-
+          that.image_files_path =  res.data.images?res.data.images.split(','): [];
+          that.video_files_path =  res.data.video?res.data.video.split(','): [];
         }else{
           that.$message.error({
             message:res.msg
@@ -228,6 +267,7 @@ export default {
           .image-box{
             width: 100%;
             height: 100%;
+            cursor: pointer;
           }
           .avatar-uploader{
             width: 100%;
@@ -309,5 +349,9 @@ export default {
     border-color: $g_color;
    }
  
+  }
+  .info-items video{
+    width: 100%;
+    height: 100%;
   }
 </style>
