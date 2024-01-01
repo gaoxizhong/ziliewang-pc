@@ -10,6 +10,9 @@
         <div class="info-items" v-for="(item,index) in video_files_path" :key="index">
           <a href="javascript:0;" title="视频" @click="gotoVideo(item)">
             <video :src="item" style="object-fit: fill;" width="100%" height="100%" ></video>
+            <div class="icon-img-box">
+              <img class="icon-img" title="删除" src="../../../../assets/image/bossSide/icon-copy.png" alt="" @click.stop="deleteVideo(item,index)"/>
+            </div>
           </a>
         </div>
         <div class="info-items">
@@ -33,7 +36,12 @@
       <div class="title">企业美图 (选填)</div>
       <div class="info-box">
         <div class="info-items" v-for="(item,index) in image_files_path" :key="index">
-          <img :src="item" alt="" class="image-box"  @click="$preview(index,image_files_path)"/>
+          <a href="javascript:0;" title="图片" @click="$preview(index,image_files_path)">
+            <img :src="item" alt="" class="image-box" />
+            <div class="icon-img-box">
+              <img class="icon-img" title="删除" src="../../../../assets/image/bossSide/icon-copy.png" alt="" @click.stop="deleteImg(item,index)" />
+            </div>
+          </a>
         </div>
         <div class="info-items">
           <el-upload class="avatar-uploader" 
@@ -51,7 +59,7 @@
     </div>
 
     <div class="btn-box">
-      <el-button type="primary" @click="submitForm">保存</el-button>
+      <el-button type="primary" @click="submitForm('btn')">保存</el-button>
     </div>
 
     <!-- 视频弹窗 -->
@@ -91,6 +99,22 @@ export default {
     
   },
   methods: {
+    // 点击删除图片
+    deleteImg(i,idx){
+      let image_files_path = this.image_files_path;
+      image_files_path.splice(idx,1);
+      this.image_files_path = image_files_path;
+      this.$message.success('删除成功！');
+      this.submitForm();
+    },
+    // 点击删除视频
+    deleteVideo(i,idx){
+      let video_files_path = this.video_files_path;
+      video_files_path.splice(idx,1);
+      this.video_files_path = video_files_path;
+      this.$message.success('删除成功！');
+      this.submitForm();
+    },
     // 点击视频
     gotoVideo(url){
       this.infoData = {
@@ -194,7 +218,7 @@ export default {
       })
     },
     // 点击发布
-    submitForm(){
+    submitForm(n){
       let that = this;
       let p = {
         images: that.image_files_path.join(','),
@@ -203,9 +227,11 @@ export default {
       that.$axios.post('/api/company/image/create',p).then( res =>{
         console.log(res)
         if(res.code == 0){
-          that.$message.success({
-            message:'上传成功！'
-          })
+          if(n == 'btn'){
+            that.$message.success({
+              message:'上传成功！'
+            })
+          }
           setTimeout( ()=>{
             that.getDetail();
           },1000)
@@ -353,5 +379,26 @@ export default {
   .info-items video{
     width: 100%;
     height: 100%;
+  }
+  .info-items a{
+    position: relative;
+  }
+  .info-items a:hover .icon-img-box{
+    display: block;
+  }
+  .icon-img-box{
+    display: none;
+    width: 100%;
+    height: auto;
+    text-align: right;
+    padding: 4px 10px;
+    background: #f5f5f571;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+  .icon-img-box .icon-img{
+    width: 20px;
+    height: 22px;
   }
 </style>

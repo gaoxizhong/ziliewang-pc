@@ -4,7 +4,8 @@
       <div class="options-row">
         <div class="row-title">城市</div>
         <ul class="row-options-detail-box">
-          <li class="options-item" :class="infoData.city == item.label? 'selected':''" :data-code="item.code" :data-name="item.label" @click="clickCity(item.label)" v-for="(item,index) in showCityList" :key="index">{{ item.label }}</li>
+          <li class="options-item" :class="city == '全国'? 'selected':''" data-code="410" data-name="全国" @click="clickCity('全国')">全国</li>
+          <li class="options-item" :class="selectCityList.indexOf(item.label) != -1? 'selected':''" :data-code="item.code" :data-name="item.label" @click="clickCity(item.label)" v-for="(item,index) in showCityList" :key="index">{{ item.label }}</li>
           <li class="options-item" id="filter-option-other-city"><span @click="clickCityOther">其他</span><div class="antd-lp-city"></div></li>
         </ul>
       </div>
@@ -103,9 +104,19 @@
       </div>
 
     </div>
-    <div class="selected-options-box" v-if="infoData.city || infoData.pay || infoData.release_time || infoData.exp || infoData.educational || infoData.enterprise_scale || infoData.financing_stage || infoData.firm_nature">
+    <div class="selected-options-box" v-if=" selectCityList.length>0 || city == '全国' || infoData.pay || infoData.release_time || infoData.exp || infoData.educational || infoData.enterprise_scale || infoData.financing_stage || infoData.firm_nature">
       <div class="selected-options-title">已选条件：</div>
       <ul class="selected-options-list-box">
+        <block v-for="(item,index) in selectCityList" :key="index">
+          <li class="selected-item">
+            <span class="anticon anticon-close">{{ item }}</span>
+            <i class="el-icon-close" @click="clickselectCityList(index)"></i>
+          </li>
+        </block>
+        <li class="selected-item" v-if=" city == '全国' ">
+          <span class="anticon anticon-close">全国</span>
+          <i class="el-icon-close" @click="clickAnticon(-1)"></i>
+        </li>
         <block v-for="(value,index) in infoData" :key="index">
           <li class="selected-item" v-if="value">
             <span class="anticon anticon-close">{{ value }}</span>
@@ -139,7 +150,7 @@
             <div class="right-list-box">
               <div class="category-list-items">
                 <ul>
-                  <li :class="infoData.city == items.label ? 'active':'' " v-for="(items,idx) in position_list" :key="idx" @click="click_position_list(items,idx)">{{ items.label }}</li>
+                  <li :class="selectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in position_list" :key="idx" @click="click_position_list(items,idx)">{{ items.label }}</li>
                 </ul>
               </div>
               
@@ -164,7 +175,6 @@ export default {
       dialogVisible: false,
       position: pcas,
       showCityList:[
-        {label:'全国',code:'410'},
         {label:'北京',code:'010'},
         {label:'上海',code:'020'},
         {label:'天津',code:'030'},
@@ -179,11 +189,12 @@ export default {
         {label:'武汉',code:'170020'},
         {label:'西安',code:'270020'},
       ],
+      selectCityList: [], // 选中的城市
       selt_item: -1,
       selt_listItems: -1,
       position_list:[],
+      city: '全国',
       infoData:{
-        city: '全国',
         pay:'',
         release_time:'',
         exp:'',
@@ -214,24 +225,56 @@ export default {
       this.position_list = ele.children;
       this.selt_item = index;
     },
-    //
+    // 点击城市
     click_position_list(item,index){
-      console.log(item.label)
+      let selectCityList = this.selectCityList;
+      if( selectCityList.length >=5 ){
+        this.$message.error('最多可选择五个城市！');
+        return
+      }
       this.selt_cityName = item.label;
-      this.infoData.city = item.label;
       this.selt_listItems = index;
-      let showCityList = this.showCityList;
-      showCityList.forEach( ele =>{
-        if(ele.code == item.code){
-          this.showCityList[4] = item;
+      if(selectCityList.indexOf('全国') != -1 ){
+        selectCityList = []
+        // this.infoData.city = '';
+        selectCityList.push(n)
+      }else{
+        if( selectCityList.indexOf(n) == -1){
+          selectCityList.push(n)
         }
-      })
+       
+      }
+      this.selectCityList = selectCityList;
+      this.city = selectCityList.join(',')
+
+      // let showCityList = this.showCityList;
+      // showCityList.forEach( ele =>{
+      //   if(ele.code == item.code){
+      //     this.showCityList[4] = item;
+      //   }
+      // })
     },
     clickClose(){
       this.dialogVisible = false;
     },
     clickCity(n){
-      this.infoData.city = n;
+      let selectCityList = this.selectCityList;
+      if(n == '全国'){
+        selectCityList = [];
+        this.city = n;
+      }else{
+        if( selectCityList.length >=5 ){
+          this.$message.error('最多可选择五个城市！');
+          return
+        }
+        if( selectCityList.indexOf(n) == -1){
+          selectCityList.push(n)
+        }
+        this.city = selectCityList.join(',')
+      }
+      this.selectCityList = selectCityList;
+      
+      
     },
     clickPay(n){
       this.infoData.pay = n;
@@ -244,14 +287,26 @@ export default {
     },
     // 点击已选项 删除
     clickAnticon(v){
-      let infoData = this.infoData;
-      infoData[v] = '';
-      this.infoData = infoData;
+      if(v == -1){
+        this.city = '';
+      }else{
+        let infoData = this.infoData;
+        infoData[v] = '';
+        this.infoData = infoData;
+      }
+      
+    },
+    // 点击选择的城市删除
+    clickselectCityList(v){
+      let selectCityList = this.selectCityList;
+      selectCityList.splice(v,1);
+      this.selectCityList = selectCityList;
     },
     // 点击清空筛选条件
     clickALLAnticon(){
+      this.selectCityList = [],
+      this.city= '全国';
       this.infoData = {
-        city: '',
         pay:'',
         release_time:'',
         exp:'',

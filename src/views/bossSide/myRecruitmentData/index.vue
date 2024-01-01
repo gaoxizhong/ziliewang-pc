@@ -7,7 +7,7 @@
         <div class="left-box">
           <img src="../../../assets/image/bossSide/myRecruitment-search.png" alt="" />
           <span class="title">我的招聘数据总览</span>
-          <span class="title-show">数据周期: 2023.03.30 ~ 2023.04.05</span>
+          <!-- <span class="title-show">数据周期: 2023.03.30 ~ 2023.04.05</span> -->
         </div>
         <div class="right-box"></div>
       </div>
@@ -19,7 +19,7 @@
             <span>简历浏览量</span>
             <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
           </div>
-          <div class="num">{{ company_recruitment_count.resume_view_num?company_recruitment_count.resume_view_num:0 }}</div>
+          <div class="num" @click="goToPages('/resumeViewNum')">{{ company_recruitment_count.resume_view_num?company_recruitment_count.resume_view_num:0 }}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -31,7 +31,7 @@
             <span>聊天发起量</span>
             <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
           </div>
-          <div class="num">{{ company_recruitment_count.chat_initiate_num?company_recruitment_count.chat_initiate_num:0 }}</div>
+          <div class="num" @click="goToPages('/interaction')">{{ company_recruitment_count.chat_initiate_num?company_recruitment_count.chat_initiate_num:0 }}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -43,7 +43,7 @@
             <span>回复处理量</span>
             <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
           </div>
-          <div class="num">{{ company_recruitment_count.reply_num?company_recruitment_count.reply_num:0 }}</div>
+          <div class="num" @click="goToPages('/interaction')">{{ company_recruitment_count.reply_num?company_recruitment_count.reply_num:0 }}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -55,7 +55,7 @@
             <span>虚拟号码获取量</span>
             <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
           </div>
-          <div class="num">{{ company_recruitment_count.get_phone_num?company_recruitment_count.get_phone_num:0 }}</div>
+          <div class="num" @click="goToPages('/numberAcquisitionNum')">{{ company_recruitment_count.get_phone_num?company_recruitment_count.get_phone_num:0 }}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -79,7 +79,7 @@
             <span>面试邀约量</span>
             <!-- <img src="../../../assets/image/bossSide/question-circle.png" alt=""> -->
           </div>
-          <div class="num">{{company_recruitment_count.interview_invite_num?company_recruitment_count.interview_invite_num:0}}</div>
+          <div class="num" @click="goToPages('/myInterviewSchedule')">{{company_recruitment_count.interview_invite_num?company_recruitment_count.interview_invite_num:0}}</div>
           <div class="sm-box">
             <img src="../../../assets/image/bossSide/caret-right.png" alt="">
             <span class="sm-n">0</span>
@@ -95,7 +95,7 @@
         <div class="left-box">
           <img src="../../../assets/image/bossSide/frame-22.png" alt="" />
           <span class="title">在线职位数据</span>
-          <span class="title-show">数据周期: 2023.03.30 ~ 2023.04.05</span>
+          <!-- <span class="title-show">数据周期: 2023.03.30 ~ 2023.04.05</span> -->
         </div>
         <div class="right-box"></div>
       </div>
@@ -140,17 +140,6 @@ export default {
       formData: {},
       company_recruitment_count:{},
       company_recruitment_list: [],
-      tableData: [
-        {
-          a: 'UI设计师',
-          b:'0',
-          c:'0',
-          d:'0',
-          e:'0',
-          f:'0',
-          e:'0',
-        }
-      ]
     }
   },
   created(){
@@ -158,6 +147,9 @@ export default {
     this.getFormData();
   },
   methods:{
+    goToPages(path){
+      this.$router.push({ path })
+    },
     getFormData(){
       let that = this;
       that.$axios.post('/api/company/recruitment',{}).then( res =>{
@@ -242,6 +234,7 @@ export default {
             color: $g_textColor;
             line-height: 40px;
             margin: 4px 0;
+            cursor: pointer;
           }
           .sm-box{
             display: flex;

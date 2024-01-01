@@ -16,7 +16,8 @@
                   :options="pcas"
                   ref="cascaderAddr" 
                   v-model="selectedOptions"
-                  :props="{ value: 'label' }"
+                  collapse-tags
+                  :props="{ multiple: true,value: 'label' }"
                   :show-all-levels="false" placeholder="城市"
                   @change="handleChange">
                 </el-cascader>
@@ -103,119 +104,122 @@
      <!-- 预览在线简历 弹窗  -->
     <div class="container-zx">
       <el-dialog title="简历详情" :center="false" :visible.sync="zx_dialogVisible" width="1100px" :before-close="handleClose">
-        <div class="pc-preview-wrapper m-box">
-          <!-- 个人信息 -->
-          <div class="resume-item item-base">
-            <div class="figure J_resume_baseMsg_headImgPreview">
-              <img :src="infoData.basic_info.avatar?infoData.basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default" v-if="infoData.basic_info"/>
-            </div>
-            <div class="item-right">
-              <div style="text-align: left;">
-                <h2 class="name">{{ infoData?infoData.basic_info.name:'暂无' }}</h2>
-                <div class="info-labels fr">
-                  <span class="label-text">
-                    <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData?infoData.basic_info.birth_year_month:'30岁' }}</span>
-                  </span>
-                  <em class="vline"></em>
-                  <span class="label-text">
-                    <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData?infoData.basic_info.begin_work_date:'暂无' }}</span>
-                  </span>
-                  <em class="vline"></em>
-                  <span class="label-text">
-                    <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData?infoData.basic_info.work_status_desc:'暂无' }}</span>
-                  </span>
-                </div>
+        <div class="pc-preview-wrapper">
+          <div class="m-box">
+            <!-- 个人信息 -->
+            <div class="resume-item item-base">
+              <div class="figure J_resume_baseMsg_headImgPreview">
+                <img :src="infoData.basic_info.avatar?infoData.basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default" v-if="infoData.basic_info"/>
               </div>
-              <div class="text selfDescription">{{ infoData?infoData.basic_info.advantages_highlights:'暂无' }}</div>
+              <div class="item-right">
+                <div style="text-align: left;">
+                  <h2 class="name">{{ infoData?infoData.basic_info.name:'暂无' }}</h2>
+                  <div class="info-labels fr">
+                    <span class="label-text">
+                      <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
+                      <span>{{ infoData?infoData.basic_info.birth_year_month:'30岁' }}</span>
+                    </span>
+                    <em class="vline"></em>
+                    <span class="label-text">
+                      <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
+                      <span>{{ infoData?infoData.basic_info.begin_work_date:'暂无' }}</span>
+                    </span>
+                    <em class="vline"></em>
+                    <span class="label-text">
+                      <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
+                      <span>{{ infoData?infoData.basic_info.work_status_desc:'暂无' }}</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="text selfDescription">{{ infoData?infoData.basic_info.advantages_highlights:'暂无' }}</div>
+              </div>
             </div>
-          </div>
-          <!-- 期望职位 -->
-          <div class="resume-item">
-            <h3 class="title">期望职位</h3>
-            <div class="item-right">
+            <!-- 期望职位 -->
+            <div class="resume-item">
+              <h3 class="title">期望职位</h3>
+              <div class="item-right">
 
-              <div style="text-align: left;" v-for="(items,idx) in infoData.job_expectation" :key="idx">
-                <div class="info-labels">
-                  <span class="label-text">{{ items.desired_position }}</span>
-                  <em class="vline"></em>
-                  <span class="label-text">{{ items.desired_industry }}</span>
-                  <em class="vline"></em>
-                  <span class="label-text">{{ items.expected_salary }}</span>
+                <div style="text-align: left;" v-for="(items,idx) in infoData.job_expectation" :key="idx">
+                  <div class="info-labels">
+                    <span class="label-text">{{ items.desired_position }}</span>
+                    <em class="vline"></em>
+                    <span class="label-text">{{ items.desired_industry }}</span>
+                    <em class="vline"></em>
+                    <span class="label-text">{{ items.expected_salary }}</span>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+            <!-- 工作经历 -->
+            <div class="resume-item">
+              <h3 class="title">工作经历</h3>
+              <div class="item-right">
+                <div class="history-list">
+                  <div class="history-item" v-for="(items,idx) in infoData.work_experience" :key="idx">
+                    <span class="period">{{ items.begin_date }} - {{ items.end_date }}</span>
+                    <h4 class="name">
+                      <span>{{ items.company_name }}</span>
+                      <em class="vline"></em>
+                      <span>{{ items.position }}</span>
+                    </h4>
+                    <div class="item-text">
+                      <span class="project-title">内容：</span>
+                      <div class="text" v-html="items.responsibility_performance"></div>
+                      <!-- <p class="tags">
+                        <span></span>
+                      </p> -->
+                    </div>
+                  </div>
                 </div>
               </div>
-              
             </div>
-          </div>
-          <!-- 工作经历 -->
-          <div class="resume-item">
-            <h3 class="title">工作经历</h3>
-            <div class="item-right">
-              <div class="history-list">
-                <div class="history-item" v-for="(items,idx) in infoData.work_experience" :key="idx">
-                  <span class="period">{{ items.begin_date }} - {{ items.end_date }}</span>
-                  <h4 class="name">
-                    <span>{{ items.company_name }}</span>
-                    <em class="vline"></em>
-                    <span>{{ items.position }}</span>
-                  </h4>
-                  <div class="item-text">
-                    <span class="project-title">内容：</span>
-                    <div class="text" v-html="items.responsibility_performance"></div>
-                    <!-- <p class="tags">
-                      <span></span>
+            <!-- 项目经历 -->
+            <div class="resume-item">
+              <h3 class="title">项目经历</h3>
+              <div class="item-right">
+                <div class="history-list">
+                  <div class="history-item" v-for="(items,idx) in infoData.project_experience" :key="idx">
+                    <span class="period">{{ items.begin_date }} - {{ items.end_date }}</span>
+                    <h4 class="name">
+                      <span>{{ items.project_name }}</span>
+                      <em class="vline"></em>
+                      <span>{{ items.position }}</span>
+                    </h4>
+                    <div class="item-text">
+                      <span class="project-title">内容：</span>
+                      <div class="text" v-html="items.job_content"></div>
+                      <!-- <p class="tags">
+                        <span></span>
+                      </p> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 教育经历 -->
+            <div class="resume-item">
+              <h3 class="title">教育经历</h3>
+              <div class="item-right">
+                <div class="history-list">
+                  <div class="history-item" v-for="(items,idx) in infoData.education_experience" :key="idx">
+                    <span class="period">{{ items.school_date }}</span>
+                    <h4 class="name">
+                      <b>{{ items.school }}</b>
+                      <em class="vline"></em> 
+                      <b>{{ items.specialty }}</b>
+                      <em class="vline"></em>
+                      <b>{{ items.education_background }}</b>
+                    </h4>
+                    <!-- <p class="tags school-tags">
+                      <span class="blue">211院校</span>
                     </p> -->
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- 项目经历 -->
-          <div class="resume-item">
-            <h3 class="title">项目经历</h3>
-            <div class="item-right">
-              <div class="history-list">
-                <div class="history-item" v-for="(items,idx) in infoData.project_experience" :key="idx">
-                  <span class="period">{{ items.begin_date }} - {{ items.end_date }}</span>
-                  <h4 class="name">
-                    <span>{{ items.project_name }}</span>
-                    <em class="vline"></em>
-                    <span>{{ items.position }}</span>
-                  </h4>
-                  <div class="item-text">
-                    <span class="project-title">内容：</span>
-                    <div class="text" v-html="items.job_content"></div>
-                    <!-- <p class="tags">
-                      <span></span>
-                    </p> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 教育经历 -->
-          <div class="resume-item">
-            <h3 class="title">教育经历</h3>
-            <div class="item-right">
-              <div class="history-list">
-                <div class="history-item" v-for="(items,idx) in infoData.education_experience" :key="idx">
-                  <span class="period">{{ items.school_date }}</span>
-                  <h4 class="name">
-                    <b>{{ items.school }}</b>
-                    <em class="vline"></em> 
-                    <b>{{ items.specialty }}</b>
-                    <em class="vline"></em>
-                    <b>{{ items.education_background }}</b>
-                  </h4>
-                  <!-- <p class="tags school-tags">
-                    <span class="blue">211院校</span>
-                  </p> -->
-                </div>
-              </div>
-            </div>
-          </div>
+          
         </div>
         <div class="info-right-box">
           <div class="m-box">
@@ -302,18 +306,33 @@ export default {
     // 获取省市区地址级联
     handleChange(thsAreaCode) {
       // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
-      console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
-      this.selectedOptions = thsAreaCode;
-      console.log(this.selectedOptions)
 
+      let areaCode = thsAreaCode;
+      let length = areaCode.length;
+      let index = length - 10;
+      if(length > 10){
+        this.$message.error({
+          message: '最多选择10个城市！'
+        })
+
+        this.selectedOptions = areaCode.splice(index,length) // 返回被截取的对象
+        return
+      }
+      this.selectedOptions = thsAreaCode;
     },
     // 搜索
     getSearchinfo(){
       let that = this;
+      let selectedOptions = that.selectedOptions;
+      let desired_location = [];
+      selectedOptions.forEach(ele =>{
+        desired_location.push(ele[1])
+      })
       let p = {
         page: that.paginationData.currentPage,
         pagesize: that.paginationData.pageSize,
         search: that.search_value,
+        desired_location: desired_location.length>0?desired_location.join(','):'',
       }
       that.$axios.post('/api/company-position/search',p).then( res =>{
         if(res.code == 0){
@@ -448,7 +467,7 @@ export default {
               border-right: 1px solid #F2F3F5;
               cursor: pointer;
               height: 100%;
-              width: 120px;
+              width: auto;
               img{
                 width: 14px;
                 height: 14px;
@@ -482,6 +501,7 @@ export default {
                   display: flex;
                   align-items: center;
                 }
+                
               }
               
             }
@@ -739,17 +759,22 @@ export default {
     transform: translateY(-50%);
     margin-top: 0 !important;
     background: #F7F9FC;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 68px);
     .el-dialog__header{
       text-align: left;
       background: #fff;
       padding: 16px 20px;
+      height: auto;
       .el-dialog__title{
         font-size: 16px;
         color: $g_textColor;
       }
     }
     .el-dialog__body{
-      height: calc(100vh - 128px);
+      // height: calc(100vh - 128px);
+      flex: 1;
       overflow: overlay;
       padding: 16px;
       display: flex;
@@ -1043,5 +1068,9 @@ export default {
       line-height: 22px;
       padding-left: 4px;
     }
+  }
+  /deep/ .el-checkbox__input.is-checked .el-checkbox__inner, /deep/ .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background: $g_bg;
+    border-color: $g_bg;
   }
 </style>

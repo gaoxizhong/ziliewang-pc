@@ -140,8 +140,24 @@ export const constantRoutes = [
         component: () => import('@/views/bossSide/myRecruitmentData/index'),
         meta: { title: '我的招聘数据', icon: 'dashboard' },
       },
+      {
+        path: '/resumeViewNum',
+        name: 'resumeViewNum',
+        hidden: true,
+        component: () => import('@/views/bossSide/myRecruitmentData/resumeViewNum'),
+        meta: { title: '简历浏览量', icon: '' },
+      },
+      {
+        path: '/numberAcquisitionNum',
+        name: 'numberAcquisitionNum',
+        hidden: true,
+        component: () => import('@/views/bossSide/myRecruitmentData/numberAcquisitionNum'),
+        meta: { title: '虚拟号码获取量', icon: '' },
+      },
+      
     ]
   },
+  
   {
     path: '/myInterviewSchedule',
     component: Layout,
