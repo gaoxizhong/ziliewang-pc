@@ -170,7 +170,7 @@ export default {
   data() {
     return {
       c_role: false,
-      tag: 'user',
+      tag: '',  // 用户角色 user、人才 company、企业端缓存
       
       login_bgurl_1:{},
       login_bgurl_2:{},
@@ -287,6 +287,12 @@ export default {
       if( login_way == 2 && login_user.password ==''){
         that.$message.error({
           message:'请输入密码'
+        })
+        return
+      }
+      if( !that.tag  ){
+        that.$message.error({
+          message:'请选择登录角色'
         })
         return
       }

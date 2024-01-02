@@ -40,7 +40,7 @@
           <el-table-column label="操作" width="80px">
             <template slot-scope="scope">
               <span class="blue" @click.stop="handleUpdateInfo(scope.row)">修改</span>
-              <span class="blue" @click.stop="deleteDateInfo(scope.row)">删除</span>
+              <span class="blue" @click.stop="deleteDateInfo(scope.row)" v-if="scope.row.is_boss == 2">删除</span>
               <!-- <span class="blue">导出</span> -->
             </template>
           </el-table-column>
