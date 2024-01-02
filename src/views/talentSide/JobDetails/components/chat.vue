@@ -14,7 +14,7 @@
                 <dl class="messages" style="margin-bottom: 12px;">
                   <dt><h4><a href="javascript:0;" id="show-history"></a></h4></dt>
 
-                  <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
+                  <dd class="bot clearfix" :style="`margin:${!item.content?0:''}`"  data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
                     <div :class=" item.type == 1 ?'msg-send':'msg-recv' " class="msg" style="color:#fff" v-if="item.content">
                       <img :src="item.user_avatar?item.user_avatar:require('../../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-if="item.type == 1"/>
                       <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-else/>

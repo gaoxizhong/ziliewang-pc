@@ -16,7 +16,7 @@
     <!-- 底部 结束  -->
 
     <!-- 聊天弹窗 开始-->
-    <VueDragResize :isActive="true" :parentW="parentW" :parentH="parentH" :w="900" :h="parentH_80" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+    <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
         <div class="VueDragResize-title-box">
           <div class="title">聊一聊</div>
@@ -65,9 +65,9 @@ import Chat from "./components/chat.vue"
         height: 0,
         parentH: 0,
         parentW: 0,
-        parentH_80: 0,
-        top: 60,
+        top: 80,
         left: 500,
+        zInfex_0: 99,
         is_VueDragResize: false,
         is_type: '',
         infoData: {}
@@ -79,21 +79,31 @@ import Chat from "./components/chat.vue"
       }
     },
     mounted(){
-      let getViewportSize = this.$getViewportSize();
-      this.parentH = getViewportSize.height;
-      this.parentW = getViewportSize.width;
-      this.parentH_80 = Number(getViewportSize.height * 0.8);
       // 组件间通信
       this.$bus.$on('receiveParams', this.receiveParams)
     },
+    created(){
+      let getViewportSize = this.$getViewportSize();
+      this.parentH = getViewportSize.height; // 组件范围
+      this.parentW = getViewportSize.width; // 组件范围
+      this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
+      this.width = Number(getViewportSize.width * 0.5) > 800 ? 800 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
+      this.left = Number(getViewportSize.width/2) - Number(this.width/2);
+    },
     methods:{
       receiveParams(params){
+          // '接收到的参数:' params
+        this.company_id = params.company_id;
         if(params.type){
           this.is_type = params.type
         }
-        this.company_id = params.company_id
-        // '接收到的参数:' params
-        this.is_VueDragResize = true;
+        if(params.is_clickMinificationpngBtn){
+          this.is_clickMinificationpngBtn = false;
+          this.zInfex_0 = 99;
+          this.top = 80;
+        }else{
+          this.is_VueDragResize = true;
+        }
       },
       //监听到当前路由状态并激活当前菜单
       setCurrentRoute() {
@@ -109,7 +119,6 @@ import Chat from "./components/chat.vue"
 
        // 拖拽时可以确定元素位置
        resize(newRect) {
-        console.log(newRect)
         this.width = newRect.width;
         this.height = newRect.height;
         this.top = newRect.top;
@@ -121,8 +130,9 @@ import Chat from "./components/chat.vue"
       },
       // 点击缩小--按钮
       clickMinificationpngBtn(){
-        this.is_VueDragResize = false;
-        this.$bus.$emit('clickSidebar', '');
+        this.zInfex_0 = -1;
+        this.top = -800;
+        this.$bus.$emit('clickSidebar',{ is_clickMinificationpngBtn:true } );
       }
   },
 
@@ -184,7 +194,6 @@ import Chat from "./components/chat.vue"
       align-items: center;
       justify-content: space-between;
       font-size: 14px;
-      padding: 10px 0;
       height: auto;
       .icon-box{
         display: flex;

@@ -15,7 +15,8 @@ export default {
   },
   data(){
     return{
-      sidebar: false
+      sidebar: false,
+      is_clickMinificationpngBtn: false
     }
   },
  
@@ -27,17 +28,22 @@ export default {
   methods: {
     clickSidebar(params){
       // '接收到的参数:' params
+      if(params.is_clickMinificationpngBtn){
+        this.is_clickMinificationpngBtn = params.is_clickMinificationpngBtn;
+      }
       if(params.type == 'clickChat'){
         // 点击的聊一聊
         this.sidebar = false;
       }else{
         this.sidebar = true;
       }
+      
     },
     // 点击侧边栏 聊天按钮
     sidebarChatBtn(){
       this.sidebar = false;
-      this.$bus.$emit('receiveParams', '');
+      let is_clickMinificationpngBtn = this.is_clickMinificationpngBtn;
+      this.$bus.$emit('receiveParams', {is_clickMinificationpngBtn});
     }
     
     

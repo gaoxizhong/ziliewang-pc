@@ -43,7 +43,7 @@
         <dl class="messages" style="margin-bottom: 12px;">
           <dt><h4><a href="javascript:0;" id="show-history"></a></h4></dt>
 
-          <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
+          <dd class="bot clearfix" :style="`margin:${!item.content?0:''}`"  data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
             <div :class=" item.type == 1 ?'msg-send':'msg-recv' " class="msg" style="color:#fff" v-if="item.content">
               <img :src="item.user_avatar?item.user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-if="item.type == 1"/>
               <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-else/>
@@ -101,7 +101,22 @@
 
       <div class="theme-c clearfix" id="footer" style="display: block;">
         <div class="icon-btn-box">
-          <div></div>
+          <div class="footer-left">
+            <el-dropdown class="avatar-container" trigger="click" placement="top">
+              <div class="username-wrapper">常用语</div>
+              <el-dropdown-menu slot="dropdown" class="user-dropdown">
+                <el-dropdown-item divided >
+                  <span style="display: block" @click="clickCyy('我可以把我的简历发您看看吗?')">我可以把我的简历发您看看吗?</span>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <span style="display: block" @click="clickCyy('您好！我可以去贵公司面试吗?')">您好！我可以去贵公司面试吗?</span>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <span style="display: block" @click="clickCyy('您好！希望可以和您聊聊，谢谢！')">您好！希望可以和您聊聊，谢谢！</span>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
           <!-- <div class="footer-right">
             <div>
               <img src="../../../assets/image/bossSide/int-qjl.png" alt="" />
@@ -150,9 +165,9 @@ export default {
       }
     },
     company_id:{
-      type: String,
+      type: Number,
       default() {
-        return ''
+        return 0
       }
     }
   },
@@ -331,6 +346,10 @@ export default {
           container.scrollTop = 999999999;
       });
     },
+    clickCyy(text){
+      this.originMessage = text;
+      this.onSendClcik();
+    }
   }
 }
 </script>
@@ -669,13 +688,14 @@ export default {
     z-index: 1;
     background-color: #fff;
     // box-shadow: 0 1px 10px 0 #e5e7eb;
-    padding: 0 16px 12px 16px;
+    padding: 0 0 12px 0;
     .icon-btn-box{
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 20px;
+      padding: 4px 0;
+      border-top: 1px solid #e9e9e9;
       .footer-right{
         display: flex;
         align-items: center;
@@ -781,6 +801,29 @@ export default {
 
     }
   }
-
+  .footer-left{
+    .username-wrapper{
+      cursor: pointer;
+      color: #14b8a6;
+    }
+  }
+  
+  /deep/ .el-dropdown-menu{
+    padding: 0;
+    margin: 0;
+  }
+  /deep/ .el-dropdown-menu__item:focus, /deep/ .el-dropdown-menu__item:not(.is-disabled):hover{
+    color: $g_color;
+  }
+  /deep/ .el-dropdown-menu__item--divided{
+    margin-top: 0;
+    border-top: none;
+  }
+  /deep/ .el-dropdown-menu__item{
+    line-height: 22px;
+  }
+  /deep/ .el-dropdown-menu__item, .el-menu-item{
+    padding: 0 10px;
+  }
 
 </style>
