@@ -27,6 +27,10 @@
             <div class="span-2" v-if="selt_info.company">{{selt_info.company.company_name}}</div>
           </div>
         </div>
+        <div class="job-1">
+          <span class="job-title">沟通职位：</span>
+          <span class="blue" v-if="selt_info.companyposition">{{selt_info.companyposition.position_name}}</span>
+        </div>
         <!-- <img src="../../../assets/image/bossSide/fileSearch.png" alt="" class="fileSearch-img" @click="onlineResume"/> -->
       </div>
       <div class="job-box scrollbar" id="content" ref="scrollbar">
@@ -129,7 +133,8 @@
       <!-- <div class="welcome-tips">
         <p>与Boss沟通，左侧列表中显示</p>
       </div> -->
-      <el-empty description="与企业沟通，左侧列表中显示"></el-empty>
+      <!-- <el-empty description="与企业沟通，左侧列表中显示"></el-empty> -->
+      <el-empty description="暂无消息..."></el-empty>
     </div>
 
   </div>
@@ -169,6 +174,7 @@ export default {
   },
   mounted(){
     this.company_id = this.company_id;
+    console.log(this.company_id)
     this.getSysMsgList();
   },
   methods:{
@@ -250,6 +256,7 @@ export default {
         if(res.code == 0){
           let sysMsgListData = res.data;
           that.sysMsgListData = sysMsgListData;
+          console.log(that.company_id)
           if(that.company_id){
             sysMsgListData.forEach( ele =>{
               if(ele.company_id == that.company_id){
@@ -460,29 +467,28 @@ export default {
         padding: 10px 30px 30px 30px;
         background: #fff;
         flex: 1;
-        div.job-1{
-          display: flex;
-          align-items: center;
-          .job-title{
-            font-size: 14px;
-            font-weight: 400;
-            color: #86909C;
-            line-height: 22px;
-          }
-          .blue{
-            font-size: 14px;
-            font-weight: 400;
-            color: #3377FF;
-            line-height: 22px;
-            padding-left: 4px;
-          }
-        }
-
       }
 
     }
+    div.job-1{
+      display: flex;
+      align-items: center;
+      .job-title{
+        font-size: 14px;
+        font-weight: 400;
+        color: #86909C;
+        line-height: 22px;
+      }
+      .blue{
+        font-size: 14px;
+        font-weight: 400;
+        color: #3377FF;
+        line-height: 22px;
+        padding-left: 4px;
+      }
+    }
   }
-
+  
   .scrollbar {
     overflow: auto;
   }
@@ -662,7 +668,7 @@ export default {
   #footer {
     z-index: 1;
     background-color: #fff;
-    box-shadow: 0 1px 10px 0 #e5e7eb;
+    // box-shadow: 0 1px 10px 0 #e5e7eb;
     padding: 0 16px 12px 16px;
     .icon-btn-box{
       width: 100%;

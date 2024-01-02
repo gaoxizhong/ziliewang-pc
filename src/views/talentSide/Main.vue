@@ -15,20 +15,34 @@
     <Footer />
     <!-- 底部 结束  -->
 
-    <VueDragResize :isActive="true" :w="300" :h="450" @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+    <!-- 聊天弹窗 开始-->
+    <VueDragResize :isActive="true" :parentW="parentW" :parentH="parentH" :w="900" :h="parentH_80" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
-        <h3>Hello World!</h3>
-        <p>{{ top }} х {{ left }} </p>
-        <p>{{ width }} х {{ height }}</p>
-        <div class="vdr-stick vdr-stick-br vdr-icon"></div>
+        <div class="VueDragResize-title-box">
+          <div class="title">聊一聊</div>
+          <div class="icon-box">
+            <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn">
+            <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
+          </div>
+        </div>
+        <div class="Chat-box">
+          <Chat :is_type="is_type" :company_id="company_id" ref="chat" />
+        </div>
       </div>
     </VueDragResize>
+    <!-- 聊天弹窗 结束-->
+
+    <!-- 侧边栏 -->
+    <Sidebar />
   </div>
 </template>
 <script>
 import Navbar from './components/Navbar';
 import Footer from '../../components/footer';
 import VueDragResize from 'vue-drag-resize';
+import Sidebar from './components/sidebar';
+import Chat from "./components/chat.vue"
+
   export default {
     provide(){ 
       // 父组件中通过provide来提供变量，在子组件中通过inject来注入。
@@ -41,15 +55,22 @@ import VueDragResize from 'vue-drag-resize';
       Navbar,
       Footer,
       VueDragResize,
+      Sidebar,
+      Chat
     },
     data(){
       return {
         isRouterAlive: true,
         width: 0,
         height: 0,
-        top: 100,
-        left: 100,
-        is_VueDragResize: true
+        parentH: 0,
+        parentW: 0,
+        parentH_80: 0,
+        top: 60,
+        left: 500,
+        is_VueDragResize: false,
+        is_type: '',
+        infoData: {}
       }
     },
     watch: {
@@ -57,8 +78,23 @@ import VueDragResize from 'vue-drag-resize';
         this.setCurrentRoute();
       }
     },
+    mounted(){
+      let getViewportSize = this.$getViewportSize();
+      this.parentH = getViewportSize.height;
+      this.parentW = getViewportSize.width;
+      this.parentH_80 = Number(getViewportSize.height * 0.8);
+      // 组件间通信
+      this.$bus.$on('receiveParams', this.receiveParams)
+    },
     methods:{
-      
+      receiveParams(params){
+        if(params.type){
+          this.is_type = params.type
+        }
+        this.company_id = params.company_id
+        // '接收到的参数:' params
+        this.is_VueDragResize = true;
+      },
       //监听到当前路由状态并激活当前菜单
       setCurrentRoute() {
         this.activeIndex = this.$route.path;    
@@ -78,6 +114,15 @@ import VueDragResize from 'vue-drag-resize';
         this.height = newRect.height;
         this.top = newRect.top;
         this.left = newRect.left;
+      },
+      // 点击关闭
+      clickCloseBtn(){
+        this.is_VueDragResize = false;
+      },
+      // 点击缩小--按钮
+      clickMinificationpngBtn(){
+        this.is_VueDragResize = false;
+        this.$bus.$emit('clickSidebar', '');
       }
   },
 
@@ -101,15 +146,29 @@ import VueDragResize from 'vue-drag-resize';
       margin: 1.2rem auto 0;
     }
   }
+  // 聊天弹窗 样式=============== ↓ ===========
   .mian-box /deep/ .vdr-stick{
     display: none;
+  }
+  .mian-box /deep/ .vdr-stick-br, .vdr-stick-tl{
+    display: block;
+    width: 12px !important;
+    height: 12px !important;
+    background-image: url("data:image/png;base64,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") !important;
+    background-size: 100% 100% !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border: none !important;
   }
   .VueDragResize-centent-box{
     width: 100%;
     height: 100%;
     background: #fff;
     padding: 10px;
+    padding-right: 12px;
     border-radius: 6px;
+    display: flex;
+    flex-direction: column;
     .vdr-icon{
       width: 28px;
       height: 28px;
@@ -120,6 +179,30 @@ import VueDragResize from 'vue-drag-resize';
       z-index: auto;
       display: block;
     }
+    .VueDragResize-title-box{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      padding: 10px 0;
+      height: auto;
+      .icon-box{
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        img{
+          margin-left: 12px;
+          width: 16px;
+          cursor: pointer;
+        }
+      }
+    }
+    .Chat-box{
+      flex: 1;
+      height: calc(100% - 60px);
+    }
+    // 聊天弹窗 样式=============== ↑ ===========
+
   }
  
 

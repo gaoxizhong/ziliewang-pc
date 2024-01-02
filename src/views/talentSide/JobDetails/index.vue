@@ -198,7 +198,7 @@ export default {
     // 点击聊一聊
     clickChat(){
       let that = this;
-
+      
       let p = {
         position_id: that.id,
         company_id: that.infoData.company_id,
@@ -207,8 +207,11 @@ export default {
       }
       that.$axios.post('/api/user/find-company',p).then( res =>{
         if(res.code == 0){
-          that.$refs.chat._data.dialogVisible = true;
+          // that.$refs.chat._data.dialogVisible = true;
           // that.$router.push('/communication');
+          that.$bus.$emit('receiveParams', {type:'JobDetails',company_id:that.infoData.company_id});
+          this.$bus.$emit('clickSidebar', {type:'clickChat'});
+          return
         }else{
           that.$message.error({
             message:res.msg

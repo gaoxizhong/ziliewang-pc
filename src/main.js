@@ -59,6 +59,16 @@ if (process.env.NODE_ENV === 'production') {
 // 如果想使用中文版，按以下声明
 Vue.use(ElementUI)
 
+// 跨组件通信 全局事件总线
+Vue.prototype.$bus = new Vue(); // 安装总线
+
+
+Vue.prototype.$getViewportSize = function() {
+  return {
+    width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+    height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+  }
+}
 
 Vue.config.productionTip = false
 
