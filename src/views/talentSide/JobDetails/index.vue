@@ -51,7 +51,7 @@
               <div class="img-box"><img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg')" alt="" /></div>
               <div class="info-text">
                 <div class="info-text-1"><span class="name">{{ infoData.sync_workmate }}</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
-                <div class="info-text-2"><span>{{ infoData.role_desc }}·</span><span v-if="infoData.company">{{ infoData.company.company_name }}</span></div>
+                <div class="info-text-2"><span>{{ infoData.role_desc }}·</span><span class="company-span" v-if="infoData.company" @click="clickCompany">{{ infoData.company.company_name }}</span></div>
               </div>
             </div>
             <div class="boss-info-btn">
@@ -122,6 +122,15 @@ export default {
     
   },
   methods: {
+    // 点击公司名称
+    clickCompany(){
+      this.$router.push({
+        path:'/companyDetails',
+        query:{
+          id: this.infoData.company_id
+        }
+      })
+    },
     async getInfo(){
       let that = this;
       let p = {
@@ -455,6 +464,7 @@ export default {
               }
               &.info-text-2{
                 margin-top: 0.5rem;
+   
               }
             }
           }
@@ -484,6 +494,12 @@ export default {
       padding-left: 0.8rem;
 
     }
+  }
+  .company-span{
+    cursor: pointer;
+  }
+  .company-span:hover{
+    color:  $g_color;          
   }
  
 

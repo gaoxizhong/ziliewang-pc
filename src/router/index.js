@@ -420,6 +420,16 @@ export const constantRoutes = [
         },
       },
       {
+        path: '/companyDetails',
+        name: 'companyDetails',
+        component: () => import('@/views/talentSide/companyDetails'),
+        meta: { 
+          title: '公司详情',
+          // keepAlive: true,
+        },
+      },
+      
+      {
         path: '/communication',
         name: 'communication',
         component: () => import('@/views/talentSide/communication'),
