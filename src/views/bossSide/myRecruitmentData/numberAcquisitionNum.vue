@@ -73,7 +73,6 @@ export default{
         page: that.paginationData.currentPage,
         pagesize: that.paginationData.pageSize,
       }).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.infoDataList = res.data.list;
           that.paginationData.total = res.data.count;

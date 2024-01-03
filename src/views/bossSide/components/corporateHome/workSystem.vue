@@ -69,7 +69,6 @@ export default {
     getDetail(){
       let that = this;
       that.$axios.post('/api/company/work/institution/detail',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.gzzd_ruleForm.work_overtime =  res.data.work_overtime;
           that.gzzd_ruleForm.work_time =  res.data.work_time;
@@ -93,7 +92,6 @@ export default {
       };
   
       that.$axios.post('/api/company/work/institution/create',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success({
             message:'保存成功!'

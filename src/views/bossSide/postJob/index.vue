@@ -431,7 +431,6 @@ export default {
         position_id:id,
       }
       that.$axios.post('/api/company-position/detail',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           let ruleForm = JSON.parse(JSON.stringify(res.data));
           let salary = res.data.salary.split('-');

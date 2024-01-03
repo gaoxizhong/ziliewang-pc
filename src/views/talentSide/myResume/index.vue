@@ -291,7 +291,6 @@ export default {
       formData.append('pictureCategory','articleCover');
       formData.append('up_tag','resume');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
         this.curriculum_vitae = res.data.upload_files;
         let upload_files_path = res.data.upload_files_path;
         this.$refs['upload'].clearFiles();
@@ -317,7 +316,6 @@ export default {
       let that = this;
       let p = Object.assign({},data);
       that.$axios.post('/api/user/save',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success( text );
           if(type == 'delet'){

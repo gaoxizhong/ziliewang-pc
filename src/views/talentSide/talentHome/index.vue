@@ -161,7 +161,6 @@ export default {
     gethotJobList(){
       let that = this;
       that.$axios.post('/api/company-position/hot',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.hotJob_options = res.data;
         }else{
@@ -180,7 +179,6 @@ export default {
         search: that.input_name,
       }
       that.$axios.post('/api/talents/index',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.infoList = res.data.list;
           that.paginationData.total = res.data.total;

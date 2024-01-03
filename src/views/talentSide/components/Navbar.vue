@@ -25,9 +25,10 @@
             <img src="../../../assets/image/nav_1.png" alt="" />
             <span>职圈</span>
           </div>
-          <div @click="clickMessage" :class="activeMenu == '/communication'?'hover':''">
+          <div @click="clickMessage" class="communication-box">
             <img src="../../../assets/image/icon-wechat1.png" alt="" />
             <span>消息</span>
+            <span class="corner-mark-box" v-if="navbarMessagePrompt"></span>
           </div>
         </div>
         <el-dropdown class="avatar-container" trigger="click">
@@ -59,6 +60,7 @@
 
 <script>
 import { getToken, setToken, removeToken } from '@/utils/auth';
+
 export default {
   components: {
   },
@@ -84,6 +86,10 @@ export default {
       console.log(path)
       return '' || path;
     },
+    navbarMessagePrompt() {
+      return this.$store.state.user.navbarMessagePrompt
+    },
+
   },
   watch:{
     '$store.state.realAvatar'(newVal){
@@ -96,9 +102,37 @@ export default {
       this.name = newVal;
       this.$forceUpdate();// 更新数据
     },
+    '$store.state.navbarMessagePrompt'(newVal){
+      console.log('navbarMessagePrompt')
+      this.navbarMessagePrompt = newVal;
+      this.$forceUpdate();// 更新数据
+    },
   },
   mounted() {
-
+    let that = this;
+    //建立连接
+    that.goEasy.connect({
+      onSuccess: function () { //连接成功
+        console.log("GoEasy connect successfully.") //连接成功
+      },
+      onFailed: function (error) { //连接失败
+        console.log("Failed to connect GoEasy, code:"+error.code+ ",error:"+error.content);
+      }
+    });
+    //订阅消息
+    that.goEasy.pubsub.subscribe({
+      channel: "zlw_channel",//替换为您自己的channel
+      onMessage: function (message) { //收到消息
+        console.log("Channel:" + message.channel + " content:" + message);
+        that.$store.dispatch('user/actions_navbarMessagePrompt', true);
+      },
+      onSuccess: function () {
+        console.log("Channel订阅成功。");
+      },
+      onFailed: function (error) {
+        console.log("Channel订阅失败, 错误：" + error + " 错误信息：" + error.content)
+      }
+    });
   },
   methods: {
    
@@ -116,6 +150,7 @@ export default {
     },
     // 点击消息
     clickMessage(){
+      this.$store.dispatch('user/actions_navbarMessagePrompt', false);
       this.$router.push({
         path:'/communication',   //跳转的路径
         // path:'/attentionFans',   //跳转的路径
@@ -204,11 +239,22 @@ export default {
         font-size: 14px;
         display: flex;
         align-items: center;
+        position: relative;
         cursor: pointer;
         img{
           width: 14px;
           height: 14px;
           margin-right: 4px;
+        }
+        .corner-mark-box{
+          background: #ff0000;
+          border-radius: 20px;
+          padding: 5px;
+          position: absolute;
+          top: 10px;
+          right: 5px;
+          line-height: 1;
+          font-size: 12px;
         }
       }
       &>div.hover{

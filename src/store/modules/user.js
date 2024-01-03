@@ -8,7 +8,8 @@ const state = {
   staffName:'', // 企业的个人姓名
   staffAvatar: localStorage.getItem('staffAvatar') || '', // 企业的个人头像
   realAvatar: localStorage.getItem('realAvatar') || '', // 用户端的个人头像
-  role: ''
+  role: '',
+  navbarMessagePrompt: false, // 消息提示
 }
 
 const mutations = {
@@ -26,11 +27,13 @@ const mutations = {
   },
   SET_realAvatar: (state, realAvatar) => {
     state.realAvatar = realAvatar
-
   },
   SET_ROLE: (state, role) => {
     state.role = role
-  }
+  },
+  mutations_SET_navbarMessagePrompt: (state, role) => {
+    state.navbarMessagePrompt = role
+  },
 }
 
 const actions = {
@@ -127,6 +130,9 @@ const actions = {
   },
   SET_ROLE({ commit }, data) {
     commit('SET_ROLE', data);
+  },
+  actions_navbarMessagePrompt({ commit }, data) {
+    commit('mutations_SET_navbarMessagePrompt', data);
   },
 }
 

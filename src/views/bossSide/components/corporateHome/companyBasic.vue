@@ -192,7 +192,6 @@ export default {
       // formData.append('pictureCategory','articleCover');
       formData.append('up_tag','logo');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
         this.jbxx_ruleForm.logo = res.data.upload_files;
         this.$refs['upload'].clearFiles();
       
@@ -205,7 +204,6 @@ export default {
     getDetail(){
       let that = this;
       that.$axios.post('/api/company/detail',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.jbxx_ruleForm.logo = res.data.logo;
           that.jbxx_ruleForm.company_register_address =  res.data.company_register_address;
@@ -234,7 +232,6 @@ export default {
       // formData.append('pictureCategory','articleCover');
       formData.append('up_tag','business_license');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
         this.jbxx_ruleForm.business_license = res.data.upload_files;
         this.$refs['upload'].clearFiles();
        
@@ -260,7 +257,6 @@ export default {
       }
    
       that.$axios.post('/api/company/edit',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success('保存成功！');
           setTimeout(()=>{

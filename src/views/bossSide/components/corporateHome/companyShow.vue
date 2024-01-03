@@ -204,7 +204,6 @@ export default {
     getDetail(){
       let that = this;
       that.$axios.post('/api/company/image/detail',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.image_files_path =  res.data.images?res.data.images.split(','): [];
           that.video_files_path =  res.data.video?res.data.video.split(','): [];
@@ -225,7 +224,6 @@ export default {
         video: that.video_files_path.join(','),
       };
       that.$axios.post('/api/company/image/create',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           if(n == 'btn'){
             that.$message.success({

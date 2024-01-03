@@ -179,7 +179,6 @@ export default {
     getSysMsgList(){
       let that = this;
       that.$axios.post('/api/company-interview/index',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.tableData = res.data;
         }else{

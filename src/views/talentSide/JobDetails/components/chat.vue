@@ -195,7 +195,6 @@ export default {
         createtime: this.getCurrentTime(),
       }
       that.$axios.post('/api/user/find-company',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.msgList.push(showMessage);
           that.originMessage = '';
@@ -222,7 +221,6 @@ export default {
         page: that.page,
         pagesize: that.pagesize
       }).then( res =>{
-        console.log(res)
         if(res.code == 0){
           let sysMsgListData = res.data;
           that.sysMsgListData = sysMsgListData;
@@ -251,7 +249,6 @@ export default {
         id: selt_info.type_id, 
       }
       that.$axios.post('/api/user/receive-interview-invite',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success({
             message:'接收面试邀请成功'
@@ -275,7 +272,6 @@ export default {
         company_uid: selt_info.company.uid,
       }
       that.$axios.post('/api/user/send-resume',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success({
             message:'发送简历成功！'

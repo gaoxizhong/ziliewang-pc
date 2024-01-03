@@ -70,7 +70,6 @@ export default {
     getDetail(){
       let that = this;
       that.$axios.post('/api/company/introduction/detail',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.qyjs_ruleForm.introduction = res.data.introduction;
           that.qyjs_ruleForm.establishment_date = res.data.establishment_date;
@@ -97,7 +96,6 @@ export default {
         reward_link: that.qyjs_ruleForm.reward_link,
       };
       that.$axios.post('/api/company/introduction/create',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success({
             message: '保存成功!'

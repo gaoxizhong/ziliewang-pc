@@ -352,7 +352,6 @@ export default {
       that.$axios.post('/api/company/resume/detail',{
         uid: i.uid
       }).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.infoData = res.data;
           that.zx_dialogVisible = true;
@@ -398,7 +397,6 @@ export default {
         uid: i.uid|| i.basic_info.uid,
       }
       that.$axios.post('/api/company/get-user-mobile',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           
           this.$alert(res.data.mobile, '电话', {
@@ -419,7 +417,6 @@ export default {
         content:'看过您的简历后，希望可以和您聊聊，谢谢！'
       }
       that.$axios.post('/api/company/find-user',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$router.push('/interaction?user_uid=' + i.uid);
         }else{

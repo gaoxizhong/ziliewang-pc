@@ -152,7 +152,6 @@
           //调用后端接口，接收返回url
           const res = await that.$axios.post('/api/order/create',p);
           that.checkInfo = res.data;
-          console.log(res)
           that.order_no = res.data.order_no;
           //清空二维码
           that.qrCodeImgUrl = '';

@@ -92,7 +92,6 @@ export default {
     getinfoList(){
       let that = this;
       that.$axios.post('/api/company-position/list',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.jobList = res.data
         }else{

@@ -33,6 +33,16 @@ Vue.use(VueVideoPlayer)
 import 'video.js/dist/video-js.css'
 import 'vue-video-player/src/custom-theme.css'
 
+// 引入 实时通讯
+import GoEasy from 'goeasy';
+const goEasy = GoEasy.getInstance({
+  host:'hangzhou.goeasy.io', //新加坡host：singapore.goeasy.io
+  appkey: "BC-6c3e503436f7436e9f2804567d3d75cd", //替换为您的应用appkey
+  modules: ['pubsub']
+});
+// 建议在main.js里初始化全局的GoEasy对象
+Vue.prototype.goEasy = goEasy;
+
 // 引入图片预览
 import vPreviewImage from 'v-preview-image'
 Vue.use(vPreviewImage)

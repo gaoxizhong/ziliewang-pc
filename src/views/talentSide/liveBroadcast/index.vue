@@ -23,7 +23,6 @@ export default {
     getPlayUrl(f){
       let that = this;
       that.$axios.post('/api/live/play-url',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.playUrl = res.data;
           if( typeof f == 'function'){

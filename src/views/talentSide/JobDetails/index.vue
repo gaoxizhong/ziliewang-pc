@@ -48,10 +48,10 @@
           <!-- boss信息 开始 -->
           <div class="m-box boss-info-box">
             <div class="boss-info-left">
-              <div class="img-box"><img src="../../../assets/image/img-user.jpg" alt="" /></div>
+              <div class="img-box"><img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg')" alt="" /></div>
               <div class="info-text">
                 <div class="info-text-1"><span class="name">{{ infoData.sync_workmate }}</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
-                <div class="info-text-2"><span>招聘专员·</span><span v-if="infoData.company">{{ infoData.company.company_name }}</span></div>
+                <div class="info-text-2"><span>{{ infoData.role_desc }}·</span><span v-if="infoData.company">{{ infoData.company.company_name }}</span></div>
               </div>
             </div>
             <div class="boss-info-btn">
@@ -86,7 +86,6 @@
       </div>
     </div>
     <!-- 主题部分 结束 -->
-    <Chat :is_type="is_type" :company_id="infoData.company_id" ref="chat"/>
 
   </div>
 
@@ -97,7 +96,6 @@ import JobDescription from "./components/jobDescription";
 import CompanyProfile from "./components/companyProfile";
 import CompanyInfo from "./components/companyInfo"
 import OtherPositions from "./components/otherPositions"
-import Chat from "./components/chat.vue"
 
 export default {
   name: 'JobDetails',
@@ -106,7 +104,6 @@ export default {
     CompanyProfile,
     CompanyInfo,
     OtherPositions,
-    Chat
   },
   data(){
     return{
@@ -131,7 +128,6 @@ export default {
         position_id: that.id,
       }
       await that.$axios.post('/api/company-position/detail',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           let infoData = res.data;
           infoData.job_benefits = infoData.job_benefits.split(',');
@@ -152,7 +148,6 @@ export default {
         company_uid: that.infoData.company.uid,
       }
       that.$axios.post('/api/user/deliver',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success({
             message:'投递成功'
@@ -231,7 +226,6 @@ export default {
         uid: i.company.phone,
       }
       that.$axios.post('',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           
           this.$alert(res.data.mobile, '电话', {
@@ -404,6 +398,7 @@ export default {
             height: 3.3rem;
             border: 2px solid #F7F8FA;
             border-radius: 50%;
+            overflow: hidden;
             img{
               display: inline-block;
               width: 100%;

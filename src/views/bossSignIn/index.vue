@@ -199,7 +199,6 @@ export default {
       // formData.append('pictureCategory','articleCover');
       formData.append('up_tag','logo');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
         this.logo = res.data.upload_files;
         this.$refs['upload'].clearFiles();
        
@@ -216,7 +215,6 @@ export default {
       // formData.append('pictureCategory','articleCover');
       formData.append('up_tag','business_license');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
         this.business_license = res.data.upload_files;
         this.$refs['upload'].clearFiles();
         this.getInfoData(res.data.upload_files);
@@ -232,7 +230,6 @@ export default {
       that.$axios.post('/api/company/check-business-license',{
         business_license: url
       }).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.company_name= res.data.company_name; // 公司名称
           that.legal_person= res.data.legal_person; //法人
@@ -317,7 +314,6 @@ export default {
         return
       }
       that.$axios.post('/api/company/apply',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success('提交成功，等待审核中！');
           

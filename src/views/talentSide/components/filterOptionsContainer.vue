@@ -432,7 +432,7 @@ export default {
   .selected-options-box .selected-options-list-box .selected-item {
     display: flex;
     align-items: center;
-    margin: 0 12px 0 0;
+    margin: 0 12px 10px 0;
     padding: 0 6px;
     line-height: 25px;
     border-radius: 6px;

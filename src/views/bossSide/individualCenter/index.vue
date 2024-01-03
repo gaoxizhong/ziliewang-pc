@@ -200,7 +200,6 @@ export default {
     getUserInfo(){
       let that = this;
       that.$axios.post('/api/staff/profile',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.infoData = res.data;
         }
@@ -240,7 +239,6 @@ export default {
       let that = this;
       let p = Object.assign({},data);
       that.$axios.post('/api/staff/save',data).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success('修改成功！');
           if(data.staff_name){
@@ -266,7 +264,6 @@ export default {
       formData.append('pictureCategory','articleCover');
       formData.append('up_tag','avatar');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
         this.infoData.avatar = res.data.upload_files;
         this.upload_files_path = res.data.upload_files_path;
         this.$refs['upload'].clearFiles();

@@ -248,7 +248,6 @@ export default {
     getUserInfo(){
       let that = this;
       that.$axios.post('/api/staff/profile',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.userInfo = res.data;
         }
@@ -267,7 +266,6 @@ export default {
     getCompanyCount(){
       let that = this;
       that.$axios.post('/api/company/count',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.companyCountData = res.data;
         }else{
@@ -298,7 +296,6 @@ export default {
     getSysMsgList(){
       let that = this;
       that.$axios.post('/api/company-interview/index',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.tableData = res.data;
         }else{

@@ -153,7 +153,6 @@ export default {
     getFormData(){
       let that = this;
       that.$axios.post('/api/company/recruitment',{}).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.formData = res.data;
           that.company_recruitment_list = res.data.company_recruitment_list.list;

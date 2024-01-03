@@ -214,7 +214,6 @@ export default {
       formData.append('pictureCategory','articleCover');
       formData.append('up_tag','other');
       this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        console.log(res)
         let data = res.data;
         this.upImgList.push(data);
 

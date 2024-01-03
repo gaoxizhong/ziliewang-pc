@@ -408,7 +408,6 @@ export default {
       };
 
       that.$axios.post('/api/register',p).then( res =>{
-        console.log(res)
         if(res.code == 0){
           that.$message.success({
             message:'注册成功'
