@@ -4,15 +4,21 @@
     <div class="container-title-box">
       <div style="width: 1200px; position: relative;">
         <el-tabs v-model="tag" @tab-click="handleClick">
-          <el-tab-pane label="推荐" name="recommend"></el-tab-pane>
-          <el-tab-pane label="热门" name="hot"></el-tab-pane>
-          <el-tab-pane label="关注" name="attention"></el-tab-pane>
-          <el-tab-pane label="直播" name="live"></el-tab-pane>
+          <el-tab-pane label="好友列表" name="buddyList"></el-tab-pane>
+          <el-tab-pane label="好友动态" name="attention"></el-tab-pane>
+          <el-tab-pane label="头条" name="hot"></el-tab-pane>
+          <!-- <el-tab-pane label="直播" name="live"></el-tab-pane> -->
         </el-tabs>
         <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
       </div>
     </div>
-    <div class="container info-box" v-if="tag == 'recommend' || tag == 'hot'|| tag == 'attention'">
+    <!-- 好友列表 开始 -->
+    <div class="container info-box" v-if=" tag == 'buddyList' ">
+      <buddyChart /> 
+    </div>
+    <!-- 好友列表 结束 -->
+    <!-- 好友动态 、 头条 开始 -->
+    <div class="container info-box" v-if=" tag == 'hot'|| tag == 'attention'">
       <div class="info-left-box">
         <div class="info-right-container">
           <!-- 列表项 开始 -->
@@ -69,10 +75,10 @@
       </div>
       <!-- 右侧模块 结束 -->
     </div>
+    <!-- 好友动态 、 头条 结束 -->
     <div class="container info-box" style="justify-content: center;" v-if="tag == 'live'"> 
       <live />
     </div>
-
 
 
     <!-- 、、、、 发布弹窗 、、、、 -->
@@ -122,16 +128,18 @@
 <script>
 import hotRecommendation from './components/hotRecommendation.vue';
 import live from '../../talentSide/liveBroadcast/index.vue';
+import buddyChart from '../components/buddyChart.vue';
 
 export default {
   name: 'myProfessionalCircle',
   components: {
     hotRecommendation,
-    live
+    live,
+    buddyChart
   },
   data(){
     return{
-      tag: 'recommend',
+      tag: 'buddyList',
       page: 1,
       dataList:[],
       dialogVisible: false,
@@ -147,13 +155,18 @@ export default {
     
   },
   mounted(){
-    this.getList();
+
+  },
+  created(){
+    if(this.tag == 'hot'|| this.tag == 'attention'){
+      this.getList();
+    }
   },
   methods: {
     handleClick(tab, event){
       console.log(tab)
       this.tag = tab._props.name;
-      if(this.tag == 'recommend' || this.tag == 'hot'|| this.tag == 'attention'){
+      if( this.tag == 'hot'|| this.tag == 'attention' ){ // 头条 好友动态
         this.page = 1;
         this.getList();
       }
@@ -294,6 +307,9 @@ export default {
               padding: 0 20px;
               display: flex;
               justify-content: center;
+              .el-tabs__item{
+                font-size: 15px;
+              }
               .el-tabs__item.is-active{
                 color: $g_color;
               }

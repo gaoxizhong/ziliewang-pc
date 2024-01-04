@@ -5,7 +5,7 @@
     <div class="info-name-box">
       <img :src="infoData.logo" alt="" class="com-img"/>
       <div class="name-box">
-        <div class="com-name">{{ infoData.company_name }}</div>
+        <div class="com-name" @click="clickCompany">{{ infoData.company_name }}</div>
         <div class="com-job-num">在招职位<span>{{ infoData.recruit_position_num }}</span>个</div>
       </div>
     </div>
@@ -34,8 +34,19 @@ export default {
       default() {
           return {}
         }
-    }
+    },
   },
+  methods:{
+    // 点击公司名称
+    clickCompany(){
+      this.$router.push({
+        path:'/companyDetails',
+        query:{
+          id: this.infoData.id
+        }
+      })
+    },
+  }
 }
 </script>
 
@@ -64,6 +75,10 @@ export default {
           font-weight: 400;
           color: $g_textColor;
           line-height: 22px;
+          cursor: pointer;
+          &:hover{
+            color: $g_color;    
+          }
         }
         .com-job-num{
           font-size: 14px;

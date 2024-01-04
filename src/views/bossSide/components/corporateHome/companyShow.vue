@@ -132,10 +132,10 @@ export default {
       const isJPG = file.type === 'video/mp4' || 'video/avi' || 'video/wmv' || 'video/flv' || 'video/rmvb' || 'video/mov';
       const isLt10M = file.size / 1024 / 1024 < 10;
       if (!isJPG) {
-        this.$message.error('上传图片只能是 视频 格式!');
+        this.$message.error('上传只能是 视频 格式!');
       }
       if (!isLt10M) {
-        this.$message.error('上传图片大小不能超过 10MB!');
+        this.$message.error('上传大小不能超过 10MB!');
       }
       return isJPG && isLt10M;
     },
@@ -154,6 +154,7 @@ export default {
     },
     // 点击上传 ----  视频
     up_video(param){
+      console.log(param)
       let data = {
         file: param.file,
         up_tag: 'video'
@@ -193,10 +194,11 @@ export default {
           that.image_files_path.push(res.data.upload_files);
         }
         that.$refs['upload'].clearFiles();
-      
+        that.$refs['upload_video'].clearFiles();
       }).catch( e=>{
         console.log('erro')
-        that.$refs['upload'].clearFiles()
+        that.$refs['upload'].clearFiles();
+        that.$refs['upload_video'].clearFiles();
       })
     },
 

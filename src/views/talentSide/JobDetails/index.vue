@@ -499,7 +499,7 @@ export default {
     cursor: pointer;
   }
   .company-span:hover{
-    color:  $g_color;          
+    color: $g_color;          
   }
  
 
