@@ -1,5 +1,6 @@
 <template>
   <div class="chat-window-box m-box">
+    <!-- 左侧 列表 开始 -->
     <div class="left-box" v-if="!is_type || is_type == ''">
       <div class="seach-box"></div>
       <div class="personAbility-box">
@@ -18,6 +19,7 @@
 
       </div>
     </div>
+    <!-- 左侧 列表 结束 -->
     <div class="right-box center-box" v-if="selt_info">
       <div class="seach-box">
         <div class="seach-box-info">

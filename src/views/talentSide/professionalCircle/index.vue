@@ -13,8 +13,9 @@
       </div>
     </div>
     <!-- 好友列表 开始 -->
-    <div class="container info-box" v-if=" tag == 'buddyList' ">
+    <div class="container info-box interaction-box" v-if=" tag == 'buddyList' ">
       <buddyChart /> 
+      <!-- <Chat ref="chat"/> -->
     </div>
     <!-- 好友列表 结束 -->
     <!-- 好友动态 、 头条 开始 -->
@@ -129,13 +130,14 @@
 import hotRecommendation from './components/hotRecommendation.vue';
 import live from '../../talentSide/liveBroadcast/index.vue';
 import buddyChart from '../components/buddyChart.vue';
-
+// import Chat from "../components/chat.vue"
 export default {
   name: 'myProfessionalCircle',
   components: {
     hotRecommendation,
     live,
-    buddyChart
+    buddyChart,
+    // Chat
   },
   data(){
     return{
@@ -283,9 +285,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.interaction-box{
+    height: calc(100vh - 150px);
+    margin: 0 auto;
+  }
   .container-title-box{
     width: 100%;
-    height: 3rem;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -298,7 +304,7 @@ export default {
           margin: 0;
           .el-tabs__nav-wrap{
             height: 100%;
-            line-height: 3rem;
+            line-height: 50px;
             &::after{
               height: 0;
             }
@@ -325,7 +331,7 @@ export default {
   .info-box{
     width: 1200px !important;
     margin: 0 auto;
-    margin-top: 1rem;
+    margin-top: 16px;
     width: 100%;
     display: flex;
     text-align: left;
@@ -335,7 +341,7 @@ export default {
         .container-items-box{
           background: #fff;
           .right-container-title{
-            margin-top: 1rem;
+            margin-top: 16px;
             width: 100%;
             height: 44px;
             line-height: 44px;

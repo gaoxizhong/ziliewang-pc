@@ -1,5 +1,6 @@
 <template>
   <div class="chat-window-box">
+    <!-- 左侧信息列表 开始 -->
     <div class="chat-sidebar">
       <div class="list">
         <ul>
@@ -10,6 +11,7 @@
         </ul>
       </div>
     </div>
+    <!-- 左侧信息列表 结束 -->
     <div class="chat-main">
       <message></message>
       <text></text>
@@ -129,7 +131,7 @@ export default {
       }).then( res =>{
         if(res.code == 0){
           let sessions = res.data;
-          that.sessions = v;
+          that.sessions = sessions;
 
           if(that.company_id){
             sessions.forEach( ele =>{
@@ -168,35 +170,41 @@ export default {
     width: 100%;
     flex: 1;
     display: flex;
-    // height: calc(100vh - 75px);
-    height: 100%;
+    height: calc(100vh - 180px);
+    // height: 100%;
+    text-align: left;
+    background: #fff;
+    border-radius: 6px;
     .chat-sidebar, .chat-main {
-        height: 100%;
+      height: 100%;
     }
     .chat-sidebar {
       float: left;
-      width: 200px;
-      color: #f4f4f4;
-      background-color: #2e3238;
+      width: 300px;
+      color: #333;
+        background-color: #e7e6e58c;
+        padding: 10px;
+        border-radius: 6px;
       .list {
         li {
-            padding: 12px 15px;
-            border-bottom: 1px solid #292C33;
-            cursor: pointer;
-            transition: background-color .1s;
+          padding:10px;
+          cursor: pointer;
+          transition: background-color .1s;
 
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.03);
-            }
-            &.active {
-                background-color: rgba(255, 255, 255, 0.1);
-            }
+          &:hover {
+            background-color:#c7c5c4;
+          }
+          &.active {
+            background-color:#c7c5c4;
+          }
         }
         .avatar, .name {
             vertical-align: middle;
         }
         .avatar {
-            border-radius: 2px;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
         }
         .name {
             display: inline-block;
