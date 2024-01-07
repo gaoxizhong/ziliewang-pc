@@ -13,7 +13,7 @@
           <span class="span-1">充值购买</span>
           <!-- <span class="span-2">早期尝鲜价格</span> -->
         </div>  
-        <el-row type="flex" class="row-bg" justify="center">
+        <el-row class="row-bg" justify="center">
           <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6" v-for="(item,index) in setMealList" :key="index">
             <div class="grid-content">
               <div></div>
@@ -23,7 +23,7 @@
               <div class="setMeal-money-box">
                 <span class="money-icon">￥</span> {{ item.recharge_price }}
               </div>
-              <div class="span-num">{{ item.get_num }} 次</div>
+              <!-- <div class="span-num">{{ item.get_num }} 次</div> -->
               <div class="setMeal-btn-box" @click="clickBuyBtn(item)">立即购买</div>
             </div>
           </el-col>

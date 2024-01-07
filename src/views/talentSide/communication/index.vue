@@ -15,10 +15,11 @@ export default {
     return {
       uid: window.localStorage.getItem('uid'),
       viewHeight:'',
+      is_type:''
     }
   },
   mounted(){
-    this.getSysMsgList();
+
   },
   methods:{
  

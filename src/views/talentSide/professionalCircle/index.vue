@@ -5,6 +5,7 @@
       <div style="width: 1200px; position: relative;">
         <el-tabs v-model="tag" @tab-click="handleClick">
           <el-tab-pane label="好友列表" name="buddyList"></el-tab-pane>
+          <el-tab-pane label="聊天记录" name="chatHistory"></el-tab-pane>
           <el-tab-pane label="好友动态" name="attention"></el-tab-pane>
           <el-tab-pane label="头条" name="hot"></el-tab-pane>
           <!-- <el-tab-pane label="直播" name="live"></el-tab-pane> -->
@@ -13,11 +14,14 @@
       </div>
     </div>
     <!-- 好友列表 开始 -->
-    <div class="container info-box interaction-box" v-if=" tag == 'buddyList' ">
+    <div class="interaction-box" v-if=" tag == 'buddyList' ">
       <buddyChart /> 
       <!-- <Chat ref="chat"/> -->
     </div>
     <!-- 好友列表 结束 -->
+    <div class="interaction-box"  v-if=" tag == 'chatHistory' ">
+      <Chat ref="chat"/>
+    </div>
     <!-- 好友动态 、 头条 开始 -->
     <div class="container info-box" v-if=" tag == 'hot'|| tag == 'attention'">
       <div class="info-left-box">
@@ -130,14 +134,14 @@
 import hotRecommendation from './components/hotRecommendation.vue';
 import live from '../../talentSide/liveBroadcast/index.vue';
 import buddyChart from '../components/buddyChart.vue';
-// import Chat from "../components/chat.vue"
+import Chat from "../components/chat.vue"
 export default {
   name: 'myProfessionalCircle',
   components: {
     hotRecommendation,
     live,
     buddyChart,
-    // Chat
+    Chat
   },
   data(){
     return{
@@ -285,9 +289,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .interaction-box{
+    width: 1200px;
     height: calc(100vh - 150px);
-    margin: 0 auto;
+    margin: 16px auto 0;
   }
   .container-title-box{
     width: 100%;
@@ -567,6 +573,11 @@ export default {
     .el-button--primary{
       background-color: $g_color;
       border-color: $g_color;
+    }
+  }
+  @media screen and (max-width: 1366px) {
+    .interaction-box{
+      width: 850px;
     }
   }
 </style>

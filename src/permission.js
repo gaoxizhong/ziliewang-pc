@@ -3,7 +3,7 @@ import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
+import { getToken,removeToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
 import { bossSideRoutes } from '@/utils/bossSideRoutes' // 企业端路由
@@ -34,14 +34,12 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.staffName
-      
-      if (hasGetUserInfo) {
-        next()
-      } else {
-        // user:人才端 company:企业端缓存
-        let tag = localStorage.getItem('tag');
-        if(tag == 'company' ){
+      let tag = localStorage.getItem('tag');
+      if(tag == 'company' ){
+        const hasGetUserInfo = store.getters.staffName
+        if (hasGetUserInfo) {
+          next()
+        } else {
           try {
             // get user info
             // await store.dispatch('user/getInfo')
@@ -59,10 +57,10 @@ router.beforeEach(async(to, from, next) => {
             next();
             NProgress.done()
           }
-        }else{
-          next()
-          NProgress.done()
         }
+      }else{
+        next()
+        NProgress.done()
       }
     }
   } else {
@@ -73,6 +71,7 @@ router.beforeEach(async(to, from, next) => {
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
+      removeToken();
       next(`/login`);
       NProgress.done()
     }

@@ -4,7 +4,6 @@
     <div class="left-box" v-if="!is_type || is_type == ''">
       <div class="seach-box"></div>
       <div class="personAbility-box">
-
         <div class="personAbility-items-box" :class="id == item.id?'hover':''" v-for="(item,index) in sysMsgListData" :key="index" @click="clickmsgListData(item)">
           <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" />
           <div class="name-box">
@@ -119,16 +118,16 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <!-- <div class="footer-right">
-            <div>
-              <img src="../../../assets/image/bossSide/int-qjl.png" alt="" />
-              <span>求简历</span>
-            </div>
-            <div>
+          <div class="footer-right">
+            <div @click="clickContactBtn">
               <img src="../../../assets/image/bossSide/int-yqms.png" alt="" />
-              <span>邀面试</span>
+              <span>交换联系方式</span>
             </div>
-          </div> -->
+            <div @click="clickSendResumeBtn('fsjl')">
+              <img src="../../../assets/image/bossSide/int-qjl.png" alt="" />
+              <span>投递简历</span>
+            </div>
+          </div>
         </div>
         <div class="ui-editor clearfix">
           <div class="textbox">
@@ -187,11 +186,11 @@ export default {
       pagesize: 20,
       selt_index: -1,
       selt_info: '',
+      id: 0
     }
   },
   mounted(){
     this.company_id = this.company_id;
-    console.log(this.company_id)
     this.getSysMsgList();
   },
   methods:{
@@ -221,6 +220,7 @@ export default {
           return i;
       }
     },
+
     // 回车键点击
     searchEnterFun(e){
       var keyCode = window.event?e.keyCode:e.which;
@@ -308,11 +308,41 @@ export default {
         }
       })
     },
-    //  发送简历
-    clickSendResumeBtn(){
+    // 交换联系方式
+    clickContactBtn(){
       let that = this;
       let selt_info = that.selt_info;
-      console.log(selt_info)
+      let p = {
+        // id: selt_info.type_id, 
+        position_id: selt_info.position_id,
+        company_id: selt_info.company_id,
+        company_uid: selt_info.company.uid,
+      }
+      let showMessage = { // 页面展示的我的提问
+        type:1,
+        content: '交换联系方式',
+        user_avatar: this.$store.state.user.realAvatar,
+        createtime: this.getCurrentTime(),
+      }
+      that.msgList.push(showMessage);
+      that.originMessage = '';
+      that.scrollBottom(); // 页面滚动到底部
+      return
+      that.$axios.post('',p).then( res =>{
+        if(res.code == 0){
+          
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    //  发送简历
+    clickSendResumeBtn(t){
+      let that = this;
+      let selt_info = that.selt_info;
+      let tag = t;
       let p = {
         // id: selt_info.type_id, 
         position_id: selt_info.position_id,
@@ -324,7 +354,17 @@ export default {
           that.$message.success({
             message:'发送简历成功！'
           })
-
+          if(tag == 'fsjl'){
+            let showMessage = { // 页面展示的我的提问
+              type:1,
+              content: '发送简历',
+              user_avatar: this.$store.state.user.realAvatar,
+              createtime: this.getCurrentTime(),
+            }
+            that.msgList.push(showMessage);
+            that.originMessage = '';
+            that.scrollBottom(); // 页面滚动到底部
+          }
         }else{
           that.$message.error({
             message:res.msg
@@ -373,12 +413,12 @@ export default {
       .personAbility-box{
         .personAbility-items-box{
           width: 100%;
-          padding: 0.8rem 0.6rem;
+          padding: 8px 6px;
           display: flex;
           cursor: pointer;
           &>img{
-            width: 2rem;
-            height: 2rem;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
           }
           &.hover{
@@ -692,7 +732,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 4px 0;
+      padding: 4px 8px;
       border-top: 1px solid #e9e9e9;
       .footer-right{
         display: flex;
@@ -703,11 +743,11 @@ export default {
           margin-left: 10px;
           cursor: pointer;
           img{
-            width: 20px;
-            height: 20px;
+            width: 14px;
+            height: 14px;
           }
           span{
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 400;
             color: #86909C;
             line-height: 22px;
@@ -823,5 +863,9 @@ export default {
   /deep/ .el-dropdown-menu__item, .el-menu-item{
     padding: 0 10px;
   }
-
+  @media screen and (max-width: 1366px) {
+    .chat-window-box .left-box[data-v-0474381f] {
+      width: 280px;
+    }
+  }
 </style>

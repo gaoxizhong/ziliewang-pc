@@ -53,7 +53,7 @@
               <dd class="bot clearfix" data-invalid-transfer="true" v-for="(item,index) in msgList" :key="index">
                 <div :class=" item.type == 1?'msg-recv':'msg-send' " class="msg" style="color:#fff">
                   <img :src="item.user_avatar?item.user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-if="item.type == 1"/>
-                <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-else/>
+                  <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-else/>
                   <div class="sender">
                     <!-- <span class="sender-text">{{item.name}}</span> -->
                     <span class="time-text">{{item.createtime}}</span>
@@ -408,7 +408,6 @@ export default {
         }
       })
     },
-    // 点击不合适
     click_bhs(n){
       let that = this;
       let selt_info = that.selt_info;

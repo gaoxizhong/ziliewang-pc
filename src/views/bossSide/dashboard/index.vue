@@ -109,17 +109,18 @@
               <img src="../../../assets/image/bossSide/wallet-three.png" alt="" />
               <span>我的资产</span>
             </div>
-            <div class="right zc-box">
+            <div class="right zc-box" @click="clickmyAssets">
               <span>更多</span>
               <img src="../../../assets/image/bossSide/right.png" alt="">
             </div>
           </div>
           <div class="my-goldCoin-box">
-            <div class="goldCoin-title">猎米</div>
+            <div class="goldCoin-title">会员等级</div>
             <div class="goldCoin-num-btn-box">
-              <span>{{ userInfo.zlw_m_num }}</span>
+              <span class="goldCoin-span">{{ userInfo.vip_rank_text }}</span>
               <button class="goldCoin-btn" @click="goToTopUpBuy">购买</button>
             </div>
+            <div class="goldCoin-title">到期时间: {{ userInfo.vip_expire_time_text }}</div>
           </div>
         </div>
         <!-- 我的资产 结束 -->
@@ -134,11 +135,11 @@
           <div class="data-box">
             <div>
               <div class="data-t">剩余在线职位数</div>
-              <div class="data-n">236</div>
+              <div class="data-n">0</div>
             </div>
             <div>
               <div class="data-t">今日剩余聊天次数</div>
-              <div class="data-n">632</div>
+              <div class="data-n">0</div>
             </div>
           </div>
         </div>
@@ -287,6 +288,11 @@ export default {
     },
     searchEnterFun(e){
       console.log(e)
+    },
+    // 点击我的资产
+    clickmyAssets(){
+      let that = this;
+      that.$router.push({ path:'/myAssets' })
     },
     // input 框搜索按钮
     getExistLabels(){
@@ -462,10 +468,9 @@ export default {
       justify-content: space-between;
       margin-top: 1rem;
       span{
-        font-size: 24px;
-        font-family: DIN Alternate-Bold, DIN Alternate;
+        font-size: 22px;
         font-weight: bold;
-        color: $g_textColor;
+        color: #ff0000;
         line-height: 32px;
       }
       .goldCoin-btn{

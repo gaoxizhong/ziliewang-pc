@@ -312,6 +312,21 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/myAssets',
+    component: Layout,
+    redirect: '/myAssets',
+    hidden: true,
+    children: [
+      {
+        path: '/myAssets',
+        name: 'myAssets',
+        component: () => import('@/views/bossSide/myAssets/index'),
+        meta: { title: '我的资产'},
+      }
+    ]
+  },
+  
   //-------------------- 人才端
   {
     path: "/talentSide",
