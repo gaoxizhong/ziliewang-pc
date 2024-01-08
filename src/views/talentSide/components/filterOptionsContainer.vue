@@ -237,10 +237,10 @@ export default {
       if(selectCityList.indexOf('全国') != -1 ){
         selectCityList = []
         // this.infoData.city = '';
-        selectCityList.push(n)
+        selectCityList.push(item.label)
       }else{
-        if( selectCityList.indexOf(n) == -1){
-          selectCityList.push(n)
+        if( selectCityList.indexOf(item.label) == -1){
+          selectCityList.push(item.label)
         }
        
       }
@@ -462,7 +462,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 999;
     .mask-box{
       width: 100%;
       height: 100%;
