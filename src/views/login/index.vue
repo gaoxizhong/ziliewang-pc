@@ -252,6 +252,12 @@ export default {
     // 点击用户注册
     clickUserSign(){
       console.log(this.tag)
+      if( !this.tag  ){
+        this.$message.error({
+          message:'请先选择用户身份角色'
+        })
+        return
+      }
       if(this.tag == 'company'){
         this.$router.push('/bossSignIn')
       }else{

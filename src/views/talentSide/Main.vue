@@ -92,18 +92,22 @@ import Chat from "./components/chat.vue"
     },
     methods:{
       receiveParams(params){
+        console.log(params)
           // '接收到的参数:' params
         this.company_id = params.company_id;
         if(params.type){
-          this.is_type = params.type
+          this.is_type = params.type //JobDetails 是详情页
         }
-        if(params.is_clickMinificationpngBtn){
+        if(params.is_clickMinificationpngBtn){  // 表示点击的 右侧浮动按钮
           this.is_clickMinificationpngBtn = false;
-          this.zInfex_0 = 99;
-          this.top = 80;
         }else{
-          this.is_VueDragResize = true;
+          this.is_VueDragResize = false;
+          this.$nextTick(function () {
+            this.is_VueDragResize = true;
+          });
         }
+        this.zInfex_0 = 99;
+        this.top = 80;
       },
       //监听到当前路由状态并激活当前菜单
       setCurrentRoute() {
@@ -157,6 +161,11 @@ import Chat from "./components/chat.vue"
     }
   }
   // 聊天弹窗 样式=============== ↓ ===========
+
+  .mian-box /deep/ .vdr{
+    position: fixed;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  }
   .mian-box /deep/ .vdr-stick{
     display: none;
   }

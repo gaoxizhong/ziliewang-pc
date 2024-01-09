@@ -208,7 +208,7 @@ export default {
           }
           if(num == 2){
             text = '回复成功！';
-            this.recoverVisible = true;
+            this.recoverVisible = false;
             this.recover_value = '';
           }
           this.$message.success(text);

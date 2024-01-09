@@ -60,7 +60,8 @@ export default {
     
   },
   created(){
-    this.tag = this.$route.query?this.$route.query.tag:'myDelivery';
+    this.tag = this.$route.query.tag || 'myDelivery';
+    console.log(this.tag)
     if(this.tag == 'myDelivery'){
         // 我的投递
         this.getUserMyDeliverList(this.sub_tag);

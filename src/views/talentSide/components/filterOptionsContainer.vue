@@ -190,7 +190,7 @@ export default {
         {label:'西安',code:'270020'},
       ],
       selectCityList: [], // 选中的城市
-      selt_item: -1,
+      selt_item: 0,
       selt_listItems: -1,
       position_list:[],
       city: '全国',
@@ -212,7 +212,7 @@ export default {
   },
   created(){
     console.log(pcas)
-    //  this.position_list = this.position[this.selt_item].children;
+     this.position_list = this.position[this.selt_item].children;
   },
   methods:{
     // 点击城市其他
