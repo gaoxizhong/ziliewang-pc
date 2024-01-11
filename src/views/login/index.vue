@@ -258,6 +258,12 @@ export default {
         })
         return
       }
+      if( !this.login_user.loginChecked ){
+        that.$message.error({
+          message:'请勾选用户协议及隐私协议'
+        })
+        return
+      }
       if(this.tag == 'company'){
         this.$router.push('/bossSignIn')
       }else{

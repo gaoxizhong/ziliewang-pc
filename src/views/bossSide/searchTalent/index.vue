@@ -264,7 +264,7 @@ export default {
   },
   data(){
     return {
-      pcas:pcas, //  城市数据
+      pcas:[{"code": "410","label": "全国"},...pcas], //  城市数据
       selectedOptions: [], // 选中的地址
       search_value:'',
       hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],

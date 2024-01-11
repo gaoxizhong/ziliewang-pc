@@ -3,6 +3,10 @@
     <!-- <div class="btn">
       <el-button type="primary" size="small" @click="addAccount">新增团队牛人</el-button>
     </div> -->
+    <div class="box-title">
+      <div class="title-1">公司核心团队</div>
+      <div class="title-2"><span class="span-1">*</span>添加公司核心团队需要管理员在员工管理中进行员工标记</div>
+    </div>
     <div class="guildListSection-box">
      <div class="guildList">
       <el-row :gutter="24">
@@ -18,6 +22,7 @@
             </div>
           </div>
         </el-col>
+        <el-empty el-empty description="暂无成员..." v-if="useDataList.length<=0"></el-empty>
       </el-row>
      </div>
     </div>
@@ -278,7 +283,7 @@ export default {
         display: flex;
         align-items: center;
         flex-direction: column;
-        padding: 16px 10px;
+        padding: 10px;
         margin-top: 14px;
         .user-img {
           width: 6.6rem;
@@ -319,7 +324,7 @@ export default {
           justify-content: flex-end;
           margin-top: 10px;
           &> i{
-            margin-right: 14px;
+            margin-right: 2px;
             font-size: 16px;
             cursor: pointer;
             &:hover{
@@ -449,6 +454,29 @@ export default {
       
     }
 
+    }
+  }
+  .box-title{
+    margin-top: 10px;
+    .title-1{
+      font-size: 16px;
+      font-weight: bold;
+      color: $g_textColor;
+      line-height: 24px;
+    }
+    .title-2{
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #4E5969;
+      display: flex;
+      align-items: center;
+      span{
+        color: red;
+        font-weight: bold;
+        font-size: 18px;
+        padding-right: 4px;
+      }
     }
   }
 </style>
