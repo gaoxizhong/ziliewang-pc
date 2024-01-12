@@ -49,8 +49,8 @@
               </div>
               <div class="login-radio-box">
                 <el-radio-group v-model="tag">
-                  <el-radio label="user">求职者</el-radio>
-                  <el-radio label="company">招聘方</el-radio>
+                  <el-radio label="user">个人用户</el-radio>
+                  <el-radio label="company">企业用户</el-radio>
                 </el-radio-group>
               </div>
 

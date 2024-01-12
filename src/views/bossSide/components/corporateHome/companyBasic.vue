@@ -127,6 +127,11 @@ export default {
         {id:4,name:'合伙企业'},
         {id:5,name:'个体工商户'},
         {id:6,name:'私营企业'},
+        {id:7,name:'合资企业'},
+        {id:8,name:'外资企业'},
+        {id:9,name:'独资企业'},
+        {id:10,name:'政府机关/非盈利机构'},
+        {id:11,name:'事业单位'},
       ],  
       scaleList: [
         {id:1,name:'0-20人'},
