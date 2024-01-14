@@ -267,6 +267,15 @@
                     margin: 0;
                   }
                 }
+                &>a{
+                  width: 140px;
+                  height: 100px;
+                  margin-left: 0.5rem;
+                  &:nth-child(1){
+                    margin: 0;
+                  }
+                  
+                }
               }
             }
             .items-bottom-btn{

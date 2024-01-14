@@ -62,7 +62,7 @@
             v-for="item in scaleList"
             :key="item.name"
             :label="item.name"
-            :value="item.name">
+            :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
@@ -134,12 +134,12 @@ export default {
         {id:11,name:'事业单位'},
       ],  
       scaleList: [
-        {id:1,name:'0-20人'},
-        {id:2,name:'20-50人'},
-        {id:3,name:'50-99人'},
-        {id:4,name:'100-599人'},
-        {id:5,name:'599-1999人'},
-        {id:6,name:'1999人以上'},
+        {id:1,name:'0-20人',value:'0-20'},
+        {id:2,name:'20-50人',value:'21-50'},
+        {id:3,name:'50-99人',value:'51-99'},
+        {id:4,name:'100-599人',value:'100-599'},
+        {id:5,name:'599-1999人',value:'600-1999'},
+        {id:6,name:'1999人以上',value:'2000'},
       ],
       listingList:[
         {id:1,name:'天使轮'},

@@ -563,7 +563,12 @@ export default {
         })
         return
       }
-      
+      if( !that.tag  ){
+        that.$message.error({
+          message:'请选择身份角色'
+        })
+        return
+      }
       if(that.isDisable){
         return
       }

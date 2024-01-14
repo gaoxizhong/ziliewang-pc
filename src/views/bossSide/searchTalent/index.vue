@@ -29,7 +29,7 @@
 
           <div class="search-input-tab">
             <!-- <div><span>展开高级搜索</span><img src="../../../assets/image/bossSide/icon-down.png" alt=""></div> -->
-            <!-- <div @click.stop="myCollection"><img src="../../../assets/image/bossSide/icon-heart.png" alt=""><span>我的收藏</span></div> -->
+            <div @click.stop="myCollection"><img src="../../../assets/image/bossSide/icon-star.png" alt=""><span>我的收藏</span></div>
           </div>
 
         </div>
@@ -45,7 +45,7 @@
       </div>
       <!-- 检索及热门职位 结束 -->
     </div>
-    <div class="job-tab-box m-box margin-top-20">
+    <!-- <div class="job-tab-box m-box margin-top-20">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="智能推荐" name="recommended"></el-tab-pane>
         <el-tab-pane label="最新" name="latest"></el-tab-pane>
@@ -54,8 +54,12 @@
         <img src="../../../assets/image/bossSide/icon-star.png" alt="" />
         <span>我的收藏</span>
       </div>
-    </div>
-    <!-- <div class="m-box margin-top-20"></div> -->
+    </div> -->
+    <!-- 高级筛选模块 开始-->
+    <!-- <div class="screen-box m-box margin-top-20">
+      <filterOptionsContainer />
+    </div> -->
+    <!-- 高级筛选模块 结束-->
     <!-- 列表模块 开始  -->
     <div class="job-list-box">
       <div v-for="(item,index) in jobList" :key="index" class="jobList-items m-box margin-top-20" @click.stop="clickItems(item)">
@@ -129,6 +133,11 @@
                       <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
                       <span>{{ infoData?infoData.basic_info.work_status_desc:'暂无' }}</span>
                     </span>
+                    <em class="vline"></em>
+                    <span class="label-text">
+                      <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
+                      <span>{{ infoData?infoData.basic_info.live_city:'暂无' }}</span>
+                    </span>
                   </div>
                 </div>
                 <div class="text selfDescription">{{ infoData?infoData.basic_info.advantages_highlights:'暂无' }}</div>
@@ -146,6 +155,8 @@
                     <span class="label-text">{{ items.desired_industry }}</span>
                     <em class="vline"></em>
                     <span class="label-text">{{ items.expected_salary }}</span>
+                    <em class="vline"></em>
+                    <span class="label-text">{{ items.desired_location }}</span>
                   </div>
                 </div>
                 
@@ -256,11 +267,13 @@
 <script>
 import mPagination from '@/components/m-pagination';
 import pcas from '../../../assets/json/pc-code.json'
+import filterOptionsContainer from '../components/filterOptionsContainer.vue';
 
 export default {
   name: 'searchTalent',
   components: {
     mPagination,
+    filterOptionsContainer
   },
   data(){
     return {
@@ -539,9 +552,11 @@ export default {
             color: $g_textColor;
             line-height: 22px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
             img{
-              width: 12px;
-              height: 12px;
+              width: 14px;
+              height: 14px;
             }
             span{
               padding: 0 4px;

@@ -18,94 +18,67 @@
       <div class="options-row">
         <div class="row-title">薪资</div>
         <ul class="row-options-detail-box">
-          <li class="options-item" :class="pay.value == '3K以下'? 'selected':''" @click="clickPay('3K以下','0-3')">3K以下</li>
-          <li class="options-item" :class="pay.value == '5K-10k'? 'selected':''" @click="clickPay('5K-10k','5-10')">5K-10k</li>
-          <li class="options-item" :class="pay.value == '10K-20k'? 'selected':''" @click="clickPay('10K-20k','10-20')">10K-20k</li>
-          <li class="options-item" :class="pay.value == '20K-40k'? 'selected':''" @click="clickPay('20K-40k','20-40')">20K-40k</li>
-          <li class="options-item" :class="pay.value == '40K-60k'? 'selected':''" @click="clickPay('40K-60k','40-60')">40K-60k</li>
-          <li class="options-item" :class="pay.value == '60k以上'? 'selected':''" @click="clickPay('60k以上','60-0')">60k以上</li>
+          <li class="options-item" :class="infoData.pay == '3K以下'? 'selected':''" @click="clickPay('3K以下')">3K以下</li>
+          <li class="options-item" :class="infoData.pay == '5K-10k'? 'selected':''" @click="clickPay('5K-10k')">5K-10k</li>
+          <li class="options-item" :class="infoData.pay == '10K-20k'? 'selected':''" @click="clickPay('10K-20k')">10K-20k</li>
+          <li class="options-item" :class="infoData.pay == '20K-40k'? 'selected':''" @click="clickPay('20K-40k')">20K-40k</li>
+          <li class="options-item" :class="infoData.pay == '40K-60k'? 'selected':''" @click="clickPay('40K-60k')">40K-60k</li>
+          <li class="options-item" :class="infoData.pay == '60k以上'? 'selected':''" @click="clickPay('60k以上')">60k以上</li>
           <!-- <div class="jsx-1824882820 search-job-custom-salary-box">
             <span class="jsx-1824882820 salary-name">自定义</span>
           </div> -->
         </ul>
       </div>
       <div class="options-row">
-        <div class="row-title">发布时间</div>
+        <div class="row-title">工作年限</div>
         <ul class="row-options-detail-box">
-          <li class="options-item" :class="release_time.value == ''? 'selected':''" @click="clickrelease_time('')">不限</li>
-          <li class="options-item" :class="release_time.value == '一天以内'? 'selected':''" @click="clickrelease_time('一天以内','1day')">一天以内</li>
-          <li class="options-item" :class="release_time.value == '三天以内'? 'selected':''" @click="clickrelease_time('三天以内','3day')">三天以内</li>
-          <li class="options-item" :class="release_time.value == '一周以内'? 'selected':''" @click="clickrelease_time('一周以内','1week')">一周以内</li>
-          <li class="options-item" :class="release_time.value == '一个月以内'? 'selected':''" @click="clickrelease_time('一个月以内','1month')">一个月以内</li>
+          <li class="options-item" :class="infoData.exp == ''? 'selected':''" @click="clickexp('')">不限</li>
+          <li class="options-item" :class="infoData.exp == '应届生'? 'selected':''" @click="clickexp('应届生')">应届生</li>
+          <li class="options-item" :class="infoData.exp == '实习生'? 'selected':''" @click="clickexp('实习生')">实习生</li>
+          <li class="options-item" :class="infoData.exp == '1年以内'? 'selected':''" @click="clickexp('1年以内')">1年以内</li>
+          <li class="options-item" :class="infoData.exp == '1-3年'? 'selected':''" @click="clickexp('1-3年')">1-3年</li>
+          <li class="options-item" :class="infoData.exp == '3-5年'? 'selected':''" @click="clickexp('3-5年')">3-5年</li>
+          <li class="options-item" :class="infoData.exp == '5-10年'? 'selected':''" @click="clickexp('5-10年')">5-10年</li>
+          <li class="options-item" :class="infoData.exp == '10-15年'? 'selected':''" @click="clickexp('10-15年')">10-15年</li>
+          <li class="options-item" :class="infoData.exp == '15年以上'? 'selected':''" @click="clickexp('15年以上')">15年以上</li>
         </ul>
       </div>
       <div class="options-row">
-        <div class="row-title">经验</div>
+        <div class="row-title">教育经历</div>
         <ul class="row-options-detail-box">
-          <li class="options-item" :class="exp.value == '应届生'? 'selected':''" @click="clickexp('应届生',3)">应届生</li>
-          <li class="options-item" :class="exp.value == '实习生'? 'selected':''" @click="clickexp('实习生',2)">实习生</li>
-          <li class="options-item" :class="exp.value == '1年以内'? 'selected':''" @click="clickexp('1年以内','0-1')">1年以内</li>
-          <li class="options-item" :class="exp.value == '1-3年'? 'selected':''" @click="clickexp('1-3年','1-3')">1-3年</li>
-          <li class="options-item" :class="exp.value == '3-5年'? 'selected':''" @click="clickexp('3-5年','3-5')">3-5年</li>
-          <li class="options-item" :class="exp.value == '5-10年'? 'selected':''" @click="clickexp('5-10年','5-10')">5-10年</li>
-          <li class="options-item" :class="exp.value == '10-15年'? 'selected':''" @click="clickexp('10-15年','10-15')">10-15年</li>
-          <li class="options-item" :class="exp.value == '15年以上'? 'selected':''" @click="clickexp('15年以上','15-100')">15年以上</li>
+          <li class="options-item" :class="infoData.education == ''? 'selected':''" @click="clickeducation('')">不限</li>
+          <li class="options-item" :class="infoData.education == '本科'? 'selected':''" @click="clickeducation('本科')">本科</li>
+          <li class="options-item" :class="infoData.education == '硕士'? 'selected':''" @click="clickeducation('硕士')">硕士</li>
+          <li class="options-item" :class="infoData.education == '博士/博士后'? 'selected':''" @click="clickeducation('博士/博士后')">博士/博士后</li>
+          <li class="options-item" :class="infoData.education == '大专'? 'selected':''" @click="clickeducation('大专')">大专</li>
+          <li class="options-item" :class="infoData.education == '中专/中技'? 'selected':''" @click="clickeducation('中专/中技')">中专/中技</li>
+          <li class="options-item" :class="infoData.education == '高中及以下'? 'selected':''" @click="clickeducation('高中及以下')">高中及以下</li>
         </ul>
       </div>
-    </div>
-    <div class="filter-options-selector-section">
       <div class="options-row">
-        <div class="row-title">更多</div>
-        <div class="row-options-detail-box">
-          <div id="filter-options-selector-bar">
-            <div class="jsx-2644757290 filter-option-selector-bar-container">
-              <div class="jsx-2644757290 select-box">
-                <el-select v-model="educational_experience.value" placeholder="学历" @change="educational_experience_change">
-                  <el-option
-                    v-for="item in educational_experienceList"
-                    :key="item"
-                    :label="item"
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="jsx-2644757290 select-box">
-                <el-select v-model="company_scale.value" placeholder="企业规模" @change="company_scale_change">
-                  <el-option
-                    v-for="item in company_scaleList"
-                    :key="item"
-                    :label="`${item}人`"
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="jsx-2644757290 select-box">
-                <el-select v-model="corporate_finance.value" placeholder="融资阶段" @change="corporate_finance_change">
-                  <el-option
-                    v-for="item in corporate_financeList"
-                    :key="item"
-                    :label="item"
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="jsx-2644757290 select-box">
-                <el-select v-model="business_nature.value" placeholder="企业性质" @change="business_nature_change">
-                  <el-option
-                    v-for="item in firm_natureList"
-                    :key="item"
-                    :label="item"
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="row-title">院校要求</div>
+        <ul class="row-options-detail-box">
+          <li class="options-item" :class="infoData.school == ''? 'selected':''" @click="clickschool('')">不限</li>
+          <li class="options-item" :class="infoData.school == '211'? 'selected':''" @click="clickschool('211')">211</li>
+          <li class="options-item" :class="infoData.school == '985'? 'selected':''" @click="clickschool('985')">985</li>
+          <li class="options-item" :class="infoData.school == '双一流'? 'selected':''" @click="clickschool('双一流')">双一流</li>
+          <li class="options-item" :class="infoData.school == '海外留学'? 'selected':''" @click="clickschool('海外留学')">海外留学</li>
+        </ul>
       </div>
-
+      <div class="options-row">
+        <div class="row-title">当前行业</div>
+        <el-select v-model="infoData.desired_industry" filterable multiple  placeholder="当前行业">
+          <el-option
+            v-for="item in industryList"
+            :key="item.industry"
+            :label="item.industry"
+            :value="item.industry">
+          </el-option>
+        </el-select>
+      </div>
     </div>
-    <div class="selected-options-box" v-if=" selectCityList.length>0 || city == '全国' || pay.value || release_time.value || exp.value || educational_experience.value || company_scale.value || corporate_finance.value || business_nature.value">
+    
+    <div class="selected-options-box" v-if=" selectCityList.length>0 || city == '全国' || infoData.pay || infoData.education || infoData.exp || infoData.educational">
       <div class="selected-options-title">已选条件：</div>
       <ul class="selected-options-list-box">
         <block v-for="(item,index) in selectCityList" :key="index">
@@ -118,41 +91,18 @@
           <span class="anticon anticon-close">全国</span>
           <i class="el-icon-close" @click="clickAnticon(-1)"></i>
         </li>
-        <li class="selected-item" v-if="pay.value">
-          <span class="anticon anticon-close">{{ pay.value }}</span>
-          <i class="el-icon-close" @click="clickAnticon('pay')"></i>
-        </li>
-        <li class="selected-item" v-if="release_time.value">
-          <span class="anticon anticon-close">{{ release_time.value }}</span>
-          <i class="el-icon-close" @click="clickAnticon('release_time')"></i>
-        </li>
-        <li class="selected-item" v-if="exp.value">
-          <span class="anticon anticon-close">{{ exp.value }}</span>
-          <i class="el-icon-close" @click="clickAnticon('exp')"></i>
-        </li>
-        <li class="selected-item" v-if="educational_experience.value">
-          <span class="anticon anticon-close">{{ educational_experience.value }}</span>
-          <i class="el-icon-close" @click="clickAnticon('educational_experience')"></i>
-        </li>
-        <li class="selected-item" v-if="company_scale.value">
-          <span class="anticon anticon-close">{{ company_scale.value }}人</span>
-          <i class="el-icon-close" @click="clickAnticon('company_scale')"></i>
-        </li>
-        <li class="selected-item" v-if="corporate_finance.value">
-          <span class="anticon anticon-close">{{ corporate_finance.value }}</span>
-          <i class="el-icon-close" @click="clickAnticon('corporate_finance')"></i>
-        </li>
-        <li class="selected-item" v-if="business_nature.value">
-          <span class="anticon anticon-close">{{ business_nature.value }}</span>
-          <i class="el-icon-close" @click="clickAnticon('business_nature')"></i>
-        </li>
-          
+        <block v-for="(value,index) in infoData" :key="index">
+          <li class="selected-item" v-if="value">
+            <span class="anticon anticon-close">{{ value }}</span>
+            <i class="el-icon-close" @click="clickAnticon(index)"></i>
+          </li>
+        </block>
       </ul>
       <div class="selected-clear" ref="search-jobs-clear-options" id="search-jobs-clear-options" @click="clickALLAnticon">清空筛选条件</div>
     </div>
 
     <!-- 选择城市弹窗 -->
-    <div class="dialogVisible-pop-box" v-if="dialogVisible && position.length >=0 ">
+    <div class="dialogVisible-pop-box" v-if="dialogVisible && cityData.length >=0 ">
       <div class="mask-box"></div>
       <div class="dialog-container">
         <div class="dialog-header">
@@ -166,7 +116,7 @@
           <div class="body-left-box">
             <div class="left-list-box">
               <ul>
-                <li :class="selt_item == index? 'active':'' " v-for="(item,index) in position" :key="index" @click="click_industryListLi(item,index)">{{ item.label }}</li>
+                <li :class="selt_province_item == index? 'active':'' " v-for="(item,index) in cityData" :key="index" @click="click_industryListLi(item,index)">{{ item.label }}</li>
               </ul>
             </div>
           </div>
@@ -174,7 +124,7 @@
             <div class="right-list-box">
               <div class="category-list-items">
                 <ul>
-                  <li :class="selectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in position_list" :key="idx" @click="click_position_list(items,idx)">{{ items.label }}</li>
+                  <li :class="selectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in city_list" :key="idx" @click="click_city_list(items,idx)">{{ items.label }}</li>
                 </ul>
               </div>
               
@@ -197,7 +147,7 @@ export default {
   data(){
     return {
       dialogVisible: false,
-      position: pcas,
+      cityData: pcas, // 城市信息
       showCityList:[
         {label:'北京',code:'010'},
         {label:'上海',code:'020'},
@@ -214,45 +164,67 @@ export default {
         {label:'西安',code:'270020'},
       ],
       selectCityList: [], // 选中的城市
-      selt_item: 0,
+      selt_province_item: 0,  // 选中的省下标
       selt_listItems: -1,
-      position_list:[],
+      city_list:[], // 城市列表
       city: '全国',
-      work_times_type: 1, //工作时长类型 1.正常 2.实习生 3.应届生
-      work_times: '', // 工作时长
-      createtime:'', // 发布时间
-      salary: '', // 薪资范围
-      pay:{value:''},
-      release_time:{value:''},
-      exp:{value:''},
-      educational_experience:{value:''}, // 学历
-      company_scale:{value:''}, // 企业规模
-      corporate_finance:{value:''},// 融资阶段
-      business_nature:{value:''}, // 企业性质
+      infoData:{
+        pay:'',
+        education:'',
+        exp:'',
+        school:'',  // 学校
+      },
+      industryList: [], // 行业列表
+      position:{  // 职位信息
+        positionList: [], //职位列表
+        category_list: [], // 当前职位列表下职位信息
+        selt_item: 0, // 选中的左侧职位下标
+        position_dialogVisible: false
+      },
       areaList:[],
-      educational_experienceList:['博士','硕士','研究生','本科','大专','中专/中技','高中','初中及以下'],
-      company_scaleList:['0-20','20-50','50-99','100-599','600-1999','2000人以上',],
-      corporate_financeList: ['天使轮','A轮','B轮','C轮','已上市','未上市'], // 融资阶段
-      firm_natureList: ['有限责任','股份制','国有企业','合伙企业','个体工商户','私营企业','合资企业','外资企业','独资企业','政府机关/非盈利机构','事业单位'],
     }
   },
   created(){
     console.log(pcas)
-     this.position_list = this.position[this.selt_item].children;
+     this.city_list = this.cityData[this.selt_province_item].children;
+    // 获取行业列表信息
+    this.getIndustryList();
+    // 获取职位列表信息
+    this.getPositionList();
   },
   methods:{
+     // 获取行业列表信息
+     getIndustryList(){
+      let that = this;
+      that.$axios.post('/api/industry/list',{}).then( res =>{
+        that.industryList = res.data;
+      }).catch( e=>{
+        console.log(e)
+      })
+    },
+    // 获取职位列表信息
+    getPositionList(){
+      let that = this;
+      that.$axios.post('/api/position/list',{}).then( res =>{
+        that.position.positionList = res.data;
+        that.position.category_list = that.position.positionList[that.position.selt_item].category_list;
+        // that.position_dialogVisible = true;
+      }).catch( e=>{
+        console.log(e)
+      })
+    },
     // 点击城市其他
     clickCityOther(){
       this.dialogVisible = true;
     },
     // 点击左侧省项
     click_industryListLi(ele,index){
-      let position = this.position;
-      this.position_list = ele.children;
-      this.selt_item = index;
+      let cityData = this.cityData;
+      this.city_list = ele.children;
+      this.selt_province_item = index;
     },
     // 点击城市
-    click_position_list(item,index){
+    click_city_list(item,index){
       let selectCityList = this.selectCityList;
       if( selectCityList.length >=5 ){
         this.$message.error('最多可选择五个城市！');
@@ -262,7 +234,7 @@ export default {
       this.selt_listItems = index;
       if(selectCityList.indexOf('全国') != -1 ){
         selectCityList = []
-        // this.city = '';
+        // this.infoData.city = '';
         selectCityList.push(item.label)
       }else{
         if( selectCityList.indexOf(item.label) == -1){
@@ -272,7 +244,6 @@ export default {
       }
       this.selectCityList = selectCityList;
       this.city = selectCityList.join(',')
-      this.getfilterInfo();
 
       // let showCityList = this.showCityList;
       // showCityList.forEach( ele =>{
@@ -285,7 +256,6 @@ export default {
       this.dialogVisible = false;
     },
     clickCity(n){
-      console.log(n)
       let selectCityList = this.selectCityList;
       if(n == '全国'){
         selectCityList = [];
@@ -301,52 +271,29 @@ export default {
         this.city = selectCityList.join(',')
       }
       this.selectCityList = selectCityList;
-      this.getfilterInfo();
+      
       
     },
-    clickPay(n,value){
-      this.pay.value = n;
-      this.salary = value;
-      this.getfilterInfo();
-
+    clickPay(n){
+      this.infoData.pay = n;
     },
-    clickrelease_time(n,v){
-      this.release_time.value = n;
-      this.createtime = v;
-      this.getfilterInfo();
-
+    clickeducation(n){
+      this.infoData.education = n;
     },
-    clickexp(n,value){
-      if(value == 2 || value == 3){
-        this.work_times_type = value;
-        this.work_times = '';
-      }else{
-        this.work_times_type = 1;
-        this.work_times = value;
-      }
-      this.exp.value = n;
-      this.getfilterInfo();
-     
+    clickschool(n){
+      this.infoData.school = n;
+    },
+    clickexp(n){
+      this.infoData.exp = n;
     },
     // 点击已选项 删除
     clickAnticon(v){
       if(v == -1){
         this.city = '';
-        this.getfilterInfo();
-
       }else{
-        if(v =='pay'){
-          this.salary = '';
-        }
-        if(v =='release_time'){
-          this.createtime = '';
-        }
-        if(v =='exp'){
-          this.work_times_type = 1;
-          this.work_times = '';
-        }
-        this[v].value = '';
-        this.getfilterInfo();
+        let infoData = this.infoData;
+        infoData[v] = '';
+        this.infoData = infoData;
       }
       
     },
@@ -355,54 +302,18 @@ export default {
       let selectCityList = this.selectCityList;
       selectCityList.splice(v,1);
       this.selectCityList = selectCityList;
-      this.city = this.selectCityList.join(',')
-      this.getfilterInfo();
-
     },
     // 点击清空筛选条件
     clickALLAnticon(){
       this.selectCityList = [],
       this.city= '全国';
-      this.work_times_type= 1;
-      this.work_times='';
-      this.createtime='';
-      this.salary=''; // 薪资范围
-      this.pay = {value:''};
-      this.release_time={value:''};
-      this.exp={value:''};
-      this.educational_experience={value:''}; // 学历
-      this.company_scale={value:''}; // 企业规模
-      this.corporate_finance={value:''};// 融资阶段
-      this.business_nature={value:''}; // 企业性质
-      this.getfilterInfo();
-    },
-    educational_experience_change(){
-      this.getfilterInfo();
-    },
-    company_scale_change(){
-      this.getfilterInfo();
-    },
-    corporate_finance_change(){
-      this.getfilterInfo();
-    },
-    business_nature_change(){
-      this.getfilterInfo();
-    },
-    getfilterInfo(){
-      let info = {
-        work_address: this.city,
-        salary: this.salary,
-        work_times: this.work_times,
-        createtime: this.createtime,
-        work_times_type: this.work_times_type,
-        educational_experience: this.educational_experience.value,
-        company_scale: this.company_scale.value,
-        corporate_finance: this.corporate_finance.value,
-        business_nature: this.business_nature.value,
-      };
-      console.log(info)
-      this.$emit('getfilterInfo',JSON.stringify(info))
-    },
+      this.infoData = {
+        pay:'',
+        release_time:'',
+        exp:'',
+        educational:'', // 学历
+      }
+    }
   }
 }
 </script>

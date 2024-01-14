@@ -30,8 +30,13 @@
 
               <div class="items-c-box">
                 <div class="items-c-p">{{ item.content }}</div>
-                <div class="items-img-box">
-                  <img :src="items" alt="" v-for="(items,idx) in item.images" :key="idx"/>
+                <div class="items-img-box" v-if="item.images.length>0">
+                  <img :src="items" alt="" title="图片" v-for="(items,idx) in item.images" :key="idx"/>
+                </div>
+                <div class="items-img-box" v-if="item.video">
+                  <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
+                    <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
+                  </a>
                 </div>
                 <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
@@ -98,17 +103,23 @@
         <el-button type="primary" @click="clickMaskBtn">发布</el-button>
       </div>
     </el-dialog>
+
+
+     <!-- 视频弹窗 -->
+     <videoDialog :infoData="video_url"  ref="video" />
   </div>
 </template>
 
 <script>
 import { getToken, setToken, removeToken } from '@/utils/auth';
 import myProfessionalCircleLeft from './components/myProfessionalCircleLeft.vue';
+import videoDialog from '../components/videoDialog.vue';
 
 export default {
   name: 'myProfessionalCircle',
   components: {
-    myProfessionalCircleLeft
+    myProfessionalCircleLeft,
+    videoDialog
   },
   data(){
     return{
@@ -123,7 +134,10 @@ export default {
       textarea:'',
       upImgList:[],
       is_return: true,
-     
+      video_url: {
+        video_url: '',
+      }
+      
     }
   },
   computed: {
@@ -153,6 +167,7 @@ export default {
     clickMaskBtn(){
       let upImgList = this.upImgList;
       let images = [];
+      let video = [];
       upImgList.forEach( ele =>{
         images.push(ele.upload_files_path)
       })
@@ -235,6 +250,13 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
+    },
+    // 点击视频
+    gotoVideo(url){
+      this.video_url = {
+        video_url: url
+      }
+      this.$refs.video._data.video_dialogVisible = true;
     },
   }
 };
@@ -368,6 +390,15 @@ export default {
                   &:nth-child(1){
                     margin: 0;
                   }
+                }
+                &>a{
+                  width: 140px;
+                  height: 100px;
+                  margin-left: 0.5rem;
+                  &:nth-child(1){
+                    margin: 0;
+                  }
+                  
                 }
               }
             }

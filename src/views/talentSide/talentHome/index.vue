@@ -16,7 +16,7 @@
 
       <!-- 搜索框模块 j结束 -->
       <!-- 筛选模块 开始-->
-      <filterOptionsContainer />
+      <filterOptionsContainer @getfilterInfo="getfilterInfo"/>
       <!-- 筛选模块 开始-->
     </div>
 
@@ -34,12 +34,12 @@
               </span>
             </p>
             <div class="items-tag-box">
-              <el-tag>{{ item.resume_demand }}</el-tag>
+              <el-tag v-if="item.work_address">{{ item.work_address }}</el-tag>
               <el-tag>{{ item.educational_experience }}</el-tag>
             </div>
             <div class="items-firm-info" v-if="item.company">
               <span class="firm-info-1">{{ item.company.company_name }}</span>
-              <span class="firm-info-2">{{ item.company.corporate_finance }}{{ item.company.company_scale }}</span>
+              <span class="firm-info-2">{{ item.company.corporate_finance }} <span v-if="item.company.company_scale">{{ item.company.company_scale }}人</span></span>
             </div>
           </div>
           <div class="items-right-box" style="flex-direction: column;justify-content: center;">
@@ -48,7 +48,9 @@
             <div class="items-boss-g">{{ item.role_desc?item.role_desc:'人事' }}</div>
           </div>
         </div>
+        <el-empty el-empty description="暂无数据..." v-if="infoList.length<=0"></el-empty>
         <!-- 列表结束 -->
+
         <!-- <jobList :data="infoData" :tag="tag"/> -->
             
         <!-- 分页控制 -->
@@ -100,6 +102,7 @@ export default {
         currentPage: 1,
         pageSize: 20,
       },
+      filterInfo:{}
     }
   },
   created(){
@@ -112,6 +115,17 @@ export default {
     
   },
   methods: {
+    // 筛选
+    getfilterInfo(e){
+      let info = JSON.parse(e);
+      this.filterInfo = info;
+      this.paginationData= {
+        total: 10,
+        currentPage: 1,
+        pageSize: 20,
+      };
+      this.getSearchinfo();
+    },
     // 获取个人信息
     getUserProfile(){
       let that = this;
@@ -177,6 +191,16 @@ export default {
         page: that.paginationData.currentPage,
         pagesize: that.paginationData.pageSize,
         search: that.input_name,
+        many_search:{}
+      }
+      let filterInfo = that.filterInfo;
+      for(let key in filterInfo){
+        if(filterInfo[key]){
+          p.many_search[key] = filterInfo[key]
+        }
+      }
+      if(p.many_search.work_address == '全国'){
+        p.many_search.work_address = ''
       }
       that.$axios.post('/api/talents/index',p).then( res =>{
         if(res.code == 0){

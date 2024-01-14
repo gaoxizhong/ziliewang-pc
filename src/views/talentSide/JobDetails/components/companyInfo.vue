@@ -1,7 +1,13 @@
 <template>
   <!-- 公司信息 -->
   <div class="div-box">
-    <div class="title">公司信息</div>
+    <div class="title">
+     <span class="title-span">公司信息</span> 
+      <div class="right zc-box" @click="clickCompany">
+        <span>更多</span>
+        <img src="../../../../assets/image/bossSide/right.png" alt="">
+      </div>
+    </div>
     <div class="info-name-box">
       <img :src="infoData.logo" alt="" class="com-img"/>
       <div class="name-box">
@@ -54,11 +60,43 @@ export default {
   .div-box{
     width: 100%;
     &>.title{
-      font-size: 16px;
-      font-weight: bold;
-      color: $g_textColor;
-      line-height: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .title-span{
+        font-size: 16px;
+        font-weight: bold;
+        color: $g_textColor;
+        line-height: 1.2rem;
+      }
+      .right{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        img{
+          width: 12.5px;
+          height: 12.5px;
+          margin-top: -4px;
+        }
+        span{
+          color: $g_color;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 22px;
+          padding-left: 6px;
+        }
+      }
+      .zc-box{
+        img {
+          margin-top: -2px;
+          margin-left: 4px;
+        }
+        span{
+          color: #4E5969;
+        }
+      }
     }
+   
     .info-name-box{
       width: 100%;
       display: flex;

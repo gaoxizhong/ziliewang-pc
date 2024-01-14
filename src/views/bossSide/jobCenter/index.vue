@@ -36,7 +36,7 @@
               <div class="title-subname">{{ item.salary }} K {{ item.work_times}} 工作城市: {{ item.work_address }}</div>
             </div>
             <div class="info-bott">
-              <img src="../../../assets/image/bossSide/img-user.png" alt="">
+              <img :src="item.avatar?item.avatar:require('../../../assets/image/bossSide/img-user.png')" alt="">
               <span>{{ item.publish_name }}  {{ item.createtime }} ( 30天后下线)</span>
             </div>
           </div>

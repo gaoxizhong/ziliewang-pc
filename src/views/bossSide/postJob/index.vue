@@ -156,13 +156,13 @@
             <el-form-item label="工作时间" required>
               <el-col :span="5">
                 <el-select v-model="ruleForm.work_times" placeholder="工作时间" style="width: 100%;">
-                  <el-option label="无经验要求" value="无经验要求"></el-option>
-                  <el-option label="0-1年" value="0-1年"></el-option>
-                  <el-option label="1-3年" value="1-3年"></el-option>
-                  <el-option label="3-5年" value="3-5年"></el-option>
-                  <el-option label="5-10年" value="5-10年"></el-option>
-                  <el-option label="10-15年" value="10-15年"></el-option>
-                  <el-option label="15年以上" value="15年以上"></el-option>
+                  <el-option label="无经验要求" value="3"></el-option>
+                  <el-option label="0-1年" value="0-1"></el-option>
+                  <el-option label="1-3年" value="1-3"></el-option>
+                  <el-option label="3-5年" value="3-5"></el-option>
+                  <el-option label="5-10年" value="5-10"></el-option>
+                  <el-option label="10-15年" value="10-15"></el-option>
+                  <el-option label="15年以上" value="15"></el-option>
                 </el-select>
               </el-col>
             </el-form-item>

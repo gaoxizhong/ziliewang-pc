@@ -17,7 +17,7 @@
                 <!-- <img src="../../../../assets/image/Frame_10.png" alt="" /> -->
                 <span>已关注</span>
               </div>
-              <div class="right">发私信</div>
+              <!-- <div class="right">发私信</div> -->
             </div>
           </div>
           <div class="user-top-num">
@@ -56,9 +56,9 @@
       <div class="info-right-box">
         <div class="info-right-top">
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane :label=" `全部${count_list.all_count}` " name="first"></el-tab-pane>
-            <el-tab-pane :label=" `动态${count_list.dynamic_state_count}` " name="second"></el-tab-pane>
-            <el-tab-pane :label=" `评论${count_list.comment_count}` " name="fourth"></el-tab-pane>
+            <el-tab-pane :label=" `全部${count_list.all_count?count_list.all_count:0}` " name="first"></el-tab-pane>
+            <el-tab-pane :label=" `动态${count_list.dynamic_state_count?count_list.dynamic_state_count:0}` " name="second"></el-tab-pane>
+            <el-tab-pane :label=" `评论${count_list.comment_count?count_list.comment_count:0}` " name="fourth"></el-tab-pane>
           </el-tabs>
         </div>
         <div class="info-right-container">
@@ -76,8 +76,13 @@
 
               <div class="items-c-box">
                 <div class="items-c-p">{{ item.content }}</div>
-                <div class="items-img-box">
-                  <img :src="item.images" alt="" />
+                <div class="items-img-box" v-if="item.images.length>0">
+                  <img :src="items" alt="" title="图片"  v-for="(items,idx) in item.images" :key="idx"/>
+                </div>
+                <div class="items-img-box" v-if="item.video">
+                  <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
+                    <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
+                  </a>
                 </div>
                 <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
@@ -104,15 +109,19 @@
       <!-- 右侧模块 结束 -->
 
     </div>
-
+    <!-- 视频弹窗 -->
+    <videoDialog :infoData="video_url"  ref="video" />
   </div>
 </template>
 
 <script>
 import { getToken, setToken, removeToken } from '@/utils/auth';
+import videoDialog from '../../components/videoDialog.vue';
+
 export default {
   name: 'myProfessionalCircle',
   components: {
+    videoDialog
   },
   data(){
     return{
@@ -121,7 +130,10 @@ export default {
       infoList:[],
       count_list:{},
       see_uid:'',
-      uid:''
+      uid:'',
+      video_url: {
+        video_url: '',
+      }
     }
   },
   computed: {
@@ -178,7 +190,14 @@ export default {
       }).catch(e =>{
         console.log(e)
       })
-    }
+    },
+    // 点击视频
+    gotoVideo(url){
+      this.video_url = {
+        video_url: url
+      }
+      this.$refs.video._data.video_dialogVisible = true;
+    },
   },
 };
 </script>

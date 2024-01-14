@@ -40,12 +40,14 @@
               <div class="items-c-box">
                 <div>
                   <div class="items-c-p">{{ item.content }}</div>
-                  <div class="items-img-box" v-if="item.images">
-                    <img :src="img_item" alt="" v-for="(img_item,idx) in item.images" :key="idx"/>
+                  <div class="items-img-box" v-if="item.images.length>0">
+                    <img :src="items" alt="" title="图片" v-for="(items,idx) in item.images" :key="idx"/>
                   </div>
-                  <!-- <div class="items-img-box" v-if="item.images">
-                    <img :src="item.images" alt="" />
-                  </div> -->
+                  <div class="items-img-box" v-if="item.video">
+                    <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
+                      <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
+                    </a>
+                  </div>
                 </div>
                 <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
@@ -126,6 +128,9 @@
         <el-button type="primary" @click="clickMaskBtn">发布</el-button>
       </div>
     </el-dialog>
+
+    <!-- 视频弹窗 -->
+    <videoDialog :infoData="video_url"  ref="video" />
   </div>
 
 </template>
@@ -135,13 +140,16 @@ import hotRecommendation from './components/hotRecommendation.vue';
 import live from '../../talentSide/liveBroadcast/index.vue';
 import buddyChart from '../components/buddyChart.vue';
 import Chat from "../components/chat.vue"
+import videoDialog from '../components/videoDialog.vue';
+
 export default {
   name: 'myProfessionalCircle',
   components: {
     hotRecommendation,
     live,
     buddyChart,
-    Chat
+    Chat,
+    videoDialog
   },
   data(){
     return{
@@ -155,6 +163,9 @@ export default {
       textarea:'',
       upImgList:[],
       is_return: true,
+      video_url: {
+        video_url: '',
+      }
     }
   },
   computed: {
@@ -284,7 +295,13 @@ export default {
       return isJPG && isLt2M;
     },
   },
- 
+  // 点击视频
+  gotoVideo(url){
+    this.video_url = {
+      video_url: url
+    }
+    this.$refs.video._data.video_dialogVisible = true;
+  },
 };
 </script>
 
@@ -417,6 +434,15 @@ export default {
                   &:nth-child(1){
                     margin: 0;
                   }
+                }
+                &>a{
+                  width: 140px;
+                  height: 100px;
+                  margin-left: 0.5rem;
+                  &:nth-child(1){
+                    margin: 0;
+                  }
+                  
                 }
               }
             }
