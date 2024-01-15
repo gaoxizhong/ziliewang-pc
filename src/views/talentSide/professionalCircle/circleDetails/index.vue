@@ -16,12 +16,14 @@
             <div class="items-c-box">
               <div>
                 <div class="items-c-p">{{ infoData.content }}</div>
-                <div class="items-img-box" v-if="infoData.images">
-                  <img :src="img_item" alt="" v-for="(img_item,idx) in infoData.images" :key="idx" @click="$preview(idx,infoData.images)"/>
+                <div class="items-img-box" v-if="infoData.images.length>0">
+                  <img :src="items" alt="" title="图片"  v-for="(items,idx) in infoData.images" :key="idx"/>
                 </div>
-                <!-- <div class="items-img-box" v-if="infoData.images">
-                  <img :src="infoData.images" alt="" />
-                </div> -->
+                <div class="items-img-box" v-if="infoData.video">
+                  <a href="javascript:0;" title="视频" @click="gotoVideo(infoData.video)">
+                    <video :src="infoData.video" style="object-fit: fill;" width="100%" height="100%" ></video>
+                  </a>
+                </div>
               </div>
               <div class="items-bottom-btn">
                 <div class="bottom-btn-items">
@@ -115,16 +117,23 @@
         </span>
       </el-dialog>
     </div>
+
+
+    <!-- 视频弹窗 -->
+    <videoDialog :infoData="video_url"  ref="video" />
   </div>
 
 </template>
 
 <script>
 import hotRecommendation from '../components/hotRecommendation.vue';
+import videoDialog from '../../components/videoDialog.vue';
+
 export default {
   name: 'circleDetails',
   components: {
     hotRecommendation,
+    videoDialog
   },
   data(){
     return{
@@ -136,6 +145,9 @@ export default {
       recover_value: '',
       reply_content:'', // 回复弹窗 value
       reply_id: 0,
+      video_url: {
+        video_url: '',
+      }
     }
   },
 
@@ -275,6 +287,13 @@ export default {
       this.reply_id = item.id;
       this.recoverVisible = true;
     },
+    // 点击视频
+    gotoVideo(url){
+      this.video_url = {
+        video_url: url
+      }
+      this.$refs.video._data.video_dialogVisible = true;
+    },
   },
 };
 </script>
@@ -368,6 +387,15 @@ export default {
                   &:nth-child(1){
                     margin: 0;
                   }
+                }
+                &>a{
+                  width: 140px;
+                  height: 100px;
+                  margin-left: 0.5rem;
+                  &:nth-child(1){
+                    margin: 0;
+                  }
+                  
                 }
               }
             }

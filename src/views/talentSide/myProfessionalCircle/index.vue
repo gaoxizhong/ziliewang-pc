@@ -65,13 +65,16 @@
     </div>
     <!-- 、、、、 发布弹窗 、、、、 -->
     <el-dialog :visible.sync="dialogVisible" width="640px" :before-close="handleClose">
+      <div class="login-type-box">
+        <span :class=" tag == 2?'hover':'' " @click="clickTab(2)">图片</span>
+        <span :class=" tag == 1?'hover':'' " @click="clickTab(1)">视频</span>
+      </div>
       <div class="dialog-bodybox">
-        <div class="dialog-img-box">
-
+        <!-- 发图片 开始-->
+        <div class="dialog-img-box" v-if="tag == 2">
           <div class="img-item" v-for="(item,index) in upImgList" :key="index">
             <img :src="item.upload_files" alt="" />
           </div>
-
           <div class="img-item add">
             <el-upload class="avatar-uploader" 
               ref="upload" 
@@ -86,8 +89,29 @@
               <i class="el-icon-plus"></i>
             </el-upload>
           </div>
-
         </div>
+        <!-- 发图片 结束-->
+        <!-- 发视频 开始-->
+        <div class="dialog-img-box" v-if="tag == 1">
+          <div class="img-item" v-for="(item,index) in video_files_path" :key="index">
+            <video :src="item.upload_files" style="object-fit: fill;" width="100%" height="100%" ></video>
+          </div>
+          <div class="img-item add">
+              <el-upload class="avatar-uploader" 
+                drag ref="upload_video" 
+                action= "none"
+                :limit="1"
+                :show-file-list="false"
+                multiple
+                :before-upload="beforeVideoUpload"
+                :http-request="up_video" 
+                :on-exceed='limitCheck'
+              >
+              <i class="el-icon-plus"></i>
+            </el-upload>
+          </div>
+        </div>
+        <!-- 发视频 结束-->
         <div class="dialog-content-box">
           <el-input
             type="textarea"
@@ -133,11 +157,12 @@ export default {
       },
       textarea:'',
       upImgList:[],
+      video_files_path:[],
       is_return: true,
       video_url: {
         video_url: '',
-      }
-      
+      },
+      tag: 2
     }
   },
   computed: {
@@ -148,6 +173,11 @@ export default {
     this.getMyProfessionCircle();
   },
   methods: {
+    clickTab(n){
+      this.tag = n;
+      this.textarea = '';
+      this.upImgList = '';
+    },
     // 点击列表
     clicklistItems(i){
       this.$router.push({
@@ -165,34 +195,49 @@ export default {
     },  
     //点击弹窗发布按钮
     clickMaskBtn(){
-      let upImgList = this.upImgList;
-      let images = [];
-      let video = [];
-      upImgList.forEach( ele =>{
-        images.push(ele.upload_files_path)
-      })
-      let str = images.toString(',');
+      let that = this;
       let p = {
-        content: this.textarea,
-        images: str
+        content: that.textarea,
       }
+      let upImgList = that.upImgList;
+      let video_files_path = that.video_files_path;
+      let video = [];
+      let images = [];
 
-      if( !this.is_return ){
+      if(upImgList.length > 0){
+        upImgList.forEach( ele =>{
+          images.push(ele.upload_files_path)
+        })
+        let str = images.toString(',');
+        p.images = str;
+        
+      }
+      if(video_files_path.length > 0){
+        video_files_path.forEach( ele =>{
+          video.push(ele.upload_files_path)
+        })
+        let video_str = video.toString(',');
+        p.video = video_str;
+      }
+      console.log(p)
+      if( !that.is_return ){
         return
       }
-      this.is_return = false;
-      this.$axios.post('/api/profession-circle/create',p).then( res =>{
+      that.is_return = false;
+      that.$axios.post('/api/profession-circle/create',p).then( res =>{
         if(res.code == 0){
-          this.$message.success('发布成功！');
-          this.dialogVisible = false;
-          this.upImgList = [];
+          that.$message.success('发布成功！');
+          that.dialogVisible = false;
+          this.textarea = '';
+          that.upImgList = [];
+          that.video_files_path = [];
           // 获取用户职圈信息
-          this.getMyProfessionCircle();
+          that.getMyProfessionCircle();
         } 
-        this.is_return = true;
+        that.is_return = true;
       }).catch(e =>{
         console.log(e)
-        this.is_return = true;
+        that.is_return = true;
       })
       
     },
@@ -223,24 +268,15 @@ export default {
     },
     // 上传图片
     uploadArticleCover(param){
-      console.log(param.file)
-      const formData = new FormData();
-      formData.append('file[]',param.file);
-      formData.append('pictureCategory','articleCover');
-      formData.append('up_tag','other');
-      this.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
-        let data = res.data;
-        this.upImgList.push(data);
-
-        this.$refs['upload'].clearFiles();
-      }).catch( e=>{
-        console.log('erro')
-        this.$refs['upload'].clearFiles()
-      })
+      let data = {
+        file: param.file,
+        up_tag: 'other'
+      }
+      this.uploadFile(data);
     },
     beforeAvatarUpload(file) {
       console.log(file)
-      const isJPG = file.type === 'image/png' || 'image/jpeg';
+      const isJPG = file.type == ('image/png' || 'image/jpeg');
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
@@ -250,6 +286,64 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
+    },
+    // 上传视频限制
+    beforeVideoUpload(file) {
+      console.log(file.type)
+      const isJPG = file.type == ('video/mp4' || 'video/avi' || 'video/wmv' || 'video/flv' || 'video/rmvb' || 'video/mov');
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (!isJPG) {
+        this.$message.error('上传只能是 视频 格式!');
+      }
+      if (!isLt10M) {
+        this.$message.error('上传大小不能超过 10MB!');
+      }
+      return isJPG && isLt10M;
+    },
+    // 选择的文件超出限制的文件总数量时触发
+    limitCheck() {
+      this.$message.warning('每次最多上传1个文件')
+    },
+    // 点击上传 ----  视频
+    up_video(param){
+      console.log(param)
+      let data = {
+        file: param.file,
+        up_tag: 'video'
+      }
+      this.uploadFile(data);
+    },
+    uploadFile(data){
+      console.log(data)
+      let that = this;
+      const formData = new FormData();
+      formData.append('file[]',data.file);
+      if(data.up_tag == 'other'){
+        formData.append('up_tag','other');
+      }
+      if(data.up_tag == 'video'){
+        formData.append('up_tag','video');
+      }
+      formData.append('pictureCategory','articleCover');
+      that.$axios.post('/api/upload',formData,{'Content-Type': 'multipart/form-data'}).then( res=>{
+        let info = res.data;
+        if(data.up_tag == 'video'){
+          that.video_files_path.push(info);
+        }
+        if(data.up_tag == 'other'){
+          that.upImgList.push(info);
+        }
+        that.$refs['upload'].clearFiles();
+        that.$refs['upload_video'].clearFiles();
+      }).catch( e=>{
+        console.log('erro')
+        if(data.up_tag == 'video'){
+          that.$refs['upload_video'].clearFiles();
+        }
+        if(data.up_tag == 'other'){
+          that.$refs['upload'].clearFiles();
+        }
+      })
     },
     // 点击视频
     gotoVideo(url){
@@ -441,6 +535,7 @@ export default {
       border-radius: 8px;
       border: 1px solid #E5E6EB;
       padding: 12px;
+      margin-top: 10px;
       .dialog-img-box{
         width: 100%;
         display: -webkit-box;
@@ -521,9 +616,40 @@ export default {
           }
         }
       }
+
     }
+    .login-type-box{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        span{
+          text-align: center;
+          font-size: 16px;
+          font-family: PingFang SC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #4E5969;
+          line-height: 28px;
+          position: relative;
+          padding: 4px 20px;
+          cursor: pointer;
+        }
+        span.hover{
+          font-weight: bold;
+          color: $g_textColor;
+          &::after{
+            content: '';
+            width: 44px;
+            height: 3px;
+            background: $g_color;
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+          }
+        }
+      }
     .el-dialog__body{
-      padding: 30px 20px 0 20px;
+      padding: 0 20px;
     }
     .el-button{
       padding: 0;

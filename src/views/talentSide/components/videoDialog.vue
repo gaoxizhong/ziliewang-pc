@@ -34,14 +34,6 @@ export default {
         }
       }
     },
-    is_type:{
-      type:String,
-      default(){
-        return {
-          data:''
-        }
-      }
-    }
   },
   data(){
     return{
