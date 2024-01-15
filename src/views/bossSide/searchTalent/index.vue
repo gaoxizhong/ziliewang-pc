@@ -9,19 +9,6 @@
 
           <div class="input-box">
             <div class="input-left-box">
-              <div class="input-add-box">
-                <img src="../../../assets/image/bossSide/icon-local-two.png" alt="">
-                <!-- <span></span> -->
-                <el-cascader
-                  :options="pcas"
-                  ref="cascaderAddr" 
-                  v-model="selectedOptions"
-                  collapse-tags
-                  :props="{ multiple: true,value: 'label' }"
-                  :show-all-levels="false" placeholder="城市"
-                  @change="handleChange">
-                </el-cascader>
-              </div>
               <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词"></el-input>
             </div>
             <button class="input-button" @click="getSearchinfo">搜索</button>
@@ -35,12 +22,12 @@
         </div>
         <!-- 搜索框 结束 -->
         <!-- 热门职位 开始 -->
-        <div class="hotJob-box">
+        <!-- <div class="hotJob-box">
           <span class="hotJob-span">热门岗位</span>
           <div class="hotJob-item-box">
             <a href="javascript:0;" class="hotJob-item" v-for="(item,index) in hotJob_options" :key="index" @click="clickTagname(item)">{{item}}</a>
           </div>
-        </div>
+        </div> -->
         <!-- 热门职位 结束 -->
       </div>
       <!-- 检索及热门职位 结束 -->
@@ -56,9 +43,9 @@
       </div>
     </div> -->
     <!-- 高级筛选模块 开始-->
-    <!-- <div class="screen-box m-box margin-top-20">
-      <filterOptionsContainer />
-    </div> -->
+    <div class="screen-box m-box margin-top-20">
+      <filterOptionsContainer  @getfilterInfo="getfilterInfo"/>
+    </div>
     <!-- 高级筛选模块 结束-->
     <!-- 列表模块 开始  -->
     <div class="job-list-box">
@@ -266,7 +253,6 @@
 
 <script>
 import mPagination from '@/components/m-pagination';
-import pcas from '../../../assets/json/pc-code.json'
 import filterOptionsContainer from '../components/filterOptionsContainer.vue';
 
 export default {
@@ -277,8 +263,6 @@ export default {
   },
   data(){
     return {
-      pcas:[{"code": "410","label": "全国"},...pcas], //  城市数据
-      selectedOptions: [], // 选中的地址
       search_value:'',
       hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
       jobList:[],  // 列表
@@ -291,6 +275,7 @@ export default {
       zx_dialogVisible: false,
       infoData:'',
       activeName: 'recommended',
+      filterInfo:{}
     }
   },
   created(){
@@ -298,6 +283,17 @@ export default {
     this.getSearchinfo();
   },
   methods:{
+     // 筛选
+     getfilterInfo(e){
+      let info = JSON.parse(e);
+      this.filterInfo = info;
+      this.paginationData= {
+        total: 10,
+        currentPage: 1,
+        pageSize: 20,
+      };
+      this.getSearchinfo();
+    },
     clickTagname(n){
       this.search_value = n;
       this.getSearchinfo();
@@ -318,7 +314,6 @@ export default {
     },
     // 获取省市区地址级联
     handleChange(thsAreaCode) {
-      // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
 
       let areaCode = thsAreaCode;
       let length = areaCode.length;
@@ -336,16 +331,21 @@ export default {
     // 搜索
     getSearchinfo(){
       let that = this;
-      let selectedOptions = that.selectedOptions;
-      let desired_location = [];
-      selectedOptions.forEach(ele =>{
-        desired_location.push(ele[1])
-      })
       let p = {
         page: that.paginationData.currentPage,
         pagesize: that.paginationData.pageSize,
         search: that.search_value,
-        desired_location: desired_location.length>0?desired_location.join(','):'',
+        many_search:{}
+        // desired_location: desired_location.length>0?desired_location.join(','):'',
+      }
+      let filterInfo = that.filterInfo;
+      for(let key in filterInfo){
+        if(filterInfo[key]){
+          p.many_search[key] = filterInfo[key]
+        }
+      }
+      if(p.many_search.work_address == '全国'){
+        p.many_search.work_address = ''
       }
       that.$axios.post('/api/company-position/search',p).then( res =>{
         if(res.code == 0){
@@ -445,7 +445,7 @@ export default {
 
 <style lang="scss" scoped>
   .searchTalent-top-box{
-    padding-bottom: 0;
+    // padding-bottom: 0;
     .search-box{
       padding: 0 3rem;
       .search-input-box{
