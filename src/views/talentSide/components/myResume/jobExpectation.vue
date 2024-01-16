@@ -83,7 +83,7 @@
           <div class="mb20 redact-item">
             <div class="item-label">期望月薪</div>
             <div class="item-content">
-              <el-select v-model="expected_salary_st" placeholder="请选择">
+              <el-select v-model="expected_salary_st" placeholder="最低月薪" @change="expected_salary_st_change">
                 <el-option
                   v-for="item in option_salary_st"
                   :key="item"
@@ -92,7 +92,7 @@
                 </el-option>
               </el-select>
               <span class="span-line"> - </span>
-              <el-select v-model="expected_salary_end" placeholder="请选择">
+              <el-select v-model="expected_salary_end" placeholder="最高月薪">
                 <el-option
                   v-for="item in option_salary_end"
                   :key="item"
@@ -206,7 +206,7 @@ export default {
       },
       selt_item: 0,
       option_salary_st: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K','50K','100K','150K','200K'],
-      option_salary_end: ['1K','2K','3K','4K','5k','6K','7K','8K','9K','10k','11K','12K','13K','14K','15k','16K','17K','18K','19K','20K','30K','50K','100K','150K','200K','300K'],
+      option_salary_end: [],
       options: pcas,
       expected_salary_st:'',
       expected_salary_end:'',
@@ -392,7 +392,15 @@ export default {
       this.infoData.desired_position = n;
       this.dialogVisible = false;
     },
-
+    expected_salary_st_change(){
+      let expected_salary_st = this.expected_salary_st;
+      this.expected_salary_end = '';
+      let option_salary_end = JSON.parse(JSON.stringify(this.option_salary_st));
+      let index = option_salary_end.indexOf(expected_salary_st);
+      let arr = option_salary_end.splice(index+1,option_salary_end.length+ 1);
+      arr.push('300K');
+      this.option_salary_end = arr;
+    }
   },
 };
 </script>

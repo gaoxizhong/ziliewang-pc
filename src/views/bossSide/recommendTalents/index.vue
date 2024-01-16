@@ -29,7 +29,7 @@
           <div class="left-info-box">
             <div class="left-info-t">
               <span class="left-info-name">{{ item.name }}</span>
-              <img src="../../../assets/image/bossSide/icon-sex.png" alt="" >
+              <img :src="require(`../../../assets/image/bossSide/sex-${item.sex == 2? 2 : 1}.png`)" alt="" >
               <span class="icon-span">今日活跃</span>
             </div>
             <div class="sub-title" v-if="item.birth_year_month">生日：{{ item.birth_year_month }}</div>
