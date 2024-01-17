@@ -528,7 +528,7 @@ export default {
               margin-top: 20px;
               text-align: left;
               .category-name{
-                font-size: 16px;
+                font-size: 15px;
                 font-weight: bold;
                 color: $g_textColor;
                 line-height: 24px;

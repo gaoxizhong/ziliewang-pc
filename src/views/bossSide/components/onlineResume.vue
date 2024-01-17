@@ -4,31 +4,36 @@
       <el-dialog title="简历详情" :center="false" :visible.sync="zx_dialogVisible" width="920px" :before-close="handleClose">
         <div class="pc-preview-wrapper m-box">
           <!-- 个人信息 -->
-          <div class="resume-item item-base" v-if="infoData.basic_info">
+          <div class="resume-item item-base" v-if="basic_info">
             <div class="figure J_resume_baseMsg_headImgPreview">
-              <img :src="infoData.basic_info?infoData.basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default"/>
+              <img :src="basic_info?basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default"/>
             </div>
             <div class="item-right item-right-1">
               <div style="text-align: left;">
-                <h2 class="name">{{ infoData.basic_info?infoData.basic_info.name:'暂无' }}</h2>
+                <h2 class="name">{{ basic_info.name?basic_info.name:'暂无' }}</h2>
                 <div class="info-labels fr">
                   <span class="label-text">
                     <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData.basic_info?infoData.basic_info.birth_year_month:'30岁' }}</span>
+                    <span>{{ basic_info.birth_year_month?basic_info.birth_year_month:'30岁' }}</span>
                   </span>
                   <em class="vline"></em>
                   <span class="label-text">
                     <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData.basic_info?infoData.basic_info.begin_work_date:'暂无' }}</span>
+                    <span>{{ basic_info.begin_work_date?basic_info.begin_work_date:'暂无' }}</span>
+                  </span>
+                  <em class="vline"></em>
+                  <span class="label-text">
+                    <img src="../../../assets/image/icon-qzzt.png" alt="" class="fz fz-age"/>
+                    <span>{{ basic_info.work_status_desc?basic_info.work_status_desc:'暂无' }}</span>
                   </span>
                   <em class="vline"></em>
                   <span class="label-text">
                     <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
-                    <span>{{ infoData.basic_info?infoData.basic_info.work_status_desc:'暂无' }}</span>
+                    <span>{{ basic_info.live_city?basic_info.live_city:'暂无' }}</span>
                   </span>
                 </div>
               </div>
-              <div class="text selfDescription">{{ infoData.basic_info?infoData.basic_info.advantages_highlights:'暂无' }}</div>
+              <div class="text selfDescription">{{ basic_info?basic_info.advantages_highlights:'暂无' }}</div>
             </div>
           </div>
           <!-- 期望职位 -->
@@ -43,6 +48,8 @@
                   <span class="label-text">{{ items.desired_industry }}</span>
                   <em class="vline"></em>
                   <span class="label-text">{{ items.expected_salary }}</span>
+                  <em class="vline"></em>
+                  <span class="label-text">{{ items.desired_location }}</span>
                 </div>
               </div>
               
@@ -132,14 +139,14 @@
                 <img src="../../../assets/image/bossSide/icon-star-1.png" alt="" />
                 <span>收藏</span>
               </div>
-              <div>
+              <!-- <div>
                 <img src="../../../assets/image/bossSide/icon-download-1.png" alt="" />
                 <span>存至本地</span>
               </div>
               <div>
                 <img src="../../../assets/image/bossSide/icon-printer.png" alt="" />
                 <span>打印</span>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -163,6 +170,14 @@ export default {
         }
       }
     },
+    basic_info: {
+      type: Object,
+      default() {
+        return {
+          data: {}
+        }
+      }
+    },
     is_type:{
       type:String,
       default(){
@@ -174,14 +189,14 @@ export default {
   },
   data(){
     return{
-      zx_dialogVisible: false
+      zx_dialogVisible: false,
     }
   },
   computed: {
 
   },
   mounted() {
-
+    
   },
   methods: {
    
@@ -421,5 +436,13 @@ export default {
         }
       }
     }
+  }
+  .vline {
+    width: 1px;
+    height: 12px;
+    vertical-align: middle;
+    background: #e0e0e0;
+    margin: 0 10px;
+    display: inline-block;
   }
 </style>

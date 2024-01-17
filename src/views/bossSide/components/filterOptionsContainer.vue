@@ -76,7 +76,7 @@
           <li class="options-item" :class="school == 5 ? 'selected':''" @click="clickschool(5)">海外留学</li>
         </ul>
       </div>
-      <!-- <div class="options-row">
+      <div class="options-row">
         <div class="row-title">当前行业:</div>
         <el-select v-model="desired_industry" filterable multiple collapse-tags clearable placeholder="当前行业" @change="desired_industry_change">
           <el-option
@@ -88,10 +88,13 @@
         </el-select>
         <div class="options-row-1">
           <div class="row-title">当前职位：</div>
-          
+          <div class="item-content" @click="clickInvolved">
+            <el-input v-model="desired_position" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+            <img src="../../../assets/image/Frame_8.png" alt="" />
+          </div>
         </div>
 
-      </div> -->
+      </div>
       <div class="options-row">
         <div class="row-title">年   龄:</div>
         <div class="options-age-box">
@@ -137,15 +140,66 @@
                   <li :class="selectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in city_list" :key="idx" @click="click_city_list(items,idx)">{{ items.label }}</li>
                 </ul>
               </div>
+            </div>
+            
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <div class="slet-box">
+            <span>当前选择:</span>
+            <span class="span-item" v-for="(item,index) in selectCityList" :key="index">{{ item }}</span>
+          </div>
+          <div class="slet-btn-box">
+            <el-button @click="clickClearCityOption">清空选项</el-button>
+            <el-button type="primary" @click="clickCityOK">确  定</el-button>
+          </div>
+        </span>
+      </div>
+    </div>
+    <!-- 选择职业弹窗 -->
+    <div class="dialogVisible-pop-box" v-if="position.dialogVisible">
+      <div class="mask-box"></div>
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <h3 class="title">请选择职位类别</h3>
+          <div class="dialog-header-input">
+            <!-- <el-input type="text" v-model="dialogVisible_seach"></el-input> -->
+          </div>
+          <img src="../../../assets/image/icon-close.png" alt="" @click="clickPositionClose"/>
+        </div>
+        <div class="dialog-body">
+          <div class="body-left-box">
+            <div class="left-list-box">
+              <ul>
+                <li :class="position.selt_item == index? 'active':'' " v-for="(item,index) in position.positionList" :key="index" @click="click_positionListLi(item,index)">{{ item.industry }}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="body-right-box">
+            <div class="right-list-box">
+              <div class="category-list-items" v-for="(item,index) in position.category_list" :key="index">
+                <div class="category-name">{{ item.category_name }}</div>
+                <ul>
+                  <li :class="position.selectCategoryList.indexOf(items.category_name) != -1 ? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name)">{{ items.category_name }}</li>
+                </ul>
+              </div>
               
             </div>
             
           </div>
         </div>
-        
+        <span slot="footer" class="dialog-footer">
+          <div class="slet-box">
+            <span>当前选择:</span>
+            <span class="span-item" v-for="(item,index) in position.selectCategoryList" :key="index">{{ item }}</span>
+          </div>
+          <div class="slet-btn-box">
+            <el-button @click="clickClearOption">清空选项</el-button>
+            <el-button type="primary" @click="clickPositionOK">确  定</el-button>
+          </div>
+        </span>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -194,11 +248,13 @@ export default {
       },
       is_age:false,
       industryList: [], // 行业列表
+      desired_position:'',// 选中的职业
       position:{  // 职位信息
         positionList: [], //职位列表
         category_list: [], // 当前职位列表下职位信息
-        selt_item: 0, // 选中的左侧职位下标
-        position_dialogVisible: false
+        selt_item: 0, // 左侧选中的职位下标
+        selectCategoryList: [], // 右侧选择的数据
+        dialogVisible: false
       },
       areaList:[],
     }
@@ -212,6 +268,7 @@ export default {
     this.getPositionList();
   },
   methods:{
+    
     age_status_input(e){
       this.is_age = true;
     },
@@ -237,22 +294,66 @@ export default {
       that.$axios.post('/api/position/list',{}).then( res =>{
         that.position.positionList = res.data;
         that.position.category_list = that.position.positionList[that.position.selt_item].category_list;
-        // that.position_dialogVisible = true;
       }).catch( e=>{
         console.log(e)
       })
+    },
+    // 点击职业列表左侧项
+    click_positionListLi(n,i){
+      console.log(n)
+      let item = n;
+      let index = i;
+      this.position.selt_item = index;
+      this.position.category_list = item.category_list;
+    },
+    // 点击选择职位关闭
+    clickInvolved(){
+      this.position.dialogVisible = true;
+    },
+    // 点击右侧具体职位列表
+    click_position_list(n){
+      let selectCategoryList = this.position.selectCategoryList;
+      let desired_position = n;
+      if( selectCategoryList.length >=3 ){
+        this.$message.error('最多可选择3个职位！');
+        return
+      }
+      selectCategoryList.push(desired_position);
+      this.position.selectCategoryList = selectCategoryList;
+      this.desired_position = this.position.selectCategoryList.join(',');
+    },
+    // 清空职业弹窗选项
+    clickClearOption(){
+      this.desired_position = '';// 选中的职业
+      this.position.selectCategoryList = [];
+      this.getfilterInfo();
+    },
+    // 点击职业弹窗确定按钮
+    clickPositionOK(){
+      this.position.dialogVisible = false;
+      this.getfilterInfo();
+    },
+    // 清空城市弹窗选项
+    clickClearCityOption(){
+      this.city= '全国';
+      this.selectCityList = [];
+      this.getfilterInfo();
+    },
+    // 点击城市弹窗确定按钮
+    clickCityOK(){
+      this.dialogVisible = false;
+      this.getfilterInfo();
     },
     // 点击城市其他
     clickCityOther(){
       this.dialogVisible = true;
     },
-    // 点击左侧省项
+    // 点击左侧项
     click_industryListLi(ele,index){
-      let cityData = this.cityData;
       this.city_list = ele.children;
       this.selt_province_item = index;
     },
-    // 点击城市
+    // 点击城市弹窗 城市
     click_city_list(item,index){
       let selectCityList = this.selectCityList;
       if( selectCityList.length >=5 ){
@@ -273,7 +374,6 @@ export default {
       }
       this.selectCityList = selectCityList;
       this.city = selectCityList.join(',')
-      this.getfilterInfo();
       // let showCityList = this.showCityList;
       // showCityList.forEach( ele =>{
       //   if(ele.code == item.code){
@@ -283,6 +383,10 @@ export default {
     },
     clickClose(){
       this.dialogVisible = false;
+    },
+    // 关闭职业弹窗
+    clickPositionClose(){
+      this.position.dialogVisible = false;
     },
     clickCity(n){
       let selectCityList = this.selectCityList;
@@ -360,6 +464,10 @@ export default {
       this.education_background='';// 学历
       this.desired_industry = []; // 当前行业
       this.school='';
+      this.desired_position= '',// 选中的职业
+      this.position.selt_item = 0; // 左侧选中的职位下标
+      this.position.selectCategoryList = []; // 右侧选择的数据
+    
       this.age= { // 年龄
         age_status:'',
         age_end: '',
@@ -379,6 +487,8 @@ export default {
         sex: this.sex,
         is_national_unified: this.is_national_unified,
         age: age_status + '-' + age_end,
+        desired_industry: this.desired_industry.join(','),
+        desired_position: this.position.selectCategoryList.join(','),
       };
       console.log(info)
       this.$emit('getfilterInfo',JSON.stringify(info))
@@ -422,6 +532,42 @@ export default {
         margin-left: 20px;
         display: flex;
         align-items: center;
+        .item-content {
+          position: relative;
+          line-height: 32px;
+          display: flex;
+          
+          /deep/ .el-select{
+            width: 260px;
+            .el-input.is-focus .el-input__inner{
+              border-color: $g_color;
+            }
+          }
+          /deep/ .el-input{
+            width: 260px;
+          }
+          /deep/ .el-input__inner{
+            height: 30px;
+            line-height: 30px;
+            cursor: pointer;
+          }
+          /deep/ .el-cascader{
+            width: 100%;
+          }
+          img{
+            width: 18px;
+            height: 16px;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+          }
+          .span-line{
+            margin: 0 10px;
+            font-size: 14px;
+          }
+        }
       }
       .options-age-box{
         display: flex;
@@ -641,7 +787,7 @@ export default {
       }
       .dialog-body {
         overflow: visible;
-        height: calc(60vh);
+        height: calc(50vh);
         width: 100%;
         display: flex;
         .body-left-box{
@@ -668,7 +814,7 @@ export default {
                 cursor: pointer;
                 text-align: left;
               }
-              li.active{
+              li:hover,li.active{
                 background: #F7F8FA;
               }
             }
@@ -687,7 +833,7 @@ export default {
               margin-top: 20px;
               text-align: left;
               .category-name{
-                font-size: 16px;
+                font-size: 15px;
                 font-weight: bold;
                 color: $g_textColor;
                 line-height: 24px;
@@ -717,6 +863,39 @@ export default {
                 
               }
             }
+          }
+        }
+      }
+      .dialog-footer{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        padding: 10px 30px;
+        border-top: 1px solid #f5f6f9;
+        &>div{
+          display: flex;
+          align-items: center;
+        }
+        .slet-box{
+          padding-left: 120px;
+          &>span{
+            display: inline-block;
+            padding: 6px 12px;
+          }
+          .span-item{
+            background: #F7F8FA;
+            border-radius:4px;
+            font-size: 14px;
+            color: $g_textColor;
+            margin-right: 8px;
+          }
+        }
+        .slet-btn-box{
+          /deep/ .el-button--primary,/deep/ .el-button--primary:focus, /deep/ .el-button--primary:hover{
+            background:  $g_bg;
+            border-color: $g_color;
           }
         }
       }

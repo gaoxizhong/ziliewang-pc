@@ -166,7 +166,7 @@
     <!-- 面试邀请弹窗 结束 -->
     <!-- 查看在线简历弹窗 开始 -->
     <div>
-      <onlineResume :infoData="onlineResumeData" :is_type="is_type" ref="onlineResume"/>
+      <onlineResume :infoData="onlineResumeData" :basic_info="online_basic_info" :is_type="is_type" ref="onlineResume"/>
     </div>
     <!-- 查看在线简历弹窗 结束 -->
     <!-- 预览附件简历pdf 弹窗  -->
@@ -215,6 +215,7 @@ export default {
       selt_index: -1,
       selt_info: '',
       onlineResumeData:{}, // 在线简历
+      online_basic_info:{}, // 在线简历个人信息
       is_type:'',
       pdfUrl:'',
       src: "",
@@ -341,6 +342,7 @@ export default {
       }).then( res =>{
         if(res.code == 0){
           that.onlineResumeData = res.data;
+          that.online_basic_info = res.data.basic_info;
           that.$refs.onlineResume._data.zx_dialogVisible = true;
           // that.zx_dialogVisible = true;
         }else{
@@ -639,6 +641,7 @@ export default {
         .fileSearch-img{
           width: 18px;
           height: 18px;
+          margin-right: 10px;
         }
 
       }

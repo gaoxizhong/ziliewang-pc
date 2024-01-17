@@ -98,36 +98,36 @@
         <div class="pc-preview-wrapper">
           <div class="m-box">
             <!-- 个人信息 -->
-            <div class="resume-item item-base">
+            <div class="resume-item item-base" v-if="basic_info">
               <div class="figure J_resume_baseMsg_headImgPreview">
-                <img :src="infoData.basic_info.avatar?infoData.basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default" v-if="infoData.basic_info"/>
+                <img :src="basic_info.avatar?basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default" v-if="basic_info"/>
               </div>
               <div class="item-right">
                 <div style="text-align: left;">
-                  <h2 class="name">{{ infoData?infoData.basic_info.name:'暂无' }}</h2>
+                  <h2 class="name">{{ basic_info.name?basic_info.name:'暂无' }}</h2>
                   <div class="info-labels fr">
                     <span class="label-text">
                       <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
-                      <span>{{ infoData?infoData.basic_info.birth_year_month:'30岁' }}</span>
+                      <span>{{ basic_info.birth_year_month?basic_info.birth_year_month:'30岁' }}</span>
                     </span>
                     <em class="vline"></em>
                     <span class="label-text">
                       <img src="../../../assets/image/Frame_2.png" alt="" class="fz fz-age"/>
-                      <span>{{ infoData?infoData.basic_info.begin_work_date:'暂无' }}</span>
+                      <span>{{ basic_info.begin_work_date?basic_info.begin_work_date:'暂无' }}</span>
+                    </span>
+                    <em class="vline"></em>
+                    <span class="label-text">
+                      <img src="../../../assets/image/icon-qzzt.png" alt="" class="fz fz-age"/>
+                      <span>{{ basic_info.work_status_desc?basic_info.work_status_desc:'暂无' }}</span>
                     </span>
                     <em class="vline"></em>
                     <span class="label-text">
                       <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
-                      <span>{{ infoData?infoData.basic_info.work_status_desc:'暂无' }}</span>
-                    </span>
-                    <em class="vline"></em>
-                    <span class="label-text">
-                      <img src="../../../assets/image/Frame_5.png" alt="" class="fz fz-age"/>
-                      <span>{{ infoData?infoData.basic_info.live_city:'暂无' }}</span>
+                      <span>{{ basic_info.live_city?basic_info.live_city:'暂无' }}</span>
                     </span>
                   </div>
                 </div>
-                <div class="text selfDescription">{{ infoData?infoData.basic_info.advantages_highlights:'暂无' }}</div>
+                <div class="text selfDescription">{{ basic_info.advantages_highlight?basic_info.advantages_highlights:'暂无' }}</div>
               </div>
             </div>
             <!-- 期望职位 -->
@@ -274,6 +274,7 @@ export default {
       },
       zx_dialogVisible: false,
       infoData:'',
+      basic_info:{},
       activeName: 'recommended',
       filterInfo:{}
     }
@@ -367,6 +368,8 @@ export default {
       }).then( res =>{
         if(res.code == 0){
           that.infoData = res.data;
+          that.basic_info = res.data.basic_info;
+
           that.zx_dialogVisible = true;
         }else{
           that.$message.error({
