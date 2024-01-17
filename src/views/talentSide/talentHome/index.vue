@@ -295,7 +295,7 @@ export default {
       flex: 1;
     }
     .info-right-box{
-      width: 19rem;
+      width: 300px;
       padding-left: 0.8rem;
       .zlhx-box{
         width: 100%;

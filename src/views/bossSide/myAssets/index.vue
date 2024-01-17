@@ -1,6 +1,6 @@
 <template>
   <!-- 我的资产 -->
-  <div class="bossSide-container">
+  <div class="bossSide-container" :style="width">
     <div class="m-box margin-top-20">
       <div class="title-box">
         <div class="left">
@@ -18,7 +18,7 @@
           <div class="infoData-lm-box">
             <div>
               <span class="span-1">到期时间：</span>
-              <span class="span-2">{{ userInfo.vip_expire_time_text }}</span>
+              <span class="span-2">{{ userInfo.vip_expire_time_text?userInfo.vip_expire_time_text:'无' }}</span>
             </div>
           </div>
           <div class="infoData-sycs-box">
@@ -76,6 +76,12 @@
           <div class="talent-box">
             <div class="box-items">
               <div class="items items-l">
+                <div class="items-label">会员等级：</div>
+                <div class="items-text" style="color: #ff0000;">{{infoData.rechargelist?infoData.rechargelist.recharge_name:''}}</div>
+              </div>
+            </div>
+            <div class="box-items">
+              <div class="items items-l">
                 <div class="items-label">订单号：</div>
                 <div class="items-text">{{infoData.order_no}}</div>
               </div>
@@ -84,20 +90,6 @@
               <div class="items items-l">
                 <div class="items-label">充值金额：</div>
                 <div class="items-text">{{ infoData.pay_price }}</div>
-              </div>
-              <!-- <div class="items items-r">
-                <span class="label-text">
-                  <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>
-                  <span>{{ infoData.users?infoData.users.birth_year_month:'20岁' }}</span>
-                </span>
-                <em class="vline"></em>
-              </div> -->
-            </div>
-
-            <div class="box-items">
-              <div class="items items-l">
-                <div class="items-label">会员等级：</div>
-                <div class="items-text">{{infoData.rechargelist?infoData.rechargelist.recharge_name:''}}</div>
               </div>
             </div>
 
@@ -144,10 +136,24 @@ export default {
       },
       infoData:{},
       dialogVisible:false,
-      userInfo:{}
+      userInfo:{},
+      width: {
+        "width": '',
+      },
+      url_type:'staff'
     }
   },
   created(){
+    let currentRoute = this.$route;
+    if(currentRoute.path == '/talentSide/myAssets'){
+      this.url_type = 'user'
+      this.$nextTick( ()=>{
+        this.width = {
+          "width": '1200px',
+          "margin": '20px auto 20px',
+        }
+      })
+    }
     //  获取信息
     this.getFormData();
     //  获取信息
@@ -158,15 +164,32 @@ export default {
     //  获取信息
     getUserInfo(){
       let that = this;
-      that.$axios.post('/api/staff/profile',{}).then( res =>{
+      let url = '';
+      if(that.url_type == 'staff'){
+        url = '/api/staff/profile'
+      }
+      if(that.url_type == 'user'){
+        url = '/api/user/profile'
+      }
+      that.$axios.post(url,{}).then( res =>{
         if(res.code == 0){
-          that.userInfo = res.data;
+          if(that.url_type == 'staff'){
+            that.userInfo = res.data;
+          }
+          if(that.url_type == 'user'){
+            that.userInfo = res.data.basic_info;
+          }
         }
       })
     }, 
     // 点击购买
     goToTopUpBuy(){
-      this.$router.push('/topUpBuy');
+      if(this.url_type == 'staff'){
+        this.$router.push('/topUpBuy');
+      }
+      if(this.url_type == 'user'){
+        this.$router.push('/talentSide/topUpBuy');
+      }
     },
     getFormData(){
       let that = this;

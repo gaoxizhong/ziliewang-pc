@@ -1,16 +1,16 @@
 <template>
-  <div class="bossSide-container center-box">
+  <div class="bossSide-container center-box" :style="width">
     <div class="n-scrollbar-container">
       <div class="bg-teal-500">
         <div class="bg-teal-title">
-          <span class="span-1">剩余次数</span>
-          <span class="span-2">{{zlw_m_num}}</span>
+          <span class="span-1">当前等级</span>
+          <span class="span-2">{{userInfo.vip_rank_text}}</span>
         </div>
       </div>
 
       <div class="n-setMeal-box">
         <div class="n-setMeal-titlebox">
-          <span class="span-1">充值购买</span>
+          <!-- <span class="span-1">会员充值</span> -->
           <!-- <span class="span-2">早期尝鲜价格</span> -->
         </div>  
         <el-row class="row-bg" justify="center">
@@ -73,16 +73,29 @@
         order_no:'', // 订单号
         invite_code:'', // 邀请码
         userInfo:{},
-
+        width: {
+          "width": '',
+        },
+        url_type:'staff',
       }
     },
     created(){
+      let currentRoute = this.$route;
+      if(currentRoute.path == '/talentSide/topUpBuy'){
+        this.url_type = 'user'
+        this.$nextTick( ()=>{
+          this.width = {
+            "width": '1200px',
+            "margin": '20px auto 20px',
+          }
+        })
+      }
       this.getOrderPayList();
       // 获取用户剩余次数
       this.get_chatgpt_num();
     },
     mounted(){
-
+     
     },
 
     methods: {
@@ -113,13 +126,25 @@
         clearInterval(this.timer1);
         this.get_chatgpt_num();
       },
-      // 获取用户剩余次数
+      // 获取用户
       get_chatgpt_num(){
         let that = this;
-        that.$axios.post('/api/staff/profile',{}).then( res =>{
+        let url = '';
+        if(that.url_type == 'staff'){
+          url = '/api/staff/profile'
+        }
+        if(that.url_type == 'user'){
+          url = '/api/user/profile'
+        }
+        that.$axios.post(url,{}).then( res =>{
         if(res.code == 0){
-          that.zlw_m_num = res.data.zlw_m_num
-          
+          if(that.url_type == 'staff'){
+            that.userInfo = res.data;
+            that.zlw_m_num = res.data.zlw_m_num
+          }
+          if(that.url_type == 'user'){
+            that.userInfo = res.data.basic_info;
+          }
         }else{
           that.$message.error({
             message:res.data.msg
@@ -250,6 +275,8 @@
   .bg-teal-title>span.span-1{
     line-height: 1.5;
     font-size: 26px;
+    color: $g_textColor;
+    margin-bottom: 10px;
   }
   .bg-teal-title>span.span-2{
     line-height: 1.5;
@@ -276,7 +303,7 @@
   }
   .n-setMeal-box{
     width: 100%;
-    padding-top: 24px;
+    // padding-top: 24px;
   }
   .n-setMeal-titlebox{
     width: 100%;
@@ -289,7 +316,7 @@
     font-weight: bold;
   }
   .n-setMeal-titlebox>span.span-1{
-    font-size: 40px;
+    font-size: 32px;
     line-height: 1;
   }
   .n-setMeal-titlebox>span.span-2{

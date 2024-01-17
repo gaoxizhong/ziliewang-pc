@@ -443,7 +443,22 @@ export const constantRoutes = [
           // keepAlive: true,
         },
       },
-      
+      {
+        path: 'myAssets',
+        name: 'talentSide_myAssets',
+        component: () => import('@/views/bossSide/myAssets/index'),
+        meta: { 
+          title: '会员信息',
+        },
+      },
+      {
+        path: 'topUpBuy',
+        name: 'talentSide_topUpBuy',
+        component: () => import('@/views/bossSide/topUpBuy/index'),
+        meta: { 
+          title: '充值',
+        },
+      },
       {
         path: '/communication',
         name: 'communication',

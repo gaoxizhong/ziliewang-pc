@@ -481,7 +481,7 @@ export default {
         border: none;
         padding: 6px 12px;
         color: #fff;
-        font-size: 16px;
+        font-size: 14px;
         border-radius: 4px;
       }
     }
