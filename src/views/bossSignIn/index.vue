@@ -108,6 +108,10 @@
             <el-input v-model="staff_name" placeholder="姓名"></el-input>
           </div>
           <div class="items-box">
+            <div class="title"><span>* </span>身份证</div>
+            <el-input v-model="id_card" placeholder="身份证"></el-input>
+          </div>
+          <div class="items-box">
             <div class="title"><span>* </span>电话</div>
             <el-input v-model="phone" placeholder="电话"></el-input>
           </div>
@@ -175,6 +179,7 @@ export default {
         {id:6,name:'未上市'},
       ],
       staff_name:'',
+      id_card:'',
       phone:'',
       password:'',
     }
@@ -279,6 +284,7 @@ export default {
         company_scale: that.company_scale, // 企业规模
         corporate_finance: that.corporate_finance, // 上市状态
         staff_name: that.staff_name,
+        id_card: that.id_card,
         phone: that.phone,
         password: that.password,
       }
@@ -310,6 +316,11 @@ export default {
         that.$message.warning('个人姓名不能为空!');
         return
       }
+      if(p.id_card == '' || !p.id_card){
+        that.$message.warning('身份证不能为空!');
+        return
+      }
+      id_card
       if(p.phone == '' || !p.phone){
         that.$message.warning('手机号不能为空!');
         return
@@ -343,7 +354,8 @@ export default {
       this.business_nature = '';  // 企业性质
       this.company_scale = '';  // 企业规模
       this.corporate_finance = '';  // 上市状态
-      this.staff_name = ''; // 个人密码
+      this.staff_name = ''; // 
+      this.id_card = '';
       this.phone = ''; //  个人手机号
       this.password = ''; // 个人密码
 
