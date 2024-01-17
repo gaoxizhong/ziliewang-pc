@@ -44,8 +44,8 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="clickQRBtn" class="footer-clobtn">确认订单</el-button>
-        <!-- <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+        <el-button @click="clickgbBtn" class="footer-clobtn-1">关 闭</el-button>
+        <el-button type="primary" @click="clickQRBtn" class="footer-clobtn">确认订单</el-button>
       </span> 
     </el-dialog>
 
@@ -120,6 +120,10 @@
           message:'复制成功',
           duration: 1500,
         })
+      },
+      clickgbBtn(){
+        this.dialogVisible = false;
+        clearInterval(this.timer1);
       },
       clickQRBtn(){
         this.dialogVisible = false;
@@ -433,13 +437,24 @@
     font-size: 14px;
     color: #ff0000;
   }
-  .footer-clobtn{
+  .footer-clobtn-1{
     border-radius: 20px;
     transition: 0.3s;
   }
-  .footer-clobtn:hover{
+  .footer-clobtn-1:hover{
     color: #14b8a6;
     background: #e7f8f6;
+    transition: 0.3s;
+  }
+  .footer-clobtn{
+    border-radius: 20px;
+    transition: 0.3s;
+    color: #fff;
+    background: $g_bg;
+  }
+  .footer-clobtn:hover{
+    color: #fff;
+    background: $g_bg;
     transition: 0.3s;
   }
 </style>

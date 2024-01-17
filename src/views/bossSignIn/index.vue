@@ -320,7 +320,6 @@ export default {
         that.$message.warning('身份证不能为空!');
         return
       }
-      id_card
       if(p.phone == '' || !p.phone){
         that.$message.warning('手机号不能为空!');
         return
