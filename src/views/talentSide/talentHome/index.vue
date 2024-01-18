@@ -262,7 +262,7 @@ export default {
     .hotJob-box{
       width: 100%;
       display: flex;
-      margin: 10px 0;
+      margin-top: 10px;
       .hotJob-span{
         width: auto;
         font-size: 14px;

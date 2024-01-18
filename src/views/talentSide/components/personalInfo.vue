@@ -142,8 +142,8 @@ export default {
     display: flex;
     align-items: center;
     img.img-user {
-      width: 4.5rem;
-      height: 4.5rem;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       border: 3px solid #F2F3F5;
     }
@@ -188,7 +188,7 @@ export default {
       justify-content: center;
       cursor: pointer;
       .infoTab-items-num{
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: bold;
         color: $g_textColor;
         line-height: 1.4rem;
@@ -203,8 +203,8 @@ export default {
     }
   }
   .setTab-box{
-    margin-top: 2rem;
-    padding-top: 2rem;
+    margin-top: 20px;
+    padding-top: 20px;
     border-top: 1px solid #F2F3F5;
     display: flex;
     justify-content: space-between;
