@@ -1,9 +1,7 @@
 <template>
   <div class="label-items-box">
     <el-form :model="qyjs_ruleForm" :rules="qyjs_rules" ref="qyjs_ruleForm" label-width="180px" class="demo-ruleForm">
-      <el-form-item label="基本介绍" prop="introduction">
-        <el-input v-model="qyjs_ruleForm.introduction" placeholder="基本介绍"></el-input>
-      </el-form-item>
+     
       <el-form-item label="成立时间" prop="establishment_date">
         <el-date-picker
           v-model="qyjs_ruleForm.establishment_date"
@@ -21,10 +19,14 @@
       <el-form-item label="获奖名称/获奖资讯链接" prop="reward_link">
         <el-input v-model="qyjs_ruleForm.reward_link" placeholder="获奖名称/获奖资讯链接"></el-input>
       </el-form-item>
+      <el-form-item label="基本介绍" prop="introduction">
+        <el-input type="textarea" :autosize="{ minRows: 8, maxRows: 100}" v-model="qyjs_ruleForm.introduction"  placeholder="基本介绍"></el-input>
+      </el-form-item>
       <el-form-item class="btn-box">
         <el-button type="primary" @click="submitForm">保存</el-button>
       </el-form-item>
     </el-form>
+
   </div>
 </template>
 
@@ -175,7 +177,7 @@ export default {
 
       }
     }
-    & .el-input{
+    & .el-input,& .el-textarea{
         width: 30rem;
       }
     & /deep/ .el-input.is-active .el-input__inner, & /deep/ .el-input__inner:focus{
@@ -198,7 +200,7 @@ export default {
     & /deep/ .el-form-item {
       margin-bottom: 22px;
       display: flex;
-      align-items: center;
+      align-items: flex-start !important;
     }
     & /deep/ .el-form-item__content{
       margin: 0 !important;

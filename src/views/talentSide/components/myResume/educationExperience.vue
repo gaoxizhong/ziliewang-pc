@@ -70,16 +70,19 @@
                 v-model="infoData.begin_date"
                 type="month"
                 value-format="yyyy-MM-dd"
-                placeholder="开始时间">
+                placeholder="开始时间"
+                @change="begin_date_change"
+                >
               </el-date-picker>
               <span class="span-line"> 至 </span>
               <el-date-picker
                 v-model="infoData.end_date"
                 type="month"
+                :picker-options="pickerOptions"
                 value-format="yyyy-MM-dd"
                 placeholder="结束时间">
               </el-date-picker>
-            </div>
+            </div>  
           </div>
 
           <!-- <div class="mb20 redact-item redact-item1">
@@ -134,15 +137,30 @@ export default {
       is_creat: false,
       education_backgroundList: ['博士','硕士','本科','大专','中专/中技','高中','初中及以下'], //学历
       list_id: '', // 选中的列表id
+     
+      startDate:''
     }
   },
   mounted(){
   
   },
   computed: {
-    
+    pickerOptions(){
+      let that = this;
+      return {
+        disabledDate(time) {
+          let maxDate = Date.parse(that.startDate);
+          return time.getTime() <= maxDate;
+        }
+      }
+      
+    }
   },
   methods: {
+    begin_date_change(e){
+      this.startDate = new Date(e);
+      this.infoData.end_date = '';
+    },
     clickCreat(){
       this.is_creat = true
     },
