@@ -224,7 +224,7 @@ export default {
         {value: 5,label: '交职业圈好友/寻找商业合作计划'}
       ],
       options: pcas,
-      selectedOptions: ['北京','北京'],
+      selectedOptions: ['','上海'],
     }
   },
   mounted(){
@@ -305,9 +305,22 @@ export default {
     clickRadio(n){
       this.infoData.sex = n;
     },
+    // 点击编辑
     clickRedactBtn(n){
       this.infoData = JSON.parse(JSON.stringify(this.data));
       this.infoData.avatar = '';
+      let options = this.options;
+      let live_city = this.infoData.live_city;
+      let selectedOptions = this.selectedOptions;
+      options.forEach(ele => {
+        ele.children.forEach(item =>{
+          if( item.label == live_city ){
+            selectedOptions[0] = ele.label;
+            selectedOptions[1] = item.label;
+          }
+        })
+      });
+      this.selectedOptions = selectedOptions;
       this.resume_image = this.infoData.resume_image;
       if(n == 1){
         this.redact_info = true;
@@ -322,6 +335,7 @@ export default {
     },
     // 点击编辑个人信息确定按钮
     clickInfoVerifyBtn(){
+
       let p = {
         name: this.infoData.real_name,
         sex: this.infoData.sex,

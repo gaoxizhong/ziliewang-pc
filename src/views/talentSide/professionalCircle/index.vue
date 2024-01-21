@@ -15,8 +15,7 @@
     </div>
     <!-- 好友列表 开始 -->
     <div class="interaction-box" v-if=" tag == 'buddyList' ">
-      <buddyChart /> 
-      <!-- <Chat ref="chat"/> -->
+      <magInfo /> 
     </div>
     <!-- 好友列表 结束 -->
     <div class="interaction-box"  v-if=" tag == 'chatHistory' ">
@@ -162,16 +161,18 @@
 <script>
 import hotRecommendation from './components/hotRecommendation.vue';
 import live from '../../talentSide/liveBroadcast/index.vue';
-import buddyChart from '../components/buddyChart.vue';
+// import buddyChart from '../components/mag/buddyChart.vue';
 import Chat from "../components/chat.vue"
 import videoDialog from '../components/videoDialog.vue';
+import magInfo from '../components/mag/magInfo.vue';
 
 export default {
   name: 'myProfessionalCircle',
   components: {
     hotRecommendation,
     live,
-    buddyChart,
+    // buddyChart,
+    magInfo,
     Chat,
     videoDialog
   },

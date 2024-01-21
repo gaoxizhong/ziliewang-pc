@@ -1088,4 +1088,7 @@ export default {
     background: $g_bg;
     border-color: $g_bg;
   }
+  .screen-box {
+    padding: 20px 20px 10px 20px;
+  }
 </style>

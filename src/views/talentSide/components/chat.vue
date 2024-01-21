@@ -19,7 +19,7 @@
       </div>
     </div>
     <!-- 左侧 列表 结束 -->
-    <div class="right-box center-box" v-if="selt_info">
+    <div class="right-box center-box">
       <div class="seach-box">
         <div class="seach-box-info">
           <img :src="selt_info.company_user_avatar?selt_info.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" />
@@ -94,7 +94,9 @@
           </dd>
           <!-- 求简历 结束 -->
         </dl>
-
+        <div class="right-box chat-no-data" v-if="!selt_info">
+          <el-empty description="暂无消息..."></el-empty>
+        </div>
         <div id="msg_end" ref="msg_end" style="height:0px; overflow:hidden"></div>
 
       </div>
@@ -144,14 +146,7 @@
         </div>
       </div>
     </div>
-    <div class="right-box chat-no-data" v-else>
-      <!-- <img src="../../../assets/image/bossSide/icon-chat-welcome.png" alt="" /> -->
-      <!-- <div class="welcome-tips">
-        <p>与Boss沟通，左侧列表中显示</p>
-      </div> -->
-      <!-- <el-empty description="与企业沟通，左侧列表中显示"></el-empty> -->
-      <el-empty description="暂无消息..."></el-empty>
-    </div>
+
 
   </div>
 </template>
@@ -254,6 +249,7 @@ export default {
       })
     },
     clickmsgListData(i){
+      console.log(i)
       let that = this;
       that.selt_info = i;
       that.id = i.id;

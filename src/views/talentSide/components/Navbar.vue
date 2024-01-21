@@ -105,28 +105,28 @@ export default {
   mounted() {
     let that = this;
     //建立连接
-    that.goEasy.connect({
-      onSuccess: function () { //连接成功
-        console.log("GoEasy connect successfully.") //连接成功
-      },
-      onFailed: function (error) { //连接失败
-        console.log("Failed to connect GoEasy, code:"+error.code+ ",error:"+error.content);
-      }
-    });
+    // that.goEasy.connect({
+    //   onSuccess: function () {
+    //     console.log("GoEasy connect successfully.") 
+    //   },
+    //   onFailed: function (error) { 
+    //     console.log("Failed to connect GoEasy, code:"+error.code+ ",error:"+error.content);
+    //   }
+    // });
     //订阅消息
-    that.goEasy.pubsub.subscribe({
-      channel: "zlw_channel",//替换为您自己的channel
-      onMessage: function (message) { //收到消息
-        console.log("Channel:" + message.channel + " content:" + message);
-        that.$store.dispatch('user/actions_navbarMessagePrompt', true);
-      },
-      onSuccess: function () {
-        console.log("Channel订阅成功。");
-      },
-      onFailed: function (error) {
-        console.log("Channel订阅失败, 错误：" + error + " 错误信息：" + error.content)
-      }
-    });
+    // that.goEasy.pubsub.subscribe({
+    //   channel: "zlw_channel",
+    //   onMessage: function (message) {
+    //     console.log("Channel:" + message.channel + " content:" + message);
+    //     that.$store.dispatch('user/actions_navbarMessagePrompt', true);
+    //   },
+    //   onSuccess: function () {
+    //     console.log("Channel订阅成功。");
+    //   },
+    //   onFailed: function (error) {
+    //     console.log("Channel订阅失败, 错误：" + error + " 错误信息：" + error.content)
+    //   }
+    // });
   },
   methods: {
    

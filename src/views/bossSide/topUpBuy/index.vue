@@ -144,10 +144,12 @@
         if(res.code == 0){
           if(that.url_type == 'staff'){
             that.userInfo = res.data;
-            that.zlw_m_num = res.data.zlw_m_num
+            that.zlw_m_num = res.data.zlw_m_num;
+            localStorage.setItem('staffVipRank', res.data.vip_rank); // 用户会员等级
           }
           if(that.url_type == 'user'){
             that.userInfo = res.data.basic_info;
+            localStorage.setItem('userVipRank', res.data.basic_info.vip_rank); // 用户会员等级
           }
         }else{
           that.$message.error({

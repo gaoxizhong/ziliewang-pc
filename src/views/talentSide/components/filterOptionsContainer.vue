@@ -357,7 +357,6 @@ export default {
       this.selectCityList = selectCityList;
       this.city = this.selectCityList.join(',')
       this.getfilterInfo();
-
     },
     // 点击清空筛选条件
     clickALLAnticon(){

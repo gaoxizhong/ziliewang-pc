@@ -1,7 +1,7 @@
 [
   {
     "code": "11",
-    "label": "北京",
+    "label": "北京市",
     "children": [
       {
         "code": "11",
@@ -11,7 +11,7 @@
   },
   {
     "code": "12",
-    "label": "天津",
+    "label": "天津市",
     "children": [
       {
         "code": "12",
@@ -21,7 +21,7 @@
   },
   {
     "code": "31",
-    "label": "上海",
+    "label": "上海市",
     "children": [
       {
         "code": "31",
@@ -31,7 +31,7 @@
   },
   {
     "code": "50",
-    "label": "重庆",
+    "label": "重庆市",
     "children": [
       {
         "code": "50",

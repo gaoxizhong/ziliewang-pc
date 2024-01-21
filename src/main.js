@@ -38,11 +38,14 @@ import GoEasy from 'goeasy';
 const goEasy = GoEasy.getInstance({
   host:'hangzhou.goeasy.io', //新加坡host：singapore.goeasy.io
   appkey: "BC-6c3e503436f7436e9f2804567d3d75cd", //替换为您的应用appkey
-  modules: ['pubsub']
+  modules: ['im']//根据需要，传入'im’或‘pubsub’，或数组方式同时传入
 });
 // 建议在main.js里初始化全局的GoEasy对象
+Vue.prototype.GoEasy = GoEasy;
 Vue.prototype.goEasy = goEasy;
-
+Vue.prototype.globalData = {
+  currentUser: null
+};
 // 引入图片预览
 import vPreviewImage from 'v-preview-image'
 Vue.use(vPreviewImage)

@@ -1,10 +1,10 @@
 <template>
   <div class="filter-options-container">
     <div class="filter-options-row-section">
-      <div class="selected-clear" @click="clickALLAnticon">
+      <!-- <div class="selected-clear" @click="clickALLAnticon">
         <i class="el-icon-delete"></i>
         <span>清空筛选条件</span>
-      </div>
+      </div> -->
 
       <div class="options-row">
         <div class="row-title">目前城市</div>
@@ -112,6 +112,52 @@
           </el-select>
         </div>
         
+      </div>
+
+
+    </div>
+    <div class="selected-options-box">
+      <div class="selected-options-title">已选条件：</div>
+      <ul class="selected-options-list-box">
+        <block v-for="(item,index) in selectCityList" :key="index">
+          <li class="selected-item">
+            <span class="anticon anticon-close">{{ item }}</span>
+            <i class="el-icon-close" @click="clickselectCityList(index)"></i>
+          </li>
+        </block>
+        
+        <li class="selected-item" v-if=" city == '全国' ">
+          <span class="anticon anticon-close">全国</span>
+          <i class="el-icon-close" @click="clickAnticon(-1)"></i>
+        </li>
+        <li class="selected-item" v-if="pay.value">
+          <span class="anticon anticon-close">{{ pay.value }}</span>
+          <i class="el-icon-close" @click="clickAnticon('pay')"></i>
+        </li>
+        <li class="selected-item" v-if="exp.value">
+          <span class="anticon anticon-close">{{ exp.value }}</span>
+          <i class="el-icon-close" @click="clickAnticon('exp')"></i>
+        </li>
+        <!-- 行业选项 开始 -->
+        <block v-for="(item,index) in desired_industry" :key="index">
+          <li class="selected-item">
+            <span class="anticon anticon-close">{{ item }}</span>
+            <i class="el-icon-close" @click="clickDesiredList(index)"></i>
+          </li>
+        </block>
+        <!-- 行业选项 结束 -->
+        <!-- 职业选项 开始 -->
+        <block v-for="(item,index) in position.selectCategoryList" :key="index">
+          <li class="selected-item">
+            <span class="anticon anticon-close">{{ item }}</span>
+            <i class="el-icon-close" @click="clickCategoryList(index)"></i>
+          </li>
+        </block>
+        <!-- 职业选项 结束 -->
+      </ul>
+      <div class="selected-clear" ref="search-jobs-clear-options" id="search-jobs-clear-options" @click="clickALLAnticon">
+        <i class="el-icon-delete"></i>
+        <span>清空筛选条件</span>
       </div>
     </div>
     <!-- 选择城市弹窗 -->
@@ -268,7 +314,47 @@ export default {
     this.getPositionList();
   },
   methods:{
-    
+    // 点击选择的城市删除
+    clickselectCityList(v){
+      let selectCityList = this.selectCityList;
+      selectCityList.splice(v,1);
+      this.selectCityList = selectCityList;
+      this.city = this.selectCityList.join(',')
+      this.getfilterInfo();
+    },
+    // 点击删除职位
+    clickCategoryList(v){
+      let selectCategoryList = this.position.selectCategoryList;
+      selectCategoryList.splice(v,1);
+      this.position.selectCategoryList = selectCategoryList;
+      this.desired_position = this.position.selectCategoryList.join(',');
+      this.getfilterInfo();
+    },
+    // 点击删除行业
+    clickDesiredList(v){
+      let desired_industry = this.desired_industry;
+      desired_industry.splice(v,1);
+      this.desired_industry = desired_industry;
+      this.getfilterInfo();
+    },
+    // 点击已选项 删除
+    clickAnticon(v){
+      if(v == -1){
+        this.city = '';
+        this.getfilterInfo();
+      }else{
+        if(v =='pay'){
+          this.salary = '';
+        }
+        if(v =='exp'){
+          this.work_times_type = 1;
+          this.work_times = '';
+        }
+        this[v].value = '';
+        this.getfilterInfo();
+      }
+      
+    },
     age_status_input(e){
       this.is_age = true;
     },
@@ -487,8 +573,8 @@ export default {
         sex: this.sex,
         is_national_unified: this.is_national_unified,
         age: age_status + '-' + age_end,
-        desired_industry: this.desired_industry.join(','),
-        desired_position: this.position.selectCategoryList.join(','),
+        desired_industry: this.desired_industry.join(','), // 行业
+        desired_position: this.position.selectCategoryList.join(','), // 职位
       };
       console.log(info)
       this.$emit('getfilterInfo',JSON.stringify(info))
@@ -508,7 +594,7 @@ export default {
     .selected-clear {
       position: absolute;
       top: 0;
-      right: 20px;
+      right: 0;
       flex-shrink: 0;
       font-size: 14px;
       line-height: 25px;
@@ -624,8 +710,8 @@ export default {
       }
     }
     .selected-options-box {
-      padding-top: 20px;
       display: flex;
+      position: relative;
     }
     .filter-options-selector-section .options-row {
       margin-bottom: 0;
@@ -902,4 +988,5 @@ export default {
 
     }
   }
+
 </style>

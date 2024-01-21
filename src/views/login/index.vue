@@ -336,6 +336,7 @@ export default {
           localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
           this.$store.dispatch('user/set_realAvatar', data.user.avatar); // vuex
           this.$store.dispatch('user/SET_NAME', data.user.real_name);
+          localStorage.setItem('userVipRank', data.user.vip_rank); // 用户会员等级
 
           setTimeout(() => {
             this.$router.push('/talentSide');
@@ -344,6 +345,7 @@ export default {
         if(data.tag == 'company'){
           // 企业端
           localStorage.setItem('realUid', data.user.id); // 用户uid缓存
+          localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
           setTimeout(() => {
             this.$router.push('/dashboard');
           }, 1000);
@@ -439,6 +441,7 @@ export default {
               localStorage.setItem('name', data.user.real_name); // 用户名缓存
               localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
               localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
+              localStorage.setItem('userVipRank', data.user.vip_rank); // 用户会员等级
               this.$store.dispatch('user/set_realAvatar', data.user.avatar); // vuex
               this.$store.dispatch('user/SET_NAME', data.user.real_name);
               setTimeout(() => {

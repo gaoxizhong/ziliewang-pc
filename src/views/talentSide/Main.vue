@@ -70,7 +70,7 @@ import Chat from "./components/chat.vue"
         zInfex_0: 99,
         is_VueDragResize: false,
         is_type: '',
-        infoData: {}
+        infoData: {},
       }
     },
     watch: {

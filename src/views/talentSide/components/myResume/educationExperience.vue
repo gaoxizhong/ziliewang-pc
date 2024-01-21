@@ -19,8 +19,8 @@
                 <span @click="clickUpdate(item)">编辑</span>
               </div>
             </div>
-            <div class="items-sub-box">统招</div>
-            <div class="items-text-box"> 大专| {{ item.specialty }}</div>
+            <!-- <div class="items-sub-box">统招</div> -->
+            <div class="items-text-box"> {{ item.education_background }} | {{ item.specialty }}</div>
           </li>
 
         </ul>
