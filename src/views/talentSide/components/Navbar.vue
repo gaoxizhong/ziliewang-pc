@@ -48,18 +48,39 @@
         </el-dropdown>
       </div>
     </div>
+
+    <!-- 点击导航消息按钮 展示消息列表弹窗 开始-->
+    <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="navbar_mag">
+      <div class="navbaerMag-box">
+        <div class="navbaerMag-title-box">
+          <span>我的沟通</span>
+          <img src="../../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
+        </div>
+        <div class="navbaerMag-content-box">2</div>
+      </div>
+    </VueDragResize>
+    <!-- 点击导航消息按钮 展示消息列表弹窗 结束-->
   </div>
 
 </template>
 
 <script>
 import { getToken, setToken, removeToken } from '@/utils/auth';
-
+import VueDragResize from 'vue-drag-resize';
 export default {
   components: {
+    VueDragResize,
   },
   data(){
     return{
+      navbar_mag: false, // 导航按钮 消息弹窗状态
+      width: 0,
+      height: 0,
+      parentH: 0,
+      parentW: 0,
+      top: 80,
+      left: 500,
+      zInfex_0: 99,
     }
   },
   computed: {
@@ -103,30 +124,16 @@ export default {
     },
   },
   mounted() {
-    let that = this;
-    //建立连接
-    // that.goEasy.connect({
-    //   onSuccess: function () {
-    //     console.log("GoEasy connect successfully.") 
-    //   },
-    //   onFailed: function (error) { 
-    //     console.log("Failed to connect GoEasy, code:"+error.code+ ",error:"+error.content);
-    //   }
-    // });
-    //订阅消息
-    // that.goEasy.pubsub.subscribe({
-    //   channel: "zlw_channel",
-    //   onMessage: function (message) {
-    //     console.log("Channel:" + message.channel + " content:" + message);
-    //     that.$store.dispatch('user/actions_navbarMessagePrompt', true);
-    //   },
-    //   onSuccess: function () {
-    //     console.log("Channel订阅成功。");
-    //   },
-    //   onFailed: function (error) {
-    //     console.log("Channel订阅失败, 错误：" + error + " 错误信息：" + error.content)
-    //   }
-    // });
+   
+    
+  },
+  created(){
+    let getViewportSize = this.$getViewportSize();
+    this.parentH = getViewportSize.height; // 组件范围
+    this.parentW = getViewportSize.width; // 组件范围
+    this.width = 300; // 可拖动div 高度
+    this.left = Number(getViewportSize.width) - Number(this.width) - 120;
+    this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
   },
   methods: {
    
@@ -144,6 +151,8 @@ export default {
     },
     // 点击消息
     clickMessage(){
+      this.navbar_mag = true;
+      return
       this.$store.dispatch('user/actions_navbarMessagePrompt', false);
       this.$router.push({
         path:'/communication',   //跳转的路径
@@ -154,8 +163,8 @@ export default {
         // }
       })
     },
-  // 获取个人信息
-   getUserProfile(){
+    // 获取个人信息
+    getUserProfile(){
       let that = this;
       that.$axios.post('/api/user/profile',{}).then(res =>{
         if(res.code == 0){
@@ -169,6 +178,17 @@ export default {
       }).catch(e =>{
         console.log(e)
       })
+    },
+    // 拖拽时可以确定元素位置
+    resize(newRect) {
+      this.width = newRect.width;
+      this.height = newRect.height;
+      this.top = newRect.top;
+      this.left = newRect.left;
+    },
+    // 点击关闭
+    clickCloseBtn(){
+      this.navbar_mag = false;
     },
   },
 };
@@ -305,6 +325,40 @@ export default {
         }
       }
     }
+  }
+}
+// 消息弹窗
+.navbaerMag-box{
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding: 10px;
+  padding-right: 12px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  box-shadow:0 0 16px 0 rgba(139,152,169,.4);
+  .navbaerMag-title-box{
+    width: 100%;
+    height: auto;
+    padding: 4px 20px;
+    text-align: center;
+    font-size: 15px;
+    position: relative;
+    &>span{
+      color: $g_textColor;
+    }
+    &>img{
+      position: absolute;
+      top: 4px;
+      right: 10px;
+      cursor: pointer;
+    }
+  }
+  .navbaerMag-content-box{
+    width: 100%;
+    flex: 1;
+    padding: 10px 20px;
   }
 }
 </style>
