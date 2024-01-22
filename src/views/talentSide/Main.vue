@@ -1,7 +1,7 @@
 <template>
   <div class="mian-box">
     <!-- 头部 开始  -->
-    <navbar />
+    <navbar @clickNavbarMag="clickNavbarMag"/>
     <!-- 头部 结束  -->
     <!-- 主题 开始 -->
     <div ref="keepAliveContainer" class="container-box">
@@ -14,6 +14,11 @@
     <!-- 底部 开始  -->
     <Footer />
     <!-- 底部 结束  -->
+    <!-- 点击导航消息按钮 展示消息列表弹窗 开始-->
+    <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="navbar_width" :h="navbar_height" :x='left' :y='top' @resizing="resize" v-if="navbar_mag">
+      <div>123</div>
+    </VueDragResize>
+    <!-- 点击导航消息按钮 展示消息列表弹窗 结束-->
 
     <!-- 聊天弹窗 开始-->
     <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
@@ -71,6 +76,7 @@ import Chat from "./components/chat.vue"
         is_VueDragResize: false,
         is_type: '',
         infoData: {},
+        navbar_mag: false, // 导航按钮 消息弹窗状态
       }
     },
     watch: {
@@ -89,8 +95,15 @@ import Chat from "./components/chat.vue"
       this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
       this.width = Number(getViewportSize.width * 0.5) > 800 ? 800 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
       this.left = Number(getViewportSize.width/2) - Number(this.width/2);
+
+      this.navbar_height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
+      this.navbar_width = 300; // 可拖动div 高度
     },
     methods:{
+      // 导航消息按钮
+      clickNavbarMag(e){
+        
+      },
       receiveParams(params){
         console.log(params)
           // '接收到的参数:' params

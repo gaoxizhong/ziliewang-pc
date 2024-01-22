@@ -3,7 +3,7 @@
     <div class="contact-left">
       <div class="contact-list-title">好友</div>
       <div class="friend-list">
-        <div v-for="(friend, key) in friends || []" :key="key" class="friend-item" :class="{actived: profile.friend && profile.friend.uid === friend.uid}"
+        <div v-for="(friend, key) in friends || []" :key="key" class="friend-item" :class="{actived: profile.friend && profile.friend.uid === friend.users.uid}"
           @click="showFriendProfile(friend)">
           <div class="friend-avatar">
             <img :src="friend.users.avatar"/>
@@ -20,19 +20,19 @@
         <div class="profile-card-title">
           <div class="profile-name">
             <i class="iconfont icon-zhanghu"></i>
-            <div>{{ profile.friend.users.real_name }}</div>
+            <div>{{ profile.friend.name }}</div>
           </div>
           <div class="profile-avatar">
-            <img :src="profile.friend.users.avatar"/>
+            <img :src="profile.friend.avatar"/>
           </div>
         </div>
         <div class="friend-info">
           <div class="info-name">邮 箱</div>
-          <div class="info-text">{{ profile.friend.users.real_email }}</div>
+          <div class="info-text">{{ profile.friend.real_email }}</div>
         </div>
         <div class="friend-info">
           <div class="info-name">手 机</div>
-          <div class="info-text">{{ profile.friend.users.real_phone }}</div>
+          <div class="info-text">{{ profile.friend.real_phone }}</div>
         </div>
         <div class="button-box">
           <button class="card-button" @click="privateChat">发消息</button>
@@ -78,10 +78,20 @@
     },
     methods: {
       showFriendProfile(friend) {
-        this.profile.friend = friend;
+        console.log(friend)
+        this.profile.friend ={
+          uid: friend.users.uid,
+          name: friend.users.real_name,
+          avatar: friend.users.avatar,
+          real_phone: friend.users.real_phone,
+          real_email: friend.users.real_email,
+        } ;
       },
       privateChat () {
-        this.is_chat = true;
+        this.is_chat = false;
+        this.$nextTick( () => {
+          this.is_chat = true;
+        })
         return
         this.$router.replace({
           path: '/conversations/privatechat/'+this.profile.friend.users.uid,
@@ -133,7 +143,7 @@
 
   .friend-item {
     display: flex;
-    padding: 8px 6px;
+    padding: 8px;
     cursor: pointer;
   }
 
@@ -141,16 +151,16 @@
     width: 40px;
     height: 40px;
     border-radius: 10%;
-    margin-left: 10px;
   }
 
   .friend {
-    width: 65%;
+    flex: 1;
     margin: 0;
     display: flex;
     flex-direction: column;
     text-align: left;
     padding-left: 10px;
+    font-size: 14px;
   }
 
   .friend-name {

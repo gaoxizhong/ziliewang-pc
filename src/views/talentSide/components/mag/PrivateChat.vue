@@ -1,8 +1,8 @@
 <template>
   <div class="chat-container">
     <div class="chat-title">
-      <img :src="friend.users.avatar" class="chat-avatar"/>
-      <div class="chat-name">{{ friend.users.real_name }}</div>
+      <img :src="friend.avatar" class="chat-avatar"/>
+      <div class="chat-name">{{ friend.name }}</div>
     </div>
     <div class="chat-main" ref="scrollView">
       <div class="message-list" ref="messageList">
@@ -15,7 +15,7 @@
         <div v-for="(message, index) in history.messages" :key="index">
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
           <div class="message-recalled" v-if="message.recalled">
-            <div v-if="message.senderId !== currentUser.id">{{ friend.users.real_name }}撤回了一条消息</div>
+            <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
               <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 "
@@ -30,7 +30,7 @@
             <div class="message-item-content" :class="{ self: message.senderId === currentUser.id }">
               <div class="sender-info">
                 <img v-if="currentUser.id === message.senderId" :src="currentUser.avatar" class="sender-avatar"/>
-                <img v-else :src="friend.users.avatar" class="sender-avatar"/>
+                <img v-else :src="friend.avatar" class="sender-avatar"/>
               </div>
               <div class="message-content" @click.right="showActionPopup(message)">
                 <div class="message-payload">
@@ -92,7 +92,7 @@
       <div class="action-box">
         <div class="action-bar">
           <!-- 表情 -->
-          <div class="action-item">
+          <!-- <div class="action-item">
             <div v-if="emoji.visible" class="emoji-box">
               <img
                 v-for="(emojiItem, emojiKey, index) in emoji.map"
@@ -103,14 +103,13 @@
               />
             </div>
             <i class="iconfont icon-smile" title="表情" @click="showEmojiBox"></i>
-          </div>
+          </div> -->
           <!-- 图片 -->
           <div class="action-item">
             <label for="img-input">
               <i class="iconfont icon-picture" title="图片"></i>
             </label>
-            <input v-show="false" id="img-input" accept="image/*" multiple type="file"
-                   @change="sendImageMessage"/>
+            <input v-show="false" id="img-input" accept="image/*" multiple type="file" @change="sendImageMessage"/>
           </div>
           <!-- 视频 -->
           <!-- <div class="action-item">
@@ -240,11 +239,12 @@
       };
       this.to = {
         type: this.GoEasy.IM_SCENE.PRIVATE,
-        id: this.friend.users.u_id,
-        data: {name: this.friend.users.real_name, avatar: this.friend.users.avatar},
+        id: this.friend.uid,
+        data: {name: this.friend.name, avatar: this.friend.avatar},
       };
+      console.log(this.to)
       // 获取历史记录
-      // this.loadHistoryMessage(true);
+      this.loadHistoryMessage(true);
 
       this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
@@ -254,7 +254,7 @@
     methods: {
       formatDate,
       onReceivedPrivateMessage(message) {
-        if (message.senderId === this.friend.users.u_id) {
+        if (message.senderId === this.friend.uid) {
           this.history.messages.push(message);
           this.markPrivateMessageAsRead();
         }
@@ -304,9 +304,12 @@
       },
       sendTextMessage() {
         if (!this.text.trim()) {
-          console.log('输入为空');
+          this.$message.error({
+            message:'输入不能为空!'
+          })
           return
         }
+        console.log(this.to)
         this.goEasy.im.createTextMessage({
           text: this.text,
           to: this.to,
@@ -499,10 +502,11 @@
           lastMessageTimeStamp = lastMessage.timestamp;
         }
         this.goEasy.im.history({
-          userId: this.friend.users.u_id,
+          userId: this.friend.uid,
           lastTimestamp: lastMessageTimeStamp,
           limit: 10,
           onSuccess: (result) => {
+            console.log(result)
             this.history.loading = false;
             let messages = result.content;
             if (messages.length === 0) {
@@ -952,7 +956,7 @@
 
   .action-bar .action-item {
     text-align: left;
-    padding: 10px 0;
+    padding: 10px 0 4px 0;
     position: relative;
   }
 
@@ -1010,6 +1014,7 @@
     outline: none;
     background: #FFFFFF;
     word-break: break-all;
+    font-size: 15px;
   }
 
   .send-box {

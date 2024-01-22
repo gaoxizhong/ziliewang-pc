@@ -119,11 +119,12 @@ export default {
   .home {
     width: 100%;
     height: 100%;
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px 0;
   }
 
   .home-container {

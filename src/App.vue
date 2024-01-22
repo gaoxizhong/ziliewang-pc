@@ -10,6 +10,8 @@ export default {
 }
 </script>
 <style>
+  /*引入阿里字体图标*/
+  @import './assets/iconfont/iconfont.css';
  #app{
   min-height: 100%;
  }

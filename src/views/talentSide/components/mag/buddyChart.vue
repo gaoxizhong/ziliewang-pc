@@ -4,7 +4,8 @@
       <div class="conversation-list-container">
         <div class="conversation-list-content">
           <div v-if="conversations.length">
-            <div v-for="(conversation, key) in conversations" :key="key" :to="chatLocation(conversation)">
+            <div class="contact-list-title">聊天记录</div>
+            <div v-for="(conversation, key) in conversations" :key="key" @click="chatLocation(conversation)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == conversation.userId}">
               <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
                 <div class="avatar">
                   <img :src="conversation.data.avatar"/>
@@ -31,7 +32,7 @@
                     </div>
                     <div class="conversation-content" v-else>
                       <div class="unread-text"
-                           v-if="conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.id">
+                            v-if="conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.id">
                         [未读]
                       </div>
                       <div v-if="conversation.type === 'private'">
@@ -45,26 +46,26 @@
                       <span v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</span>
                       <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
                       <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
-                      <span v-else-if="conversation.lastMessage.type === 'order'">[订单消息]</span>
                     </div>
                   </div>
                 </div>
               </div>
+  
             </div>
           </div>
           <div v-else class="no-conversation">- 当前没有会话 -</div>
         </div>
       </div>
-      <div v-if="rightClickMenu.visible" :style="{'left': rightClickMenu.x + 'px', 'top': rightClickMenu.y + 'px'}"
-           class="action-box">
+      <div v-if="rightClickMenu.visible" :style="{'left': rightClickMenu.x + 'px', 'top': rightClickMenu.y + 'px'}" class="action-box">
         <div class="action-item" @click="topConversation">{{ rightClickMenu.conversation.top ? '取消置顶' : '置顶' }}</div>
         <div class="action-item" @click="deleteConversation">删除聊天</div>
       </div>
     </div>
-    <div class="chat">
-      <!-- <router-view :key="$route.params.id" /> -->
-      <PrivateChat :key="user_uid" v-if="user_uid"/>
+    <!-- 聊天部分 开始-->
+    <div class="contact-main" v-if="is_chat">
+      <PrivateChat :infoData="profile.friend" />
     </div>
+    <!-- 聊天部分 结束-->
   </div>
 </template>
 
@@ -88,7 +89,11 @@
           x: null,
           y: null,
         },
-        user_uid: ''
+        user_uid: '',
+        profile: {
+          friend: null,
+        },
+        is_chat: false
       };
     },
     created() {
@@ -167,16 +172,15 @@
         }
       },
       chatLocation (conversation) {
-        let path = conversation.type === 'private' ?
-          '/conversations/privatechat/'+conversation.userId :
-          '/conversations/groupchat/'+conversation.groupId
-        return {
-          path: path,
-          query: {
-            name: conversation.data.name,
-            avatar: conversation.data.avatar
-          }
-        }
+        this.profile.friend = {
+          uid: conversation.userId,
+          name: conversation.data.name,
+          avatar: conversation.data.avatar,
+        };
+        this.is_chat = false;
+        this.$nextTick( () => {
+          this.is_chat = true;
+        })
       }
     },
   };
@@ -192,7 +196,7 @@
   }
 
   .conversation-list {
-    width: 220px;
+    width: 260px;
   }
 
   .conversation-list-container {
@@ -218,11 +222,16 @@
   .no-conversation {
     text-align: center;
     color: #666666;
+    font-size: 14px;
   }
-
+  .conversation-box{
+    padding: 10px 5px;
+  }
+  .conversation-box.actived{
+    background: #eee;
+  }
   .conversation {
     display: flex;
-    padding: 10px 5px;
     cursor: pointer;
   }
 
@@ -248,7 +257,6 @@
     flex: 1;
     padding-left: 5px;
     display: flex;
-    width: 160px;
     flex-direction: column;
     justify-content: space-around;
   }
@@ -261,25 +269,28 @@
   }
 
   .conversation-name {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
   }
 
   .conversation-time {
-    width: 75px;
+    flex: 1;
     color: #B9B9B9;
     display: flex;
     flex-direction: column;
+    font-size: 14px;
   }
 
   .conversation-bottom {
     display: flex;
     color: #666666;
+    font-size: 13px;
+    margin-top: 4px;
   }
 
   .conversation-content {
     display: flex;
-    width: 160px;
+    width: 100%;
     color: #b3b3b3;
   }
 
@@ -293,18 +304,19 @@
 
   .conversation-bottom .unread-text {
     color: #d02129;
-    width: 35px !important;
+    width: auto;
   }
 
   .conversation .avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     position: relative;
   }
 
   .conversation .avatar img {
     width: 100%;
-    border-radius: 10%;
+    height: 100%;
+    border-radius: 50%;
   }
 
   .router-link-active {
@@ -337,5 +349,12 @@
     flex: 1;
     display: flex;
   }
-
+  .contact-main {
+    flex: 1;
+    background: #FFFFFF;
+  }
+  .contact-list-title {
+    margin: 10px 20px;
+    font-size: 14px;
+  }
 </style>
