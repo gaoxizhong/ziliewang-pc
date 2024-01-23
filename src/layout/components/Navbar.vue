@@ -4,10 +4,10 @@
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
       <div class="right-items-box">
-        <!-- <div>
+        <div @click="clickMessage" class="communication-box">
           <img src="../../assets/image/bossSide/remind.png" alt="" />
-          <span>通知</span>
-        </div> -->
+          <span>消息</span>
+        </div>
         <div @click="gotoassist">
           <img src="../../assets/image/bossSide/questionCircle.png" alt="" />
           <span>帮助</span>
@@ -39,17 +39,24 @@
               个人中心
             </el-dropdown-item>
           </router-link>
-          <!-- <router-link to="/talentSide">
-            <el-dropdown-item>
-              人才端
-            </el-dropdown-item>
-          </router-link> -->
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+
+    <!-- 点击导航消息按钮 展示消息列表弹窗 开始-->
+    <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="navbar_mag">
+      <div class="navbaerMag-box">
+        <div class="navbaerMag-title-box">
+          <span>我的沟通</span>
+          <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
+        </div>
+        <div class="navbaerMag-content-box">2</div>
+      </div>
+    </VueDragResize>
+    <!-- 点击导航消息按钮 展示消息列表弹窗 结束-->
   </div>
 </template>
 
@@ -57,12 +64,27 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import VueDragResize from 'vue-drag-resize';
+
 import { setToken } from '@/utils/auth';
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    VueDragResize
+  },
+  data(){
+    return {
+      navbar_mag: false,
+      width: 0,
+      height: 0,
+      parentH: 0,
+      parentW: 0,
+      top: 80,
+      left: 500,
+      zInfex_0: 99,
+    }
   },
   computed: {
     ...mapGetters([
@@ -88,6 +110,14 @@ export default {
         this.$forceUpdate();// 更新数据
     },
   },
+  created(){
+    let getViewportSize = this.$getViewportSize();
+    this.parentH = getViewportSize.height; // 组件范围
+    this.parentW = getViewportSize.width; // 组件范围
+    this.width = 300; // 可拖动div 高度
+    this.left = Number(getViewportSize.width) - Number(this.width) - 140;
+    this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -99,6 +129,7 @@ export default {
       this.$store.dispatch('user/SET_staffAvatar', '');
       this.$store.dispatch('user/SET_ROLE', '');
       localStorage.setItem('tag', ''); // 用户身份 user、人才端 company、企业端缓存
+      localStorage.setItem('staffVipRank', ''); // 用户会员等级
       setToken('');
       // 清除缓存的权限菜单
       sessionStorage.removeItem("route")
@@ -115,7 +146,22 @@ export default {
     },
     gotoassist(){
       this.$router.push('/assist')
-    }
+    },
+    // 点击消息
+    clickMessage(){
+      this.navbar_mag = true;
+    },
+    // 拖拽时可以确定元素位置
+    resize(newRect) {
+      this.width = newRect.width;
+      this.height = newRect.height;
+      this.top = newRect.top;
+      this.left = newRect.left;
+    },
+    // 点击关闭
+    clickCloseBtn(){
+      this.navbar_mag = false;
+    },
   }
 }
 </script>
@@ -215,6 +261,41 @@ export default {
         }
       }
     }
+  }
+}
+
+// 消息弹窗
+.navbaerMag-box{
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding: 10px;
+  padding-right: 12px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  box-shadow:0 0 16px 0 rgba(139,152,169,.4);
+  .navbaerMag-title-box{
+    width: 100%;
+    height: auto;
+    padding: 4px 10px;
+    text-align: center;
+    font-size: 15px;
+    position: relative;
+    &>span{
+      color: $g_textColor;
+    }
+    &>img{
+      position: absolute;
+      top: 4px;
+      right: 10px;
+      cursor: pointer;
+    }
+  }
+  .navbaerMag-content-box{
+    width: 100%;
+    flex: 1;
+    padding: 10px 20px;
   }
 }
 </style>

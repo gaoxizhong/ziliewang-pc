@@ -25,6 +25,14 @@ export default {
     AppMain,
     Footer
   },
+  data(){
+    return {
+      unreadAmount: null,
+      currentUser: null,
+      avatar: '',
+      name:''
+    }
+  },
   mixins: [ResizeMixin],
   computed: {
     sidebar() {
@@ -45,10 +53,72 @@ export default {
       }
     }
   },
+  watch:{
+    '$store.state.staffAvatar'(newVal){
+        this.avatar = newVal;
+        this.$forceUpdate();// 更新数据
+    },
+    '$store.state.staffName'(newVal){
+        this.name = newVal;
+        this.$forceUpdate();// 更新数据
+    },
+  },
+  created(){
+    this.currentUser = {
+      id: localStorage.getItem('realUid'),
+      name: this.$store.state.user.staffName,
+      avatar: this.$store.state.user.staffAvatar
+    }
+    console.log(this.currentUser)
+    if (this.goEasy.getConnectionStatus() === 'disconnected') {
+      this.connectGoEasy();  //连接goeasy
+    }
+    this.listenConversationUpdate(); //监听会话列表变化
+    this.loadConversations(); //加载会话列表
+  },
+   beforeDestroy() {
+    this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
+  },
   methods: {
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
-    }
+    },
+    connectGoEasy() {
+      this.goEasy.connect({
+        id: this.currentUser.id,
+        data: {name: this.currentUser.name, avatar: this.currentUser.avatar},
+        onSuccess: function () { 
+          console.log("G连接成功.") 
+        },
+        onFailed: function (error) {
+          console.log("连接失败, code:" + error.code + ",error:" + error.content);
+        },
+        onProgress: function (attempts) { 
+          console.log("连接或自动重连中", attempts);
+        }
+      });
+      
+    },
+    listenConversationUpdate() {
+      // 监听会话列表变化
+      this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
+    },
+    //加载会话列表
+    loadConversations() {
+      this.goEasy.im.latestConversations({
+        onSuccess: (result) => {
+          let content = result.content;
+          this.setUnreadNumber(content);
+        },
+        onFailed: (error) => {
+          console.log('获取最新会话失败, code:' + error.code + 'content:' + error.content);
+        },
+      });
+    },
+    // 获取消息数量
+    setUnreadNumber(content) {
+      this.unreadAmount = content.unreadTotal;
+    },
   }
 }
 </script>

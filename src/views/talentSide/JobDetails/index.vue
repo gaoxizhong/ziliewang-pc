@@ -50,7 +50,7 @@
             <div class="boss-info-left">
               <div class="img-box"><img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg')" alt="" /></div>
               <div class="info-text">
-                <div class="info-text-1"><span class="name">{{ infoData.sync_workmate }}</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
+                <div class="info-text-1"><span class="name">{{ infoData.publish_name?infoData.publish_name:'' }}</span><span class="status">当前在线</span><span class="aptitude">已认证</span></div>
                 <div class="info-text-2"><span>{{ infoData.role_desc }}·</span><span class="company-span" v-if="infoData.company" @click="clickCompany">{{ infoData.company.company_name }}</span></div>
               </div>
             </div>
@@ -202,7 +202,14 @@ export default {
     // 点击聊一聊
     clickChat(){
       let that = this;
-      
+      let infoData = {
+        uid: that.infoData.publish_uid,
+        name: that.infoData.publish_name,
+        avatar: that.infoData.avatar,
+      }
+      that.$bus.$emit('receiveParams', {type:'JobDetails',infoData:JSON.stringify(infoData) });
+      that.$bus.$emit('clickSidebar', {type:'clickChat'});
+      return
       let p = {
         position_id: that.id,
         company_id: that.infoData.company_id,
