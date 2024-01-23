@@ -28,7 +28,7 @@
           <div @click="clickMessage" class="communication-box">
             <img src="../../../assets/image/icon-wechat1.png" alt="" />
             <span>消息</span>
-            <span class="corner-mark-box" v-if="navbarMessagePrompt"></span>
+            <span class="corner-mark-box" v-if="unreadAmount">{{ unreadAmount }}</span>
           </div>
         </div>
         <el-dropdown class="avatar-container" trigger="click">
@@ -56,7 +56,9 @@
           <span>我的沟通</span>
           <img src="../../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
         </div>
-        <div class="navbaerMag-content-box">2</div>
+        <div class="navbaerMag-content-box">
+          <ConversationList :title_show="title_show" @chatLocation="chatLocation"/>
+        </div>
       </div>
     </VueDragResize>
     <!-- 点击导航消息按钮 展示消息列表弹窗 结束-->
@@ -67,9 +69,12 @@
 <script>
 import { getToken, setToken, removeToken } from '@/utils/auth';
 import VueDragResize from 'vue-drag-resize';
+import ConversationList from './mag/conversationList.vue';
+
 export default {
   components: {
     VueDragResize,
+    ConversationList
   },
   data(){
     return{
@@ -81,6 +86,8 @@ export default {
       top: 80,
       left: 500,
       zInfex_0: 99,
+      unreadAmount: null,
+      title_show: 'navbarMag'
     }
   },
   computed: {
@@ -104,7 +111,6 @@ export default {
     navbarMessagePrompt() {
       return this.$store.state.user.navbarMessagePrompt
     },
-
   },
   watch:{
     '$store.state.realAvatar'(newVal){
@@ -123,20 +129,44 @@ export default {
       this.$forceUpdate();// 更新数据
     },
   },
+  // 退出关闭
+  beforeDestroy() {
+    this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
+  },
   mounted() {
-   
-    
+ 
   },
   created(){
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
-    this.width = 300; // 可拖动div 高度
-    this.left = Number(getViewportSize.width) - Number(this.width) - 120;
+    this.width = 340; // 可拖动div 高度
+    this.left = Number(getViewportSize.width) - Number(this.width) - 140;
     this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
+
+    this.listenConversationUpdate();// 监听会话列表变化
+    this.loadConversations(); //加载会话列表
   },
   methods: {
-   
+    loadConversations() {
+      this.goEasy.im.latestConversations({
+        onSuccess: (result) => {
+          let content = result.content;
+          this.setUnreadNumber(content);
+        },
+        onFailed: (error) => {
+          console.log('获取失败, code:' + error.code + 'content:' + error.content);
+        },
+      });
+    },
+    listenConversationUpdate() {
+      this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
+    },
+    // 获取消息数量
+    setUnreadNumber(content) {
+      console.log(content)
+      this.unreadAmount = content.unreadTotal;
+    },
     logout() {
       // debugger
       setToken('');
@@ -189,6 +219,10 @@ export default {
     // 点击关闭
     clickCloseBtn(){
       this.navbar_mag = false;
+    },
+    // 接收组件方法通讯
+    chatLocation(e){
+      console.log(e)
     },
   },
 };
@@ -261,14 +295,16 @@ export default {
           margin-right: 4px;
         }
         .corner-mark-box{
+          line-height: initial;
           background: #ff0000;
-          border-radius: 20px;
-          padding: 5px;
+          color: #fff;
+          border-radius: 10px;
+          padding: 2px 6px;
           position: absolute;
-          top: 10px;
-          right: 5px;
-          line-height: 1;
+          top: 2px;
+          right: -3px;
           font-size: 12px;
+          transform: scale(0.8);
         }
       }
       &>div.hover{
@@ -341,7 +377,7 @@ export default {
   .navbaerMag-title-box{
     width: 100%;
     height: auto;
-    padding: 4px 20px;
+    padding: 4px 10px;
     text-align: center;
     font-size: 15px;
     position: relative;
@@ -351,7 +387,7 @@ export default {
     &>img{
       position: absolute;
       top: 4px;
-      right: 10px;
+      right: 4px;
       cursor: pointer;
     }
   }

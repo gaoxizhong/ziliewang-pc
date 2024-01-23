@@ -180,6 +180,5 @@ export function getPerfectionDegree(data) {
     project_experience,
     education_experience
   }
-  console.log(perfection_degree)
   return perfection_degree
 }

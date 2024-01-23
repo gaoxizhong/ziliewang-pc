@@ -62,30 +62,14 @@ export default {
       name: localStorage.getItem('name'),
       avatar: localStorage.getItem('realAvatar'),
     }
-    if (this.goEasy.getConnectionStatus() === 'disconnected') {
-      this.connectGoEasy();  //连接goeasy
-    }
+   
     this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
   },
   methods:{
-    connectGoEasy() {
-      this.goEasy.connect({
-        id: this.currentUser.id,
-        data: {name: this.currentUser.name, avatar: this.currentUser.avatar},
-        onSuccess: function () {  //连接成功
-          console.log("GoEasy connect successfully.") //连接成功
-        },
-        onFailed: function (error) { //连接失败
-          console.log("Failed to connect GoEasy, code:" + error.code + ",error:" + error.content);
-        },
-        onProgress: function (attempts) { //连接或自动重连中
-          console.log("GoEasy is connecting", attempts);
-        }
-      });
-      
-    },
+    
     // 获取消息数量
     setUnreadNumber(content) {
+      console.log(content)
       this.unreadAmount = content.unreadTotal;
     },
   
