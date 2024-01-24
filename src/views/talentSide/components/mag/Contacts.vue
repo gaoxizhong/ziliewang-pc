@@ -19,7 +19,7 @@
       <div class="profile-card" v-if="profile.friend">
         <div class="profile-card-title">
           <div class="profile-name">
-            <i class="iconfont icon-zhanghu"></i>
+            <i class="iconfont icon-shenfen"></i>
             <div>{{ profile.friend.name }}</div>
           </div>
           <div class="profile-avatar">

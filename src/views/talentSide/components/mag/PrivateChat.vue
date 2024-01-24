@@ -13,20 +13,23 @@
           {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
         </div>
         <div v-for="(message, index) in history.messages" :key="index">
+          <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
 
-          <div class="message-recalled" v-if="message.recalled">
+          <!-- <div class="message-recalled" v-if="message.recalled">
             <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
               <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
             </div>
-          </div>
+          </div> -->
           <!-- 内容区域 开始 -->
-          <div class="message-item" v-else>
-            <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
+          <div class="message-item">
+            <!-- 多选按钮 -->
+            <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
-            </div>
+            </div> -->
+
             <div class="message-item-content" :class="{ self: message.senderId === currentUser.id }">
               <!-- 头像 开始 -->
               <div class="sender-info">
@@ -35,7 +38,8 @@
               </div>
               <!-- 头像 结束 -->
 
-              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)">
+              <!-- <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)"> -->
+              <div class="message-content">
                 <div class="message-payload">
                   <div class="pending" v-if="message.status === 'sending'"></div>
                   <div class="send-fail" v-if="message.status === 'fail'"></div>
@@ -53,6 +57,9 @@
                     </div>
                   </a>
                   <!-- 简历 结束 -->
+                  <!-- 交换联系方式 开始 -->
+                  
+                  <!-- 交换联系方式 结束 -->
                   <!-- 图片 开始 -->
                   <div v-if="message.type === 'image'" class="content-image" @click="showImagePreviewPopup(message.payload.url)">
                     <img :src="message.payload.url" :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
@@ -91,6 +98,21 @@
       </div> -->
       <div class="action-box">
         <div class="action-bar">
+          <!-- 常用语 -->
+          <div class="action-item">
+            <div v-if="cyy.visible" class="sentence-panel">
+              <div class="header">
+                <h3 class="title">常用语</h3>
+                <a href="javascript:0;" target="_blank" class="set-btn"></a>
+              </div>
+              <ul>
+                <li @click="clickCyy('我可以把我的简历发您看看吗?')">我可以把我的简历发您看看吗?</li>
+                <li @click="clickCyy('您好！我可以去贵公司面试吗?')">您好！我可以去贵公司面试吗?</li>
+                <li @click="clickCyy('您好！希望可以和您聊聊，谢谢！')">您好！希望可以和您聊聊，谢谢！</li>
+              </ul>
+            </div>
+            <i class="iconfont icon-changyongyu" title="常用语" @click="showCyyBox"></i>
+          </div>
           <!-- 表情 -->
           <!-- <div class="action-item">
             <div v-if="emoji.visible" class="emoji-box">
@@ -102,15 +124,15 @@
                 @click="chooseEmoji(emojiKey)"
               />
             </div>
-            <i class="iconfont icon-smile" title="表情" @click="showEmojiBox"></i>
+            <i class="iconfont icon-biaoqing" title="表情" @click="showEmojiBox"></i>
           </div> -->
           <!-- 图片 -->
           <div class="action-item">
             <label for="img-input" v-if="userVipRank > 0">
-              <i class="iconfont icon-picture" title="图片"></i>
+              <i class="iconfont icon-tupian" title="图片"></i>
             </label>
             <label  @click="clickvipRank_0" v-else>
-              <i class="iconfont icon-picture" title="图片"></i>
+              <i class="iconfont icon-tupian" title="图片"></i>
             </label>
             <input v-show="false" id="img-input" accept="image/*" multiple type="file" @change="sendImageMessage"/>
           </div>
@@ -123,15 +145,16 @@
           <!-- 文件 -->
           <div class="action-item">
             <label for="file-input" v-if="userVipRank > 0">
-              <i class="iconfont icon-wj-wjj" title="文件"></i>
+              <i class="iconfont icon-wenjianjia" title="文件"></i>
             </label>
             <label @click="clickvipRank_0" v-else>
-              <i class="iconfont icon-wj-wjj" title="文件"></i>
+              <i class="iconfont icon-wenjianjia" title="文件"></i>
             </label>
             <input v-show="false" id="file-input" type="file" @change="sendFileMessage"/>
           </div>
           <i class="vline"></i>
           <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickToolbarBtn('resume')">发简历</div>
+          <!-- <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn('phone')">交换联系方式</div> -->
         </div>
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
@@ -215,6 +238,10 @@
 
         text: '',
 
+        // 常用语
+        cyy: {
+          visible: false,
+        },
         //定义表情列表
         emoji: {
           url: emojiUrl,
@@ -319,6 +346,26 @@
       onAudioPlayEnd() {
         this.audioPlayer.playingMessage = null;
       },
+      // 点击 交换联系方式
+      clickPhoneBtn(){
+        let userProfile = this.userProfile;
+        real_phone
+        let payload = {
+          phone: userProfile.basic_info.real_phone
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'phone',  //字符串，可以任意自定义类型 phone 联系方式
+          text: '交换联系方式',
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            this.sendMessage(message);
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
+      },
       // 点击 发简历按钮
       clickToolbarBtn(){
         let userProfile = this.userProfile;
@@ -366,6 +413,16 @@
       clickInput(){
         this.$refs.input.focus();
       },
+      // 点击常用语 icon
+      showCyyBox(){
+        this.cyy.visible = !this.cyy.visible;
+      },
+      // 点击常用语列表
+      clickCyy(text){
+        this.text = text;
+        this.cyy.visible = false;
+      },
+      // 点击表情
       showEmojiBox() {
         this.emoji.visible = !this.emoji.visible;
       },
@@ -917,8 +974,8 @@
   }
 
   .file-img {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
   }
 
   .message-item .self {
@@ -1009,7 +1066,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0 10px;
+    padding: 6px 10px 0 10px;
   }
 
   .action-bar .action-item {
@@ -1019,8 +1076,8 @@
   }
 
   .action-bar .action-item .iconfont {
-    font-size: 20px;
-    margin: 0 6px;
+    font-size: 23px;
+    margin: 0 8px;
     z-index: 3;
     color: #606266;
     cursor: pointer;
@@ -1033,7 +1090,86 @@
   .action-bar .action-item .iconfont:hover {
     color: #d02129;
   }
+  /*================ 常用语 样式  ↓  =================*/
+  .sentence-panel{
+    position: absolute;
+    z-index: 15;
+    bottom: 60px;
+    left: 0;
+    width: 400px;
+    background: #fff;
+    box-shadow: 0 3px 11px 0 rgba(0,0,0,.2);
+    border-radius: 8px;
+  }
+  .sentence-panel .header {
+    line-height: 34px;
+    height: 34px;
+    background: linear-gradient(90deg,#dee7fb,#fcfbfa);
+    border-radius: 8px 8px 0 0;
+    font-weight: 400;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sentence-panel .header .title {
+    height: 16px;
+    font-size: 13px;
+    color: #666;
+    line-height: 16px;
+    padding: 0;
+  }
+  .sentence-panel .header .set-btn {
+    font-size: 13px;
+    color: #00a6a7;
+    cursor: pointer;
+  }
+  .sentence-panel ul {
+    overflow: auto;
+    max-height: 180px;
+    padding: 4px;
+    background: #fff;
+  }
 
+  .sentence-panel:after {
+    position: absolute;
+    bottom: -5px;
+    left: 14px;
+    width: 10px;
+    height: 10px;
+    content: "";
+    transform: rotate(135deg);
+    background: #fff;
+    box-shadow: 16px 3px 11px 0 rgba(0,0,0,.1);
+  }
+  
+  .sentence-panel li {
+    height: 34px;
+    line-height: 34px;
+    border-radius: 4px;
+    z-index: 1;
+    overflow: hidden;
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0 12px 0 24px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #333;
+    border: none;
+    position: relative;
+  }
+  .sentence-panel li:before {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #d9d9d9;
+  }
+  /*================ 常用语 样式  ↑  =================*/
   .emoji-box {
     width: 210px;
     position: absolute;
@@ -1083,7 +1219,7 @@
   .send-button {
     width: 70px;
     height: 30px;
-    font-size: 15px;
+    font-size: 14px;
     border: 1px solid #d02129;
     background-color: #ffffff;
     color: #d02129;

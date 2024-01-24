@@ -43,6 +43,7 @@
                 <span v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</span>
                 <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
                 <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
+                <span v-else-if="conversation.lastMessage.type === 'resume'">[简历消息]</span>
               </div>
             </div>
           </div>
@@ -219,7 +220,7 @@
 
   .conversation-message {
     flex: 1;
-    padding-left: 5px;
+    // padding-left: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -279,8 +280,8 @@
   }
 
   .conversation .avatar img {
-    width: 100%;
-    height: 100%;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
   }
 

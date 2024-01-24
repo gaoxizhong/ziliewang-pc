@@ -407,7 +407,7 @@ export default {
 .interaction-box{
     width: 1200px;
     height: calc(100vh - 150px);
-    margin: 16px auto 0;
+    margin: 0 auto;
   }
   .container-title-box{
     width: 100%;

@@ -123,7 +123,7 @@ export default {
     this.parentW = getViewportSize.width; // 组件范围
     this.width = 340; // 可拖动div 高度
     this.left = Number(getViewportSize.width) - Number(this.width) - 140;
-    this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
+    this.height = Number(getViewportSize.height * 0.85); // 可拖动div 高度
 
     this.listenConversationUpdate();// 监听会话列表变化
     this.loadConversations(); //加载会话列表

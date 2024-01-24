@@ -106,7 +106,7 @@ export default {
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
-    this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
+    this.height = Number(getViewportSize.height * 0.85); // 可拖动div 高度
     this.width = Number(getViewportSize.width * 0.5) > 430 ? 430 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
     this.left = Number(getViewportSize.width) - Number(this.width) - 540;
     this.currentUser = {
