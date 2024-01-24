@@ -209,26 +209,6 @@ export default {
       }
       that.$bus.$emit('receiveParams', {type:'JobDetails',infoData:JSON.stringify(infoData) });
       that.$bus.$emit('clickSidebar', {type:'clickChat'});
-      return
-      let p = {
-        position_id: that.id,
-        company_id: that.infoData.company_id,
-        company_uid: that.infoData.company.uid,
-        content:''
-      }
-      that.$axios.post('/api/user/find-company',p).then( res =>{
-        if(res.code == 0){
-          // that.$refs.chat._data.dialogVisible = true;
-          // that.$router.push('/communication');
-          that.$bus.$emit('receiveParams', {type:'JobDetails',company_id:that.infoData.company_id});
-          that.$bus.$emit('clickSidebar', {type:'clickChat'});
-          return
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
     },
     // 点击打电话
     clickMobile(i){

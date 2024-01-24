@@ -21,12 +21,13 @@
         <div class="VueDragResize-title-box">
           <div class="title">聊一聊</div>
           <div class="icon-box">
-            <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn">
+            <!-- <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
             <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
           </div>
         </div>
         <div class="Chat-box">
-          <Chat :is_type="is_type" :company_id="company_id" ref="chat" />
+          <!-- <Chat :is_type="is_type" :company_id="company_id" ref="chat" /> -->
+          <PrivateChat :infoData="infoData" :is_pop="is_pop" ref="chat" />
         </div>
       </div>
     </VueDragResize>
@@ -41,7 +42,7 @@ import Navbar from './components/Navbar';
 import Footer from '../../components/footer';
 import VueDragResize from 'vue-drag-resize';
 import Sidebar from './components/sidebar';
-import Chat from "./components/chat.vue"
+import PrivateChat from './components/mag/PrivateChat.vue';
 
   export default {
     provide(){ 
@@ -56,7 +57,7 @@ import Chat from "./components/chat.vue"
       Footer,
       VueDragResize,
       Sidebar,
-      Chat
+      PrivateChat,
     },
     data(){
       return {
@@ -70,6 +71,7 @@ import Chat from "./components/chat.vue"
         zInfex_0: 99,
         is_VueDragResize: false,
         is_type: '',
+        is_pop:'pop',
         infoData: {},
       }
     },
@@ -91,8 +93,8 @@ import Chat from "./components/chat.vue"
       this.parentH = getViewportSize.height; // 组件范围
       this.parentW = getViewportSize.width; // 组件范围
       this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
-      this.width = Number(getViewportSize.width * 0.5) > 800 ? 800 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
-      this.left = Number(getViewportSize.width/2) - Number(this.width/2);
+      this.width = Number(getViewportSize.width * 0.5) > 430 ? 430 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
+      this.left = Number(getViewportSize.width) - Number(this.width) - 540;
       this.currentUser = {
         id: localStorage.getItem('realUid'),
         name: localStorage.getItem('name'),
@@ -124,13 +126,13 @@ import Chat from "./components/chat.vue"
       receiveParams(params){
         console.log(params)
           // '接收到的参数:' params
-        this.company_id = params.company_id;
         if(params.type){
           this.is_type = params.type //JobDetails 是详情页
         }
         if(params.is_clickMinificationpngBtn){  // 表示点击的 右侧浮动按钮
           this.is_clickMinificationpngBtn = false;
         }else{
+          this.infoData = JSON.parse(params.infoData);
           this.is_VueDragResize = false;
           this.$nextTick(function () {
             this.is_VueDragResize = true;
@@ -194,8 +196,8 @@ import Chat from "./components/chat.vue"
 
   .mian-box /deep/ .vdr{
     position: fixed;
-    box-shadow: 0 1px 3px rgba(0,0,0,.3);
     border-radius: 4px;
+    box-shadow:0 0 16px 0 rgba(139,152,169,1);
   }
   .mian-box /deep/ .vdr.active:before{
     transform: scale(0.5);
@@ -252,10 +254,11 @@ import Chat from "./components/chat.vue"
     .Chat-box{
       flex: 1;
       height: calc(100% - 60px);
+      padding-top: 10px;
     }
-    // 聊天弹窗 样式=============== ↑ ===========
 
   }
+  // 聊天弹窗 样式=============== ↑ ===========
  
 
 </style>

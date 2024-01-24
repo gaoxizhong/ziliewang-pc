@@ -14,35 +14,52 @@
         </div>
         <div v-for="(message, index) in history.messages" :key="index">
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
+
           <div class="message-recalled" v-if="message.recalled">
             <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
-              <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 "
-                    @click="editRecalledMessage(message.payload.text)">重新编辑</span>
+              <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
             </div>
           </div>
+          <!-- 内容区域 开始 -->
           <div class="message-item" v-else>
             <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
-              <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids"
-                     @click="selectMessages">
+              <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
             </div>
             <div class="message-item-content" :class="{ self: message.senderId === currentUser.id }">
+              <!-- 头像 开始 -->
               <div class="sender-info">
                 <img v-if="currentUser.id === message.senderId" :src="currentUser.avatar" class="sender-avatar"/>
                 <img v-else :src="friend.avatar" class="sender-avatar"/>
               </div>
-              <div class="message-content" @click.right="showActionPopup(message)">
+              <!-- 头像 结束 -->
+
+              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)">
                 <div class="message-payload">
                   <div class="pending" v-if="message.status === 'sending'"></div>
                   <div class="send-fail" v-if="message.status === 'fail'"></div>
-                  <div v-if="message.type === 'text'" class="content-text"
-                       v-html="emoji.decoder.decode(message.payload.text)"></div>
-                  <div v-if="message.type === 'image'" class="content-image"
-                       @click="showImagePreviewPopup(message.payload.url)">
-                    <img :src="message.payload.url"
-                         :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
+
+                  <!-- 内容 开始 -->
+                  <div v-if="message.type === 'text'" class="content-text" v-html="emoji.decoder.decode(message.payload.text)"></div>
+                  <!-- 内容 结束 -->
+                  <!-- 简历 开始 -->
+                  <a v-if="message.type === 'resume'" :href="message.payload.resume" target="_blank" download="download">
+                    <div class="content-file" title="点击下载">
+                      <div class="file-info">
+                        <span class="file-name">个人简历</span>
+                      </div>
+                      <img class="file-img" src="../../../../assets/image/icon-zxjl.png"/>
+                    </div>
+                  </a>
+                  <!-- 简历 结束 -->
+                  <!-- 图片 开始 -->
+                  <div v-if="message.type === 'image'" class="content-image" @click="showImagePreviewPopup(message.payload.url)">
+                    <img :src="message.payload.url" :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
                   </div>
+                  <!-- 图片 结束 -->
+
+                  <!-- 文件 开始 -->
                   <a v-if="message.type === 'file'" :href="message.payload.url" target="_blank" download="download">
                     <div class="content-file" title="点击下载">
                       <div class="file-info">
@@ -52,28 +69,10 @@
                       <img class="file-img" src="../../../../assets/images/file-icon.png"/>
                     </div>
                   </a>
-                  <div v-if="message.type ==='audio'" class="content-audio" @click="playAudio(message)">
-                    <div class="audio-facade" :style="{width:Math.ceil(message.payload.duration)*7 + 50 + 'px'}">
-                      <div class="audio-facade-bg" :class="{'play-icon':audioPlayer.playingMessage === message}"></div>
-                      <div>{{ Math.ceil(message.payload.duration) || 1 }}<span>"</span></div>
-                    </div>
-                  </div>
-                  <goeasy-video-player
-                    v-if="message.type === 'video'"
-                    :thumbnail="message.payload.thumbnail"
-                    :src="message.payload.video.url"
-                  />
-                  <div v-if="message.type === 'order'" class="content-order">
-                    <div class="order-id">订单号：{{ message.payload.id }}</div>
-                    <div class="order-body">
-                      <img :src="message.payload.url" class="order-img"/>
-                      <div class="order-name">{{ message.payload.name }}</div>
-                      <div>
-                        <div class="order-price">{{ message.payload.price }}</div>
-                        <div class="order-count">共{{ message.payload.count }}件</div>
-                      </div>
-                    </div>
-                  </div>
+                  <!-- 文件 结束 -->
+                  <!-- 视频 开始 -->
+                  <goeasy-video-player v-if="message.type === 'video'" :thumbnail="message.payload.thumbnail" :src="message.payload.video.url" />
+                  <!-- 视频 结束 -->
                 </div>
                 <div v-if="currentUser.id === message.senderId" :class="message.read ?'message-read':'message-unread'">
                   <div v-if="message.senderId === currentUser.id">{{ message.read ? '已读' : '未读' }}</div>
@@ -81,10 +80,11 @@
               </div>
             </div>
           </div>
+          <!-- 内容区域 结束 -->
         </div>
       </div>
     </div>
-    <div class="chat-footer">
+    <div class="chat-footer" :style="`height:${is_pop == 'pop'?'120':'140'}px;`">
       <!-- <div class="action-delete" v-if="messageSelector.visible">
         <img class="delete-btn" src="../../../../assets/images/delete.png" @click="deleteMultipleMessages"/>
         <div>删除</div>
@@ -106,7 +106,10 @@
           </div> -->
           <!-- 图片 -->
           <div class="action-item">
-            <label for="img-input">
+            <label for="img-input" v-if="userVipRank > 0">
+              <i class="iconfont icon-picture" title="图片"></i>
+            </label>
+            <label  @click="clickvipRank_0" v-else>
               <i class="iconfont icon-picture" title="图片"></i>
             </label>
             <input v-show="false" id="img-input" accept="image/*" multiple type="file" @change="sendImageMessage"/>
@@ -119,18 +122,21 @@
           </div> -->
           <!-- 文件 -->
           <div class="action-item">
-            <label for="file-input">
+            <label for="file-input" v-if="userVipRank > 0">
               <i class="iconfont icon-wj-wjj" title="文件"></i>
             </label>
-            <input v-show="false" id="file-input" type="file"
-                   @change="sendFileMessage"/>
+            <label @click="clickvipRank_0" v-else>
+              <i class="iconfont icon-wj-wjj" title="文件"></i>
+            </label>
+            <input v-show="false" id="file-input" type="file" @change="sendFileMessage"/>
           </div>
-          
+          <i class="vline"></i>
+          <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickToolbarBtn('resume')">发简历</div>
         </div>
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
-        <div class="input-box">
-          <textarea ref="input" @focus="onInputFocus" @keyup.enter="sendTextMessage" v-model="text" maxlength="700" autocomplete="off" class="input-content"></textarea>
+        <div class="input-box" @click.stop="clickInput">
+          <textarea ref="input" @focus="onInputFocus" @keyup.enter="sendTextMessage" placeholder="输入内容...." v-model="text" maxlength="700"  class="input-content"></textarea>
         </div>
         <div class="send-box">
           <button class="send-button" @click="sendTextMessage">发送</button>
@@ -176,6 +182,12 @@
           return {}
         }
       },
+      is_pop:{
+        type: String,
+        default() {
+          return ''
+        }
+      }
     },
     data() {
       const emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
@@ -188,6 +200,8 @@
         '[傲慢]': 'emoji_8@2x.png',
       };
       return {
+        userProfile:{}, // 个人信息
+        userVipRank: 0,
         currentUser: null,
         friend: null,
 
@@ -231,6 +245,7 @@
       };
     },
     created() {
+      this.userVipRank = localStorage.getItem('userVipRank');
       this.friend = this.infoData; // 好友信息
       this.currentUser = {  // 我的信息
         id: localStorage.getItem('realUid'),
@@ -242,11 +257,13 @@
         id: this.friend.uid,
         data: {name: this.friend.name, avatar: this.friend.avatar},
       };
-      console.log(this.to)
       // 获取历史记录
       this.loadHistoryMessage(true);
 
       this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
+
+      // 获取个人信息
+      this.getUserProfile();
     },
     beforeDestroy() {
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
@@ -302,6 +319,27 @@
       onAudioPlayEnd() {
         this.audioPlayer.playingMessage = null;
       },
+      // 点击 发简历按钮
+      clickToolbarBtn(){
+        let userProfile = this.userProfile;
+        let payload = {
+          resume: userProfile.basic_info.curriculum_vitae
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'resume',  //字符串，可以任意自定义类型 resume 简历
+          text: '发送简历',
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            console.log(message)
+            this.sendMessage(message);
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
+      },
+      // 发送按钮事件
       sendTextMessage() {
         if (!this.text.trim()) {
           this.$message.error({
@@ -324,6 +362,9 @@
       },
       onInputFocus () {
         this.emoji.visible = false;
+      },
+      clickInput(){
+        this.$refs.input.focus();
       },
       showEmojiBox() {
         this.emoji.visible = !this.emoji.visible;
@@ -394,8 +435,8 @@
           },
           onFailed: function (error) {
             if (error.code === 507) {
-              alert('发送语音/图片/视频/文件失败，没有配置OSS存储');
-              console.log('发送语音/图片/视频/文件失败，没有配置OSS存储，详情参考：https://docs.goeasy.io/2.x/im/message/media/alioss');
+              alert('发送失败，没有配置OSS存储');
+              console.log('发送失败，没有配置OSS存储');
             } else {
               console.log('发送失败:', error);
             }
@@ -561,6 +602,23 @@
         }
         return '';
       },
+
+      clickvipRank_0(){
+        this.$message.error("需要升级为VIP会员才可发送文件!");
+        return
+      },
+      // 获取个人信息
+      getUserProfile(){
+        let that = this;
+        that.$axios.post('/api/user/profile',{}).then(res =>{
+          if(res.code == 0){
+            this.userProfile = res.data;
+          }
+        }).catch(e =>{
+          console.log(e)
+        })
+      },
+
     },
   };
 </script>
@@ -576,7 +634,7 @@
 
   .chat-title {
     height: 40px;
-    padding: 0 15px;
+    padding: 10px 10px 0 10px;
     display: flex;
     align-items: center;
     font-size: 18px;
@@ -917,7 +975,6 @@
   .chat-footer {
     border-top: 1px solid #dcdfe6;
     width: 100%;
-    height: 140px;
     background: #FFFFFF;
   }
 
@@ -951,18 +1008,19 @@
   .action-bar {
     display: flex;
     flex-direction: row;
+    align-items: center;
     padding: 0 10px;
   }
 
   .action-bar .action-item {
     text-align: left;
-    padding: 10px 0 4px 0;
+    padding: 4px 0;
     position: relative;
   }
 
   .action-bar .action-item .iconfont {
-    font-size: 22px;
-    margin: 0 10px;
+    font-size: 20px;
+    margin: 0 6px;
     z-index: 3;
     color: #606266;
     cursor: pointer;
@@ -1007,14 +1065,14 @@
     border: none;
     resize: none;
     display: block;
-    padding: 5px 15px;
+    padding: 5px 0;
     box-sizing: border-box;
     width: 100%;
     color: #606266;
     outline: none;
     background: #FFFFFF;
     word-break: break-all;
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .send-box {
@@ -1037,8 +1095,8 @@
     height: 100%;
     position: absolute;
     top: 0;
-    left: -281px;
-    background: rgba(51, 51, 51, 0.5);
+    left: 0;
+    background: rgba(51, 51, 51, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1167,5 +1225,32 @@
     color: #666666;
     flex: 1;
   }
-
+  .vline {
+    display: inline-block;
+    margin-right: 20px;
+    margin-left: 0;
+    margin-top: 5px;
+    width: 1px;
+    height: 12px;
+    vertical-align: middle;
+    background: #e0e0e0;
+    margin: 0 10px;
+  }
+  .toolbar-btn {
+    height: 22px;
+    border-radius: 4px;
+    border: 1px solid #e6e8eb;
+    padding: 0 10px;
+    line-height: 23px;
+    vertical-align: top;
+    margin-right: 10px;
+    box-sizing: content-box;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    font-size: 12px;
+  }
+  .unable {
+    color: #999;
+  } 
 </style>

@@ -419,6 +419,13 @@ export default {
     // 点击聊一聊
     clickChat(i){
       let that = this;
+      let infoData = {
+        uid: i.uid || i.basic_info.uid,
+        name: i.name || i.basic_info.uid,
+        avatar: i.avatar || i.basic_info.uid,
+      }
+      that.$bus.$emit('receiveParams', {type:'searchTalent',infoData:JSON.stringify(infoData) });
+      return
       let p = {
         uid: i.uid|| i.basic_info.uid,
         content:'看过您的简历后，希望可以和您聊聊，谢谢！'

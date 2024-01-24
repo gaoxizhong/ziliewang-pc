@@ -7,6 +7,7 @@
         <div @click="clickMessage" class="communication-box">
           <img src="../../assets/image/bossSide/remind.png" alt="" />
           <span>消息</span>
+          <span class="corner-mark-box" v-if="unreadAmount">{{ unreadAmount }}</span>
         </div>
         <div @click="gotoassist">
           <img src="../../assets/image/bossSide/questionCircle.png" alt="" />
@@ -53,7 +54,9 @@
           <span>我的沟通</span>
           <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
         </div>
-        <div class="navbaerMag-content-box">2</div>
+        <div class="navbaerMag-content-box">
+          <ConversationList :title_show="title_show" @chatLocation="chatLocation"/>
+        </div>
       </div>
     </VueDragResize>
     <!-- 点击导航消息按钮 展示消息列表弹窗 结束-->
@@ -66,13 +69,15 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import VueDragResize from 'vue-drag-resize';
 
+import ConversationList from '../../views/bossSide/components/mag/conversationList.vue';
 import { setToken } from '@/utils/auth';
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    VueDragResize
+    VueDragResize,
+    ConversationList
   },
   data(){
     return {
@@ -84,6 +89,8 @@ export default {
       top: 80,
       left: 500,
       zInfex_0: 99,
+      unreadAmount: null,
+      title_show: 'navbarMag'
     }
   },
   computed: {
@@ -114,11 +121,35 @@ export default {
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
-    this.width = 300; // 可拖动div 高度
+    this.width = 340; // 可拖动div 高度
     this.left = Number(getViewportSize.width) - Number(this.width) - 140;
     this.height = Number(getViewportSize.height * 0.8); // 可拖动div 高度
+
+    this.listenConversationUpdate();// 监听会话列表变化
+    this.loadConversations(); //加载会话列表
   },
   methods: {
+    loadConversations() {
+      this.goEasy.im.latestConversations({
+        onSuccess: (result) => {
+          let content = result.content;
+          this.setUnreadNumber(content);
+        },
+        onFailed: (error) => {
+          console.log('获取失败, code:' + error.code + 'content:' + error.content);
+        },
+      });
+    },
+    listenConversationUpdate() {
+      this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
+    },
+    // 获取消息数量
+    setUnreadNumber(content) {
+      console.log(content)
+      this.unreadAmount = content.unreadTotal;
+    },
+
+
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -162,6 +193,10 @@ export default {
     clickCloseBtn(){
       this.navbar_mag = false;
     },
+    // 接收组件方法通讯
+    chatLocation(e){
+      this.$bus.$emit('receiveParams', {type:'searchTalent',infoData:e });
+    },
   }
 }
 </script>
@@ -204,15 +239,28 @@ export default {
       align-items: center;
       justify-content: center;
       div{
-        margin-right: 1.5rem;
+        margin-right: 22px;
         font-size: 14px;
         display: flex;
         align-items: center;
+        position: relative;
         cursor: pointer;
         img{
           width: 14px;
           height: 14px;
           margin-right: 4px;
+        }
+        .corner-mark-box{
+          line-height: initial;
+          background: #ff0000;
+          color: #fff;
+          border-radius: 10px;
+          padding: 2px 6px;
+          position: absolute;
+          top: -10px;
+          right: -10px;
+          font-size: 12px;
+          transform: scale(0.8);
         }
       }
     }
@@ -295,7 +343,7 @@ export default {
   .navbaerMag-content-box{
     width: 100%;
     flex: 1;
-    padding: 10px 20px;
+    padding: 10px 0;
   }
 }
 </style>

@@ -527,6 +527,7 @@ export default {
   .chat-window-box{
     padding: 0;
     width: 100%;
+    margin: 0 auto;
     flex: 1;
     display: flex;
     height: calc(100vh - 120px);

@@ -223,6 +223,7 @@ export default {
     // 接收组件方法通讯
     chatLocation(e){
       console.log(e)
+      this.$bus.$emit('receiveParams', {type:'JobDetails',infoData:e });
     },
   },
 };
@@ -373,7 +374,6 @@ export default {
   border-radius: 6px;
   display: flex;
   flex-direction: column;
-  box-shadow:0 0 16px 0 rgba(139,152,169,.4);
   .navbaerMag-title-box{
     width: 100%;
     height: auto;
@@ -394,7 +394,7 @@ export default {
   .navbaerMag-content-box{
     width: 100%;
     flex: 1;
-    padding: 10px 20px;
+    padding: 10px 0;
   }
 }
 </style>

@@ -168,8 +168,8 @@ export default {
   }
   .menu-unread {
     position: absolute;
-    top: -5px;
-    right: 5px;
+    top: -10px;
+    right: -5px;
     width: 18px;
     height: 18px;
     line-height: 18px;
@@ -177,6 +177,7 @@ export default {
     border-radius: 50%;
     background-color: #d02129;
     color: #ffffff;
+    font-size: 12px;
   }
 
   .router-link-active i {

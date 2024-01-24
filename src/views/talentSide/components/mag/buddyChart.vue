@@ -1,5 +1,4 @@
 <template>
-  <div class="conversations">
     <div class="conversations">
       <div class="conversation-list">
         <div class="conversation-list-container">
@@ -10,15 +9,12 @@
           </div>
         </div>
       </div>
+      <!-- 聊天部分 开始-->
+      <div class="contact-main" v-if="is_chat">
+        <PrivateChat :infoData="profile.friend" />
+      </div>
+      <!-- 聊天部分 结束-->
     </div>
-
-    <!-- 聊天部分 开始-->
-    <div class="contact-main" v-if="is_chat">
-      <PrivateChat :infoData="profile.friend" />
-    </div>
-    <!-- 聊天部分 结束-->
-
-  </div>
 </template>
 
 <script>
@@ -45,13 +41,7 @@
     methods: {
       
       chatLocation (conversation) {
-        console.log(conversation)
-        this.profile.friend = {
-          uid: conversation.userId,
-          name: conversation.data.name,
-          avatar: conversation.data.avatar,
-        };
-        return
+        this.profile.friend = JSON.parse(conversation);
         this.is_chat = false;
         this.$nextTick( () => {
           this.is_chat = true;
@@ -69,14 +59,6 @@
     display: flex;
     color: #333333;
   }
-  .conversations {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    display: flex;
-    color: #333333;
-  }
-
   .conversation-list {
     width: 260px;
   }
