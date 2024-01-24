@@ -5,7 +5,7 @@
       <div style="width: 1200px; position: relative;">
         <el-tabs v-model="tag" @tab-click="handleClick">
           <el-tab-pane label="好友列表" name="buddyList"></el-tab-pane>
-          <el-tab-pane label="聊天记录" name="chatHistory"></el-tab-pane>
+          <!-- <el-tab-pane label="聊天记录" name="chatHistory"></el-tab-pane> -->
           <el-tab-pane label="好友动态" name="attention"></el-tab-pane>
           <el-tab-pane label="头条" name="hot"></el-tab-pane>
           <!-- <el-tab-pane label="直播" name="live"></el-tab-pane> -->
@@ -208,7 +208,7 @@ export default {
   },
   methods: {
     clickTab(n){
-      this.tag = n;
+      this.content_tag = n;
       this.textarea = '';
       this.upImgList = [];
       this.video_files_path = [];

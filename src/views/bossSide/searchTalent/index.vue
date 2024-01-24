@@ -21,14 +21,6 @@
 
         </div>
         <!-- 搜索框 结束 -->
-        <!-- 热门职位 开始 -->
-        <!-- <div class="hotJob-box">
-          <span class="hotJob-span">热门岗位</span>
-          <div class="hotJob-item-box">
-            <a href="javascript:0;" class="hotJob-item" v-for="(item,index) in hotJob_options" :key="index" @click="clickTagname(item)">{{item}}</a>
-          </div>
-        </div> -->
-        <!-- 热门职位 结束 -->
       </div>
       <!-- 检索及热门职位 结束 -->
     </div>
@@ -264,7 +256,6 @@ export default {
   data(){
     return {
       search_value:'',
-      hotJob_options: ['UI设计师','项目经理/主管','工艺工程师','3D设计师','电话销售'],
       jobList:[],  // 列表
       // 分页数据
       paginationData: {

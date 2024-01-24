@@ -1,18 +1,21 @@
 <template>
   <div class="bossSide-container interaction-box">
     <!-- 互动页 -->
-    <div class="tab-box">
+    <!-- <div class="tab-box">
       <div class="tab-left">
         <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">沟通中</div>
-        <!-- <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">已约面</div> -->
-        <!-- <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">不合适</div> -->
-        <!-- <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">收藏</div> -->
+        <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">已约面</div>
+        <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">不合适</div>
+        <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">收藏</div>
       </div>
-      <!-- <div class="tab-right">
+      <div class="tab-right">
         <span></span>
-      </div> -->
+      </div>
+    </div> -->
+    <div class="chat-window-box">
+      <buddyChart />
     </div>
-    <div class="chat-window-box margin-top-20 m-box">
+    <!-- <div class="chat-window-box margin-top-20 m-box">
       <div class="left-box">
         <div class="seach-box"></div>
         <div class="personAbility-box">
@@ -21,7 +24,6 @@
             <div class="name-box">
               <div class="name-t">
                 <span class="span-1" v-if="item.user">{{item.user.real_name}}</span>
-                <!-- <span class="span-2">{{item.user.position?item.user.position:'暂无'}}</span> -->
               </div>
               <div class="sub-title">{{item.chat_list[item.chat_list.length-1].content}}</div>
             </div>
@@ -55,7 +57,6 @@
                   <img :src="item.user_avatar?item.user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-if="item.type == 1"/>
                   <img :src="item.company_user_avatar?item.company_user_avatar:require('../../../assets/image/bossSide/img-user.jpg')" class="msg-avatar" v-else/>
                   <div class="sender">
-                    <!-- <span class="sender-text">{{item.name}}</span> -->
                     <span class="time-text">{{item.createtime}}</span>
                   </div>
                   <div class="msg-content-and-after">
@@ -110,7 +111,7 @@
         <el-empty el-empty description="与人才沟通，左侧列表中显示"></el-empty>
       </div>
 
-    </div>
+    </div> -->
 
 
     <!-- 面试邀请弹窗 开始 -->
@@ -185,11 +186,13 @@
 <script>
 import onlineResume from "../components/onlineResume.vue";
 import pdf from 'vue-pdf';
+import buddyChart from '../../bossSide/components/mag/buddyChart.vue';
 
 export default {
   components: {
     onlineResume,
-    pdf
+    pdf,
+    buddyChart
   },
   data() {
     return {
