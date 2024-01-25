@@ -16,11 +16,11 @@
           <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
 
-          <div class="message-phone-box" v-if="message.type === 'phone' && message.payload.way_status == 1">你已向对方发送交换联系方式</div>
-          <div class="message-phone-box" v-if="message.type === 'phone' && message.payload.way_status == 3">你已同意对方索要联系方式</div>
+          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 1">你已向对方发送交换联系方式</div>
+          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 3">你已同意对方索要联系方式</div>
 
           <!-- boss 发送过来的手机号 ↓ -->
-          <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 2">
+          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 2">
             <h4 class="message-phone-universal-card-header">手机号</h4>
             <div class="message-phone-universal-card-content">
               <span>{{ message.payload.name }}的手机号：{{ message.payload.phone }}</span>
@@ -28,7 +28,7 @@
           </div>
           <!-- boss 发送过来的手机号 ↑ -->
           <!-- boss 索要手机号 ↓ -->
-          <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 4">
+          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 4">
             <h4 class="message-phone-universal-card-header">手机号</h4>
             <div class="message-phone-universal-card-content">
               <span>对方请求交换联系方式</span>
@@ -1256,7 +1256,7 @@
   }
 
   .action-popup {
-    width: 848px;
+    width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
@@ -1428,7 +1428,7 @@
   }
   .message-phone-universal-card{
     max-width: 260px;
-    margin: 10px auto 0;
+    margin: 10px auto;
     background: #fff;
     border: 1px solid rgba(202,208,217,.7);
     border-radius: 6px;
@@ -1441,7 +1441,7 @@
     line-height: 21px;
     background: linear-gradient(270deg,#f2f6ff,rgba(227,236,255,.85));
     border-radius: 6px 6px 0 0;
-  }
+  } 
   .message-phone-universal-card-content{
     padding: 8px 16px;
     color: #222;

@@ -609,6 +609,7 @@ export default {
     }
     .options-row {
       display: flex;
+      align-items: center;
       padding-bottom: 12px;
       margin-bottom: 12px;
       line-height: 20px;

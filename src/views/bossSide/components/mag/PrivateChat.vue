@@ -17,19 +17,19 @@
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
 
           
-          <div class="message-phone-box" v-if="message.type === 'phone' && message.payload.way_status == 4">你已向对方发送交换联系方式</div>
-          <div class="message-phone-box" v-if="message.type === 'phone' && message.payload.way_status == 2">你已同意对方索要联系方式</div>
+          <div class="message-phone-box"  @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 4">你已向对方发送交换联系方式</div>
+          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 2">你已同意对方索要联系方式</div>
 
           <!-- 个人 发送过来的手机号 ↓ -->
-          <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 3">
+          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 3">
             <h4 class="message-phone-universal-card-header">手机号</h4>
             <div class="message-phone-universal-card-content">
-              <span>{{ message.payload.name }}的手机号：{{ message.payload.phone }}</span>
+              <span>{{ message.payload.real_name }}的手机号：{{ message.payload.real_phone }}</span>
             </div>
           </div>
           <!-- 个人 发送过来的手机号 ↑ -->
           <!-- 个人 索要手机号 ↓ -->
-          <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 1">
+          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 1">
             <h4 class="message-phone-universal-card-header">手机号</h4>
             <div class="message-phone-universal-card-content">
               <span>对方请求交换联系方式</span>
@@ -61,8 +61,8 @@
                 <img v-else :src="friend.avatar" class="sender-avatar"/>
               </div>
               <!-- 头像 结束 -->
-              <!-- <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)"> -->
-              <div class="message-content">
+              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)">
+              <!-- <div class="message-content"> -->
                 <div class="message-payload">
                   <div class="pending" v-if="message.status === 'sending'"></div>
                   <div class="send-fail" v-if="message.status === 'fail'"></div>
@@ -1147,7 +1147,7 @@
   }
 
   .action-popup {
-    width: 848px;
+    width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
@@ -1400,7 +1400,7 @@
   }
   .message-phone-universal-card{
     max-width: 260px;
-    margin: 10px auto 0;
+    margin: 10px auto;
     background: #fff;
     border: 1px solid rgba(202,208,217,.7);
     border-radius: 6px;

@@ -60,7 +60,7 @@ export default {
   color: #333333;
 }
 .conversation-list {
-  width: 260px;
+  width: 300px;
 }
 
 .conversation-list-container {
@@ -74,7 +74,7 @@ export default {
 .conversation-list-content {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 0;
+  padding: 10px 8px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

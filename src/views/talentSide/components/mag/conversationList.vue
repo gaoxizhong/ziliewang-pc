@@ -203,7 +203,7 @@
   .unread-count {
     position: absolute;
     top: -10px;
-    left: 30px;
+    left: -6px;
     width: 18px;
     height: 18px;
     border-radius: 50%;

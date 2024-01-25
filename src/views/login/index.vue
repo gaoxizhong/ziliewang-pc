@@ -126,6 +126,12 @@
                   <el-input v-model="change_password.password_tow" type="password" name="password_tow" placeholder="请确认新密码" show-password></el-input>
                 </div>
               </div>
+              <div class="login-radio-box">
+                <el-radio-group v-model="tag">
+                  <el-radio label="user">个人用户</el-radio>
+                  <el-radio label="company">企业用户</el-radio>
+                </el-radio-group>
+              </div>
               <button type="submit" class="login-btn">确认修改</button>
             </form>
             <button type="button" class="login-btn-qx" @click="clickUserLogin">取消</button>
@@ -533,44 +539,38 @@ export default {
     click_code(ty){
       let that = this;
       let type = ty; // 1、注册； 2、登录 3、忘记密码
+      
       let phone = '';
-      if(type == 1){
-        phone = that.newuser.phone
-      }
-      if(type == 2){
-        phone = that.login_user.phone
-      }
-      if(type == 3){
-        phone = that.change_password.phone
-      }
-
+      
       let event = '';
       if(type == 1){
         // 注册
-        event = 'register'
+        event = 'register';
+        phone = that.newuser.phone;
       }
       if(type == 2){
         // 登录
-        event = 'login'
-      }
-      if(type == 3){
-        // 修改密码
-        event = 'changepwd'
+        event = 'login';
+        phone = that.login_user.phone
       }
       if(type == 4){
         // 修改手机号
         event = 'changephone'
       }
-
+      if(type == 3){
+        // 修改密码
+        event = 'changepwd';
+        phone = that.change_password.phone
+      }
+      if( !that.tag  ){
+          that.$message.error({
+            message:'请选择身份角色'
+          })
+          return
+        }
       if(phone == ''){
         this.$message.error({
           message:'请输入手机号'
-        })
-        return
-      }
-      if( !that.tag  ){
-        that.$message.error({
-          message:'请选择身份角色'
         })
         return
       }

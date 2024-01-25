@@ -418,12 +418,15 @@ export default {
     },
     // 点击聊一聊
     clickChat(i){
+      console.log(i)
       let that = this;
       let infoData = {
         uid: i.uid || i.basic_info.uid,
-        name: i.name || i.basic_info.uid,
-        avatar: i.avatar || i.basic_info.uid,
+        name: i.name || i.basic_info.name,
+        avatar: i.avatar || i.basic_info.avatar,
       }
+      console.log(infoData)
+      that.zx_dialogVisible = false;
       that.$bus.$emit('receiveParams', {type:'searchTalent',infoData:JSON.stringify(infoData) });
       return
       let p = {
