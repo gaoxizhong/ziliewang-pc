@@ -16,6 +16,29 @@
           <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
 
+          <div class="message-phone-box" v-if="message.type === 'phone' && message.payload.way_status == 1">你已向对方发送交换联系方式</div>
+          <div class="message-phone-box" v-if="message.type === 'phone' && message.payload.way_status == 3">你已同意对方索要联系方式</div>
+
+          <!-- boss 发送过来的手机号 ↓ -->
+          <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 2">
+            <h4 class="message-phone-universal-card-header">手机号</h4>
+            <div class="message-phone-universal-card-content">
+              <span>{{ message.payload.name }}的手机号：{{ message.payload.phone }}</span>
+            </div>
+          </div>
+          <!-- boss 发送过来的手机号 ↑ -->
+          <!-- boss 索要手机号 ↓ -->
+          <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 4">
+            <h4 class="message-phone-universal-card-header">手机号</h4>
+            <div class="message-phone-universal-card-content">
+              <span>对方请求交换联系方式</span>
+            </div>
+            <div class="message-phone-universal-card-footer">
+              <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(3)">同意交换</div>
+            </div>
+          </div>
+          <!-- boss 发送过来的手机号 ↑ -->
+
           <!-- <div class="message-recalled" v-if="message.recalled">
             <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
@@ -24,7 +47,7 @@
             </div>
           </div> -->
           <!-- 内容区域 开始 -->
-          <div class="message-item">
+          <div class="message-item"  v-if="message.type != 'phone'">
             <!-- 多选按钮 -->
             <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
@@ -38,11 +61,13 @@
               </div>
               <!-- 头像 结束 -->
 
-              <!-- <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)"> -->
-              <div class="message-content">
+              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)">
+              <!-- <div class="message-content"> -->
                 <div class="message-payload">
-                  <div class="pending" v-if="message.status === 'sending'"></div>
-                  <div class="send-fail" v-if="message.status === 'fail'"></div>
+                  <!-- 加载中 icon -->
+                  <div class="pending" v-if="message.status === 'sending'"></div> 
+                  <!--  发送失败 icon -->
+                  <div class="send-fail" v-if="message.status === 'fail'"></div> 
 
                   <!-- 内容 开始 -->
                   <div v-if="message.type === 'text'" class="content-text" v-html="emoji.decoder.decode(message.payload.text)"></div>
@@ -154,7 +179,7 @@
           </div>
           <i class="vline"></i>
           <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickToolbarBtn('resume')">发简历</div>
-          <!-- <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn('phone')">交换联系方式</div> -->
+          <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">交换联系方式</div>
         </div>
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
@@ -347,11 +372,14 @@
         this.audioPlayer.playingMessage = null;
       },
       // 点击 交换联系方式
-      clickPhoneBtn(){
+      clickPhoneBtn(n){
         let userProfile = this.userProfile;
-        real_phone
         let payload = {
-          phone: userProfile.basic_info.real_phone
+          real_phone: userProfile.basic_info.real_phone,
+          phone: userProfile.basic_info.phone,
+          real_name: userProfile.basic_info.real_name,
+          name: userProfile.basic_info.name,
+          way_status: n,  // 1. 向对方发起交换联系方式发出请求,2.boss 发送过来的手机号(boss同意) 3.同意对方索要联系方式 4. boss发送交换联系方式发出请求
         }
         this.goEasy.im.createCustomMessage({
           type: 'phone',  //字符串，可以任意自定义类型 phone 联系方式
@@ -748,6 +776,7 @@
     color: #999;
     text-align: center;
     font-size: 12px;
+    margin-top: 8px;
   }
 
   .message-list {
@@ -1389,4 +1418,57 @@
   .unable {
     color: #999;
   } 
+  /* ============ 交换联系方式  ↓ ==================*/
+  .message-phone-box{
+    width: auto;
+    text-align: center;
+    font-size: 13px;
+    color: #d02129;
+    padding: 10px;
+  }
+  .message-phone-universal-card{
+    max-width: 260px;
+    margin: 10px auto 0;
+    background: #fff;
+    border: 1px solid rgba(202,208,217,.7);
+    border-radius: 6px;
+  }
+  .message-phone-universal-card-header{
+    padding: 6px 16px;
+    color: #356ce9;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 21px;
+    background: linear-gradient(270deg,#f2f6ff,rgba(227,236,255,.85));
+    border-radius: 6px 6px 0 0;
+  }
+  .message-phone-universal-card-content{
+    padding: 8px 16px;
+    color: #222;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px
+  }
+  .message-phone-universal-card-footer {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
+  .message-phone-universal-card-btn{
+    width: 111px;
+    padding: 6px 0;
+    color: #222;
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid #cad0d9;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .message-phone-universal-card-btn-main {
+    color: #0058ff;
+    border: 1px solid #0058ff;
+  }
+
+  /* ============ 交换联系方式  ↑ ==================*/
+
 </style>

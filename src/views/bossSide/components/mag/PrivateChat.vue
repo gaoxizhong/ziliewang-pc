@@ -13,7 +13,34 @@
           {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
         </div>
         <div v-for="(message, index) in history.messages" :key="index">
+          <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
+
+          
+          <div class="message-phone-box" v-if="message.type === 'phone' && message.payload.way_status == 4">你已向对方发送交换联系方式</div>
+          <div class="message-phone-box" v-if="message.type === 'phone' && message.payload.way_status == 2">你已同意对方索要联系方式</div>
+
+          <!-- 个人 发送过来的手机号 ↓ -->
+          <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 3">
+            <h4 class="message-phone-universal-card-header">手机号</h4>
+            <div class="message-phone-universal-card-content">
+              <span>{{ message.payload.name }}的手机号：{{ message.payload.phone }}</span>
+            </div>
+          </div>
+          <!-- 个人 发送过来的手机号 ↑ -->
+          <!-- 个人 索要手机号 ↓ -->
+          <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 1">
+            <h4 class="message-phone-universal-card-header">手机号</h4>
+            <div class="message-phone-universal-card-content">
+              <span>对方请求交换联系方式</span>
+            </div>
+            <div class="message-phone-universal-card-footer">
+              <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(2)">同意交换</div>
+            </div>
+          </div>
+          <!-- 个人 索要手机号 ↑ -->
+
+
 
           <!-- <div class="message-recalled" v-if="message.recalled">
             <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
@@ -23,7 +50,7 @@
             </div>
           </div> -->
           <!-- 内容区域 开始 -->
-          <div class="message-item">
+          <div class="message-item" v-if="message.type != 'phone'">
             <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
             </div> -->
@@ -146,7 +173,7 @@
             <input v-show="false" id="file-input" type="file"  @change="sendFileMessage"/>
           </div>
           <i class="vline"></i>
-          
+          <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(4)">交换联系方式</div>
         </div>
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
@@ -213,6 +240,7 @@
         '[傲慢]': 'emoji_8@2x.png',
       };
       return {
+        userProfile:{}, // 个人信息
         userVipRank: 0,
         currentUser: null,
         friend: null,
@@ -275,7 +303,8 @@
       console.log(this.to)
       // 获取历史记录
       this.loadHistoryMessage(true);
-
+      // 获取个人信息
+      this.getUserProfile();
       this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     beforeDestroy() {
@@ -331,6 +360,29 @@
       },
       onAudioPlayEnd() {
         this.audioPlayer.playingMessage = null;
+      },
+      // 点击 交换联系方式
+      clickPhoneBtn(n){
+        let userProfile = this.userProfile;
+        let payload = {
+          real_phone: userProfile.phone,
+          phone: userProfile.phone,
+          real_name: userProfile.staff_name,
+          name: userProfile.staff_name,
+          way_status: n,  // 1. 向对方发起交换联系方式发出请求,2.boss 发送过来的手机号(boss同意) 3.同意对方索要联系方式 4. boss发送交换联系方式发出请求
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'phone',  //字符串，可以任意自定义类型 phone 联系方式
+          text: '交换联系方式',
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            this.sendMessage(message);
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
       },
       sendTextMessage() {
         if (!this.text.trim()) {
@@ -607,7 +659,18 @@
       clickvipRank_0(){
         this.$message.error("需要升级为VIP会员才可发送文件!");
         return
-      }
+      },
+      // 获取个人信息
+      getUserProfile(){
+        let that = this;
+        that.$axios.post('/api/staff/profile',{}).then(res =>{
+          if(res.code == 0){
+            this.userProfile = res.data;
+          }
+        }).catch(e =>{
+          console.log(e)
+        })
+      },
 
     },
   };
@@ -681,6 +744,7 @@
     color: #999;
     text-align: center;
     font-size: 12px;
+    margin-top: 6px;
   }
 
   .message-list {
@@ -1325,4 +1389,57 @@
     background: #d9d9d9;
   }
   /*================ 常用语 样式  ↑  =================*/
+
+  /* ============ 交换联系方式  ↓ ==================*/
+  .message-phone-box{
+    width: auto;
+    text-align: center;
+    font-size: 13px;
+    color: #d02129;
+    padding: 10px;
+  }
+  .message-phone-universal-card{
+    max-width: 260px;
+    margin: 10px auto 0;
+    background: #fff;
+    border: 1px solid rgba(202,208,217,.7);
+    border-radius: 6px;
+  }
+  .message-phone-universal-card-header{
+    padding: 6px 16px;
+    color: #356ce9;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 21px;
+    background: linear-gradient(270deg,#f2f6ff,rgba(227,236,255,.85));
+    border-radius: 6px 6px 0 0;
+  }
+  .message-phone-universal-card-content{
+    padding: 8px 16px;
+    color: #222;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px
+  }
+  .message-phone-universal-card-footer {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
+  .message-phone-universal-card-btn{
+    width: 111px;
+    padding: 6px 0;
+    color: #222;
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid #cad0d9;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .message-phone-universal-card-btn-main {
+    color: #0058ff;
+    border: 1px solid #0058ff;
+  }
+
+  /* ============ 交换联系方式  ↑ ==================*/
 </style>

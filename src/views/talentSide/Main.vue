@@ -105,6 +105,17 @@ import PrivateChat from './components/mag/PrivateChat.vue';
          this.connectGoEasy(); 
       }
     },
+    beforeDestroy() {
+      //断开连接
+      this.goEasy.disconnect({
+        onSuccess: function(){
+            console.log("断开连接成功.")
+        },
+        onFailed: function(error){
+            console.log("断开连接失败, code:"+error.code+ ",error:"+error.content);
+        }
+      });
+    },
     methods:{
       //连接goeasy
        connectGoEasy() {
