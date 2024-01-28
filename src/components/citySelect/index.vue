@@ -190,9 +190,9 @@ export default {
                 flex-wrap: wrap;
                 li{
                   width: auto;
-                  height: 38px;
+                  height: 36px;
                   text-align: center;
-                  line-height: 38px;
+                  line-height: 36px;
                   background: #F7F8FA;
                   border-radius: 4px 4px 4px 4px;
                   font-size: 14px;

@@ -19,7 +19,8 @@
           
           <div class="message-phone-box"  @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 4">你已向对方发送交换联系方式</div>
           <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 2">你已同意对方索要联系方式</div>
-
+          
+          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'interview' && message.payload.way_status == 1">已向对方发送面试邀请</div>
           <!-- 个人 发送过来的手机号 ↓ -->
           <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 3">
             <h4 class="message-phone-universal-card-header">手机号</h4>
@@ -86,6 +87,11 @@
                   </div>
                   <!-- 图片 结束 -->
 
+                  <!-- 同意面试邀请 开始 -->
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 2" class="content-interview">
+                    <span>接受了面试邀请</span>
+                  </div>
+                  <!-- 同意面试邀请 结束 -->
                   <!-- 文件 开始 -->
                   <a v-if="message.type === 'file'" :href="message.payload.url" target="_blank" download="download">
                     <div class="content-file" title="点击下载">
@@ -163,7 +169,7 @@
                    @change="sendVideoMessage"/>
           </div> -->
           <!-- 文件 -->
-          <div class="action-item">
+          <!-- <div class="action-item">
             <label for="file-input" v-if="userVipRank > 0">
               <i class="iconfont icon-wenjianjia" title="文件"></i>
             </label>
@@ -171,9 +177,10 @@
               <i class="iconfont icon-wenjianjia" title="文件"></i>
             </label>
             <input v-show="false" id="file-input" type="file"  @change="sendFileMessage"/>
-          </div>
+          </div> -->
           <i class="vline"></i>
-          <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(4)">交换联系方式</div>
+          <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(4)">联系方式</div>
+          <div class="btn-resume toolbar-btn unable" title="邀请面试" @click="clickYqms(1)">邀面试</div>
         </div>
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
@@ -361,10 +368,33 @@
       onAudioPlayEnd() {
         this.audioPlayer.playingMessage = null;
       },
+      // 点击 邀请面试
+      clickYqms(n){
+        // n == 1, 发送邀请面试
+        let userProfile = this.userProfile;
+        let payload = {
+          text: '邀请面试',
+          name: userProfile.staff_name,
+          way_status: n,  // 1. 向对方 发送邀请面试请求,2.用户同意面试邀请，
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'interview',  //字符串，可以任意自定义类型 interview 邀请面试
+          text: '邀请面试',
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            this.sendMessage(message);
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
+      },
       // 点击 交换联系方式
       clickPhoneBtn(n){
         let userProfile = this.userProfile;
         let payload = {
+          text: '交换联系方式',
           real_phone: userProfile.phone,
           phone: userProfile.phone,
           real_name: userProfile.staff_name,
@@ -686,11 +716,12 @@
   }
 
   .chat-title {
-    height: 40px;
-    padding: 10px 10px 0 10px;
+    height: auto;
+    padding: 6px 10px;
     display: flex;
     align-items: center;
     font-size: 18px;
+    border-bottom: 1px solid #f2f2f2;
   }
 
   .chat-avatar {
@@ -714,6 +745,7 @@
     overflow-y: auto;
     flex: 1;
     scrollbar-width: thin;
+    padding: 10px;
   }
 
   .chat-main::-webkit-scrollbar {
@@ -747,9 +779,9 @@
     margin-top: 6px;
   }
 
-  .message-list {
+  /* .message-list {
     padding: 0 10px;
-  }
+  } */
 
   .message-item {
     display: flex;
@@ -935,7 +967,18 @@
     color: #666666;
     flex: 1;
   }
-
+  .content-interview{
+    width: 240px;
+    height: 65px;
+    font-size: 15px;
+    background: #FFFFFF;
+    border: 1px solid #eeeeee;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    color: #356ce9;
+  }
   .content-file {
     width: 240px;
     height: 65px;
@@ -1065,7 +1108,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 6px 10px 0 10px;
+    /* padding: 6px 10px 0 10px; */
   }
 
   .action-bar .action-item {
@@ -1132,7 +1175,7 @@
   }
 
   .send-box {
-    padding: 5px 10px;
+    padding: 8px 20px;
     text-align: right;
   }
 

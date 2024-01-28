@@ -2,7 +2,7 @@
   <div class="container">
     <div class="workExperience-box myResume-plate">
       <div class="myResume-plate-title-box">
-        <span class="info-t">工作经历</span>
+        <span class="info-t" :class="data.length<= 0 ?'hover':''">工作经历</span>
         <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" v-if="!is_creat" @click="clickCreat"/>
       </div>
       <div class="myResume-plate-list" v-if="!is_creat">
@@ -483,9 +483,9 @@ export default {
                 flex-wrap: wrap;
                 li{
                   width: auto;
-                  height: 38px;
+                  height: 36px;
                   text-align: center;
-                  line-height: 38px;
+                  line-height: 36px;
                   background: #F7F8FA;
                   border-radius: 4px 4px 4px 4px;
                   font-size: 14px;

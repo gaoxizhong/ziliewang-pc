@@ -2,7 +2,7 @@
   <div class="container">
     <div class="projectExperience-box myResume-plate">
       <div class="myResume-plate-title-box">
-        <span class="info-t">项目经历</span>
+        <span class="info-t" :class="data.length<= 0 ?'hover':''">项目经历</span>
         <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" @click="clickCreat"/>
       </div>
       <div class="myResume-plate-list" v-if="!is_creat">

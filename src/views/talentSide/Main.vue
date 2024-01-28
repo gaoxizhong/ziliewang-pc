@@ -66,7 +66,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
         height: 0,
         parentH: 0,
         parentW: 0,
-        top: 80,
+        top: 56,
         left: 500,
         zInfex_0: 99,
         is_VueDragResize: false,
@@ -91,10 +91,10 @@ import PrivateChat from './components/mag/PrivateChat.vue';
       let that = this;
       let getViewportSize = this.$getViewportSize();
       this.parentH = getViewportSize.height; // 组件范围
-      this.parentW = getViewportSize.width; // 组件范围
-      this.height = Number(getViewportSize.height * 0.85); // 可拖动div 高度
-      this.width = Number(getViewportSize.width * 0.5) > 430 ? 430 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
-      this.left = Number(getViewportSize.width) - Number(this.width) - 540;
+      this.parentW = getViewportSize.width; // 组件范围 
+      this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
+      this.width = Number(getViewportSize.width * 0.5) > 380 ? 380 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
+      this.left = Number(getViewportSize.width) - Number(this.width) - 480;
       this.currentUser = {
         id: localStorage.getItem('realUid'),
         name: localStorage.getItem('name'),
@@ -150,7 +150,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
           });
         }
         this.zInfex_0 = 99;
-        this.top = 80;
+        this.top = 56;
       },
       //监听到当前路由状态并激活当前菜单
       setCurrentRoute() {
@@ -230,8 +230,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
     width: 100%;
     height: 100%;
     background: #fff;
-    padding: 10px;
-    padding-right: 12px;
+    padding: 10px 0;
     border-radius: 6px;
     display: flex;
     flex-direction: column;
@@ -251,6 +250,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
       justify-content: space-between;
       font-size: 14px;
       height: auto;
+      padding: 0 10px;
       .icon-box{
         display: flex;
         align-items: center;

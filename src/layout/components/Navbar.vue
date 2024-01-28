@@ -86,7 +86,7 @@ export default {
       height: 0,
       parentH: 0,
       parentW: 0,
-      top: 80,
+      top: 56,
       left: 500,
       zInfex_0: 99,
       unreadAmount: null,
@@ -121,9 +121,9 @@ export default {
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
-    this.width = 340; // 可拖动div 高度
+    this.width = 330; // 可拖动div 高度
     this.left = Number(getViewportSize.width) - Number(this.width) - 140;
-    this.height = Number(getViewportSize.height * 0.85); // 可拖动div 高度
+    this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
 
     this.listenConversationUpdate();// 监听会话列表变化
     this.loadConversations(); //加载会话列表

@@ -66,20 +66,16 @@ export default {
     this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
   },
   methods:{
-    
     // 获取消息数量
     setUnreadNumber(content) {
       console.log(content)
       this.unreadAmount = content.unreadTotal;
     },
-  
-
-    // 获取聊天列表
+    // 获取好友列表
     getSysMsgList() {
       let that = this;
-      that.$axios.post('/api/user/friend/chat/list', {
-        page: that.page,
-        pagesize: that.pagesize
+      that.$axios.post('/api/user/friend/list', {
+        tag: 'friend'
       }).then(res => {
         if (res.code == 0) {
           this.msgList = res.data;
@@ -108,7 +104,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 0;
+    padding: 20px 0 10px 0;
   }
 
   .home-container {

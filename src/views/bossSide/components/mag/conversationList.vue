@@ -44,6 +44,8 @@
                 <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
                 <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
                 <span v-else-if="conversation.lastMessage.type === 'resume'">[简历消息]</span>
+                <span v-else-if="conversation.lastMessage.type === 'phone'">[交换联系方式消息]</span>
+                <span v-else-if="conversation.lastMessage.type === 'interview'">[邀请面试消息]</span>
               </div>
             </div>
           </div>

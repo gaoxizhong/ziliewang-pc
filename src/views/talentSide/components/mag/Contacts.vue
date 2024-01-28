@@ -3,14 +3,14 @@
     <div class="contact-left">
       <div class="contact-list-title">好友</div>
       <div class="friend-list">
-        <div v-for="(friend, key) in friends || []" :key="key" class="friend-item" :class="{actived: profile.friend && profile.friend.uid === friend.users.uid}"
+        <div v-for="(friend, key) in friends || []" :key="key" class="friend-item" :class="{actived: profile.friend && profile.friend.uid === friend.uid}"
           @click="showFriendProfile(friend)">
           <div class="friend-avatar">
-            <img :src="friend.users.avatar"/>
+            <img :src="friend.avatar"/>
           </div>
           <div class="friend">
-            <div class="friend-name">{{ friend.users.real_name }}</div>
-            <div class="friend-mail">{{ friend.users.real_email }}</div>
+            <div class="friend-name">{{ friend.real_name }}</div>
+            <div class="friend-mail">{{ friend.real_email }}</div>
           </div>
         </div>
       </div>
@@ -70,21 +70,17 @@
     },
     mounted() {
       this.friends = this.msgList;
-      const currentUser  = {
-        id: localStorage.getItem('realUid'),
-        name: localStorage.getItem('name'),
-        avatar: localStorage.getItem('realAvatar'),
-      }
     },
     methods: {
       showFriendProfile(friend) {
         console.log(friend)
         this.profile.friend ={
-          uid: friend.users.uid,
-          name: friend.users.real_name,
-          avatar: friend.users.avatar,
-          real_phone: friend.users.real_phone,
-          real_email: friend.users.real_email,
+          is_friend: true, // 是好友聊天
+          uid: friend.uid,
+          name: friend.real_name,
+          avatar: friend.avatar,
+          real_phone: friend.real_phone,
+          real_email: friend.real_email,
         } ;
       },
       privateChat () {
@@ -94,7 +90,7 @@
         })
         return
         this.$router.replace({
-          path: '/conversations/privatechat/'+this.profile.friend.users.uid,
+          path: '/conversations/privatechat/'+this.profile.friend.uid,
           query: {
             name: this.profile.friend.name,
             avatar: this.profile.friend.avatar

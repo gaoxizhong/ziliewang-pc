@@ -2,7 +2,7 @@
   <div class="container">
     <div class="jobExpectation-box myResume-plate">
       <div class="myResume-plate-title-box">
-        <span class="info-t">求职期望</span>
+        <span class="info-t" :class="data.length<= 0 ?'hover':''">求职期望</span>
         <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" v-if="!is_creat" @click="clickCreat"/>
       </div>
       
@@ -540,9 +540,9 @@ export default {
                 flex-wrap: wrap;
                 li{
                   width: auto;
-                  height: 38px;
+                  height: 36px;
                   text-align: center;
-                  line-height: 38px;
+                  line-height: 36px;
                   background: #F7F8FA;
                   border-radius: 4px 4px 4px 4px;
                   font-size: 14px;

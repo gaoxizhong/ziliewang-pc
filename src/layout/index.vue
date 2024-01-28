@@ -59,7 +59,7 @@ export default {
       height: 0,
       parentH: 0,
       parentW: 0,
-      top: 80,
+      top: 56,
       left: 500,
       zInfex_0: 99,
       is_VueDragResize: false,
@@ -106,9 +106,9 @@ export default {
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
-    this.height = Number(getViewportSize.height * 0.85); // 可拖动div 高度
-    this.width = Number(getViewportSize.width * 0.5) > 430 ? 430 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
-    this.left = Number(getViewportSize.width) - Number(this.width) - 540;
+    this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
+    this.width = Number(getViewportSize.width * 0.5) > 380 ? 380 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
+    this.left = Number(getViewportSize.width) - Number(this.width) - 480;
     this.currentUser = {
       id: localStorage.getItem('realUid'),
       name: this.$store.state.user.staffName,
@@ -187,7 +187,7 @@ export default {
         });
       }
       this.zInfex_0 = 99;
-      this.top = 80;
+      this.top = 56;
     },
     // 拖拽时可以确定元素位置
     resize(newRect) {
@@ -279,8 +279,7 @@ export default {
     width: 100%;
     height: 100%;
     background: #fff;
-    padding: 10px;
-    padding-right: 12px;
+    padding: 10px 0;
     border-radius: 6px;
     display: flex;
     flex-direction: column;
@@ -300,6 +299,7 @@ export default {
       justify-content: space-between;
       font-size: 14px;
       height: auto;
+      padding: 0 10px;
       .icon-box{
         display: flex;
         align-items: center;

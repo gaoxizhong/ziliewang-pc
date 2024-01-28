@@ -1,8 +1,11 @@
 <template>
   <div class="chat-container">
     <div class="chat-title">
-      <img :src="friend.avatar" class="chat-avatar"/>
-      <div class="chat-name">{{ friend.name }}</div>
+      <div class="chat-title-l">
+        <img :src="friend.avatar" class="chat-avatar"/>
+        <div class="chat-name">{{ friend.name }}</div>
+      </div>
+      <div class="position-name">{{ detailData.position_name }}</div>
     </div>
     <div class="chat-main" ref="scrollView">
       <div class="message-list" ref="messageList">
@@ -82,9 +85,28 @@
                     </div>
                   </a>
                   <!-- 简历 结束 -->
-                  <!-- 交换联系方式 开始 -->
-                  
-                  <!-- 交换联系方式 结束 -->
+                  <!-- 面试邀请 开始 -->
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 1">
+                    <h4 class="message-phone-universal-card-header">面试邀请</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>对方发起了面试邀请</span>
+                    </div>
+                    <div class="message-phone-universal-card-footer">
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickYqms(2)">同意</div>
+                    </div>
+                  </div>
+                  <!-- 面试邀请 结束 -->
+                  <!-- 同意面试邀请 开始 -->
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 2">
+                    <h4 class="message-phone-universal-card-header">面试邀请</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span style="color: #ff0000;">同意了面试邀请</span>
+                    </div>
+                    <div class="message-phone-universal-card-footer">
+                      <!-- <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn">同意</div> -->
+                    </div>
+                  </div>
+                  <!-- 同意面试邀请 结束 -->
                   <!-- 图片 开始 -->
                   <div v-if="message.type === 'image'" class="content-image" @click="showImagePreviewPopup(message.payload.url)">
                     <img :src="message.payload.url" :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
@@ -168,7 +190,7 @@
                    @change="sendVideoMessage"/>
           </div> -->
           <!-- 文件 -->
-          <div class="action-item">
+          <!-- <div class="action-item">
             <label for="file-input" v-if="userVipRank > 0">
               <i class="iconfont icon-wenjianjia" title="文件"></i>
             </label>
@@ -176,10 +198,10 @@
               <i class="iconfont icon-wenjianjia" title="文件"></i>
             </label>
             <input v-show="false" id="file-input" type="file" @change="sendFileMessage"/>
-          </div>
+          </div> -->
           <i class="vline"></i>
           <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickToolbarBtn('resume')">发简历</div>
-          <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">交换联系方式</div>
+          <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">联系方式</div>
         </div>
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
@@ -248,6 +270,8 @@
         '[傲慢]': 'emoji_8@2x.png',
       };
       return {
+        sessionList:[], // 会话记录列表
+        detailData:{}, // 职位信息
         userProfile:{}, // 个人信息
         userVipRank: 0,
         currentUser: null,
@@ -296,6 +320,7 @@
         },
       };
     },
+    
     created() {
       this.userVipRank = localStorage.getItem('userVipRank');
       this.friend = this.infoData; // 好友信息
@@ -307,18 +332,37 @@
       this.to = {
         type: this.GoEasy.IM_SCENE.PRIVATE,
         id: this.friend.uid,
-        data: {name: this.friend.name, avatar: this.friend.avatar},
+        data: {name: this.friend.name, avatar: this.friend.avatar,is_friend: this.friend.is_friend},
       };
+      if(this.friend.position_id){
+        this.to.data.position_id = this.friend.position_id; //职位详情id
+        this.$axios.post('/api/company-position/detail',{
+          position_id:this.friend.position_id
+        }).then( res =>{
+          if(res.code == 0){
+            let detailData = res.data;
+            detailData.job_benefits = detailData.job_benefits.split(',');
+            this.detailData = detailData;
+          }else{
+            this.$message.error({
+              message:res.msg
+            })
+          }
+        })
+      }
       // 获取历史记录
       this.loadHistoryMessage(true);
 
-      this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
+      this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage); // 监听消息
 
+      this.listenConversationUpdate(); //监听会话列表变化
+      this.loadConversations(); //加载会话列表
       // 获取个人信息
       this.getUserProfile();
     },
     beforeDestroy() {
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
+      this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
     },
     methods: {
       formatDate,
@@ -328,6 +372,24 @@
           this.markPrivateMessageAsRead();
         }
         this.scrollToBottom();
+      },
+      loadConversations() {
+        this.goEasy.im.latestConversations({
+          onSuccess: (result) => {
+            let content = result.content;
+            this.renderConversations(content);
+          },
+          onFailed: (error) => {
+            console.log('获取最新会话列表失败, code:' + error.code + 'content:' + error.content);
+          },
+        });
+      },
+      listenConversationUpdate() {
+        // 监听会话列表变化
+        this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
+      },
+      renderConversations(content) {
+        this.conversations = content.conversations; /// 会话列表
       },
       /**
        * 核心就是设置高度，产生明确占位
@@ -371,10 +433,32 @@
       onAudioPlayEnd() {
         this.audioPlayer.playingMessage = null;
       },
+      // 同意面试邀请
+      clickYqms(n){
+        let userProfile = this.userProfile;
+        let payload = {
+          text: '同意面试邀请',
+          name: userProfile.basic_info.real_name,
+          way_status: n,   // 1. 向对方 发送邀请面试请求,2.用户同意面试邀请，
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'interview',  //字符串，可以任意自定义类型 interview 联系方式
+          text: '同意面试邀请',
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            this.sendMessage(message);
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
+      },
       // 点击 交换联系方式
       clickPhoneBtn(n){
         let userProfile = this.userProfile;
         let payload = {
+          text: '交换联系方式',
           real_phone: userProfile.basic_info.real_phone,
           phone: userProfile.basic_info.phone,
           real_name: userProfile.basic_info.real_name,
@@ -398,6 +482,7 @@
       clickToolbarBtn(){
         let userProfile = this.userProfile;
         let payload = {
+          text: '发送简历',
           resume: userProfile.basic_info.curriculum_vitae
         }
         this.goEasy.im.createCustomMessage({
@@ -416,19 +501,41 @@
       },
       // 发送按钮事件
       sendTextMessage() {
-        if (!this.text.trim()) {
-          this.$message.error({
+        let that = this;
+        if (!that.text.trim()) {
+          that.$message.error({
             message:'输入不能为空!'
           })
           return
         }
-        console.log(this.to)
-        this.goEasy.im.createTextMessage({
-          text: this.text,
-          to: this.to,
+        if(that.friend.position_id){
+          let conversations = that.conversations;
+          let is_sess = false;
+          conversations.forEach(ele =>{
+            if(ele.data.position_id == that.friend.position_id){
+              return is_sess = true;
+            }
+          })
+          if(!is_sess){
+            that.$axios.post('/api/user/find-company',{
+              position_id: that.friend.position_id, // 岗位id
+              company_uid: that.to.id,//  发布人uid
+              company_id: that.friend.company_id, // 公司id
+              content: '发起聊天'
+            }).then( res =>{
+              
+            }).catch(e =>{
+
+            })
+          }
+          
+        }
+        that.goEasy.im.createTextMessage({
+          text: that.text,
+          to: that.to,
           onSuccess: (message) => {
-            this.sendMessage(message);
-            this.text = '';
+            that.sendMessage(message);
+            that.text = '';
           },
           onFailed: (err) => {
             console.log("创建消息err:", err);
@@ -703,6 +810,7 @@
           console.log(e)
         })
       },
+      
 
     },
   };
@@ -718,20 +826,28 @@
   }
 
   .chat-title {
-    height: 40px;
-    padding: 10px 10px 0 10px;
+    height: auto;
+    padding: 6px 10px;
     display: flex;
     align-items: center;
-    font-size: 18px;
+    justify-content: space-between;
+    font-size: 14px;
+    border-bottom: 1px solid #f2f2f2;
   }
-
+  .position-name{
+    color: #37f;
+  }
+  .chat-title-l{
+    display: flex;
+    align-items: center;
+  }
   .chat-avatar {
     width: 35px;
     height: 35px;
   }
 
   .chat-name {
-    width: 400px;
+    width: auto;
     font-size: 15px;
     margin-left: 10px;
     white-space: nowrap;
@@ -746,6 +862,7 @@
     overflow-y: auto;
     flex: 1;
     scrollbar-width: thin;
+    padding: 10px;
   }
 
   .chat-main::-webkit-scrollbar {
@@ -779,9 +896,9 @@
     margin-top: 8px;
   }
 
-  .message-list {
+  /* .message-list {
     padding: 0 10px;
-  }
+  } */
 
   .message-item {
     display: flex;
@@ -1095,7 +1212,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 6px 10px 0 10px;
+    /* padding: 6px 10px 0 10px; */
   }
 
   .action-bar .action-item {
@@ -1241,7 +1358,7 @@
   }
 
   .send-box {
-    padding: 5px 10px;
+    padding: 8px 20px;
     text-align: right;
   }
 

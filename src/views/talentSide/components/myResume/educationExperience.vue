@@ -2,7 +2,7 @@
   <div class="container">
     <div class="educationExperience-box myResume-plate">
       <div class="myResume-plate-title-box">
-        <span class="info-t">教育经历</span>
+        <span class="info-t" :class="data.length<= 0 ?'hover':''">教育经历</span>
         <img src="../../../../assets/image/Frame_7.png" alt="" class="info-icon-img" v-if="!is_creat" @click="clickCreat"/>
       </div>
       <div class="myResume-plate-list" v-if="!is_creat">
@@ -258,5 +258,4 @@ export default {
 
 <style lang="scss" scoped>
   @import '../../../../styles/myResume.scss';
-
 </style>

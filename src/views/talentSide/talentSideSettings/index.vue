@@ -18,6 +18,7 @@
             <li :class="setType =='set_phone'? 'hover': '' " @click="clickLeItems('set_phone')">手机号码</li>
             <li :class="setType =='set_email'? 'hover': '' " @click="clickLeItems('set_email')">我的邮箱</li>
             <li :class="setType =='set_password'? 'hover': '' " @click="clickLeItems('set_password')">密码设置</li>
+            <li :class="setType =='set_expressions'? 'hover': '' " @click="clickLeItems('set_expressions')">常用语设置</li>
           </ul>
         </div>
       </div>
@@ -99,7 +100,27 @@
             <div class="title">密码设置</div>
             <div class="info-box">当前登录账号: {{ infoData.basic_info.phone }}</div>
             <button @click="clickSetPassword">密码设置</button>
-
+          </div>
+           <!-- 常用语设置 -->
+           <div class="container-right-items" ref="set_expressions">
+            <div class="title">常用语设置</div>
+            <ul class="phraseslist-box">
+              <li class="phrases-item">
+                <p>我可以把我的简历发给您看看吗？</p>
+                <div class="item-i">
+                  <i class="el-icon-edit"></i>
+                  <i class="el-icon-delete"></i>
+                </div>
+              </li>
+              <li class="phrases-item">
+                <p>我可以把我的简历发给您看看吗？</p>
+                <div class="item-i">
+                  <i class="el-icon-edit"></i>
+                  <i class="el-icon-delete"></i>
+                </div>
+              </li>
+            </ul>
+            <button @click="clickSetPassword">添加常用语</button>
           </div>
         </div>
         
@@ -728,5 +749,49 @@ export default {
     
   }
 }
-
+.phraseslist-box{
+  width: auto;
+  padding: 0 10px;
+  margin-top: 13px;
+}
+.phraseslist-box>li.phrases-item{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 22px;
+  margin-bottom: 4px;
+  background: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  color: #333;
+  line-height: 28px;
+  position: relative;
+}
+.phraseslist-box>li.phrases-item:before {
+  content: "";
+  position: absolute;
+  top: 21px;
+  left: 8px;
+  width: 6px;
+  height: 6px;
+  background: #d9d9d9;
+  border-radius: 50%;
+}
+.phraseslist-box>li.phrases-item:hover{
+  box-shadow: 0 4px 16px 0 hsla(0,0%,60%,.2);
+  border-radius: 8px;
+}
+.item-i{
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  &>i{
+    margin-left: 10px;
+    cursor: pointer;
+    &:hover{
+      color: $g_color;
+    }
+  }
+}
 </style>
