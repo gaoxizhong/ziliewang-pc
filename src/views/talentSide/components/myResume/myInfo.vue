@@ -635,6 +635,7 @@ export default {
       background: #F4F5F7;
       text-align: left;
       position: relative;
+      border: 1px solid #fff;
       .textarea-box{
         width: 100%;
         margin-top: 10px; 

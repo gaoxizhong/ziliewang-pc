@@ -127,43 +127,7 @@
 
 
     <!-- 职位弹窗 -->
-    <div class="dialogVisible-pop-box" v-if="dialogVisible">
-      <div class="mask-box"></div>
-      <div class="dialog-container">
-        <div class="dialog-header">
-          <h3 class="title">请选择职位类别</h3>
-          <div class="dialog-header-input">
-            <!-- <el-input type="text" v-model="dialogVisible_seach"></el-input> -->
-          </div>
-          <img src="../../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
-        </div>
-        <div class="dialog-body">
-          <div class="body-left-box">
-            <div class="left-list-box">
-              <ul>
-                <li :class="selt_item == index? 'active':'' " v-for="(item,index) in position.industryList" :key="index" @click="click_industryListLi(item,index)">{{ item.industry }}</li>
-              </ul>
-            </div>
-          </div>
-          <div class="body-right-box">
-            <div class="right-list-box">
-              <div class="category-list-items" v-for="(item,index) in position.category_list" :key="index">
-                <div class="category-name">{{ item.category_name }}</div>
-                <ul>
-                  <li :class="selt_item == index? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name)">{{ items.category_name }}</li>
-                </ul>
-              </div>
-              
-            </div>
-            
-          </div>
-        </div>
-        <!-- <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        </span> -->
-      </div>
-    </div>
+    <industryList :data="position" ref="industryList" />
 
   </div>
 
@@ -171,9 +135,11 @@
 
 <script>
 let pcas = require('../../../../assets/json/pc-code.json');
+import industryList from "./industryList.vue";
 
 export default {
   components: {
+    industryList
   },
   props:{
     data:{
@@ -375,7 +341,7 @@ export default {
       that.$axios.post('/api/position/list',{}).then( res =>{
         that.position.industryList = res.data;
         that.position.category_list = that.position.industryList[that.selt_item].category_list;
-        that.dialogVisible = true;
+        that.$refs.industryList._data.dialogVisible = true;
       }).catch( e=>{
         console.log(e)
       })
@@ -463,8 +429,8 @@ export default {
             border: none;
             .el-input__inner{
               background: #F7F8FA;
-              height: 38px;
-              line-height: 38px;
+              height: 30px;
+              line-height: 30px;
             }
           }
           /deep/ .el-input.is-focus .el-input__inner{

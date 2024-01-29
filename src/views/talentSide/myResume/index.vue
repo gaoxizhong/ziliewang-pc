@@ -345,6 +345,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding-right: 15px;
   div{
     margin-left: 12px;
     width: 92px;
@@ -368,6 +369,7 @@ export default {
   width: 100%;
   display: flex;
   margin-top: 20px;
+  padding-right: 15px;
   .info-left-box{
     flex: 1;
   }

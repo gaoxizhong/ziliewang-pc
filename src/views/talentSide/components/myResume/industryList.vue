@@ -5,7 +5,7 @@
       <div class="dialog-header">
         <h3 class="title">请选择职位类别</h3>
         <div class="dialog-header-input">
-          <!-- <el-input type="text" v-model="dialogVisible_seach"></el-input> -->
+          <el-input type="text" v-model="dialogVisible_seach" placeholder="请输入职位名称搜索" clearable prefix-icon="el-icon-search"></el-input>
         </div>
         <img src="../../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
       </div>
@@ -22,7 +22,7 @@
             <div class="category-list-items" v-for="(item,index) in position.category_list" :key="index">
               <div class="category-name">{{ item.category_name }}</div>
               <ul>
-                <li :class="selt_item == index? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name)">{{ items.category_name }}</li>
+                <li :class="selt_listItems == index? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name,index)">{{ items.category_name }}</li>
               </ul>
             </div>
             
@@ -45,7 +45,7 @@ export default {
   components: {
   },
   props:{
-    infoData: {
+    data: {
       type: Object,
       default() {
         return {
@@ -56,17 +56,39 @@ export default {
   },
   data(){
     return{
-
+      position: {},
+      dialogVisible: false,
+      dialogVisible_seach:'',
+      selt_item: 0, // 左侧下标
+      selt_listItems: -1,
     }
   },
   computed: {
 
   },
   mounted() {
-    
+    this.position = this.data;
   },
   methods: {
-   
+    
+    // 点击职位弹窗关闭按钮
+    clickClose(){
+      this.dialogVisible = false;
+    },
+    // 点击职位分类列表
+    click_industryListLi(n,i){
+      let item = n;
+      let index = i;
+      this.selt_item = index;
+      this.selt_listItems = -1;
+      this.position.category_list = item.category_list;
+    },
+    // 点击职位列表
+    click_position_list(n,i){
+      this.selt_listItems = i;
+      this.infoData.desired_position = n;
+      this.dialogVisible = false;
+    },
   },
 };
 </script>
@@ -122,14 +144,14 @@ export default {
           flex: 1;
           display: flex;
           align-items: center;
-          padding-left: 30px;
+          padding-left: 120px;
           /deep/ .el-input{
             width: 320px;
             border: none;
             .el-input__inner{
-              background: #F7F8FA;
-              height: 38px;
-              line-height: 38px;
+              background: #fbfbfb;
+              height: 35px;
+              line-height: 35px;
             }
           }
           /deep/ .el-input.is-focus .el-input__inner{
