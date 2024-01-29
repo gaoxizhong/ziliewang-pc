@@ -105,22 +105,15 @@
            <div class="container-right-items" ref="set_expressions">
             <div class="title">常用语设置</div>
             <ul class="phraseslist-box">
-              <li class="phrases-item">
-                <p>我可以把我的简历发给您看看吗？</p>
+              <li class="phrases-item" v-for="(item,index) in phraseslist" :key="index">
+                <p>{{ item.name }}</p>
                 <div class="item-i">
-                  <i class="el-icon-edit"></i>
-                  <i class="el-icon-delete"></i>
-                </div>
-              </li>
-              <li class="phrases-item">
-                <p>我可以把我的简历发给您看看吗？</p>
-                <div class="item-i">
-                  <i class="el-icon-edit"></i>
+                  <i class="el-icon-edit" ></i>
                   <i class="el-icon-delete"></i>
                 </div>
               </li>
             </ul>
-            <button @click="clickSetPassword">添加常用语</button>
+            <button @click="clickSetPhrases">添加常用语</button>
           </div>
         </div>
         
@@ -200,11 +193,20 @@
         </span>
       </el-dialog>
     </div>
-
-    
- 
-
-
+    <!-- 常用语 弹窗 -->
+    <div class="setPasswordVisible">
+      <el-dialog title="常用语" :visible.sync="setPhrasesVisible" width="500px" :before-close="closePhrasesVisible">
+        <div class="cententinfo-box">
+          <div class="demo-input-suffix">
+            <el-input type="textarea" :rows="3" v-model="phrases" name="Phrases" placeholder="添加常用语" show-password></el-input>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setPhrasesVisible = false">取 消</el-button>
+          <el-button type="primary" @click="clickPhrasesQR">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 
 </template>
@@ -220,15 +222,21 @@ export default {
     return{
       resume_radio: 1,
       infoData:{},
+      phraseslist: [ // 常用语列表
+        {id:1,name:'我可以把我的简历发给您看看吗？'},
+        {id:2,name:'我可以把我的简历发给您看看吗？'}
+      ],
       setType:'set_resume',
       setPasswordVisible: false,
       setPhoneVisible: false,
       setEmailVisible: false,
       setShieldVisible: false, // 屏蔽公司
+      setPhrasesVisible: false, // 常用语
       password:'',
       phone:'',
       email:'',
       email_code:'',
+      phrases:'',
       isDisable: false,
       statusMsg:'获取验证码',
       corporation:'', // 公司名称
@@ -292,6 +300,9 @@ export default {
     closePasswordVisible(){
       this.setPasswordVisible = false;
     },
+    closePhrasesVisible(){
+      this.setPhrasesVisible = false;
+    },
     //
     clickLeItems(n){
       this.setType = n;
@@ -346,6 +357,10 @@ export default {
     clickSetShield(){
       this.setShieldVisible = true;
     },
+    // 点击添加常用语
+    clickSetPhrases(){
+      this.setPhrasesVisible = true;
+    },
     // 添加屏蔽的公司
     clickShieldCorporationQR(){
       let that = this;
@@ -365,6 +380,45 @@ export default {
           return
         }
         if(res.code == 1){
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
+    // 确认常用语
+    clickPhrasesQR(){
+      let that = this;
+      let p = {
+        phrases: that.phrases,
+      };
+      let url = '';
+      if(that.phrases_id){
+        p.id = that.phrases_id
+      }
+      that.$axios.post('',p).then( res =>{
+        if(res.code == 0){
+          if(that.phrases_id){
+            that.$message.success({
+              message:'修改成功'
+            })
+          }else{
+            that.$message.success({
+              message:'添加成功'
+            })
+          }
+          
+          setTimeout(()=>{
+             // 获取列表信息
+            //  that.getUserProfile();
+             that.setPhrasesVisible = false;
+          },1500)
+          return
+        }else{
           that.$message.error({
             message:res.msg
           })

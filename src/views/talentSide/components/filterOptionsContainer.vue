@@ -191,6 +191,7 @@
 <script>
 import pcas from '../../../assets/json/pc-code.json'
 export default {
+  name:'filterOptionsContainer',
    components: {
 
   },
