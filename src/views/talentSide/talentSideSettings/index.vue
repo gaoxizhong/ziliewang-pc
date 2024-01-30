@@ -23,10 +23,10 @@
         </div>
       </div>
       <div class="container-right-box">
-        <div style="height: auto;">
+        <el-scrollbar style="height:100%;" ref="scrollbar">
           <!-- 谁能查看我的简历 -->
-          <div class="container-right-items" ref="set_resume">
-          <div class="title">谁能查看我的简历</div>
+          <div class="container-right-items" id="set_resume">
+            <div class="title">谁能查看我的简历</div>
             <div class="radio-group-box">
               <el-radio-group v-model="resume_radio" @change="resume_change">
                 <el-radio :label="1">
@@ -49,7 +49,7 @@
             </div>
           </div>
           <!-- 屏蔽公司 -->
-          <div class="container-right-items" ref="set_shield">
+          <div class="container-right-items" id="set_shield">
             <div class="title">屏蔽公司</div>
             <div class="info-box">你可以屏蔽HR或猎头所在公司</div>
             <button @click="clickSetShield">
@@ -65,7 +65,7 @@
             </div>
           </div>
           <!-- 手机号码保护 -->
-          <div class="container-right-items" ref="phone_protect">
+          <div class="container-right-items" id="phone_protect">
             <div class="title">手机号码保护</div>
             <div class="info-box">开启后，当企业HR和猎头联系你时对其隐藏真实手机号码</div>
             <div class="phone-protect-box">
@@ -74,7 +74,7 @@
             </div>
           </div>
           <!-- 手机号码保护 -->
-          <div class="container-right-items" ref="name_protect">
+          <div class="container-right-items" id="name_protect">
             <div class="title">真实姓名保护</div>
             <div class="info-box">开启后对外展示名称将展示 "张**明"</div>
             <div class="phone-protect-box">
@@ -83,26 +83,26 @@
             </div>
           </div>
           <!-- 手机号码 -->
-          <div class="container-right-items" ref="set_phone">
+          <div class="container-right-items" id="set_phone">
             <div class="title">手机号码</div>
-            <div class="info-box">当前手机号: {{ infoData.basic_info.phone }}</div>
+            <div class="info-box" >当前手机号: {{ basic_info.phone }}</div>
             <button @click="clickSetPhone">修改手机号</button>
           </div>
           <!-- 我的邮箱 -->
-          <div class="container-right-items" ref="set_email">
+          <div class="container-right-items" id="set_email">
             <div class="title">我的邮箱</div>
-            <div class="info-box">当前邮箱: {{ infoData.basic_info.email }}</div>
+            <div class="info-box">当前邮箱: {{ basic_info.email }}</div>
             <button  @click="clickSetEmail">修改邮箱</button>
 
           </div>
           <!-- 密码设置 -->
-          <div class="container-right-items" ref="set_password">
+          <div class="container-right-items" id="set_password">
             <div class="title">密码设置</div>
-            <div class="info-box">当前登录账号: {{ infoData.basic_info.phone }}</div>
+            <div class="info-box">当前登录账号: {{ basic_info.phone }}</div>
             <button @click="clickSetPassword">密码设置</button>
           </div>
-           <!-- 常用语设置 -->
-           <div class="container-right-items" ref="set_expressions">
+          <!-- 常用语设置 -->
+          <div class="container-right-items" id="set_expressions">
             <div class="title">常用语设置</div>
             <ul class="phraseslist-box">
               <li class="phrases-item" v-for="(item,index) in phraseslist" :key="index">
@@ -115,8 +115,7 @@
             </ul>
             <button @click="clickSetPhrases">添加常用语</button>
           </div>
-        </div>
-        
+        </el-scrollbar>
       </div>
     </div>
 
@@ -140,7 +139,7 @@
     <div class="setPhoneVisible">
       <el-dialog title="修改手机号" :visible.sync="setPhoneVisible" width="500px" :before-close="closePhoneVisible">
         <div class="cententinfo-box">
-          <div class="cententinfo-title">手机号: {{ infoData.basic_info.phone }}</div>
+          <div class="cententinfo-title">手机号: {{ basic_info.phone }}</div>
           <div class="demo-input-suffix">
             <span>新手机号:</span>
             <el-input v-model="phone" type="number" name="phone" placeholder="新手机号"></el-input>
@@ -177,7 +176,7 @@
     <div class="setPasswordVisible">
       <el-dialog title="密码设置" :visible.sync="setPasswordVisible" width="500px" :before-close="closePasswordVisible">
         <div class="cententinfo-box">
-          <div class="cententinfo-title">手机号: {{ infoData.basic_info.phone }}</div>
+          <div class="cententinfo-title">手机号: {{ basic_info.phone }}</div>
           <div class="demo-input-suffix">
             <span>新密码:</span>
             <el-input v-model="password" type="password" name="password" placeholder="8-16位字母、数字、字符，不支持空格" show-password></el-input>
@@ -222,6 +221,7 @@ export default {
     return{
       resume_radio: 1,
       infoData:{},
+      basic_info: {},
       phraseslist: [ // 常用语列表
         {id:1,name:'我可以把我的简历发给您看看吗？'},
         {id:2,name:'我可以把我的简历发给您看看吗？'}
@@ -248,9 +248,13 @@ export default {
   computed: {
     
   },
+  created(){
+   this.setType = this.$route.query.setType || 'set_resume';
+  },
   mounted(){
     // 获取个人信息
     this.getUserProfile();
+    this.clickLeItems(this.setType);
   },
   methods: {
     // 手机号码保护
@@ -305,13 +309,13 @@ export default {
     },
     //
     clickLeItems(n){
+      let that = this;
       this.setType = n;
-      let el = this.$refs[n];
-      el.scrollIntoView({
-        behavior: "auto", //定义动画过渡效果"auto"或 "smooth" 之一。默认为 "auto"。
-        block: "start",//定义垂直方向的对齐， "start", "center", "end", 或 "nearest"之一。默认为 "start"。
-        inline: "nearest"//"start", "center", "end", 或 "nearest"之一。默认为 "nearest"。
-      })
+      var _dom = document.getElementById(n);
+      setTimeout(() => {
+        that.$refs.scrollbar.wrap.scrollTop = _dom.offsetTop
+      },500);
+     
     },  
     // 获取个人信息
     async getUserProfile(){
@@ -320,6 +324,7 @@ export default {
         console.log(res.data)
         if(res.code == 0){
           this.infoData = res.data;
+          this.basic_info = res.data.basic_info;
           let is_phone_protect = res.data.basic_info.is_phone_protect;
           let is_name_protect = res.data.basic_info.is_name_protect;
           if(is_phone_protect == 1){
@@ -570,7 +575,9 @@ export default {
     padding: 0 2rem 2rem 2rem;
     height: calc(100vh - 85px);
     overflow-y: auto;
-
+    & /deep/ .el-scrollbar__wrap{
+      overflow-x: hidden;
+    }
     .container-right-items{
       width: 100%;
       padding: 2rem 0;

@@ -150,7 +150,7 @@
             <div v-if="cyy.visible" class="sentence-panel">
               <div class="header">
                 <h3 class="title">常用语</h3>
-                <a href="javascript:0;" target="_blank" class="set-btn"></a>
+                <a href="javascript:0;" class="set-btn" @click="clickSetBtn">设置</a>
               </div>
               <ul>
                 <li @click="clickCyy('我可以把我的简历发您看看吗?')">我可以把我的简历发您看看吗?</li>
@@ -810,7 +810,16 @@
           console.log(e)
         })
       },
-      
+      // 点击常用语设置
+      clickSetBtn(){
+        this.cyy.visible = false;
+        this.$router.push({
+          path:'/talentSideSettings',
+          query:{
+            setType: 'set_expressions'
+          }
+        })
+      },
 
     },
   };

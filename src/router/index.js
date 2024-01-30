@@ -386,7 +386,6 @@ export const constantRoutes = [
         component: () => import('@/views/talentSide/talentSideSettings'),
         meta: { 
           title: '设置',
-          keepAlive: true,
         },
       },
       {
