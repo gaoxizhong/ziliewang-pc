@@ -44,7 +44,7 @@
         <ul class="row-options-detail-box">
           <li class="options-item" v-for="(item,index) in infoData.user_education_experience" :key="index">
             <div class="education-image-box">
-              <img src="../../../../assets/image/work-icon.png" alt="" />
+              <img src="../../../../assets/image/shcool.png" alt="" />
             </div>
             <div class="item-info">
               <div>{{ item.school }}</div>

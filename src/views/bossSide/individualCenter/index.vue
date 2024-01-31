@@ -3,15 +3,16 @@
   <div class="bossSide-container">
     <div class="tab-box">
       <div class="tab-left">
-        <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">基本信息</div>
-        <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">账号安全</div>
+        <div :class="tabStatus == 'basicInfo'?'hover-items':'' " @click="clickStatus('basicInfo')">基本信息</div>
+        <div :class="tabStatus == 'expressions'?'hover-items':'' " @click="clickStatus('expressions')">常用语</div>
+        <!-- <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">账号安全</div> -->
         <!-- <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">员工关系</div> -->
         <!-- <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">隐私中心</div> -->
       </div>
     </div>
     <div class="m-box margin-top-20">
       <!-- 基本信息 开始-->
-      <div class="jc-info-box" v-if="tabStatus == 1">
+      <div class="jc-info-box" v-if="tabStatus == 'basicInfo'">
         <div class="items-box">
           <div class="title">头像</div>
           <!-- <div class="avatar-box">
@@ -60,6 +61,24 @@
         </div>
       </div>
       <!-- 基本信息 结束-->
+      <!-- 常用语设置 开始-->
+      <div class="jc-info-box" v-if="tabStatus == 'expressions'">
+        <div class="container-right-items" id="set_expressions">
+          <div class="title">常用语设置</div>
+          <ul class="phraseslist-box">
+            <li class="phrases-item" v-for="(item,index) in phraseslist" :key="index">
+              <p>{{ item.name }}</p>
+              <div class="item-i">
+                <i class="el-icon-edit" ></i>
+                <i class="el-icon-delete"></i>
+              </div>
+            </li>
+          </ul>
+          <button @click="clickSetPhrases">添加常用语</button>
+        </div>
+      </div>
+      <!-- 常用语设置 结束-->
+
       <!-- 账号安全 开始-->
       <div v-if="tabStatus == 2">
         <div class="list-items-box">
@@ -143,6 +162,22 @@
       </div>
       
     </div>
+
+
+    <!-- 常用语 弹窗 -->
+    <div class="setPasswordVisible">
+      <el-dialog title="常用语" :visible.sync="setPhrasesVisible" width="500px" :before-close="closePhrasesVisible">
+        <div class="cententinfo-box">
+          <div class="demo-input-suffix">
+            <el-input type="textarea" :rows="3" v-model="phrases" name="Phrases" placeholder="添加常用语" show-password></el-input>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setPhrasesVisible = false">取 消</el-button>
+          <el-button type="primary" @click="clickPhrasesQR">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -150,7 +185,11 @@
 export default {
   data() {
     return {
-      tabStatus: 1,
+      tabStatus: 'basicInfo', // 基本信息
+      phraseslist: [ // 常用语列表
+        {id:1,name:'我可以把我的简历发给您看看吗？'},
+        {id:2,name:'我可以把我的简历发给您看看吗？'}
+      ],
       infoData:{
         staff_name:"Lucy",
         role_desc: "",
@@ -164,15 +203,58 @@ export default {
         up_tag: 'avatar'
       },
       setPhoneVisible: false,
-
+      setPhrasesVisible: false,
     }
   },
   created(){
+    this.tabStatus = this.$route.query.tabStatus || 'basicInfo';
     //  获取信息
     this.getUserInfo();
   },
   methods:{
-   
+    // 点击添加常用语
+    clickSetPhrases(){
+      this.setPhrasesVisible = true;
+    },
+    // 确认常用语
+    clickPhrasesQR(){
+      let that = this;
+      let p = {
+        phrases: that.phrases,
+      };
+      let url = '';
+      if(that.phrases_id){
+        p.id = that.phrases_id
+      }
+      that.$axios.post('',p).then( res =>{
+        if(res.code == 0){
+          if(that.phrases_id){
+            that.$message.success({
+              message:'修改成功'
+            })
+          }else{
+            that.$message.success({
+              message:'添加成功'
+            })
+          }
+          
+          setTimeout(()=>{
+             // 获取列表信息
+            //  that.getUserProfile();
+             that.setPhrasesVisible = false;
+          },1500)
+          return
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
     // 点击修改手机号
     clickSetPhone(){
       this.setPhoneVisible = true;
@@ -572,6 +654,51 @@ export default {
     }
 
     
+  }
+}
+.phraseslist-box{
+  width: auto;
+  padding: 0 10px;
+  margin-top: 13px;
+}
+.phraseslist-box>li.phrases-item{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 22px;
+  margin-bottom: 4px;
+  background: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  color: #333;
+  line-height: 28px;
+  position: relative;
+}
+.phraseslist-box>li.phrases-item:before {
+  content: "";
+  position: absolute;
+  top: 21px;
+  left: 8px;
+  width: 6px;
+  height: 6px;
+  background: #d9d9d9;
+  border-radius: 50%;
+}
+.phraseslist-box>li.phrases-item:hover{
+  box-shadow: 0 4px 16px 0 hsla(0,0%,60%,.2);
+  border-radius: 8px;
+}
+.item-i{
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  &>i{
+    margin-left: 10px;
+    cursor: pointer;
+    &:hover{
+      color: $g_color;
+    }
   }
 }
 </style>
