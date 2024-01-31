@@ -6,6 +6,7 @@
         <h3 class="title">请选择职位类别</h3>
         <div class="dialog-header-input">
           <el-input type="text" v-model="dialogVisible_seach" placeholder="请输入职位名称搜索" clearable prefix-icon="el-icon-search"></el-input>
+          <div class="searchList-box" v-if="searchList_info">123</div>
         </div>
         <img src="../../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
       </div>
@@ -61,6 +62,7 @@ export default {
       dialogVisible_seach:'',
       selt_item: 0, // 左侧下标
       selt_listItems: -1,
+      searchList_info: false,
     }
   },
   computed: {
@@ -144,7 +146,8 @@ export default {
           flex: 1;
           display: flex;
           align-items: center;
-          padding-left: 120px;
+          margin-left: 120px;
+          position: relative;
           /deep/ .el-input{
             width: 320px;
             border: none;
@@ -159,6 +162,16 @@ export default {
             &:focus{
               border-color: $g_color;
             }
+          }
+          .searchList-box{
+            position: absolute;
+            top: 54px;
+            left: 0;
+            padding: 10px;
+            border-radius: 6px;
+            background: #fff;
+            box-shadow: 0 0 10px 0 #b2bdca;
+            line-height: 1;
           }
         }
         img{

@@ -120,8 +120,10 @@
           </div>
 
           <div class="right-box integrity-box">
-            <div class="integrity-att-t">简历完整度 <span>{{ perfection_degree.degree_num }}%</span></div>
-            <div></div>
+            <div class="integrity-att-t">简历完整度</div>
+            <div>
+              <el-progress :percentage="Number(perfection_degree.degree_num)" :color="customColor"></el-progress>
+            </div>
             <div class="integrity-instructions">完善后获更强竞争力</div>
           </div>
 
@@ -189,6 +191,7 @@ export default {
       onlineResumeData:{}, // 在线简历
       is_type:'',
       perfection_degree: {}, // 简历完善度
+      customColor: '#37f'
     }
   },
   computed: {
@@ -523,6 +526,9 @@ export default {
         line-height: 22px;
         margin-top: 8px;
         text-align: left;
+      }
+      & /deep/ .el-progress__text{
+        color: #FF751A !important;
       }
     }
   }
