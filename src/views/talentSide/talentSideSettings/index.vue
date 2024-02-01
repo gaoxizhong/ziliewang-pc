@@ -49,7 +49,7 @@
             </div>
           </div>
           <!-- 屏蔽公司 -->
-          <div class="container-right-items" id="set_shield">
+          <!-- <div class="container-right-items" id="set_shield">
             <div class="title">屏蔽公司</div>
             <div class="info-box">你可以屏蔽HR或猎头所在公司</div>
             <button @click="clickSetShield">
@@ -63,7 +63,7 @@
                 <span class="items-cancel">取消屏蔽</span>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- 手机号码保护 -->
           <div class="container-right-items" id="phone_protect">
             <div class="title">手机号码保护</div>
@@ -106,10 +106,10 @@
             <div class="title">常用语设置</div>
             <ul class="phraseslist-box">
               <li class="phrases-item" v-for="(item,index) in phraseslist" :key="index">
-                <p>{{ item.name }}</p>
+                <p>{{ item.common_language }}</p>
                 <div class="item-i">
-                  <i class="el-icon-edit" ></i>
-                  <i class="el-icon-delete"></i>
+                  <i class="el-icon-edit" @click="clickupdate(item.common_language,item.id)"></i>
+                  <i class="el-icon-delete" @click="deletePhrasesQR(item.id)"></i>
                 </div>
               </li>
             </ul>
@@ -222,10 +222,7 @@ export default {
       resume_radio: 1,
       infoData:{},
       basic_info: {},
-      phraseslist: [ // 常用语列表
-        {id:1,name:'我可以把我的简历发给您看看吗？'},
-        {id:2,name:'我可以把我的简历发给您看看吗？'}
-      ],
+      phraseslist: [],// 常用语列表
       setType:'set_resume',
       setPasswordVisible: false,
       setPhoneVisible: false,
@@ -237,12 +234,13 @@ export default {
       email:'',
       email_code:'',
       phrases:'',
+      phrases_id:'',
       isDisable: false,
       statusMsg:'获取验证码',
       corporation:'', // 公司名称
       shieldBossList:[{}],
       is_phone_protect: true,
-      is_name_protect: true
+      is_name_protect: true,
     }
   },
   computed: {
@@ -254,6 +252,8 @@ export default {
   mounted(){
     // 获取个人信息
     this.getUserProfile();
+    // 获取常用语
+    this.geturlCommonLanguageList();
     this.clickLeItems(this.setType);
   },
   methods: {
@@ -317,6 +317,17 @@ export default {
       },500);
      
     },  
+    // 获取常用语
+    geturlCommonLanguageList(){
+      let that = this;
+      that.$axios.post('/api/common-language/list',{}).then(res =>{
+        if(res.code == 0){
+          this.phraseslist = res.data;
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
     // 获取个人信息
     async getUserProfile(){
       let that = this;
@@ -366,6 +377,12 @@ export default {
     clickSetPhrases(){
       this.setPhrasesVisible = true;
     },
+    // 点击编辑常用语
+    clickupdate(n,i){
+      this.phrases = n;
+      this.phrases_id = i;
+      this.setPhrasesVisible = true;
+    },
     // 添加屏蔽的公司
     clickShieldCorporationQR(){
       let that = this;
@@ -395,17 +412,47 @@ export default {
         console.log(e)
       })
     },
+    // 删除用语
+    deletePhrasesQR(i){
+      let that = this;
+      let p = {
+        id: i,
+      };
+      that.$axios.post('/api/common-language/delete',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:'删除成功'
+          })
+          setTimeout(()=>{
+             that.geturlCommonLanguageList();
+          },1500)
+          return
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
     // 确认常用语
     clickPhrasesQR(){
       let that = this;
       let p = {
-        phrases: that.phrases,
+        common_language: that.phrases,
       };
       let url = '';
       if(that.phrases_id){
-        p.id = that.phrases_id
+        p.id = that.phrases_id,
+        url = '/api/common-language/update'
+      }else{
+        url = '/api/common-language/create'
       }
-      that.$axios.post('',p).then( res =>{
+
+      that.$axios.post(url,p).then( res =>{
         if(res.code == 0){
           if(that.phrases_id){
             that.$message.success({
@@ -418,8 +465,7 @@ export default {
           }
           
           setTimeout(()=>{
-             // 获取列表信息
-            //  that.getUserProfile();
+             that.geturlCommonLanguageList();
              that.setPhrasesVisible = false;
           },1500)
           return

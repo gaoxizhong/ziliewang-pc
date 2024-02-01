@@ -67,10 +67,10 @@
           <div class="title">常用语设置</div>
           <ul class="phraseslist-box">
             <li class="phrases-item" v-for="(item,index) in phraseslist" :key="index">
-              <p>{{ item.name }}</p>
+              <p>{{ item.common_language }}</p>
               <div class="item-i">
-                <i class="el-icon-edit" ></i>
-                <i class="el-icon-delete"></i>
+                <i class="el-icon-edit" @click="clickupdate(item.common_language,item.id)"></i>
+                <i class="el-icon-delete" @click="deletePhrasesQR(item.id)"></i>
               </div>
             </li>
           </ul>
@@ -186,10 +186,9 @@ export default {
   data() {
     return {
       tabStatus: 'basicInfo', // 基本信息
-      phraseslist: [ // 常用语列表
-        {id:1,name:'我可以把我的简历发给您看看吗？'},
-        {id:2,name:'我可以把我的简历发给您看看吗？'}
-      ],
+      phraseslist: [], // 常用语列表
+      phrases:'',
+      phrases_id:'',
       infoData:{
         staff_name:"Lucy",
         role_desc: "",
@@ -210,23 +209,74 @@ export default {
     this.tabStatus = this.$route.query.tabStatus || 'basicInfo';
     //  获取信息
     this.getUserInfo();
+    // 获取常用语
+    this.geturlCommonLanguageList();
   },
   methods:{
+    // 获取常用语
+    geturlCommonLanguageList(){
+      let that = this;
+      that.$axios.post('/api/common-language/list',{}).then(res =>{
+        if(res.code == 0){
+          this.phraseslist = res.data;
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
     // 点击添加常用语
     clickSetPhrases(){
       this.setPhrasesVisible = true;
+    },
+    closePhrasesVisible(){
+      this.setPhrasesVisible = false;
+    },
+    // 点击编辑常用语
+    clickupdate(n,i){
+      this.phrases = n;
+      this.phrases_id = i;
+      this.setPhrasesVisible = true;
+    },
+    // 删除用语
+    deletePhrasesQR(i){
+      let that = this;
+      let p = {
+        id: i,
+      };
+      that.$axios.post('/api/common-language/delete',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:'删除成功'
+          })
+          setTimeout(()=>{
+             that.geturlCommonLanguageList();
+          },1500)
+          return
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        console.log(e)
+      })
     },
     // 确认常用语
     clickPhrasesQR(){
       let that = this;
       let p = {
-        phrases: that.phrases,
+        common_language: that.phrases,
       };
       let url = '';
       if(that.phrases_id){
-        p.id = that.phrases_id
+        p.id = that.phrases_id,
+        url = '/api/common-language/update'
+      }else{
+        url = '/api/common-language/create'
       }
-      that.$axios.post('',p).then( res =>{
+      that.$axios.post(url,p).then( res =>{
         if(res.code == 0){
           if(that.phrases_id){
             that.$message.success({
@@ -239,8 +289,7 @@ export default {
           }
           
           setTimeout(()=>{
-             // 获取列表信息
-            //  that.getUserProfile();
+             that.geturlCommonLanguageList();
              that.setPhrasesVisible = false;
           },1500)
           return
@@ -698,6 +747,64 @@ export default {
     cursor: pointer;
     &:hover{
       color: $g_color;
+    }
+  }
+}
+.container-right-items{
+  width: 100%;
+  text-align: left;
+  .title{
+    font-size: 16px;
+    font-weight: bold;
+    color: $g_textColor;
+    line-height: 24px;
+  }
+  .info-box{
+    font-size: 14px;
+    font-weight: 400;
+    color: #86909C;
+    line-height: 22px;
+  }
+  .phone-protect-box{
+    width: 100%;
+    display: flex;
+    margin-top: 1.5rem;
+    .phone-protect-title{
+      font-size: 14px;
+      font-weight: bold;
+      color: $g_textColor;
+      line-height: 22px;
+    }
+    .el-switch{
+      margin-left: 16.5rem;
+    }
+    /deep/ .el-switch.is-checked .el-switch__core{
+      border-color: $g_color;
+      background-color: $g_bg;
+    }
+  }
+  button{
+    width: auto;
+    padding: 0 16px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    background: $g_bg;
+    border-radius: 30px;
+    opacity: 1;
+    border: 1px solid $g_bg;
+    color: #FFFFFF;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    margin-top: 12px;
+    margin-left: 12px;
+    img{
+      width: 12px;
+      height: 12px;
+    }
+    span{
+      margin-left: 6px;
     }
   }
 }

@@ -153,9 +153,7 @@
                 <a href="javascript:0;" class="set-btn" @click="clickSetBtn">设置</a>
               </div>
               <ul>
-                <li @click="clickCyy('我可以把我的简历发您看看吗?')">我可以把我的简历发您看看吗?</li>
-                <li @click="clickCyy('您好！我可以去贵公司面试吗?')">您好！我可以去贵公司面试吗?</li>
-                <li @click="clickCyy('您好！希望可以和您聊聊，谢谢！')">您好！希望可以和您聊聊，谢谢！</li>
+                <li v-for="(item,index) in phraseslist" :key="index" @click="clickCyy(item.common_language)"> {{ item.common_language }}</li>
               </ul>
             </div>
             <i class="iconfont icon-changyongyu" title="常用语" @click="showCyyBox"></i>
@@ -273,6 +271,7 @@
         sessionList:[], // 会话记录列表
         detailData:{}, // 职位信息
         userProfile:{}, // 个人信息
+        phraseslist:[], // 常用语
         userVipRank: 0,
         currentUser: null,
         friend: null,
@@ -550,8 +549,25 @@
       },
       // 点击常用语 icon
       showCyyBox(){
-        this.cyy.visible = !this.cyy.visible;
+        let that = this;
+        if( that.cyy.visible ){
+          that.cyy.visible = false;
+          return
+        }else{
+          that.$axios.post('/api/common-language/list',{
+            no_looding: 1, // 隐藏-- 封装请求里的 looding
+          }).then(res =>{
+            if(res.code == 0){
+              that.phraseslist = res.data;
+              that.cyy.visible = true;
+            }
+          }).catch(e =>{
+            console.log(e)
+          })
+        }
+        
       },
+      
       // 点击常用语列表
       clickCyy(text){
         this.text = text;
