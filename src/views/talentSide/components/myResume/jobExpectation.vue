@@ -127,7 +127,7 @@
 
 
     <!-- 职位弹窗 -->
-    <industryList :data="position" ref="industryList" />
+    <industryList :data="position" ref="industryList" @clickSearchItem="clickSearchItem"/>
 
   </div>
 
@@ -192,6 +192,11 @@ export default {
       // console.log(thsAreaCode) // 注意3： 最终结果是个一维数组对象
       // thsAreaCode = this.$refs['cascaderAddr'].getCheckedNodes()[0].pathLabels// 注意2： 获取label值
       this.infoData.desired_location = thsAreaCode[1];
+    },
+    //接收组件方法
+    clickSearchItem(e){
+      console.log(e)
+      this.infoData.desired_position = e.name;
     },
     clickCreat(){
       this.infoData = {
@@ -329,34 +334,40 @@ export default {
     // 获取行业列表信息
     getIndustryList(){
       let that = this;
+      var loadingInstance = this.$Loading.service({
+        lock: false,
+        customClass: 'z-index999',
+        text: '加载中，请稍后...',
+        spinner: 'ui-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      });
       that.$axios.post('/api/industry/list',{}).then( res =>{
+        loadingInstance.close();
         that.industry.industryList = res.data;
       }).catch( e=>{
+        loadingInstance.close();
         console.log(e)
       })
     },
     // 获取职位列表信息
     getPositionList(){
       let that = this;
+      var loadingInstance = this.$Loading.service({
+        lock: false,
+        customClass: 'z-index999',
+        text: '加载中，请稍后...',
+        spinner: 'ui-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      });
       that.$axios.post('/api/position/list',{}).then( res =>{
+        loadingInstance.close();
         that.position.industryList = res.data;
         that.position.category_list = that.position.industryList[that.selt_item].category_list;
         that.$refs.industryList._data.dialogVisible = true;
       }).catch( e=>{
+        loadingInstance.close();
         console.log(e)
       })
-    },
-    // 点击职位分类列表
-    click_industryListLi(n,i){
-      let item = n;
-      let index = i;
-      this.selt_item = index;
-      this.position.category_list = item.category_list;
-    },
-    // 点击职位列表
-    click_position_list(n){
-      this.infoData.desired_position = n;
-      this.dialogVisible = false;
     },
     expected_salary_st_change(){
       let expected_salary_st = this.expected_salary_st;

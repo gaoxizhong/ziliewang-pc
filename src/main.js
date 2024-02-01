@@ -54,6 +54,9 @@ Vue.use(vPreviewImage)
 
 Vue.prototype.$axios = axios;
 
+import { Loading } from 'element-ui';
+Vue.prototype.$Loading = Loading;
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

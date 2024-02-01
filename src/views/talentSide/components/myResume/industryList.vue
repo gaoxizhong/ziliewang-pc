@@ -5,8 +5,19 @@
       <div class="dialog-header">
         <h3 class="title">请选择职位类别</h3>
         <div class="dialog-header-input">
-          <el-input type="text" v-model="dialogVisible_seach" placeholder="请输入职位名称搜索" clearable prefix-icon="el-icon-search"></el-input>
-          <div class="searchList-box" v-if="searchList_info">123</div>
+          <el-input type="text" v-model="dialogVisible_seach" placeholder="请输入职位名称搜索" clearable prefix-icon="el-icon-search" @input="jobsSearchInput"></el-input>
+          <!-- 弹窗 开始 -->
+          <div class="searchList-box" v-if="searchList_info">
+            <div class="suggest-list">
+              <ul>
+                <li v-for="(item,index) in jobsSearchList" :key="index" @click="clickSearchItem(item.position_name)">
+                  <p class="list-title" v-html="item.position_tag_name"></p> 
+                  <p class="list-content">{{ item.industry }} > {{ item.category_name }}</p> 
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- 弹窗 结束 -->
         </div>
         <img src="../../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
       </div>
@@ -63,6 +74,7 @@ export default {
       selt_item: 0, // 左侧下标
       selt_listItems: -1,
       searchList_info: false,
+      jobsSearchList:[],  //搜索出的数据
     }
   },
   computed: {
@@ -72,7 +84,23 @@ export default {
     this.position = this.data;
   },
   methods: {
-    
+    // 点击搜索列表
+    clickSearchItem(n){
+      this.$emit('clickSearchItem',{name:n});
+      this.dialogVisible = false;
+    },
+    // 搜索框事件
+    jobsSearchInput(){
+      let that = this;
+      that.$axios.post('/api/position/search',{
+        search: that.dialogVisible_seach
+      }).then( res =>{
+        if(res.code == 0){
+          that.jobsSearchList = res.data.list;
+          that.searchList_info = true;
+        }
+      })
+    },
     // 点击职位弹窗关闭按钮
     clickClose(){
       this.dialogVisible = false;
@@ -166,12 +194,45 @@ export default {
           .searchList-box{
             position: absolute;
             top: 54px;
-            left: 0;
+            left: -10px;
             padding: 10px;
-            border-radius: 6px;
             background: #fff;
             box-shadow: 0 0 10px 0 #b2bdca;
-            line-height: 1;
+            border-radius: 8px;
+            width: 380px;
+            line-height: 24px;
+            .suggest-list {
+              position: relative;
+              max-height: 480px;
+              overflow: auto;
+              ul {
+                margin: 0;
+                padding: 6px 0;
+                li {
+                  position: relative;
+                  padding: 10px 8px;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  &:hover{
+                    background-color: #f1f2f3;
+                  }
+                  p {
+                    margin-bottom: 0;
+                  }
+                  p.list-title {
+                    color: #222;
+                    font-size: 14px;
+                    line-height: 20px;
+                  }
+                  p.list-content {
+                    font-size: 13px;
+                    line-height: 17px;
+                    color: #666;
+                    margin-top: 4px;
+                  }
+                }
+              }
+            }
           }
         }
         img{
