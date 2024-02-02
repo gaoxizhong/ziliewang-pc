@@ -238,7 +238,6 @@ export default {
     }
   },
   created(){
-    console.log(pcas)
      this.position_list = this.position[this.selt_item].children;
   },
   methods:{

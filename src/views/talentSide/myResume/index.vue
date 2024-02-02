@@ -79,11 +79,11 @@
                 </div>
                 <div class="up-box-Instructions">
                   <div class="basic-info-text">
-                    <span v-if=" !perfection_degree.basic_info.avatar ">头像缺失</span>
-                    <span v-if=" !perfection_degree.basic_info.begin_work_date ">参加工作时间缺失</span>
-                    <span v-if=" !perfection_degree.basic_info.real_phone ">电话缺失</span>
-                    <span v-if=" !perfection_degree.basic_info.real_email ">邮箱缺失</span>
-                    <span v-if=" !perfection_degree.basic_info.advantages_highlights ">优势亮点缺失</span>
+                    <span v-if=" !perfection_degree_basic_info.avatar ">头像缺失</span>
+                    <span v-if=" !perfection_degree_basic_info.begin_work_date ">参加工作时间缺失</span>
+                    <span v-if=" !perfection_degree_basic_info.real_phone ">电话缺失</span>
+                    <span v-if=" !perfection_degree_basic_info.real_email ">邮箱缺失</span>
+                    <span v-if=" !perfection_degree_basic_info.advantages_highlights ">优势亮点缺失</span>
                   </div>
                 </div>
               </div>
@@ -191,6 +191,8 @@ export default {
       onlineResumeData:{}, // 在线简历
       is_type:'',
       perfection_degree: {}, // 简历完善度
+      perfection_degree_basic_info: {}, // 简历完善度
+
       customColor: '#37f'
     }
   },
@@ -277,6 +279,7 @@ export default {
 
           // 简历完善度、
           this.perfection_degree = getPerfectionDegree(res.data);
+          this.perfection_degree_basic_info = getPerfectionDegree(res.data).basic_info;
         }
       }).catch(e =>{
         console.log(e)

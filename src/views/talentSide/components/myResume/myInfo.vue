@@ -36,7 +36,7 @@
               <span>{{ data.live_city?data.live_city:"暂无" }}</span>
             </li>
             <li>
-              <img src="../../../../assets/image/icon-qzzt.png" alt="">
+              <img src="../../../../assets/image/icon-qzzt-1.png" alt="">
               <span>{{ data.work_status_desc }}</span>
             </li>
           </ul>

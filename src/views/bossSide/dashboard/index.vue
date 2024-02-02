@@ -174,7 +174,7 @@
                 </span>
                 <em class="vline"></em>
                 <span class="label-text">
-                  <img src="../../../assets/image/icon-qzzt.png" alt="" class="fz fz-age"/>
+                  <img src="../../../assets/image/icon-qzzt-1.png" alt="" class="fz fz-age"/>
                   <span>{{ infoData.users?infoData.users.work_status_desc:'在职不考虑' }}</span>
                 </span>
               </div>

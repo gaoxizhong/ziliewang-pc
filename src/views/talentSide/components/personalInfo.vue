@@ -2,10 +2,10 @@
   <div class="right-box">
     <div class="m-box">
       <div class="users-box">
-        <img :src="infoData.basic_info.avatar?infoData.basic_info.avatar:require('../../../assets/image/img-user.jpg')" alt="" class="img-user" v-if="infoData.basic_info"/>
+        <img :src="basic_info.avatar?basic_info.avatar:require('../../../assets/image/img-user.jpg')" alt="" class="img-user" />
         <div class="users-right">
           <div class="users-name">
-            <span class="span-1" v-if="infoData.basic_info">{{infoData.basic_info.real_name}}</span>
+            <span class="span-1" v-if="basic_info">{{basic_info.real_name}}</span>
             <img src="../../../assets/image/sex-1.png" alt="" class="img-sex"/>
           </div>
           <div class="wcd-box">简历完整度{{ perfection_degree.degree_num }}%</div>
@@ -58,10 +58,10 @@
         <div class="my-goldCoin-box">
           <div class="goldCoin-title">会员等级</div>
           <div class="goldCoin-num-btn-box">
-            <span class="goldCoin-span">{{ infoData.basic_info.vip_rank_text }}</span>
+            <span class="goldCoin-span">{{ basic_info.vip_rank_text }}</span>
             <button class="goldCoin-btn" @click="goToTopUpBuy">购买</button>
           </div>
-          <div class="goldCoin-title" v-if="infoData.basic_info.vip_expire_time_text">到期时间: {{ infoData.basic_info.vip_expire_time_text }}</div>
+          <div class="goldCoin-title" v-if="basic_info.vip_expire_time_text">到期时间: {{ basic_info.vip_expire_time_text }}</div>
         </div>
       </div>
       <!-- 我的资产 结束 -->

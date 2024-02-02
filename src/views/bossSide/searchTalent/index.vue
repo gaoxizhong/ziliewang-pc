@@ -109,7 +109,7 @@
                     </span>
                     <em class="vline"></em>
                     <span class="label-text">
-                      <img src="../../../assets/image/icon-qzzt.png" alt="" class="fz fz-age"/>
+                      <img src="../../../assets/image/icon-qzzt-1.png" alt="" class="fz fz-age"/>
                       <span>{{ basic_info.work_status_desc?basic_info.work_status_desc:'暂无' }}</span>
                     </span>
                     <em class="vline"></em>
