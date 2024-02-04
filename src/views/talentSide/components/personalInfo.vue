@@ -58,7 +58,7 @@
         <div class="my-goldCoin-box">
           <div class="goldCoin-title">会员等级</div>
           <div class="goldCoin-num-btn-box">
-            <span class="goldCoin-span">{{ basic_info.vip_rank_text }}</span>
+            <span class="goldCoin-span">{{ basic_info.vip_rank_text?basic_info.vip_rank_text:'普通用户' }}</span>
             <button class="goldCoin-btn" @click="goToTopUpBuy">购买</button>
           </div>
           <div class="goldCoin-title" v-if="basic_info.vip_expire_time_text">到期时间: {{ basic_info.vip_expire_time_text }}</div>
