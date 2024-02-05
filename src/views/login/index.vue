@@ -157,6 +157,20 @@
     <div>
       <privacyPolicy ref="privacyPolicy"/>
     </div>
+
+    <!-- 企业端选择企业弹窗 -->
+    <div class="myfirm-box">
+      <el-dialog class="declaration-box" title="请先选择您的企业" :center="true" :visible.sync="myfirmVisible" height="auto">
+      <div class="dialog-content-box">
+        <ul>
+          <li v-for="(item,index) in companyList" :key="index" @click="clickCompanyItems(item)">{{ item.company_name }}</li>
+        </ul>
+      </div>
+      <!-- <span slot="footer" class="dialog-footer">
+        <el-button type="primary" plain @click="clickmyfirmVisible" class="footer-clobtn">确定</el-button>
+      </span>  -->
+    </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -209,6 +223,8 @@ export default {
       // dl_statusMsg: '获取验证码',
       is_yzmlogin: false, // 验证码登录状态
       redirect: undefined,
+      myfirmVisible: false,
+      companyList: []
     };
   },
   computed: {
@@ -335,9 +351,9 @@ export default {
       }
       that.$axios.post('/api/login',p).then( res =>{
         let data = res.data;
-        setToken(data.token);   // 缓存
         localStorage.setItem('tag', data.tag); // 用户身份 user、人才端 company、企业端缓存
         if(data.tag == 'user'){
+          setToken(data.token);   // 缓存
           // 求职者
           localStorage.setItem('name', data.user.real_name); // 用户名缓存
           localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
@@ -351,18 +367,43 @@ export default {
           }, 1000);
         }
         if(data.tag == 'company'){
+          that.companyList = data.company_staff_list;
+          if(that.companyList.length>=2){
+            that.myfirmVisible = true;
+          }
+          if(that.companyList.length == 1){
+           that.clickCompanyItems( that.companyList[0] );
+          }
           // 企业端
-          localStorage.setItem('realUid', data.user.id); // 用户uid缓存
-          localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
-          setTimeout(() => {
-            this.$router.push('/dashboard');
-          }, 1000);
+          // localStorage.setItem('realUid', data.user.id); // 用户uid缓存
+          // localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
+          // setTimeout(() => {
+          //   this.$router.push('/dashboard');
+          // }, 1000);
         }
         
       }).catch( e=>{
         console.log(e)
       })
 
+    },
+    // 点击企业列表项
+    clickCompanyItems(i){
+      let that = this;
+      that.$axios.post('/api/select-company-login',{
+        id: i.id
+      }).then( res =>{
+        let data = res.data;
+        setToken(data.token);   // 缓存
+        localStorage.setItem('realUid', data.user.id); // 用户uid缓存
+        localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
+        setTimeout(() => {
+          this.$router.push('/dashboard');
+        }, 1000);
+        
+      }).catch( e=>{
+        console.log(e)
+      })
     },
     // 点击免费注册
     signUserInfo(e){
@@ -704,7 +745,7 @@ $cursor: #000;
   position: absolute;
   top: 50%;
   right: 20px;
-  z-index: 9999;
+  z-index: 99;
   transform: translateY(-52%);
   padding: 20px 30px;
 
@@ -951,6 +992,54 @@ $cursor: #000;
     }
   }
 }
+.myfirm-box /deep/ .el-dialog{
+    width: 400px;
+    min-height: 260px;
+    max-height: 360px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 9999 !important;
+    transform: translate(-50%, -50%);
+    margin: 0 !important;
+    border-radius: 6px;
+    overflow: hidden;
+    .el-dialog__header {
+      padding: 20px 0 10px 0;
+      font-size: 15px;
+      font-weight: 600;
+      width: 100%;
+      height: auto;
+      background: #fff;
+      text-align: center;
+    }
+    .el-dialog__body{
+      flex: 1;
+      width: 100%;
+      padding: 0;
+      -ms-overflow-style:none; /*IE浏览器 */
+      scrollbar-width:none;  /*火狐浏览器 */
+      .dialog-content-box{
+        padding: 0 10px 10px 10px;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        li{
+          font-size: 15px;
+          padding: 10px;
+          cursor: pointer;
+          &:hover{
+            background: #eee;
+          }
+        }
+      }
+    }
+  }
 
 
 

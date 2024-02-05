@@ -97,6 +97,7 @@ export default {
     position: fixed;
     top: 50%;
     left: 50%;
+    z-index: 9999 !important;
     transform: translate(-50%, -50%);
     margin: 0 !important;
     border-radius: 6px;
