@@ -468,6 +468,15 @@ export const constantRoutes = [
         },
       },
       {
+        path: '/liveRoom',
+        name: 'liveRoom',
+        component: () => import('@/views/talentSide/liveRoom'),
+        meta: { 
+          title: '直播',
+          // keepAlive: true,
+        },
+      },
+      {
         path: 'liveBroadcast',
         name: 'talentSide_liveBroadcast',
         component: () => import('@/views/talentSide/liveBroadcast/index'),
