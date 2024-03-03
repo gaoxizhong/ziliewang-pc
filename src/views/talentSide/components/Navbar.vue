@@ -17,7 +17,7 @@
           <el-menu-item index="/myResume">我的简历</el-menu-item>
           <el-menu-item index="/myDelivery">我的投递</el-menu-item>
           <el-menu-item index="/myProfessionalCircle">我的职业身份</el-menu-item>
-          <el-menu-item index="/liveRoom">直播</el-menu-item>
+          <el-menu-item index="/liveList">直播</el-menu-item>
         </el-menu>
       </div>
       <div class="right-menu">
@@ -106,7 +106,6 @@ export default {
       // if (meta.activeMenu) {
       //   return meta.activeMenu;
       // }
-      console.log(path)
       return '' || path;
     },
     navbarMessagePrompt() {

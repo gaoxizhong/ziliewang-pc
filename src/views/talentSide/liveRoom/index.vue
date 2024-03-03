@@ -1,12 +1,61 @@
 <template>
-  <div class="container">
-    <div class="sec-hd">
-      <h3>精选直播</h3>
-      <p>体验沉浸式求职</p>
-    </div>  
-    <div class="sec-bd">
-      <div class=""></div>
+  <div class="container-box">
+    <div class="live-banner">
+      <div class="container">
+        <!-- 视频区域 开始 -->
+        <div class="live-video">
+          <div class="live-video-title">
+            <h1>亚玛芬体育2024届管培生招募空中宣讲会</h1>
+            <p>
+              <img src="../../../assets/image/icon-wechat1.png" alt="" />
+              <span>开播时间: 3月4日 19:00</span>
+            </p>
+          </div>
+          <div class="live-video-cover" :style="`background-image:url(${liveInfo.image});`"></div>
+        </div>
+        <!-- 视频区域 结束 -->
+        <!-- 讨论区域 开始  -->
+        <div class="live-im">222</div>
+        <!-- 讨论区域 结束  -->
+      </div>
+    </div>
+    <div class="live-desc">
 
+      <div class="container">
+        <div class="live-introduce">
+          <h2>
+            <span>直播介绍</span>
+          </h2>
+          <div class="live-introduce-desc">
+            <div class="lecturer-slide">
+              <h3><span>主讲人</span></h3>
+              <div class="lecturer-card">
+                <div class="lecturer-card-img"><img src="https://image0.lietou-static.com/img/65d870f529a2bb31d83ec59308u.jpg" alt=""></div>
+                <div class="lecturer-card-desc">
+                  <p class="lecturer-card-name"><strong>AMER SPORTS</strong></p>
+                  <p class="lecturer-card-title">亚玛芬体育</p>
+                </div>
+              </div>
+            </div>
+            <div class="live-bright">
+              <h3>本场亮点</h3>
+              <div class="live-bright-desc">
+                亚玛芬体育2024届管培生招募空中宣讲会，即将开场！
+
+                解锁网申通关指南，助你顺利通关网申全流程！
+                揭秘未来成长计划，看亚玛芬如何让你迅速成长~
+                打开员工福利宝箱，带你了解亚玛芬的各项员工福利政策，提前感受在亚玛芬工作的满满幸福感~
+
+                除此之外
+                还有亚玛芬企业文化大揭秘
+                嘉宾们的个人经验分享、职场故事放送
+                参与直播间三轮互动问答
+                还有亚玛芬定制礼品等你来抢！
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -15,48 +64,168 @@
 <script>
 
 export default {
-  name: 'liveRoom',
+  name: 'liveList',
   components: {
 
   },
   data(){
     return{
-      liveList: [],
+      liveInfo:{image:'https://image0.lietou-static.com/img/65d86e09eb61c74ef2d7a4ab08u.jpg'},
     }
   },
   created(){
-
+    console.log(this.$route.query)
   },
   computed: {
     
   },
   methods: {
-
+  
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  .container-box{
-    background: #fff;
+  .live-banner {
+    height: 540px;
+    margin-bottom: 40px;
+    padding: 20px 0 40px 0;
+    background: #2e2f3d no-repeat top;
   }
-  .sec-hd{
-    display: flex;
-    margin-bottom: 24px;
-    height: 34px;
+  .container {
+    margin: 0 auto;
+    padding: 0 8px;
+    width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
   }
-  .sec-hd h3 {
-    font-weight: 600;
-    font-size: 24px;
-    height: 34px;
-    line-height: 34px;
-    color: #3e454d;
-    margin-right: 12px;
+  .live-video{
+    position: relative;
+    float: left;
+    width: 784px;
+    height: 460px;
+    overflow: hidden;
+    background-color: #000;
+    border-radius: 4px;
+    .live-video-title {
+      position: absolute;
+      z-index: 3;
+      width: 100%;
+      height: 90px;
+      padding: 16px 16px 0 24px;
+      color: #fff;
+      background-color: rgba(0, 0, 0, .7);
+      transition: transform .3s 3s;
+      h1{
+        margin: 0 0 8px;
+        overflow: hidden;
+        font-size: 20px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #fff;
+        line-height: 1.2;
+      }
+      &>p{
+        display: flex;
+        align-items: center;
+        img{
+          width: 18px;
+          height: 18px;
+        }
+        span{
+          padding-left: 10px;
+        }
+      }
+
+    }
+    .live-video-cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        background: 100% 100% / contain no-repeat;
+    }
   }
-  .sec-hd p {
+  .live-im {
+    position: relative;
+    float: right;
+    width: 385px;
+    height: 460px;
+    padding: 24px;
+    background: rgba(0, 0, 0, .4) url(//concat.lietou-static.com/fe-www-pc/v6/images/bg.db4daf32.jpg) 0 0 / contain no-repeat;
+    border-radius: 4px;
+  }
+  .live-introduce>h2 {
+    margin: 0 0 20px;
+    font-size: 22px;
+  }
+  .lecturer-slide {
+    margin-bottom: 32px;
+  }
+  .lecturer-slide>h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+  }
+  .lecturer-card {
+    overflow: hidden;
+    width: 284px;
+    height: 112px;
+    margin: 0 8px;
+    padding: 24px;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    .lecturer-card-img {
+      float: left;
+      width: 64px;
+      height: 64px;
+      overflow: hidden;
+      background-color: #fff;
+      border-radius: 32px;
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .lecturer-card-desc {
+      margin-left: 64px;
+      padding-top: 9px;
+      padding-left: 16px;
+      line-height: 1.4;
+      .lecturer-card-name {
+        margin-bottom: 10px;
+        font-size: 16px;
+        strong {
+          font-weight: 700;
+        }
+      }
+      &>p{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .lecturer-card-title {
+        word-break: break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        white-space: normal;
+      }
+    }
+  }
+  .live-bright>h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+  }
+  .live-bright-desc {
+    color: #666;
     font-size: 14px;
-    color: #667280;
-    align-self: flex-end;
-    padding-bottom: 3px;
-  }
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-all;
+  } 
 </style>

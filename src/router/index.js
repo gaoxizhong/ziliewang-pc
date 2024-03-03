@@ -468,23 +468,30 @@ export const constantRoutes = [
         },
       },
       {
-        path: '/liveRoom',
-        name: 'liveRoom',
-        component: () => import('@/views/talentSide/liveRoom'),
+        path: '/liveList',
+        name: 'liveList',
+        component: () => import('@/views/talentSide/liveList'),
         meta: { 
           title: '直播',
           // keepAlive: true,
         },
       },
       {
-        path: 'liveBroadcast',
-        name: 'talentSide_liveBroadcast',
-        component: () => import('@/views/talentSide/liveBroadcast/index'),
+        path: '/liveRoom/:id',
+        name: 'liveRoom',
+        component: () => import('@/views/talentSide/liveRoom'),
         meta: { 
-          title: '直播',
-          // keepAlive: true,
+          title: '直播间',
         },
       },
+      // {
+      //   path: 'liveBroadcast',
+      //   name: 'talentSide_liveBroadcast',
+      //   component: () => import('@/views/talentSide/liveBroadcast/index'),
+      //   meta: { 
+      //     title: '直播',
+      //   },
+      // },
     ]
   },
 
