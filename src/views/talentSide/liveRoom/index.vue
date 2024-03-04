@@ -3,7 +3,7 @@
     <div class="live-banner">
       <div class="container">
         <!-- 视频区域 开始 -->
-        <div class="live-video">
+        <div class="live-video" v-if="videoUrl">
           <div class="live-video-title">
             <h1>亚玛芬体育2024届管培生招募空中宣讲会</h1>
             <p>
@@ -12,6 +12,9 @@
             </p>
           </div>
           <div class="live-video-cover" :style="`background-image:url(${liveInfo.image});`"></div>
+        </div>
+        <div class="live-video" v-else>
+          <video-player @ready="handleReady" ref="videoPlayer" :options="playerOptions" class="videoPlayer-box"></video-player>
         </div>
         <!-- 视频区域 结束 -->
         <!-- 讨论区域 开始  -->
@@ -71,6 +74,20 @@ export default {
   data(){
     return{
       liveInfo:{image:'https://image0.lietou-static.com/img/65d86e09eb61c74ef2d7a4ab08u.jpg'},
+      videoUrl:'',
+      playerOptions: { // 播放地址
+        // 视频 url
+        sources: [{
+          src: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+          type: 'video/mp4'
+        }],
+        // 其他设置项
+        autoplay: true, // 视频将在加载完成后自动播放
+        controls: true,  //将显示控制条（播放/暂停、音量、进度条等控件）
+        poster: 'https://image0.lietou-static.com/img/65d86e09eb61c74ef2d7a4ab08u.jpg',  // 设置视频封面
+      }
+
+
     }
   },
   created(){
@@ -79,8 +96,31 @@ export default {
   computed: {
     
   },
+  mounted(){
+    // 通过 ref 访问 videoPlayer 组件实例
+    // this.$refs.videoPlayer.play()
+  },
   methods: {
-  
+    // 播放地址
+    getPlayUrl(f){
+      let that = this;
+      that.$axios.post('/api/live/play-url',{}).then( res =>{
+        if(res.code == 0){
+          that.playUrl = res.data;
+          // if( typeof f == 'function'){
+          //   return f(res.data.hls_play_url)
+          // }
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    //视频播放器准备好时触发
+    handleReady(player){
+      console.log(player)
+    }
   },
 };
 </script>
@@ -147,6 +187,7 @@ export default {
         height: 100%;
         background: 100% 100% / contain no-repeat;
     }
+
   }
   .live-im {
     position: relative;
@@ -228,4 +269,17 @@ export default {
     white-space: pre-wrap;
     word-break: break-all;
   } 
+  .live-video /deep/ .video-player{
+    width: 100%;
+    height: 100%;
+  }
+  .live-video /deep/ .video-js{
+    width: 100%;
+    height: 100%;
+  }
+  .live-video /deep/ .vjs-big-play-button{
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+  }
 </style>

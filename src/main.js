@@ -24,16 +24,17 @@ import '@/utils/dialogDrag'
 import VueDragResize from 'vue-drag-resize'
 Vue.component('vue-drag-resize', VueDragResize)
 
-// 引入视频直播
+// ==============  引入视频直播  ↓   ================
 import VueVideoPlayer from 'vue-video-player'
 // 使用视频直播组件
 Vue.use(VueVideoPlayer)
 
-// 引入视频直播样式
+// 引入视频直播样式 
 import 'video.js/dist/video-js.css'
 import 'vue-video-player/src/custom-theme.css'
+// ==============  引入视频直播  ↑  ================
 
-// 引入 实时通讯
+// ==============  引入 实时通讯  ↓   ================
 import GoEasy from 'goeasy';
 const goEasy = GoEasy.getInstance({
   host:'hangzhou.goeasy.io', //新加坡host：singapore.goeasy.io
@@ -43,9 +44,12 @@ const goEasy = GoEasy.getInstance({
 // 建议在main.js里初始化全局的GoEasy对象
 Vue.prototype.GoEasy = GoEasy;
 Vue.prototype.goEasy = goEasy;
+// ==============  引入 实时通讯   ↑  ================
+
 Vue.prototype.globalData = {
   currentUser: null
 };
+
 // 引入图片预览
 import vPreviewImage from 'v-preview-image'
 Vue.use(vPreviewImage)
