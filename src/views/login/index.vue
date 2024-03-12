@@ -3,20 +3,8 @@
     <div class="login-header-box">
       <div class="header-nav-box">
         <img src="../../assets/image/log-2.png" alt="" class="logo"/>
-        <!-- <div class="select-box">
-          <div class="show-select-box">
-            <span class="title">{{ tag == 'user'? '我是求职者' : '我是招聘方' }}</span>
-            <img src="../../assets/image/Swap.png" alt="" class=""/>
-            <span class="qh" @click="clickCRole">切换</span>
-          </div>
-          <div class="select-items-box" v-if="c_role">
-            <p :class="tag == 'user'?'hover':'' " @click="clickRole('user')">我是求职者</p>
-            <p :class="tag == 'company'?'hover':'' " @click="clickRole('company')">我是招聘方</p>
-          </div>
-        </div> -->
       </div>
     </div>
-    <!-- <div class="home-container" :style="tag == 'user'? login_bgurl_1 : login_bgurl_2" > -->
     <div class="home-container" :style="login_bgurl_1">
       <div class="home-container-div">
         <div class="form-container-box">
@@ -257,16 +245,6 @@ export default {
     clickCRole(){
       this.c_role = !this.c_role;
     },  
-    // 切换角色
-    clickRole(n){
-      this.tag = n;
-      console.log(this.tag)
-      localStorage.setItem('tag',n);
-      this.c_role = false;
-      this.sign_login = 'login'; // sign、注册； login、登录
-      this.login_way = 2; // 登录方式 1、快捷登录 2、密码登录
-      
-    },
     // 点击注册登录框tab
     clickTab(n){
       this.login_way = n;
