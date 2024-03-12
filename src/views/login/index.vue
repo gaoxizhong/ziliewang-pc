@@ -527,11 +527,11 @@ export default {
         code: change_password.code,
         password: change_password.password,
         password_tow: change_password.password_tow,
-        tag: that.tag 
-
+        tag: that.tag,
+        
       };
 
-      that.$axios.post('/api/register',p).then( res =>{
+      that.$axios.post('/api/forgot-password',p).then( res =>{
         if(res.code == 0){
           that.$message.success({
             message:'修改成功'
