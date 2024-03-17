@@ -23,7 +23,7 @@ export default {
  
   mounted() {
     // 组件间通信
-    this.$bus.$on('clickSidebar', this.clickSidebar)
+    this.$bus.$on('talentSide_clickSidebar', this.clickSidebar)
   },
   methods: {
     clickSidebar(params){
@@ -43,7 +43,7 @@ export default {
     sidebarChatBtn(){
       this.sidebar = false;
       let is_clickMinificationpngBtn = this.is_clickMinificationpngBtn;
-      this.$bus.$emit('receiveParams', {is_clickMinificationpngBtn});
+      this.$bus.$emit('talentSide_receiveParams', {is_clickMinificationpngBtn});
     }
     
     

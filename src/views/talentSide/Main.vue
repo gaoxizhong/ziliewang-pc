@@ -21,6 +21,7 @@
         <div class="VueDragResize-title-box">
           <div class="title">聊一聊</div>
           <div class="icon-box">
+            <span class="gt-span" @click="clickMessage">跳至沟通</span>
             <!-- <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
             <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
           </div>
@@ -68,7 +69,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
         parentW: 0,
         top: 56,
         left: 500,
-        zInfex_0: 99,
+        zInfex_0: 999,
         is_VueDragResize: false,
         is_type: '',
         is_pop:'pop',
@@ -85,7 +86,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
     },
     mounted(){
       // 组件间通信
-      this.$bus.$on('receiveParams', this.receiveParams);
+      this.$bus.$on('talentSide_receiveParams', this.receiveParams);
     },
     created(){
       let that = this;
@@ -179,8 +180,12 @@ import PrivateChat from './components/mag/PrivateChat.vue';
       clickMinificationpngBtn(){
         this.zInfex_0 = -1;
         this.top = -800;
-        this.$bus.$emit('clickSidebar',{ is_clickMinificationpngBtn:true } );
-      }
+        this.$bus.$emit('talentSide_clickSidebar',{ is_clickMinificationpngBtn:true } );
+      },
+        // 点击消息
+    clickMessage(){
+      this.$bus.$emit('clickMessage',{ navbar_mag:true } );
+    },
   },
 
   }
@@ -267,9 +272,12 @@ import PrivateChat from './components/mag/PrivateChat.vue';
       height: calc(100% - 60px);
       padding-top: 10px;
     }
-
+    .gt-span{
+      cursor: pointer;
+      color: $g_color;
+      font-size: 14px;
+    }
   }
   // 聊天弹窗 样式=============== ↑ ===========
  
-
 </style>

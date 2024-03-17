@@ -55,7 +55,7 @@
               </div>
             </div>
             <div class="boss-info-btn">
-              <el-button class="chat" :class="infoData.check_is_position == 1?'hover':'' " @click="infoData.check_is_position == 1?'':'clickChat'" >聊一聊</el-button>
+              <el-button class="chat" :class="infoData.check_is_position == 1?'hover':'' " @click="clickChat" >聊一聊</el-button>
               <el-button class="chat" @click="clickMobile(infoData)">打电话</el-button>
             </div>
           </div>
@@ -203,7 +203,6 @@ export default {
     // 点击聊一聊
     clickChat(){
       let that = this;
-      console.log(that.infoData)
       let infoData = {
         position_id: that.id,
         company_id: that.infoData.company_id,
@@ -211,8 +210,8 @@ export default {
         name: that.infoData.publish_name || 'BOSS',
         avatar: that.infoData.avatar || 'https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20240127/e4ffd5fcef38311336c5676416b317fa.jpg',
       }
-      that.$bus.$emit('receiveParams', {type:'JobDetails',infoData:JSON.stringify(infoData) });
-      that.$bus.$emit('clickSidebar', {type:'clickChat'});
+      that.$bus.$emit('talentSide_receiveParams', {type:'JobDetails',infoData:JSON.stringify(infoData) });
+      that.$bus.$emit('talentSide_clickSidebar', {type:'clickChat'});
     },
     // 点击打电话
     clickMobile(i){

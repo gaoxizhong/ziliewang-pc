@@ -4,7 +4,7 @@
       <div class="conversation-list-container">
         <div class="conversation-list-content">
 
-          <ConversationList @chatLocation="chatLocation"/>
+          <ConversationList :title_show="title_show" :laiyuan="laiyuan" @chatLocation="chatLocation"/>
           
         </div>
       </div>
@@ -26,6 +26,26 @@ export default {
     PrivateChat,
     ConversationList
   },
+  props:{
+    infoData:{
+        type: Object,
+        default() {
+          return {}
+        }
+      },
+    title_show:{
+      type: String,
+      default() {
+        return ''
+      }
+    },
+    laiyuan:{
+      type: String,
+      default() {
+        return ''
+      }
+    },
+  },
   data() {
     return {
       profile: {
@@ -35,7 +55,14 @@ export default {
     };
   },
   created() {
-
+    if(this.laiyuan == 'is_nav'){
+      // 点击头部导航消息按钮
+    }else{
+      if(this.infoData){
+        this.chatLocation (JSON.stringify(this.infoData))
+      }
+    }
+    
   },
   
   methods: {
@@ -54,7 +81,7 @@ export default {
 <style scoped>
 .conversations {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 120px);
   position: relative;
   display: flex;
   color: #333333;

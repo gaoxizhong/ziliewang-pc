@@ -55,7 +55,7 @@
           <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
         </div>
         <div class="navbaerMag-content-box">
-          <ConversationList :title_show="title_show" @chatLocation="chatLocation"/>
+          <buddyChart :title_show="title_show" :laiyuan="'is_nav'" />
         </div>
       </div>
     </VueDragResize>
@@ -69,7 +69,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import VueDragResize from 'vue-drag-resize';
 
-import ConversationList from '../../views/bossSide/components/mag/conversationList.vue';
+import buddyChart from '../../views/bossSide/components/mag/buddyChart.vue';
 import { setToken } from '@/utils/auth';
 
 export default {
@@ -77,7 +77,7 @@ export default {
     Breadcrumb,
     Hamburger,
     VueDragResize,
-    ConversationList
+    buddyChart
   },
   data(){
     return {
@@ -121,7 +121,7 @@ export default {
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
-    this.width = 330; // 可拖动div 高度
+    this.width = 1000; // 可拖动div 高度
     this.left = Number(getViewportSize.width) - Number(this.width) - 140;
     this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
 

@@ -15,15 +15,15 @@
     <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
         <div class="VueDragResize-title-box">
-          <div class="title">聊一聊</div>
+          <!-- <div class="title">聊一聊</div> -->
+          <div class="title"></div>
           <div class="icon-box">
             <!-- <img src="../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
             <img src="../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
           </div>
         </div>
-        <div class="Chat-box">
-          <!-- <Chat :is_type="is_type" :company_id="company_id" ref="chat" /> -->
-          <PrivateChat :infoData="infoData" :is_pop="is_pop" ref="chat" />
+        <div class="navbaerMag-content-box">
+          <buddyChart :title_show="title_show" :infoData="infoData" is_pop="is_pop" ref="chat" />
         </div>
       </div>
     </VueDragResize>
@@ -35,7 +35,7 @@
 import Footer from '../components/footer/index'
 import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-import PrivateChat from '../views/bossSide/components/mag/PrivateChat.vue';
+import buddyChart from '../views/bossSide/components/mag/buddyChart.vue';
 import VueDragResize from 'vue-drag-resize';
 
 export default {
@@ -45,7 +45,7 @@ export default {
     Sidebar,
     AppMain,
     Footer,
-    PrivateChat,
+    buddyChart,
     VueDragResize
   },
   data(){
@@ -106,9 +106,9 @@ export default {
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
+    this.width = 1000; // 可拖动div 高度
+    this.left = Number(getViewportSize.width) - Number(this.width) - 140;
     this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
-    this.width = Number(getViewportSize.width * 0.5) > 380 ? 380 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
-    this.left = Number(getViewportSize.width) - Number(this.width) - 480;
     this.currentUser = {
       id: localStorage.getItem('realUid'),
       name: this.$store.state.user.staffName,
@@ -173,6 +173,7 @@ export default {
       this.unreadAmount = content.unreadTotal;
     },
     receiveParams(params){
+      console.log(params)
         // '接收到的参数:' params
       if(params.type){
         this.is_type = params.type //searchTalent 是搜索人才页

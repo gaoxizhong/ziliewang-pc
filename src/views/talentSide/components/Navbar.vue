@@ -133,8 +133,9 @@ export default {
   beforeDestroy() {
     this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
   },
-  mounted() {
- 
+  mounted(){
+    // 组件间通信
+    this.$bus.$on('clickMessage', this.clickMessage);
   },
   created(){
     let getViewportSize = this.$getViewportSize();
@@ -222,7 +223,8 @@ export default {
     },
     // 接收组件方法通讯
     chatLocation(e){
-      this.$bus.$emit('receiveParams', {type:'JobDetails',infoData:e });
+      // 传递通讯
+      this.$bus.$emit('talentSide_receiveParams', {type:'JobDetails',infoData:e });
     },
   },
 };

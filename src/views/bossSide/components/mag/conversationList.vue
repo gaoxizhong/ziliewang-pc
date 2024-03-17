@@ -2,50 +2,50 @@
   <div class="mag-box">
     <div v-if="conversations.length">
       <div class="contact-list-title" v-if="title_show != 'navbarMag'">聊天记录</div>
-      <div v-for="(conversation, key) in conversations" :key="key" @click="chatLocation(conversation)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == conversation.userId}">
+      <div v-for="(item, key) in conversations" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == item.userId}">
         <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
           <div class="avatar">
-            <img :src="conversation.data.avatar"/>
-            <div v-if="conversation.unread>0"
+            <img :src="item.data.avatar"/>
+            <div v-if="item.unread>0"
                 class="unread-count">
-              <span class="unread">{{ conversation.unread }}</span>
+              <span class="unread">{{ item.unread }}</span>
             </div>
           </div>
           <div class="conversation-message">
             <div class="conversation-top">
-              <span class="conversation-name">{{ conversation.data.name }}</span>
+              <span class="conversation-name">{{ item.data.name }}</span>
               <div class="conversation-time">
-                <div>{{ formatDate(conversation.lastMessage.timestamp) }}</div>
+                <div>{{ formatDate(item.lastMessage.timestamp) }}</div>
               </div>
             </div>
             <div class="conversation-bottom">
-              <div class="conversation-content" v-if="conversation.lastMessage.recalled">
-                <div v-if="conversation.type === 'private'">
-                  {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.data.name}"` }}撤回了一条消息
+              <div class="conversation-content" v-if="item.lastMessage.recalled">
+                <div v-if="item.type === 'private'">
+                  {{ item.lastMessage.senderId === currentUser.id ? '你' : `"${item.data.name}"` }}撤回了一条消息
                 </div>
-                <div v-if="conversation.type === 'group'">
-                  {{ conversation.lastMessage.senderId === currentUser.id ? '你' : `"${conversation.lastMessage.senderData.name}"` }}撤回了一条消息
+                <div v-if="item.type === 'group'">
+                  {{ item.lastMessage.senderId === currentUser.id ? '你' : `"${item.lastMessage.senderData.name}"` }}撤回了一条消息
                 </div>
               </div>
               <div class="conversation-content" v-else>
                 <div class="unread-text"
-                      v-if="conversation.lastMessage.read === false && conversation.lastMessage.senderId === currentUser.id">
+                      v-if="item.lastMessage.read === false && item.lastMessage.senderId === currentUser.id">
                   [未读]
                 </div>
-                <div v-if="conversation.type === 'private'">
-                  {{ conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.data.name }}:
+                <div v-if="item.type === 'private'">
+                  {{ item.lastMessage.senderId === currentUser.id ? '我' : item.data.name }}:
                 </div>
                 <div v-else>
-                  {{ conversation.lastMessage.senderId === currentUser.id ? '我' : conversation.lastMessage.senderData.name }}:
+                  {{ item.lastMessage.senderId === currentUser.id ? '我' : item.lastMessage.senderData.name }}:
                 </div>
-                <span class="text" v-if="conversation.lastMessage.type === 'text'">{{conversation.lastMessage.payload.text}}</span>
-                <span v-else-if="conversation.lastMessage.type === 'video'">[视频消息]</span>
-                <span v-else-if="conversation.lastMessage.type === 'audio'">[语音消息]</span>
-                <span v-else-if="conversation.lastMessage.type === 'image'">[图片消息]</span>
-                <span v-else-if="conversation.lastMessage.type === 'file'">[文件消息]</span>
-                <span v-else-if="conversation.lastMessage.type === 'resume'">[简历消息]</span>
-                <span v-else-if="conversation.lastMessage.type === 'phone'">[交换联系方式消息]</span>
-                <span v-else-if="conversation.lastMessage.type === 'interview'">[邀请面试消息]</span>
+                <span class="text" v-if="item.lastMessage.type === 'text'">{{item.lastMessage.payload.text}}</span>
+                <span v-else-if="item.lastMessage.type === 'video'">[视频消息]</span>
+                <span v-else-if="item.lastMessage.type === 'audio'">[语音消息]</span>
+                <span v-else-if="item.lastMessage.type === 'image'">[图片消息]</span>
+                <span v-else-if="item.lastMessage.type === 'file'">[文件消息]</span>
+                <span v-else-if="item.lastMessage.type === 'resume'">[简历消息]</span>
+                <span v-else-if="item.lastMessage.type === 'phone'">[交换联系方式消息]</span>
+                <span v-else-if="item.lastMessage.type === 'interview'">[邀请面试消息]</span>
               </div>
             </div>
           </div>
@@ -71,6 +71,12 @@
     },
     props:{
       title_show:{
+        type: String,
+        default() {
+          return ''
+        }
+      },
+      laiyuan:{
         type: String,
         default() {
           return ''
@@ -130,6 +136,9 @@
       },
       renderConversations(content) {
         this.conversations = content.conversations; /// 会话列表
+        if(this.laiyuan == 'is_nav'){
+          this.chatLocation(content.conversations[0])
+        }
       },
      
       showRightClickMenu(e, conversation) {
