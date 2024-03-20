@@ -15,23 +15,23 @@
         <div v-else :class="history.allLoaded ? 'history-loaded':'load'" @click="loadHistoryMessage(false)">
           {{ history.allLoaded ? '已经没有更多的历史消息' : '获取历史消息' }}
         </div>
-        <div v-for="(message, index) in history.messages" :key="index">
+        <div v-for="(item, index) in history.messages" :key="index">
           <!-- 时间 -->
-          <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
+          <div class="time-tips">{{ renderMessageDate(item, index) }}</div>
 
-          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 1">你已向对方发送交换联系方式</div>
-          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 3">你已同意对方索要联系方式</div>
+          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 1">你已向对方发送交换联系方式</div>
+          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 3">你已同意对方索要联系方式</div>
 
           <!-- boss 发送过来的手机号 ↓ -->
-          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 2">
+          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 2">
             <h4 class="message-phone-universal-card-header">手机号</h4>
             <div class="message-phone-universal-card-content">
-              <span>{{ message.payload.name }}的手机号：{{ message.payload.phone }}</span>
+              <span>{{ item.payload.name }}的手机号：{{ item.payload.phone }}</span>
             </div>
           </div>
           <!-- boss 发送过来的手机号 ↑ -->
           <!-- boss 索要手机号 ↓ -->
-          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 4">
+          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 4">
             <h4 class="message-phone-universal-card-header">手机号</h4>
             <div class="message-phone-universal-card-content">
               <span>对方请求交换联系方式</span>
@@ -40,43 +40,43 @@
               <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(3)">同意交换</div>
             </div>
           </div>
-          <!-- boss 发送过来的手机号 ↑ -->
+          <!-- boss 索要手机号 ↑ -->
 
-          <!-- <div class="message-recalled" v-if="message.recalled">
+          <!-- <div class="message-recalled" v-if="item.recalled">
             <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
-              <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
+              <span v-if="item.type === 'text' && Date.now()-item.timestamp< 60 * 1000 " @click="editRecalledMessage(item.payload.text)">重新编辑</span>
             </div>
           </div> -->
           <!-- 内容区域 开始 -->
-          <div class="message-item"  v-if="message.type != 'phone'">
+          <div class="message-item"  v-if="item.type != 'phone'">
             <!-- 多选按钮 -->
-            <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
-              <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
+            <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && item.status !== 'sending'">
+              <input class="input-checkbox" type="checkbox" :value="item.messageId" v-model="messageSelector.ids" @click="selectMessages">
             </div> -->
 
-            <div class="message-item-content" :class="{ self: message.senderId === currentUser.id }">
+            <div class="message-item-content" :class="{ self: item.senderId === currentUser.id }">
               <!-- 头像 开始 -->
               <div class="sender-info">
-                <img v-if="currentUser.id === message.senderId" :src="currentUser.avatar" class="sender-avatar"/>
+                <img v-if="currentUser.id === item.senderId" :src="currentUser.avatar" class="sender-avatar"/>
                 <img v-else :src="friend.avatar" class="sender-avatar"/>
               </div>
               <!-- 头像 结束 -->
 
-              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)">
+              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(item)">
               <!-- <div class="message-content"> -->
                 <div class="message-payload">
                   <!-- 加载中 icon -->
-                  <div class="pending" v-if="message.status === 'sending'"></div> 
+                  <div class="pending" v-if="item.status === 'sending'"></div> 
                   <!--  发送失败 icon -->
-                  <div class="send-fail" v-if="message.status === 'fail'"></div> 
+                  <div class="send-fail" v-if="item.status === 'fail'"></div> 
 
                   <!-- 内容 开始 -->
-                  <div v-if="message.type === 'text'" class="content-text" v-html="emoji.decoder.decode(message.payload.text)"></div>
+                  <div v-if="item.type === 'text'" class="content-text" v-html="emoji.decoder.decode(item.payload.text)"></div>
                   <!-- 内容 结束 -->
                   <!-- 简历 开始 -->
-                  <a v-if="message.type === 'resume'" :href="message.payload.resume" target="_blank" download="download">
+                  <a v-if="item.type === 'resume'" :href="item.payload.resume" target="_blank" download="download">
                     <div class="content-file" title="点击下载">
                       <div class="file-info">
                         <span class="file-name">个人简历</span>
@@ -86,7 +86,7 @@
                   </a>
                   <!-- 简历 结束 -->
                   <!-- 面试邀请 开始 -->
-                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 1">
+                  <div v-if="item.type === 'interview' &&  item.payload.way_status == 1">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-universal-card-content">
                       <span>对方发起了面试邀请</span>
@@ -97,7 +97,7 @@
                   </div>
                   <!-- 面试邀请 结束 -->
                   <!-- 同意面试邀请 开始 -->
-                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 2">
+                  <div v-if="item.type === 'interview' &&  item.payload.way_status == 2">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-universal-card-content">
                       <span style="color: #ff0000;">同意了面试邀请</span>
@@ -108,28 +108,28 @@
                   </div>
                   <!-- 同意面试邀请 结束 -->
                   <!-- 图片 开始 -->
-                  <div v-if="message.type === 'image'" class="content-image" @click="showImagePreviewPopup(message.payload.url)">
-                    <img :src="message.payload.url" :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
+                  <div v-if="item.type === 'image'" class="content-image" @click="showImagePreviewPopup(item.payload.url)">
+                    <img :src="item.payload.url" :style="{height:getImageHeight(item.payload.width,item.payload.height)+'px'}"/>
                   </div>
                   <!-- 图片 结束 -->
 
                   <!-- 文件 开始 -->
-                  <a v-if="message.type === 'file'" :href="message.payload.url" target="_blank" download="download">
+                  <a v-if="item.type === 'file'" :href="item.payload.url" target="_blank" download="download">
                     <div class="content-file" title="点击下载">
                       <div class="file-info">
-                        <span class="file-name">{{ message.payload.name }}</span>
-                        <span class="file-size">{{ (message.payload.size / 1024).toFixed(2) }}KB</span>
+                        <span class="file-name">{{ item.payload.name }}</span>
+                        <span class="file-size">{{ (item.payload.size / 1024).toFixed(2) }}KB</span>
                       </div>
                       <img class="file-img" src="../../../../assets/images/file-icon.png"/>
                     </div>
                   </a>
                   <!-- 文件 结束 -->
                   <!-- 视频 开始 -->
-                  <goeasy-video-player v-if="message.type === 'video'" :thumbnail="message.payload.thumbnail" :src="message.payload.video.url" />
+                  <goeasy-video-player v-if="item.type === 'video'" :thumbnail="item.payload.thumbnail" :src="item.payload.video.url" />
                   <!-- 视频 结束 -->
                 </div>
-                <div v-if="currentUser.id === message.senderId" :class="message.read ?'message-read':'message-unread'">
-                  <div v-if="message.senderId === currentUser.id">{{ message.read ? '已读' : '未读' }}</div>
+                <div v-if="currentUser.id === item.senderId" :class="item.read ?'message-read':'message-unread'">
+                  <div v-if="item.senderId === currentUser.id">{{ item.read ? '已读' : '未读' }}</div>
                 </div>
               </div>
             </div>
