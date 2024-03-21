@@ -48,7 +48,7 @@
     </div>
 
     <!-- 点击导航消息按钮 展示消息列表弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="navbar_mag">
+    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".navbaerMag-title-box" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="navbar_mag">
       <div class="navbaerMag-box">
         <div class="navbaerMag-title-box">
           <span>我的沟通</span>
@@ -318,6 +318,7 @@ export default {
   height: 100%;
   background: #fff;
   padding: 10px;
+  padding-top: 0;
   padding-right: 12px;
   border-radius: 6px;
   display: flex;
@@ -326,17 +327,18 @@ export default {
   .navbaerMag-title-box{
     width: 100%;
     height: auto;
-    padding: 4px 10px;
+    padding: 10px;
     text-align: center;
     font-size: 15px;
     position: relative;
+    cursor: move;
     &>span{
       color: $g_textColor;
     }
     &>img{
       position: absolute;
-      top: 4px;
-      right: 10px;
+      top: 10px;
+      right: 8px;
       cursor: pointer;
     }
   }

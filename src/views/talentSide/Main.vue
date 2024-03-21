@@ -16,7 +16,7 @@
     <!-- 底部 结束  -->
 
     <!-- 聊天弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
         <div class="VueDragResize-title-box">
           <div class="title">聊一聊</div>
@@ -211,6 +211,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
   // 聊天弹窗 样式=============== ↓ ===========
 
   .mian-box /deep/ .vdr{
+    z-index: 99999 !important;
     position: fixed;
     border-radius: 4px;
     box-shadow:0 0 16px 0 rgba(139,152,169,1);
@@ -236,6 +237,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
     height: 100%;
     background: #fff;
     padding: 10px 0;
+    padding-top: 0;
     border-radius: 6px;
     display: flex;
     flex-direction: column;
@@ -255,7 +257,8 @@ import PrivateChat from './components/mag/PrivateChat.vue';
       justify-content: space-between;
       font-size: 14px;
       height: auto;
-      padding: 0 10px;
+      padding: 10px;
+      cursor: move;
       .icon-box{
         display: flex;
         align-items: center;
@@ -270,7 +273,6 @@ import PrivateChat from './components/mag/PrivateChat.vue';
     .Chat-box{
       flex: 1;
       height: calc(100% - 60px);
-      padding-top: 10px;
     }
     .gt-span{
       cursor: pointer;

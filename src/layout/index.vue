@@ -256,6 +256,7 @@ export default {
   // 聊天弹窗 样式=============== ↓ ===========
 
   .app-wrapper /deep/ .vdr{
+    z-index: 99999 !important;
     position: fixed;
     border-radius: 4px;
     box-shadow:0 0 16px 0 rgba(139,152,169,1);
