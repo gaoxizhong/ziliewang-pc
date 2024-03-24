@@ -147,7 +147,8 @@ export default {
       reply_id: 0,
       video_url: {
         video_url: '',
-      }
+      },
+      userVipRank: localStorage.getItem('userVipRank') || 0,
     }
   },
 
@@ -200,6 +201,10 @@ export default {
     // },
     // 发布评论
     clickInfoVerifyBtn(n){
+      if(this.userVipRank < 1){
+        this.$message.error("需要升级为VIP会员可评论、回复!");
+        return
+      }
       let num = n; // 1 评论职圈； 2、回复评论
       let p = {
         profession_circle_id: this.id,
@@ -283,6 +288,10 @@ export default {
     },
     // 点击评论列表回复
     clickRecover(item){
+      if(this.userVipRank < 1){
+        this.$message.error("需要升级为VIP会员可评论、回复!");
+        return
+      }
       console.log(item)
       this.reply_id = item.id;
       this.recoverVisible = true;

@@ -12,18 +12,18 @@ import talentSide from '../views/talentSide/Main.vue';
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
  *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
+ * hidden: true                   如果设置为true则不会显示在侧边菜单
+ * alwaysShow: true               设置为true一直显示根路由
+ * redirect: noRedirect           当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
+ * name:'router-name'             设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'             the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+    roles: ['admin','editor']    设置该路由进入的权限，支持多个权限叠加
+    title: 'title'               设置该路由在侧边栏和面包屑中展示的名字
+    icon: 'svg-name'             设置该路由的图标
+    breadcrumb: false            如果设置为false，则不会在breadcrumb面包屑中显示
+    activeMenu: '/example/list'  如果设置了激活菜单，则侧边菜单会默认选中
+    parentBreadcrumb: '['父级路由path']'    如果设置了会在面包屑中作为父级路由，添加到面包屑中间
+    noredirect: true   如果设置了true，择控制面包屑点击路由不跳转
   }
  */
 
@@ -73,7 +73,7 @@ export const constantRoutes = [
         path: '/jobCenter',
         name: 'JobCenter',
         component: () => import('@/views/bossSide/jobCenter/index'),
-        meta: { title: '职位中心', icon: 'dashboard' },
+        meta: { title: '职位中心', icon: 'example' },
       },
     ]
   },
@@ -99,7 +99,7 @@ export const constantRoutes = [
         path: '/searchTalent',
         name: 'SearchTalent',
         component: () => import('@/views/bossSide/searchTalent/index'),
-        meta: { title: '搜索人才', icon: 'dashboard' },
+        meta: { title: '搜索人才', icon: 'chazhao' },
       },
     ]
   },
@@ -112,7 +112,7 @@ export const constantRoutes = [
         path: '/interaction',
         name: 'Interaction',
         component: () => import('@/views/bossSide/interaction/index'),
-        meta: { title: '互动', icon: 'dashboard' },
+        meta: { title: '互动', icon: 'hudong' },
       },
     ]
   },
@@ -138,21 +138,21 @@ export const constantRoutes = [
         path: '/myRecruitmentData',
         name: 'MyRecruitmentData',
         component: () => import('@/views/bossSide/myRecruitmentData/index'),
-        meta: { title: '我的招聘数据', icon: 'dashboard' },
+        meta: { title: '我的招聘数据', icon: 'shuju' },
       },
       {
         path: '/resumeViewNum',
         name: 'resumeViewNum',
         hidden: true,
         component: () => import('@/views/bossSide/myRecruitmentData/resumeViewNum'),
-        meta: { title: '简历浏览量', icon: '' },
+        meta: { title: '简历浏览量', icon: '',parentBreadcrumb:['MyRecruitmentData'] },
       },
       {
         path: '/numberAcquisitionNum',
         name: 'numberAcquisitionNum',
         hidden: true,
         component: () => import('@/views/bossSide/myRecruitmentData/numberAcquisitionNum'),
-        meta: { title: '虚拟号码获取量', icon: '' },
+        meta: { title: '虚拟号码获取量', icon: '',parentBreadcrumb:['MyRecruitmentData'] },
       },
       
     ]
@@ -167,7 +167,7 @@ export const constantRoutes = [
         path: '/myInterviewSchedule',
         name: 'MyInterviewSchedule',
         component: () => import('@/views/bossSide/myInterviewSchedule/index'),
-        meta: { title: '我的面试安排', icon: 'dashboard' },
+        meta: { title: '我的面试安排', icon: 'anpai' },
       },
     ]
   },
@@ -306,9 +306,9 @@ export const constantRoutes = [
     children: [
       {
         path: '/staffManagement',
-        name: 'staffManagement',
+        name: '',
         component: () => import('@/views/bossSide/staffManagement/index'),
-        meta: { title: '员工管理', icon: 'dashboard',role: ['boss'] },
+        meta: { title: '员工管理', icon: 'user',role: ['boss'] },
       }
     ]
   },
@@ -507,7 +507,7 @@ export const asyncRouterMap = [
         path: '/staffManagement',
         name: 'staffManagement',
         component: () => import('@/views/bossSide/staffManagement/index'),
-        meta: { title: '员工管理', icon: 'dashboard',role: ['boss'] },
+        meta: { title: '员工管理', icon: 'user',role: ['BOSS'] },
       }
     ]
   },

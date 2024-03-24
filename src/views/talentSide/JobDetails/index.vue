@@ -110,7 +110,7 @@ export default {
       infoData: {},
       company:{},
       is_type: 'chat',
-      userVipRank: localStorage.getItem('staffVipRank') || 0,
+      userVipRank: localStorage.getItem('userVipRank') || 0,
     }
   },
   created(){
@@ -152,6 +152,10 @@ export default {
     // 投简历
     clickDeliver(){
       let that = this;
+      if(that.userVipRank < 1){
+        this.$message.error("需要升级为VIP会员可投递简历!");
+        return
+      }
       let p = {
         position_id: that.id,
         company_id: that.infoData.company_id,
@@ -216,7 +220,7 @@ export default {
     // 点击打电话
     clickMobile(i){
       let that = this;
-      if(that.userVipRank <= 0){
+      if(that.userVipRank < 1){
         this.$message.error("需要升级为VIP会员可获取对方电话!");
         return
       }

@@ -58,7 +58,7 @@ export default {
     if(this.laiyuan == 'is_nav'){
       // 点击头部导航消息按钮
     }else{
-      if(this.infoData){
+      if(this.infoData && this.infoData.id){
         this.chatLocation (JSON.stringify(this.infoData))
       }
     }

@@ -268,11 +268,11 @@
         '[傲慢]': 'emoji_8@2x.png',
       };
       return {
+        userVipRank: localStorage.getItem('userVipRank') || 0,
         sessionList:[], // 会话记录列表
         detailData:{}, // 职位信息
         userProfile:{}, // 个人信息
         phraseslist:[], // 常用语
-        userVipRank: 0,
         currentUser: null,
         friend: null,
 
@@ -480,6 +480,10 @@
       // 点击 发简历按钮
       clickToolbarBtn(){
         let userProfile = this.userProfile;
+        if(this.userVipRank < 1){
+          this.$message.error("需要升级为VIP会员可投递简历!");
+          return
+        }
         let payload = {
           text: '发送简历',
           resume: userProfile.basic_info.curriculum_vitae

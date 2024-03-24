@@ -88,8 +88,11 @@ export default {
   mounted() {
     // 获取个人信息
     this.getUserProfile();
+    // 组件间通信
+    this.$bus.$on('getVip', this.getUserProfile);
   },
   methods: {
+    
     goTomyProfessionalCircle(){
       this.$router.push('/myProfessionalCircle');
     },
@@ -105,7 +108,7 @@ export default {
       this.$message.success('刷新成功！');
     },
     // 获取个人信息
-    getUserProfile(){
+    getUserProfile(params){
       let that = this;
       that.$axios.post('/api/user/profile',{}).then(res =>{
         if(res.code == 0){

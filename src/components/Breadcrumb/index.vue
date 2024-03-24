@@ -18,6 +18,11 @@ export default {
       levelList: null
     }
   },
+  computed: {
+    routes() {
+      return this.$router.options.routes;
+    },
+  },
   watch: {
     $route() {
       this.getBreadcrumb()
@@ -28,21 +33,33 @@ export default {
   },
   methods: {
     getBreadcrumb() {
-      // only show routes with meta.title
+      // 只显示带有meta.title的路由
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
-      const first = matched[0]
+      console.log(matched)
+      const first = matched[0];
+      const last = matched[matched.length - 1];
       if (!this.isDashboard(first)) {
-        matched = [{ path: '/', meta: { title: '企业端' }}].concat(matched)
+        matched = [{ path: '/', meta: { title: '首页' }}].concat(matched)
       }
-
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
+      //根据findRoute() 找到路由中的parentBreadcrumb配置，返回路由数据。添加到面包屑数组中, this.levelList.splice(1, 0, ...pushlist);
+      const pushlist = [];
+      if (last.meta.parentBreadcrumb && last.meta.parentBreadcrumb.length > 0) {
+        last.meta.parentBreadcrumb.forEach((element) => {
+          const selectroute = this.findRoute(element);
+          if (selectroute != null) {
+            pushlist.push(selectroute);
+          }
+        });
+      }
+      this.levelList.splice(1, 0, ...pushlist);
     },
     isDashboard(route) {
       const name = route && route.name
       if (!name) {
         return false
       }
-      return name.trim().toLocaleLowerCase() === '企业端'.toLocaleLowerCase()
+      return name.trim().toLocaleLowerCase() === '首页'.toLocaleLowerCase()
     },
     pathCompile(path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
@@ -57,7 +74,24 @@ export default {
         return
       }
       this.$router.push(this.pathCompile(path))
-    }
+    },
+    findRoute(name) {
+      console.log(name)
+      let routes = null;
+      for (var i = 0; i < this.routes.length - 1; i++) {
+        if (this.routes[i].children) {
+          console.log(this.routes[i].children)
+          this.routes[i].children.forEach( ele =>{
+            if(ele.name == name){
+              routes = ele
+            }
+          })
+        }
+      }
+      console.log(routes)
+
+      return routes;
+    },
   }
 }
 </script>

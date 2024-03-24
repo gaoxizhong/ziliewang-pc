@@ -141,6 +141,7 @@
           url = '/api/user/profile'
         }
         that.$axios.post(url,{}).then( res =>{
+          console.log(res)
         if(res.code == 0){
           if(that.url_type == 'staff'){
             that.userInfo = res.data;
@@ -150,6 +151,7 @@
           if(that.url_type == 'user'){
             that.userInfo = res.data.basic_info;
             localStorage.setItem('userVipRank', res.data.basic_info.vip_rank); // 用户会员等级
+            that.$bus.$emit('getVip', {});
           }
         }else{
           that.$message.error({
@@ -230,7 +232,7 @@
             });
             setTimeout(() => {
               that.get_chatgpt_num();
-            }, 1000);
+            }, 500);
           }
         } catch (err) {
           // this.$message.error({

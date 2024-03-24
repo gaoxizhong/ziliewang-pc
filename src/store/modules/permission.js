@@ -24,7 +24,6 @@ export function filterasyncRouterMap(routes, role) {
     routes.forEach(route => {
         const tmp = { ...route }
         if (hasPermission(role, tmp)) {
-            console.log(111);
             if (tmp.children) {
                 tmp.children = filterasyncRouterMap(tmp.children, role)
             }
@@ -51,7 +50,7 @@ const permission = {
             return new Promise(resolve => {
                 let accessedRoutes
                 //如果角色是admin
-                if (role.includes('boss')) {
+                if (role.includes('BOSS')) {
                 //将route.js中的admin权限人员可见的路由表加入，此处我们只有admin和editor两个角色
                     accessedRoutes = asyncRouterMap || []
                 } else {

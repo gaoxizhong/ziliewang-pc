@@ -230,7 +230,15 @@ export default {
     pageHasChanged() {
       this.getTableData();
     },
-    addAccount() {
+    async addAccount() {
+
+      let res =  await this.$axios.post('/api/staff/profile',{})
+      if(res.data.vip_rank < 3){
+        this.$message.error({
+          message: '购买会员后才可操作！'
+        })
+        return
+      }
       this.dialog_title = '新增员工';
       this.addDialog.form = {};
       this.addDialog.visible = true;

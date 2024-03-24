@@ -397,9 +397,17 @@ export default {
         }
       })
     },
+      
     // 点击打电话
-    clickMobile(i){
+    async clickMobile(i){
       let that = this;
+      let res =  await that.$axios.post('/api/staff/profile',{})
+      if(res.data.vip_rank < 1){
+        that.$message.error({
+          message: '购买会员后才可打招呼！'
+        })
+        return
+      }
       let p = {
         uid: i.uid|| i.basic_info.uid,
       }
@@ -417,9 +425,15 @@ export default {
       })
     },
     // 点击聊一聊
-    clickChat(i){
-      console.log(i)
+    async clickChat(i){
       let that = this;
+      let res =  await that.$axios.post('/api/staff/profile',{})
+      if(res.data.vip_rank < 1){
+        that.$message.error({
+          message: '购买会员后才可打招呼！'
+        })
+        return
+      }
       let infoData = {
         uid: i.uid || i.basic_info.uid,
         name: i.name || i.basic_info.name,
