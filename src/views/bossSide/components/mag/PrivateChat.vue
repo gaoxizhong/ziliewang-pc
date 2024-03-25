@@ -43,15 +43,15 @@
 
 
 
-          <!-- <div class="message-recalled" v-if="message.recalled">
+          <div class="message-recalled" v-if="message.recalled">
             <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
               <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
             </div>
-          </div> -->
+          </div>
           <!-- 内容区域 开始 -->
-          <div class="message-item" v-if="message.type != 'phone'">
+          <div class="message-item" v-if="message.type != 'phone' && !message.recalled">
             <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
             </div> -->

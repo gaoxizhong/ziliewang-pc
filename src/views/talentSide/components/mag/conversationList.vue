@@ -226,7 +226,7 @@
 
   .conversation-message {
     flex: 1;
-    // padding-left: 5px;
+    padding-left: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;

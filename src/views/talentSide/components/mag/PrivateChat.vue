@@ -42,15 +42,15 @@
           </div>
           <!-- boss 索要手机号 ↑ -->
 
-          <!-- <div class="message-recalled" v-if="item.recalled">
-            <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
+          <div class="message-recalled" v-if="item.recalled">
+            <div v-if="item.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
               <span v-if="item.type === 'text' && Date.now()-item.timestamp< 60 * 1000 " @click="editRecalledMessage(item.payload.text)">重新编辑</span>
             </div>
-          </div> -->
+          </div>
           <!-- 内容区域 开始 -->
-          <div class="message-item"  v-if="item.type != 'phone'">
+          <div class="message-item"  v-if="item.type != 'phone' && !item.recalled">
             <!-- 多选按钮 -->
             <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && item.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="item.messageId" v-model="messageSelector.ids" @click="selectMessages">
@@ -656,6 +656,7 @@
         });
       },
       showActionPopup(message) {
+        console.log(message)
         const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
         this.messageSelector.ids = [message.messageId];
         if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === this.currentUser.id && message.status === 'success') {
@@ -675,6 +676,7 @@
           this.deleteMessage();
         }
       },
+      //删除
       deleteMessage() {
         let conf = confirm("确认删除？");
         if (conf === true) {
@@ -703,6 +705,7 @@
           this.messageSelector.ids = [];
         }
       },
+      //撤回
       recallMessage() {
         let selectedMessages = [];
         this.history.messages.forEach((message) => {
@@ -721,6 +724,7 @@
           }
         });
       },
+
       editRecalledMessage(text) {
         this.text = text;
       },

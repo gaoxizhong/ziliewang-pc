@@ -146,7 +146,7 @@ export default {
     },
     // 评论与回复
     getList(){
-      this.$axios.post('/api/user-attention-fans/list',{
+      this.$axios.post('/api/user/friend/list',{
         page: this.page,
         tag: this.tag,
         see_uid: this.see_uid

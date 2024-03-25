@@ -74,7 +74,7 @@
   .conversation-list-content {
     flex: 1;
     overflow-y: auto;
-    padding: 10px 8px;
+    padding: 10px 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
