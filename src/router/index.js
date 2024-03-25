@@ -279,7 +279,7 @@ export const constantRoutes = [
       {
         path: '/topUpBuy',
         name: 'topUpBuy',
-        component: () => import('@/views/bossSide/topUpBuy/index'),
+        component: () => import('@/views/topUpBuy/index'),
         meta: { title: '充值' },
       },
     ]
@@ -453,7 +453,7 @@ export const constantRoutes = [
       {
         path: 'topUpBuy',
         name: 'talentSide_topUpBuy',
-        component: () => import('@/views/bossSide/topUpBuy/index'),
+        component: () => import('@/views/topUpBuy/index'),
         meta: { 
           title: '充值',
         },
