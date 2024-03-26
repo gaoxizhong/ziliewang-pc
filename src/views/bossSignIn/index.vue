@@ -333,22 +333,14 @@ export default {
       that.$axios.post('/api/company/apply',p).then( res =>{
         if(res.code == 0){
           that.$message.success('提交成功！');
-          
-          // setTimeout(()=>{
-          //   that.$router.push({ path:'/' })
-          // },1500)
-          that.$axios.post('/api/login',{
-            phone: p.phone,
-            password: p.password,
-            tag: 'company',
-            login_type: 'pass_login'
+          let data = res.data;
+          setToken(data.token);
+          localStorage.setItem('tag', 'company'); // 用户身份 user、人才端 company、企业端缓存
+          localStorage.setItem('realUid', data.user.id); // 用户uid缓存
+          localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
+          that.$axios.post('/api/select-company-login',{
+            id: data.company.id
           }).then( res =>{
-            let data = res.data;
-            setToken(data.token);   // 缓存
-            localStorage.setItem('tag', 'company'); // 用户身份 user、人才端 company、企业端缓存
-            // 企业端
-            localStorage.setItem('realUid', data.user.id); // 用户uid缓存
-            localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
             setTimeout(() => {
               this.$router.push('/dashboard');
             }, 1000);
