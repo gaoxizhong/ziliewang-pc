@@ -33,6 +33,7 @@
           </div>
         </div>
       </div>
+      
     </div>
     <div class="m-box margin-top-20 zxzw-data">
       <div class="left">
@@ -234,6 +235,7 @@ export default {
       padding-left: 10px;
       padding-top: 6px;
       &>div{
+        font-size: 16px;
         display: flex;
         align-items: center;
         padding: 6px 0;
@@ -260,7 +262,6 @@ export default {
       border: none;
       padding: 6px 12px;
       color: #fff;
-      font-size: 14px;
       border-radius: 4px;
       font-size: 14px;
       margin-left: 120px;
@@ -277,7 +278,7 @@ export default {
         margin-top: -4px;
       }
       span {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 500;
         color: #1F2E4D;
         line-height: 26px;

@@ -23,6 +23,9 @@
               <div class="setMeal-money-box">
                 <span class="money-icon">￥</span> {{ item.recharge_price }}
               </div>
+              <div class="rights-box">
+                <div  class="rights-text" v-html="item.rights_interests"></div>
+              </div>
               <!-- <div class="span-num">{{ item.get_num }} 次</div> -->
               <div class="setMeal-btn-box" @click="clickBuyBtn(item)">立即购买</div>
             </div>
@@ -344,9 +347,10 @@
     width: 100%;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
-    padding: 30px;
+    padding: 30px 10px;
     transition: 0.5s;
     margin: 10px 0;
+    box-sizing: border-box;
   }
   .span-num{
     font-size: 15px;
@@ -356,8 +360,18 @@
   }
   .grid-content:hover{
     border-color: #14b8a6;
-    transform: scale(1.02);
+    // transform: scale(1.02);
     transition: 0.5s;
+  }
+  .rights-box{
+    width: 100%;
+    height: 260px;
+    margin-top: 10px;
+  }
+  .rights-text{
+    font-size: 14px;
+    line-height: 24px;
+    color: #ff0000;
   }
   .setMeal-num-box{
     display: flex;
@@ -382,6 +396,7 @@
     font-size: 20px;
     padding-right: 10px;
   }
+ 
   .setMeal-btn-box{
     margin-top: 20px;
     width: 100%;
@@ -400,12 +415,13 @@
   }
   .setMeal-btn-box:hover{
     background: #14b8a6;
-    border: #14b8a6;
+    border:1px solid #14b8a6 !important;
     color: #fff;
     transition: 0.5s;
   }
-  .el-dialog{
-    padding: 30px;
+  .center-box >>> .el-dialog{
+    width: 600px;
+    padding: 20px;
   }
   .dialog-content-box{
     width: 100%;
@@ -486,10 +502,6 @@
     }
     .setMeal-btn-box{
       padding: 10px 4px;
-    }
-    .center-box >>> .el-dialog{
-      width: 98%;
-      padding: 10px;
     }
     .center-box >>> .el-dialog__header{
       padding: 10px 0;

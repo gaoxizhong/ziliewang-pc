@@ -310,8 +310,7 @@ export default {
           line-height: 23px;
           text-align: left;
           color: #666;
-          display:box;
-          display: -webkit-box;
+          display: flex;
           overflow:hidden;
           text-overflow: ellipsis;
           -webkit-box-orient: vertical;
