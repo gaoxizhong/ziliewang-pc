@@ -25,6 +25,10 @@
               </div>
               <div class="rights-box">
                 <div  class="rights-text" v-html="item.rights_interests"></div>
+                <!-- <div  class="rights-text" :class="index == rights_index && rights_show == true?'':'auto'" v-html="item.rights_interests"></div> -->
+                <!-- <div class="rights-img-box">
+                  <img :src="`${ index == rights_index && rights_show == true ?require('../../assets/image/zhankaijiantoucopy.png'):require('../../assets/image/zhankaijiantoucopy_1.png')}`" alt="" :title="index == rights_index && rights_show == true?'收起':'展开'" @click="clickRightsImg(index)"/>
+                </div> -->
               </div>
               <!-- <div class="span-num">{{ item.get_num }} 次</div> -->
               <div class="setMeal-btn-box" @click="clickBuyBtn(item)">立即购买</div>
@@ -80,6 +84,7 @@
           "width": '',
         },
         url_type:'staff',
+        rights_index: null
       }
     },
     created(){
@@ -102,6 +107,11 @@
     },
 
     methods: {
+      clickRightsImg(n){
+        console.log(n)
+        this.rights_index = n;
+        this.rights_show = !this.rights_show;
+      },
       handleCopy(n){
           //创建一个input框
         const input = document.createElement("input");
@@ -351,7 +361,7 @@
     width: 100%;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
-    padding: 30px 10px;
+    padding: 10px;
     transition: 0.5s;
     margin: 10px 0;
     box-sizing: border-box;
@@ -369,19 +379,39 @@
   }
   .rights-box{
     width: 100%;
-    min-height: 260px;
     margin-top: 10px;
+  }
+  .rights-text.auto{
+    // height: auto !important;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .rights-text{
     font-size: 14px;
     line-height: 24px;
     color: #ff0000;
+    height: auto;
+    overflow: hidden;
+  }
+  .rights-img-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    &>img{
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+    }
   }
   .setMeal-num-box{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 10px;
   }
   .setMeal-num-box h3{
     font-size: 28px;
@@ -391,7 +421,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 10px;
     font-weight: 700;
     font-size: 35px;
     line-height: 36px;
@@ -500,7 +530,7 @@
       padding-top: 12px;
     }
     .grid-content{
-      padding: 20px;
+      padding: 10px;
     }
     .setMeal-money-box{
       font-size: 28px;

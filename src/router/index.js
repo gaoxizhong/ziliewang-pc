@@ -224,7 +224,7 @@ export const constantRoutes = [
         path: '/enterpriseInfoEdit',
         name: 'enterpriseInfoEdit',
         component: () => import('@/views/bossSide/corporateHome/enterpriseInfoEdit.vue'),
-        meta: { title: '企业信息修改' },
+        meta: { title: '企业信息修改',parentBreadcrumb:['corporateHome'] },
       },
     ]
   },

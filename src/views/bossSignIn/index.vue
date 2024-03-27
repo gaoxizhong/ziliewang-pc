@@ -338,15 +338,9 @@ export default {
           localStorage.setItem('tag', 'company'); // 用户身份 user、人才端 company、企业端缓存
           localStorage.setItem('realUid', data.user.id); // 用户uid缓存
           localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
-          that.$axios.post('/api/select-company-login',{
-            id: data.company.id
-          }).then( res =>{
-            setTimeout(() => {
-              this.$router.push('/dashboard');
-            }, 1000);
-          }).catch( e=>{
-            console.log(e)
-          })
+          setTimeout(() => {
+            this.$router.push('/dashboard');
+          }, 500);
         }else{
           that.$message.error({
             message:res.msg

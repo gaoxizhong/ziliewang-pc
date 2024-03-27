@@ -6,6 +6,9 @@
     <div class="box-title">
       <div class="title-1">公司核心团队</div>
       <div class="title-2"><span class="span-1">*</span>添加公司核心团队需要管理员在员工管理中进行员工标记</div>
+      <div class="btn" v-if="userProfile.role_desc == 'BOSS'">
+        <el-button type="primary" size="small" @click="goToStaffManagement">前往员工管理</el-button>
+      </div>
     </div>
     <div class="guildListSection-box">
      <div class="guildList">
@@ -84,6 +87,7 @@ export default {
   },
   data(){
     return{
+      userProfile: {},
       infoData: {},
       useDataList: [],
       details_dialogVisible:false,
@@ -97,7 +101,8 @@ export default {
     this.getTableData();
   },
   mounted(){
- 
+  // 获取个人信息
+  this.getUserProfile();
   },
   computed: {
     
@@ -125,6 +130,22 @@ export default {
       this.addDialog.form = {};
       this.addDialog.visible = true;
     },
+    goToStaffManagement(){
+      this.$router.push({
+        path:'/staffManagement',
+      })
+    },
+    // 获取个人信息
+    getUserProfile(){
+      let that = this;
+      that.$axios.post('/api/staff/profile',{}).then(res =>{
+        if(res.code == 0){
+          this.userProfile = res.data;
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
     // 点击查看详情
     clickLike(e){
       let that = this;
@@ -150,6 +171,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .btn-box{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px 40px;
+   &>.el-button{
+    width: 114px;
+    height: 40px;
+    margin-right: 20px;
+   }
+   & /deep/ .el-button--primary{
+    background-color:$g_bg;
+    border-color: $g_color;
+   }
+
+  }
   .label-items-box{
     width: 100%;
     height: auto;
