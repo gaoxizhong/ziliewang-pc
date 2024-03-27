@@ -169,8 +169,12 @@
         let that = this;
         that.$axios.post('/api/recharge/list',{}).then( res =>{
           if(res.code == 0){
-            that.setMealList = res.data
-            
+            let setMealList = res.data;
+            // let replaceRegex = /(\n\r|\r\n|\r|\n)/g; 
+            // setMealList.forEach(ele => {
+            //   ele.rights_interests = ele.rights_interests.replace(replaceRegex, '<br/>');
+            // });
+            that.setMealList = setMealList;
           }else{
             that.$message.error({
               message:res.data.msg
@@ -365,7 +369,7 @@
   }
   .rights-box{
     width: 100%;
-    height: 260px;
+    min-height: 260px;
     margin-top: 10px;
   }
   .rights-text{
@@ -399,7 +403,7 @@
  
   .setMeal-btn-box{
     margin-top: 20px;
-    width: 100%;
+    width: 86%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -412,6 +416,8 @@
     border-radius: 6px;
     transition: 0.5s;
     cursor: pointer;
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
   .setMeal-btn-box:hover{
     background: #14b8a6;

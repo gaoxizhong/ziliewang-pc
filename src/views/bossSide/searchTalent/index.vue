@@ -9,11 +9,10 @@
 
           <div class="input-box">
             <div class="input-left-box">
-              <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词"></el-input>
+              <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词" @keydown.enter.native="searchInputFun($event)"></el-input>
             </div>
             <button class="input-button" @click="getSearchinfo">搜索</button>
           </div>
-
           <div class="search-input-tab">
             <!-- <div><span>展开高级搜索</span><img src="../../../assets/image/bossSide/icon-down.png" alt=""></div> -->
             <div @click.stop="myCollection"><img src="../../../assets/image/bossSide/icon-star.png" alt=""><span>我的收藏</span></div>
@@ -320,6 +319,13 @@ export default {
       }
       this.selectedOptions = thsAreaCode;
     },
+    // 回车键点击
+    searchInputFun(e){
+      var keyCode = window.event?e.keyCode:e.which;
+      if(keyCode == 13){
+        this.getSearchinfo();
+      }
+    },
     // 搜索
     getSearchinfo(){
       let that = this;
@@ -464,8 +470,11 @@ export default {
 <style lang="scss" scoped>
   .searchTalent-top-box{
     // padding-bottom: 0;
+    
     .search-box{
       padding: 0 3rem;
+      position: sticky;
+      top: 0;
       .search-input-box{
         display: flex;
         align-items: center;

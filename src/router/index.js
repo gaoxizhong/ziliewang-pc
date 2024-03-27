@@ -459,15 +459,6 @@ export const constantRoutes = [
         },
       },
       {
-        path: '/communication',
-        name: 'communication',
-        component: () => import('@/views/talentSide/communication'),
-        meta: { 
-          title: '沟通',
-          // keepAlive: true,
-        },
-      },
-      {
         path: '/liveList',
         name: 'liveList',
         component: () => import('@/views/talentSide/liveList'),

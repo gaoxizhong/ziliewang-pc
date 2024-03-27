@@ -183,16 +183,6 @@ export default {
     // 点击消息
     clickMessage(){
       this.navbar_mag = true;
-      return
-      this.$store.dispatch('user/actions_navbarMessagePrompt', false);
-      this.$router.push({
-        path:'/communication',   //跳转的路径
-        // path:'/attentionFans',   //跳转的路径
-        // query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-        //   tag: 'pingl-hf',
-        //   see_uid: localStorage.getItem('realUid')
-        // }
-      })
     },
     // 获取个人信息
     getUserProfile(){

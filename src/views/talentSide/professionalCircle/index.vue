@@ -19,7 +19,7 @@
     </div>
     <!-- 好友列表 结束 -->
     <!-- <div class="interaction-box"  v-if=" tag == 'chatHistory' ">
-      <Chat ref="chat"/>
+      
     </div> -->
     <!-- 好友动态 、 头条 开始 -->
     <div class="container info-box" v-if=" tag == 'hot'|| tag == 'attention'">
@@ -161,7 +161,6 @@
 <script>
 import hotRecommendation from './components/hotRecommendation.vue';
 import live from '../../talentSide/liveBroadcast/index.vue';
-// import Chat from "../components/chat.vue"
 import videoDialog from '../components/videoDialog.vue';
 import magInfo from '../components/mag/magInfo.vue';
 
@@ -171,7 +170,6 @@ export default {
     hotRecommendation,
     live,
     magInfo,
-    // Chat,
     videoDialog
   },
   data(){

@@ -123,7 +123,7 @@
             </div>
           </div>
         </div>
-        <div class="info-right-box" v-if="is_type =='searchTalent'">
+        <!-- <div class="info-right-box" v-if="is_type =='searchTalent'">
           <div class="m-box">
             <div class="title">感觉人才还不错，您可以:</div>
             <div class="form-btns">
@@ -139,17 +139,9 @@
                 <img src="../../../assets/image/bossSide/icon-star-1.png" alt="" />
                 <span>收藏</span>
               </div>
-              <!-- <div>
-                <img src="../../../assets/image/bossSide/icon-download-1.png" alt="" />
-                <span>存至本地</span>
-              </div>
-              <div>
-                <img src="../../../assets/image/bossSide/icon-printer.png" alt="" />
-                <span>打印</span>
-              </div> -->
             </div>
           </div>
-        </div>
+        </div> -->
       </el-dialog>
     </div>
   </div>
