@@ -88,28 +88,28 @@
                 </div>
               </div>
 
-              <div class="i-items" v-if="perfection_degree.job_expectation.length <= 0">
+              <div class="i-items" v-if="job_expectation.length <= 0">
                 <div class="up-att-t">
                   <span class="span-1">求职期望</span>
                   <span class="span-2" @click="goto('qw')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
                 </div>
                 <div class="up-box-Instructions">请补充求职期望 <span>·1项</span></div>
               </div>
-              <div class="i-items" v-if="perfection_degree.work_experience.length <= 0">
+              <div class="i-items" v-if="work_experience.length <= 0">
                 <div class="up-att-t">
                   <span class="span-1">工作经历</span>
                   <span class="span-2" @click="goto('gz')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
                 </div>
                 <div class="up-box-Instructions">请补充工作经历 <span>·1项</span></div>
               </div>
-              <div class="i-items" v-if="perfection_degree.project_experience.length <= 0">
+              <div class="i-items" v-if="project_experience.length <= 0">
                 <div class="up-att-t">
                   <span class="span-1">项目经历</span>
                   <span class="span-2" @click="goto('xm')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
                 </div>
                 <div class="up-box-Instructions">请补充项目经历 <span>·1项</span></div>
               </div>
-              <div class="i-items" v-if="perfection_degree.education_experience.length <= 0">
+              <div class="i-items" v-if="education_experience.length <= 0">
                 <div class="up-att-t">
                   <span class="span-1">教育经历</span>
                   <span class="span-2" @click="goto('jy')">去补充<i class="el-icon-arrow-right" style="margin-left:2px;"></i></span>
@@ -265,10 +265,9 @@ export default {
     },
     
    // 获取个人信息
-   getUserProfile(){
+  async getUserProfile(){
       let that = this;
-      that.$axios.post('/api/user/profile',{}).then(res =>{
-        console.log(res.data)
+      await that.$axios.post('/api/user/profile',{}).then(res =>{
         if(res.code == 0){
           this.infoData = res.data;
           this.education_experience = res.data.education_experience;
@@ -278,8 +277,10 @@ export default {
           this.curriculum_vitae = res.data.basic_info.curriculum_vitae;
 
           // 简历完善度、
-          this.perfection_degree = getPerfectionDegree(res.data);
+          this.perfection_degree =  getPerfectionDegree(res.data);
+
           this.perfection_degree_basic_info = getPerfectionDegree(res.data).basic_info;
+          console.log(this.perfection_degree)
         }
       }).catch(e =>{
         console.log(e)

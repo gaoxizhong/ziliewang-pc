@@ -1,6 +1,6 @@
 <template>
   <div class="dialogVisible-pop-box" v-if="dialogVisible">
-    <div class="mask-box"></div>
+    <div class="mask-box" @click.stop="clickPop"></div>
     <div class="dialog-container">
       <div class="dialog-header">
         <h3 class="title">请选择职位类别</h3>
@@ -21,7 +21,7 @@
         </div>
         <img src="../../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
       </div>
-      <div class="dialog-body">
+      <div class="dialog-body" @click.stop="clickPop">
         <div class="body-left-box">
           <div class="left-list-box">
             <ul>
@@ -34,7 +34,7 @@
             <div class="category-list-items" v-for="(item,index) in position.category_list" :key="index">
               <div class="category-name">{{ item.category_name }}</div>
               <ul>
-                <li :class="selt_listItems == index? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name,index)">{{ items.category_name }}</li>
+                <li :class="selt_listItems == index && selt_listItems_idx == idx? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name,index,idx)">{{ items.category_name }}</li>
               </ul>
             </div>
             
@@ -73,6 +73,7 @@ export default {
       dialogVisible_seach:'',
       selt_item: 0, // 左侧下标
       selt_listItems: -1,
+      selt_listItems_idx: -1,
       searchList_info: false,
       jobsSearchList:[],  //搜索出的数据
     }
@@ -88,6 +89,7 @@ export default {
     clickSearchItem(n){
       this.$emit('clickSearchItem',{name:n});
       this.dialogVisible = false;
+      this.searchList_info = false;
     },
     // 搜索框事件
     jobsSearchInput(){
@@ -101,9 +103,15 @@ export default {
         }
       })
     },
+    // 
+    clickPop(){
+      this.searchList_info = false;
+    },
     // 点击职位弹窗关闭按钮
     clickClose(){
+      this.dialogVisible_seach = '';
       this.dialogVisible = false;
+      this.searchList_info = false
     },
     // 点击职位分类列表
     click_industryListLi(n,i){
@@ -111,13 +119,16 @@ export default {
       let index = i;
       this.selt_item = index;
       this.selt_listItems = -1;
+      this.selt_listItems_idx = -1;
       this.position.category_list = item.category_list;
     },
     // 点击职位列表
-    click_position_list(n,i){
+    click_position_list(n,i,i_x){
       this.selt_listItems = i;
-      this.infoData.desired_position = n;
+      this.selt_listItems_idx = i_x;
+      this.$emit('clickSearchItem',{name:n});
       this.dialogVisible = false;
+      this.searchList_info = false;
     },
   },
 };
@@ -312,6 +323,10 @@ export default {
                   margin-right: 16px;
                   padding: 0 10px;
                   cursor: pointer;
+                }
+                li.active{
+                  background: $g_bg;
+                  color: #fff;
                 }
               }
             }

@@ -182,6 +182,8 @@ export default {
   mounted(){
     // 点击所属行业项
     this.getIndustryList();
+    // 获取职位列表信息
+    this.getPositionList();
   },
   computed: {
     
@@ -325,7 +327,8 @@ export default {
     },
     // 点击选择职位
     clickInvolved(){
-      this.getPositionList();
+      // this.getPositionList();
+      this.$refs.industryList._data.dialogVisible = true;
     },
     // 点击职位弹窗关闭按钮
     clickClose(){
@@ -334,18 +337,9 @@ export default {
     // 获取行业列表信息
     getIndustryList(){
       let that = this;
-      var loadingInstance = this.$Loading.service({
-        lock: false,
-        customClass: 'z-index999',
-        text: '加载中，请稍后...',
-        spinner: 'ui-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)',
-      });
       that.$axios.post('/api/industry/list',{}).then( res =>{
-        loadingInstance.close();
         that.industry.industryList = res.data;
       }).catch( e=>{
-        loadingInstance.close();
         console.log(e)
       })
     },
@@ -363,7 +357,6 @@ export default {
         loadingInstance.close();
         that.position.industryList = res.data;
         that.position.category_list = that.position.industryList[that.selt_item].category_list;
-        that.$refs.industryList._data.dialogVisible = true;
       }).catch( e=>{
         loadingInstance.close();
         console.log(e)
