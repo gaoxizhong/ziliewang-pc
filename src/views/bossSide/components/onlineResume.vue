@@ -123,25 +123,25 @@
             </div>
           </div>
         </div>
-        <!-- <div class="info-right-box" v-if="is_type =='searchTalent'">
+        <div class="info-right-box" v-if="is_type =='searchTalent'">
           <div class="m-box">
             <div class="title">感觉人才还不错，您可以:</div>
             <div class="form-btns">
-              <el-button type="primary">打招呼</el-button>
-              <el-button>电话沟通</el-button>
+              <el-button type="primary" @click="clickChat(infoData)">打招呼</el-button>
+              <el-button @click="clickMobile(infoData)">电话沟通</el-button>
             </div>
             <div class="icon-box">
               <div>
                 <img src="../../../assets/image/bossSide/icon-shareAlt-1.png" alt="" />
                 <span>转发给同事</span>
               </div>
-              <div>
+              <div @click="collection">
                 <img src="../../../assets/image/bossSide/icon-star-1.png" alt="" />
-                <span>收藏</span>
+                <span :class="infoData.is_collection == 1?'hover':''"> {{ infoData.is_collection == 1?"已收藏":'收藏' }}</span>
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
       </el-dialog>
     </div>
   </div>
@@ -195,6 +195,94 @@ export default {
     handleClose(done) {
       this.zx_dialogVisible = false;
     },
+     // 点击收藏
+    async collection(){
+      let that = this;
+      let url = '';
+      let infoData = that.infoData;
+      if( infoData.is_collection == 1){
+        // 取消收藏
+        url = '/api/company-collection/cancelcollection'
+      }else{
+        //收藏
+        url = '/api/company-collection/collection'
+      }
+      await that.$axios.post(url,{
+        uid: infoData.basic_info.uid,
+      }).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:res.msg
+          })
+        infoData.is_collection == 1?infoData.is_collection = 2 : infoData.is_collection = 1;
+        that.infoData = infoData;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+    // 点击打电话
+    async clickMobile(i){
+      let that = this;
+      let res =  await that.$axios.post('/api/staff/profile',{})
+      if(res.data.vip_rank < 1){
+        that.$message.error({
+          message: '购买会员后才可打招呼！'
+        })
+        return
+      }
+      let p = {
+        uid: i.uid|| i.basic_info.uid,
+      }
+      that.$axios.post('/api/company/get-user-mobile',p).then( res =>{
+        if(res.code == 0){
+          
+          this.$alert(res.data.mobile, '电话', {
+            confirmButtonText: '确定',
+          });
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
+
+     // 点击聊一聊
+     async clickChat(i){
+      let that = this;
+      let res =  await that.$axios.post('/api/staff/profile',{})
+      if(res.data.vip_rank < 1){
+        that.$message.error({
+          message: '购买会员后才可打招呼！'
+        })
+        return
+      }
+      let infoData = {
+        uid: i.uid || i.basic_info.uid,
+        name: i.name || i.basic_info.name,
+        avatar: i.avatar || i.basic_info.avatar,
+      }
+      console.log(infoData)
+      that.zx_dialogVisible = false;
+      that.$bus.$emit('receiveParams', {type:'searchTalent',infoData:JSON.stringify(infoData) });
+      return
+      let p = {
+        uid: i.uid|| i.basic_info.uid,
+        content:'看过您的简历后，希望可以和您聊聊，谢谢！'
+      }
+      that.$axios.post('/api/company/find-user',p).then( res =>{
+        if(res.code == 0){
+          that.$router.push('/interaction?user_uid=' + i.uid);
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
   },
 };
 </script>
@@ -205,22 +293,27 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     margin-top: 0 !important;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 68px);
     .el-dialog__header{
       text-align: left;
+      background: #fff;
+      padding: 16px 20px;
+      height: auto;
       .el-dialog__title{
         font-size: 16px;
         color: $g_textColor;
       }
     }
     .el-dialog__body{
-      padding: 20px 30px 30px;
-      height: calc(100vh - 128px);
+      // height: calc(100vh - 128px);
+      flex: 1;
       overflow: overlay;
-      padding: 20px;
+      padding: 16px;
+      display: flex;
       .pc-preview-wrapper{
-        border-radius: 4px;
-        border: 1px solid #e3e7ed;
-        padding: 20px 40px;
+        flex: 1;
         color: #414a60;
         line-height: 26px;
         .resume-item{
@@ -251,7 +344,7 @@ export default {
             vertical-align: top;
             padding-top: 2px;
             h2.name{
-              font-size: 1.1rem;
+              font-size: 14px;
               font-weight: bold;
               display: inline-block;
               position: relative;

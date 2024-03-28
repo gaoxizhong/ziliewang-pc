@@ -30,24 +30,27 @@
           <el-table-column  prop="users.work_status_desc" label="求职状态"></el-table-column>
           <!-- <el-table-column  prop="users.see_me_num" label="查看次数"></el-table-column> -->
           <el-table-column label="操作" width="80px">
-            <!-- <template slot-scope="scope">
-              <span class="blue" @click.stop="handleUpdateInfo(scope.row)">查看详情</span>
-            </template> -->
+            <template slot-scope="scope">
+              <span class="blue" @click.stop="handleUpdateInfo(scope.row)">在线简历</span>
+            </template>
           </el-table-column>
         </el-table>
         <!-- 分页控制 -->
         <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged"></mPagination>
       </div>
-
     </div>
+    <!-- 预览在线简历 弹窗  -->
+    <onlineResume ref="onlineResume" :infoData="infoData" :basic_info="basic_info" :is_type="is_type" />
   </div>
 </template>
 <script>
 import mPagination from '@/components/m-pagination';
+import onlineResume from '../components/onlineResume.vue';
 
 export default{
   components: {
     mPagination,
+    onlineResume
   },
   data(){
     return {
@@ -59,6 +62,9 @@ export default{
         currentPage: 1,
         pageSize: 20,
       },
+      is_type: 'searchTalent',
+      infoData: {},
+      basic_info:{},
     }
   },
   created(){
@@ -66,6 +72,22 @@ export default{
     this.getInfoData();
   },
   methods:{
+    handleUpdateInfo(e){
+      let that = this;
+      that.$axios.post('/api/company/resume/detail',{
+        uid: e.uid
+      }).then( res =>{
+        if(res.code == 0){
+          that.infoData = res.data;
+          that.basic_info = res.data.basic_info;
+          that.$refs.onlineResume._data.zx_dialogVisible = true;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
     getInfoData(){
       let that = this;
       that.$axios.post('/api/company/view/resume/list',{

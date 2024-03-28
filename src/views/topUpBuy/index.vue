@@ -24,11 +24,10 @@
                 <span class="money-icon">￥</span> {{ item.recharge_price }}
               </div>
               <div class="rights-box">
-                <div  class="rights-text" v-html="item.rights_interests"></div>
-                <!-- <div  class="rights-text" :class="index == rights_index && rights_show == true?'':'auto'" v-html="item.rights_interests"></div> -->
-                <!-- <div class="rights-img-box">
-                  <img :src="`${ index == rights_index && rights_show == true ?require('../../assets/image/zhankaijiantoucopy.png'):require('../../assets/image/zhankaijiantoucopy_1.png')}`" alt="" :title="index == rights_index && rights_show == true?'收起':'展开'" @click="clickRightsImg(index)"/>
-                </div> -->
+                <div  class="rights-text" :class="showFull[index].status ?'':'auto'" v-html="item.rights_interests"></div>
+                <div class="rights-img-box">
+                  <img :src="`${ showFull[index].status ?require('../../assets/image/zhankaijiantoucopy.png'):require('../../assets/image/zhankaijiantoucopy_1.png')}`" alt="" :title="showFull[index].status?'收起':'展开'" @click.stop='openFulltxt(index)'/>
+                </div>
               </div>
               <!-- <div class="span-num">{{ item.get_num }} 次</div> -->
               <div class="setMeal-btn-box" @click="clickBuyBtn(item)">立即购买</div>
@@ -84,7 +83,7 @@
           "width": '',
         },
         url_type:'staff',
-        rights_index: null
+        showFull: [],
       }
     },
     created(){
@@ -107,10 +106,10 @@
     },
 
     methods: {
-      clickRightsImg(n){
-        console.log(n)
-        this.rights_index = n;
-        this.rights_show = !this.rights_show;
+      openFulltxt(idx) {
+        let index = idx;
+        this.showFull[index].status = !this.showFull[index].status
+        this.showFull= this.showFull
       },
       handleCopy(n){
           //创建一个input框
@@ -180,10 +179,15 @@
         that.$axios.post('/api/recharge/list',{}).then( res =>{
           if(res.code == 0){
             let setMealList = res.data;
-            // let replaceRegex = /(\n\r|\r\n|\r|\n)/g; 
-            // setMealList.forEach(ele => {
-            //   ele.rights_interests = ele.rights_interests.replace(replaceRegex, '<br/>');
-            // });
+            let replaceRegex = /(\n\r|\r\n|\r|\n)/g; 
+            let showFull =[];
+            setMealList.forEach(ele => {
+              ele.rights_interests = ele.rights_interests.replace(replaceRegex, '<br/>');
+              let obj = {};
+              obj.status = false;
+              showFull.push(obj);
+            });
+            that.showFull = showFull;
             that.setMealList = setMealList;
           }else{
             that.$message.error({
@@ -392,7 +396,7 @@
   .rights-text{
     font-size: 14px;
     line-height: 24px;
-    color: #ff0000;
+    color: $g_textColor;
     height: auto;
     overflow: hidden;
   }

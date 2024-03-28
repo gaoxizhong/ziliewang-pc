@@ -15,6 +15,22 @@ export function formatDate(t) {
     str += time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
     return str;
 };
+  //获取当前时间
+  export function handleTimeValue(date) {
+    const _date = date ? new Date(date) : new Date()
+    const year = _date.getFullYear()
+    const month = _date.getMonth() + 1
+    const day = _date.getDate()
+    const days = _date.getDay()
+    const time = `${year}-${month >= 10 ? month : '0' + month}-${day >= 10 ? day : '0' + day}`
+    return {
+      time,
+      year,
+      month,
+      day,
+      days
+    }
+  }
 
 /**
  * 距当前时间点的时长

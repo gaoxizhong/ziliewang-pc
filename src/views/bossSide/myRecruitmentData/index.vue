@@ -7,7 +7,22 @@
         <div class="left-box">
           <img src="../../../assets/image/bossSide/myRecruitment-search.png" alt="" />
           <span class="title">我的招聘数据总览</span>
-          <!-- <span class="title-show">数据周期: 2023.03.30 ~ 2023.04.05</span> -->
+          <div class="item-content">
+            <el-date-picker
+              v-model="begin_date"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="开始时间">
+            </el-date-picker>
+            <span class="span-line"> 至 </span>
+            <el-date-picker
+              v-model="end_date"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="结束时间">
+            </el-date-picker>
+            <el-button type="primary" size="small" @click="clickSearhButton">搜索</el-button>
+          </div>
         </div>
         <div class="right-box"></div>
       </div>
@@ -134,30 +149,59 @@
 </template>
 
 <script>
+import {formatDate,handleTimeValue} from '../../../utils/utils'
+import {Loading } from 'element-ui';
+
 export default {
   data(){
     return {
+      begin_date:'',
+      end_date:'',
       formData: {},
       company_recruitment_count:{},
       company_recruitment_list: [],
     }
   },
   created(){
-    //  获取信息
-    this.getFormData();
+    // 获取当前的日期
+    const date = new Date();
+    this.end_date = handleTimeValue(date).time;
+    // 获取一周前的日期
+    const oneWeekAgo = new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000);
+    this.begin_date = handleTimeValue(oneWeekAgo).time;
+    this.clickSearhButton();
   },
   methods:{
+    // 点击日期搜索按钮
+    clickSearhButton(){
+      //  获取信息
+      this.getFormData();
+    },
     goToPages(path){
       this.$router.push({ path })
     },
     getFormData(){
       let that = this;
-      that.$axios.post('/api/company/recruitment',{}).then( res =>{
+      let loadingInstance = Loading.service({
+        lock: false,
+        customClass: 'z-index999',
+        text: '加载中，请稍后...',
+        spinner: 'ui-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+      });
+      that.$axios.post('/api/company/recruitment',{
+        begin_date: that.begin_date,
+        end_date: that.end_date,
+      }).then( res =>{
+        loadingInstance.close();
         if(res.code == 0){
           that.formData = res.data;
           that.company_recruitment_list = res.data.company_recruitment_list.list;
           that.company_recruitment_count = res.data.company_recruitment_count;
         }
+      }).catch( e =>{
+        loadingInstance.close();
+        console.log(e)
       })
     }
   }
@@ -289,6 +333,84 @@ export default {
           background: #F7F9FC !important;
         }
       }
+    }
+  }
+  .item-content {
+    margin-left: 30px;
+    position: relative;
+    line-height: 30px;
+    display: flex;
+    .radio-item{
+      flex: 1;
+      min-width: auto;
+      line-height: 30px;
+      display: inline-block;
+      border: 1px solid #e3e7ed;
+      background-color: #fff;
+      text-align: center;
+      cursor: pointer;
+      color: #9fa3b0;
+      margin-right: 20px;
+      white-space: nowrap;
+      position: relative;
+      vertical-align: middle;
+      font-size: 14px;
+      &:last-of-type {
+        margin-right: 0;
+      }
+      /deep/ .el-textarea__inner{
+        font-size: 14px;
+        &:focus{
+          border-color: $g_color;
+        }
+      }
+    }
+    .radio-checked {
+      border-color: $g_color;
+      color: $g_color;
+      background-color: #effbfa;
+    }
+    /deep/ .el-select{
+      width: 100%;
+      .el-input.is-focus .el-input__inner{
+        border-color: $g_color;
+      }
+    }
+    /deep/ .el-date-editor.el-input__inner,/deep/ .el-date-editor.el-input{
+      width: 170px;
+    }
+    /deep/ .el-input__inner{
+      height: 30px;
+      line-height: 30px;
+      cursor: pointer;
+    }
+    /deep/ .el-input__icon{
+      line-height: 30px;
+    }
+    /deep/ .el-cascader{
+      width: 100%;
+    }
+    /deep/ .el-button{
+      height: 30px;
+      padding: 0 20px;
+      margin-left: 20px;
+    }
+    /deep/ .el-button--primary{
+      background-color: $g_bg;
+      border-color: $g_bg;
+    }
+    img{
+      width: 21px;
+      height: 18px;
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+    .span-line{
+      margin: 0 10px;
+      font-size: 14px;
     }
   }
 </style>
