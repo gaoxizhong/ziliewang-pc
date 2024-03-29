@@ -148,7 +148,7 @@ export default {
     flex: 1;
     width: 100%;
     text-align: left;
-    padding: 0 12px;
+    padding: 0 20px;
   }
  
   .privacyPolicy-box /deep/ .el-dialog__body .dialog-content-box .dialog-content-left p{

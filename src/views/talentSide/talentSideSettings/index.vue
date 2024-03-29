@@ -18,6 +18,7 @@
             <li :class="setType =='set_phone'? 'hover': '' " @click="clickLeItems('set_phone')">手机号码</li>
             <li :class="setType =='set_email'? 'hover': '' " @click="clickLeItems('set_email')">我的邮箱</li>
             <li :class="setType =='set_password'? 'hover': '' " @click="clickLeItems('set_password')">密码设置</li>
+            <li :class="setType =='account_cancellation'? 'hover': '' " @click="clickLeItems('account_cancellation')">账号注销</li>
             <li :class="setType =='set_expressions'? 'hover': '' " @click="clickLeItems('set_expressions')">常用语设置</li>
           </ul>
         </div>
@@ -101,6 +102,12 @@
             <div class="info-box">当前登录账号: {{ basic_info.phone }}</div>
             <button @click="clickSetPassword">密码设置</button>
           </div>
+          <!-- 账号注销 -->
+          <div class="container-right-items" id="account_cancellation">
+            <div class="title">账号注销</div>
+            <div class="info-box">账号注销成功后会清空用户在本平台上所有信息！</div>
+            <button @click="clickAccountCancellation">确认注销</button>
+          </div>
           <!-- 常用语设置 -->
           <div class="container-right-items" id="set_expressions">
             <div class="title">常用语设置</div>
@@ -120,8 +127,8 @@
     </div>
 
     <!-- 弹窗功能 -->
-      <!-- 屏蔽公司 弹窗 -->
-     <div class="setShieldVisible">
+    <!-- 屏蔽公司 弹窗 -->
+    <div class="setShieldVisible">
       <el-dialog title="添加公司" :visible.sync="setShieldVisible" width="500px" :before-close="closeShieldVisible">
         <div class="cententinfo-box">
           <div class="demo-input-suffix">
@@ -206,16 +213,21 @@
         </span>
       </el-dialog>
     </div>
+    <!-- 账号注销弹窗 -->
+    <div class="accountVisible">
+      <accountCancellation  ref="accountCancellation"/>
+    </div>
   </div>
 
 </template>
 
 <script>
+import accountCancellation from "../../../components/accountCancellation.vue";
 
 export default {
   name: 'talentSideSettings',
   components: {
-    
+    accountCancellation
   },
   data(){
     return{
@@ -307,6 +319,7 @@ export default {
     closePhrasesVisible(){
       this.setPhrasesVisible = false;
     },
+    
     //
     clickLeItems(n){
       let that = this;
@@ -373,6 +386,10 @@ export default {
     clickSetShield(){
       this.setShieldVisible = true;
     },
+    // 点击账号注销按钮
+    clickAccountCancellation(){
+      this.$refs.accountCancellation._data.dialogVisible = true;
+    },
     // 点击添加常用语
     clickSetPhrases(){
       this.setPhrasesVisible = true;
@@ -438,6 +455,7 @@ export default {
         console.log(e)
       })
     },
+   
     // 确认常用语
     clickPhrasesQR(){
       let that = this;
