@@ -218,7 +218,39 @@ export default {
         }
       })
     },
-   
+    // 点击聊一聊
+    async clickChat(i){
+      let that = this;
+      let res =  await that.$axios.post('/api/staff/profile',{})
+      if(res.data.vip_rank < 1){
+        that.$message.error({
+          message: '购买会员后才可打招呼！'
+        })
+        return
+      }
+      let infoData = {
+        uid: i.uid || i.basic_info.uid,
+        name: i.name || i.basic_info.name,
+        avatar: i.avatar || i.basic_info.avatar,
+      }
+      console.log(infoData)
+      that.zx_dialogVisible = false;
+      that.$bus.$emit('receiveParams', {type:'searchTalent',infoData });
+      return
+      let p = {
+        uid: i.uid|| i.basic_info.uid,
+        content:'看过您的简历后，希望可以和您聊聊，谢谢！'
+      }
+      that.$axios.post('/api/company/find-user',p).then( res =>{
+        if(res.code == 0){
+          that.$router.push('/interaction?user_uid=' + i.uid);
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
       
     
     

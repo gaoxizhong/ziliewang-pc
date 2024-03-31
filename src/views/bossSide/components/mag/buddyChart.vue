@@ -4,7 +4,7 @@
       <div class="conversation-list-container">
         <div class="conversation-list-content">
 
-          <ConversationList :title_show="title_show" :laiyuan="laiyuan" @chatLocation="chatLocation"/>
+          <ConversationList :title_show="title_show" :infoData="profile.friend" :laiyuan="laiyuan" @chatLocation="chatLocation"/>
           
         </div>
       </div>
@@ -42,7 +42,7 @@ export default {
     laiyuan:{
       type: String,
       default() {
-        return ''
+        return 'is_nav'
       }
     },
   },
@@ -58,7 +58,7 @@ export default {
     if(this.laiyuan == 'is_nav'){
       // 点击头部导航消息按钮
     }else{
-      if(this.infoData && this.infoData.id){
+      if(this.infoData){
         this.chatLocation (JSON.stringify(this.infoData))
       }
     }
@@ -69,6 +69,7 @@ export default {
     
     chatLocation (conversation) {
       this.profile.friend = JSON.parse(conversation);
+      console.log(this.profile.friend)
       this.is_chat = false;
       this.$nextTick( () => {
         this.is_chat = true;

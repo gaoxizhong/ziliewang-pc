@@ -5,7 +5,7 @@
       <div v-for="(item, key) in conversations" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == item.userId}">
         <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
           <div class="avatar">
-            <img :src="item.data.avatar"/>
+            <img :src="item.data.avatar?item.data.avatar:require('../../../../assets/image/img-user.jpg')"/>
             <div v-if="item.unread>0"
                 class="unread-count">
               <span class="unread">{{ item.unread }}</span>
@@ -70,6 +70,12 @@
       
     },
     props:{
+      infoData:{
+        type: Object,
+        default() {
+          return {}
+        }
+      },
       title_show:{
         type: String,
         default() {
@@ -101,6 +107,7 @@
       };
     },
     created() {
+      this.profile.friend = this.infoData; // 好友信息
       //隐藏Conversation右键菜单
       document.addEventListener('click', () => {
         this.hideRightClickMenu();

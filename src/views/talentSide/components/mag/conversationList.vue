@@ -5,7 +5,7 @@
       <div v-for="(conversation, key) in conversations" :key="key" @click="chatLocation(conversation)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == conversation.userId}">
         <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
           <div class="avatar">
-            <img :src="conversation.data.avatar"/>
+            <img :src="conversation.data.avatar?conversation.data.avatar:require('../../../../assets/image/img-user.jpg')"/>
             <div v-if="conversation.unread>0"
                 class="unread-count">
               <span class="unread">{{ conversation.unread }}</span>

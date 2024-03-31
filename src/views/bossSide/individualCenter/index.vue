@@ -5,7 +5,7 @@
       <div class="tab-left">
         <div :class="tabStatus == 'basicInfo'?'hover-items':'' " @click="clickStatus('basicInfo')">基本信息</div>
         <div :class="tabStatus == 'expressions'?'hover-items':'' " @click="clickStatus('expressions')">常用语</div>
-        <!-- <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">账号安全</div> -->
+        <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">账号安全</div> 
         <!-- <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">员工关系</div> -->
         <!-- <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">隐私中心</div> -->
       </div>
@@ -103,6 +103,26 @@
         </div>
         <div class="list-items-box">
           <div class="left">
+            <img src="../../../assets/image/bossSide/icon-zhmm.png" alt="" />
+            <div class="item-info-box">
+              <div class="title">账号注销</div>
+              <div class="sub-title"><span>账号注销成功后会清空用户在本平台上所有信息！</span></div>
+            </div>
+          </div>
+          <div class="right" @click="clickAccountCancellation">注销</div>
+        </div>
+        <!-- <div class="list-items-box">
+          <div class="left">
+            <img src="../../../assets/image/bossSide/icon-zhmm.png" alt="" />
+            <div class="item-info-box">
+              <div class="title">密码设置</div>
+              <div class="sub-title"><span>当前登录账号：{{ infoData.phone }}</span></div>
+            </div>
+          </div>
+          <div class="right" @click="clickSetPassword">修改密码</div>
+        </div> -->
+        <!-- <div class="list-items-box">
+          <div class="left">
             <img src="../../../assets/image/bossSide/icon-yx.png" alt="" />
             <div class="item-info-box">
               <div class="title">绑定安全邮箱</div>
@@ -110,17 +130,8 @@
             </div>
           </div>
           <div class="right" @click="clickSetEmail">换绑</div>
-        </div>
-        <!-- <div class="list-items-box">
-          <div class="left">
-            <img src="../../../assets/image/bossSide/icon-zhmm.png" alt="" />
-            <div class="item-info-box">
-              <div class="title">账号密码</div>
-              <div class="sub-title"><span>账号：zjayhyz8927394</span></div>
-            </div>
-          </div>
-          <div class="right">换绑</div>
         </div> -->
+        
         <!-- <div class="list-items-box">
           <div class="left">
             <img src="../../../assets/image/bossSide/icon-wx.png" alt="" />
@@ -160,9 +171,28 @@
           </span>
         </el-dialog>
       </div>
+      <!-- 修改密码 弹窗 -->
+      <div class="setPasswordVisible">
+        <el-dialog title="密码设置" :visible.sync="setPasswordVisible" width="500px" :before-close="closePasswordVisible">
+          <div class="cententinfo-box">
+            <div class="cententinfo-title">手机号: {{ infoData.phone }}</div>
+            <div class="demo-input-suffix">
+              <span>新密码:</span>
+              <el-input v-model="password" type="password" name="password" placeholder="8-16位字母、数字、字符，不支持空格" show-password></el-input>
+            </div>
+          </div>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="setPasswordVisible = false">取 消</el-button>
+            <el-button type="primary" @click="clickPasswordQR">确 定</el-button>
+          </span>
+        </el-dialog>
+      </div>
       
     </div>
-
+    <!-- 账号注销弹窗 -->
+    <div class="accountVisible">
+      <accountCancellation :id="infoData.company_id" ref="accountCancellation"/>
+    </div>
 
     <!-- 常用语 弹窗 -->
     <div class="setPasswordVisible">
@@ -182,7 +212,12 @@
 </template>
 
 <script>
+import accountCancellation from "../../../components/accountCancellation.vue";
+
 export default {
+  components: {
+    accountCancellation
+  },
   data() {
     return {
       tabStatus: 'basicInfo', // 基本信息
@@ -201,7 +236,9 @@ export default {
       uploadData:{
         up_tag: 'avatar'
       },
+      password:'',
       setPhoneVisible: false,
+      setPasswordVisible: false,
       setPhrasesVisible: false,
     }
   },
@@ -308,12 +345,32 @@ export default {
     clickSetPhone(){
       this.setPhoneVisible = true;
     },
+    // 点击设置密码
+    clickSetPassword(){
+      this.setPasswordVisible = true;
+    },
     clickSetEmail(){
 
+    },
+    // 点击账号注销按钮
+    clickAccountCancellation(){
+      this.$refs.accountCancellation._data.dialogVisible = true;
     },
     // 关闭 修改手机号码弹窗
     closePhoneVisible(){
       this.setPhoneVisible = false;
+    },
+    // 关闭 修改密码弹窗
+    closePasswordVisible(){
+      this.setPasswordVisible = false;
+    },
+    // 确认修改密码
+    clickPasswordQR(){
+      let that = this;
+      let p = {
+        password: that.password,
+      };
+      that.setUserSave(p);
     },
     // 确认修改手机号
     clickPhoneQR(){

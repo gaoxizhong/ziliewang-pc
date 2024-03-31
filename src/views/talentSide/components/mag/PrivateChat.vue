@@ -2,7 +2,7 @@
   <div class="chat-container">
     <div class="chat-title">
       <div class="chat-title-l">
-        <img :src="friend.avatar" class="chat-avatar"/>
+        <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar"/>
         <div class="chat-name">{{ friend.name }}</div>
       </div>
       <div class="position-name">{{ detailData.position_name }}</div>
@@ -18,13 +18,19 @@
         <div v-for="(item, index) in history.messages" :key="index">
           <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(item, index) }}</div>
-
-          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 1">你已向对方发送交换联系方式</div>
           <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 3">你已同意对方索要联系方式</div>
-
+          <!-- 人才 发送请求联系方式 ↓ -->
+          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 1">
+            <h4 class="message-phone-universal-card-header">联系方式</h4>
+            <div class="message-phone-universal-card-content">
+              <span>您的手机号：{{ item.payload.phone }}</span>
+            </div>
+            <div class="message-phone-box">您已向对方发送交换联系方式</div>
+          </div>
+          <!-- 人才 发送请求联系方式 ↑ -->
           <!-- boss 发送过来的手机号 ↓ -->
           <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 2">
-            <h4 class="message-phone-universal-card-header">手机号</h4>
+            <h4 class="message-phone-universal-card-header">联系方式</h4>
             <div class="message-phone-universal-card-content">
               <span>{{ item.payload.name }}的手机号：{{ item.payload.phone }}</span>
             </div>
@@ -32,10 +38,11 @@
           <!-- boss 发送过来的手机号 ↑ -->
           <!-- boss 索要手机号 ↓ -->
           <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 4">
-            <h4 class="message-phone-universal-card-header">手机号</h4>
+            <h4 class="message-phone-universal-card-header">对方请求交换联系方式</h4>
             <div class="message-phone-universal-card-content">
-              <span>对方请求交换联系方式</span>
+              <span>对方手机号：{{ item.payload.phone }}</span>
             </div>
+            
             <div class="message-phone-universal-card-footer">
               <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(3)">同意交换</div>
             </div>
@@ -46,7 +53,7 @@
             <div v-if="item.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
-              <span v-if="item.type === 'text' && Date.now()-item.timestamp< 60 * 1000 " @click="editRecalledMessage(item.payload.text)">重新编辑</span>
+              <span v-if="item.type === 'text'" @click="editRecalledMessage(item.payload.text)">重新编辑</span>
             </div>
           </div>
           <!-- 内容区域 开始 -->

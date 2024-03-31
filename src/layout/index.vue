@@ -12,22 +12,53 @@
 
 
     <!-- 聊天弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
         <div class="VueDragResize-title-box">
-          <!-- <div class="title">聊一聊</div> -->
-          <div class="title"></div>
+          <div class="title"><span>我的沟通</span></div>
           <div class="icon-box">
             <!-- <img src="../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
             <img src="../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
           </div>
         </div>
         <div class="navbaerMag-content-box">
-          <buddyChart :title_show="title_show" :infoData="infoData" is_pop="is_pop" ref="chat" />
+          <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" is_pop="is_pop" ref="chat" />
         </div>
       </div>
     </VueDragResize>
     <!-- 聊天弹窗 结束-->
+
+    <div class="yqms-popup">
+      <el-dialog title="邀请面试" :visible.sync="yqmsVisible" width="500px">
+        <div class="cententinfo-box">
+          <div class="items-box">
+            <div class="title">面试职位：</div>
+            <el-select v-model="interviewData.requirement" placeholder="面试职位" @change="changeIndustry">
+              <el-option :label="item" :value="item" v-for="(item,index) in industryList" :key="index"></el-option>
+            </el-select>
+          </div>
+          <div class="items-box">
+            <div class="title">联系人：</div>
+            <el-input v-model="interviewData.name" placeholder="联系人"></el-input>
+          </div>
+          <div class="items-box">
+            <div class="title">联系电话：</div>
+            <el-input v-model="interviewData.phone" placeholder="联系电话"></el-input>
+          </div>
+          <div class="items-box">
+            <div class="title">面试地址：</div>
+            <el-input v-model="interviewData.address" placeholder="面试地址"></el-input>
+          </div>
+          <div class="items-box">
+            <div class="title">面试准备事项：</div>
+            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 12}" placeholder="请您准备好个人纸质简历，正装参加面试、女士淡妆，请准时到达" v-model="interviewData.remark"></el-input>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary">邀请面试</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -63,9 +94,13 @@ export default {
       left: 500,
       zInfex_0: 99,
       is_VueDragResize: false,
-      is_type: '',
+      title_show: '',
+      laiyuan:'',
       is_pop:'pop',
       infoData: {},
+      yqmsVisible: false,
+      interviewData: {}, // 邀请面试信息
+      industryList:['web前端','后端','UI设计师','项目经理']
     }
   },
   mixins: [ResizeMixin],
@@ -101,6 +136,8 @@ export default {
   mounted(){
     // 组件间通信
     this.$bus.$on('receiveParams', this.receiveParams);
+    // 组件间通信
+    this.$bus.$on('clickYqms', this.clickYqms);
   },
   created(){
     let getViewportSize = this.$getViewportSize();
@@ -133,6 +170,9 @@ export default {
     });
   },
   methods: {
+    changeIndustry(e){
+      console.log(e)
+    },
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     },
@@ -175,13 +215,14 @@ export default {
     receiveParams(params){
       console.log(params)
         // '接收到的参数:' params
+        this.laiyuan = params.laiyuan?params.lanyuan:'';
       if(params.type){
-        this.is_type = params.type //searchTalent 是搜索人才页
+        this.title_show = params.type //searchTalent 是搜索人才页
       }
       if(params.is_clickMinificationpngBtn){  // 表示点击的 右侧浮动按钮
         this.is_clickMinificationpngBtn = false;
       }else{
-        this.infoData = JSON.parse(params.infoData);
+        this.infoData = params.infoData;
         this.is_VueDragResize = false;
         this.$nextTick(function () {
           this.is_VueDragResize = true;
@@ -206,7 +247,45 @@ export default {
       this.zInfex_0 = -1;
       this.top = -800;
       this.$bus.$emit('clickSidebar',{ is_clickMinificationpngBtn:true } );
-    }
+    },
+    // 接收监听通讯 点击邀请面试按钮
+    clickYqms(){
+      console.log('yqmsVisible')
+      this.yqmsVisible = true;
+    },
+    // 点击发送面试邀请
+    submitForm(){
+      let that = this;
+      let selt_info = that.selt_info;
+      let p = {
+        status: 2, //1.待查看2.发送邀请 3.不合适 4.已参加 5已超时
+        uid: selt_info.uid, // 用户 
+        id: selt_info.company_interview_id, // 面试信息id 
+        company_id: selt_info.company_id, // 企业id
+        position_id: selt_info.position_id,  // 岗位信息id
+        system_msg_id: selt_info.id,  // 消息id
+        type_id:  selt_info.type_id,
+        type: that.ruleForm.type,
+        begin_time: that.ruleForm.begin_time,
+        end_time: that.ruleForm.end_time,
+        staff: that.ruleForm.staff,
+        phone: that.ruleForm.phone,
+        remark: that.ruleForm.remark
+      }
+      console.log(p)
+      that.$axios.post('/api/company-interview/edit',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:'发送面试邀请成功'
+          })
+          this.yqms_dialogVisible = false;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
 
   }
 }
@@ -256,7 +335,7 @@ export default {
   // 聊天弹窗 样式=============== ↓ ===========
 
   .app-wrapper /deep/ .vdr{
-    z-index: 99999 !important;
+    z-index: 9999 !important;
     position: fixed;
     border-radius: 4px;
     box-shadow:0 0 16px 0 rgba(139,152,169,1);
@@ -301,7 +380,10 @@ export default {
       justify-content: space-between;
       font-size: 14px;
       height: auto;
-      padding: 0 10px;
+      padding: 10px;
+      .title{
+        margin: 0 auto;
+      }
       .icon-box{
         display: flex;
         align-items: center;
@@ -319,5 +401,92 @@ export default {
       padding-top: 10px;
     }
 
+  }
+  .yqms-popup {
+    /deep/ .el-dialog__wrapper{
+      z-index: 99999 !important;
+    }
+    /deep/ .el-dialog{
+      min-width: 420px;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-top: 0 !important;
+      .el-dialog__header{
+        text-align: left;
+        padding: 10px;
+        .el-dialog__title{
+          font-size: 15px;
+          color: $g_textColor;
+        }
+        .el-dialog__headerbtn{
+          top: 10px;
+        }
+      }
+      .el-dialog__body{
+        height: auto;
+        overflow: hidden;
+        padding: 20px 0;
+        margin: 0 20px;
+        border-top: 1px solid #F2F3F5;
+        .cententinfo-box{
+          width: 100%;
+          .items-box{
+            width: 100%;
+            display: flex;
+            margin-top: 10px;
+            &:nth-of-type(1){
+              margin-top: 0px;
+            }
+            .title{
+              width: 126px;
+              height: 24px;
+              font-size: 14px;
+              font-weight: 400;
+              color: $g_textColor;
+              line-height: 24px;
+              &>span{
+                color: #ff0000;
+                font-size: 14px;
+                font-weight: bold;
+              }
+            }
+            & .el-select{
+              flex: 1;
+            }
+            & .el-input__inner{
+              height: 30px;
+              line-height: 30px;
+            }
+            & .el-input{
+              height: 30px;
+              line-height: 30px;
+            }
+            & .el-input__icon{
+              height: 30px;
+              line-height: 30px;
+            }
+            & /deep/ .el-input.is-active .el-input__inner, & /deep/ .el-input__inner:focus{
+              border-color: $g_bg;
+            }
+            & .el-textarea{
+              
+            }
+          }
+
+        }
+      }
+      .el-button{
+        padding: 0;
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+      }
+      .el-button--primary{
+        background-color: $g_color;
+        border-color: $g_color;
+      }
+
+    
+    }
   }
 </style>

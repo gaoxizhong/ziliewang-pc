@@ -47,19 +47,6 @@
       </el-dropdown>
     </div>
 
-    <!-- 点击导航消息按钮 展示消息列表弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".navbaerMag-title-box" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="navbar_mag">
-      <div class="navbaerMag-box">
-        <div class="navbaerMag-title-box">
-          <span>我的沟通</span>
-          <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
-        </div>
-        <div class="navbaerMag-content-box">
-          <buddyChart :title_show="title_show" :laiyuan="'is_nav'" />
-        </div>
-      </div>
-    </VueDragResize>
-    <!-- 点击导航消息按钮 展示消息列表弹窗 结束-->
   </div>
 </template>
 
@@ -181,6 +168,7 @@ export default {
     // 点击消息
     clickMessage(){
       this.navbar_mag = true;
+      this.$bus.$emit('receiveParams', {type:'navbarMag',laiyuan:'is_nav',infoData:{} });
     },
     // 拖拽时可以确定元素位置
     resize(newRect) {

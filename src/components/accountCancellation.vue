@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="userAgreement-box">
-      <el-dialog class="declaration-box" title="自猎平台用户协议" :center="false" :visible.sync="dialogVisible" height="auto">
+      <el-dialog class="declaration-box" title="自猎平台用户协议" :visible.sync="dialogVisible" height="auto">
         <div class="dialog-content-box">
           <div class="dialog-content-left">
             <h3>【重要】</h3>
@@ -59,7 +59,7 @@
           </div>
         </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" plain @click="clickdialogVisible" class="footer-clobtn">确定</el-button>
+        <el-button type="primary" plain @click="clickdialogVisible" class="footer-clobtn">确认注销</el-button>
       </span> 
     </el-dialog>
     </div>
@@ -67,10 +67,18 @@
 </template>
 
 <script>
-
+import { getToken, setToken, removeToken } from '@/utils/auth';
 export default {
 
   components: {
+  },
+  props:{
+    id:{
+      type: Number,
+      default() {
+        return null
+      }
+    },
   },
   data(){
     return{
@@ -90,7 +98,38 @@ export default {
     },
     // 点击确认按钮
     clickdialogVisible(){
-      this.dialogVisible = false;
+      let that = this;
+      let id = that.id;
+      let tag = localStorage.getItem('tag');
+      that.dialogVisible = false;
+      let p = {
+        tag,
+      }
+      if(tag == 'company'){
+        p.company_id = id;
+      }
+      if(tag == 'user'){
+        p.uid = id;
+      }
+      that.$axios.post('/api/logout',p).then(res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:'注销成功'
+          })
+          setToken('');
+          localStorage.setItem('tag', ''); // 用户身份 user、人才端 company、企业端缓存
+          // 清除缓存的权限菜单
+          sessionStorage.removeItem("route");
+          setTimeout( () =>{
+            that.$router.push(`/login`);
+          },1000)
+        }else{
+          
+        }
+      }).catch(error =>{
+        console.log(error)
+       
+      })
     }
   },
 };
@@ -119,7 +158,7 @@ export default {
       width: 100%;
       height: auto;
       background: #fff;
-      text-align: center;
+      text-align: center !important;
     }
     .el-dialog__body{
       flex: 1;
@@ -145,7 +184,7 @@ export default {
     text-align: center;
   }
   .userAgreement-box /deep/ .el-dialog__footer .footer-clobtn{
-    padding: 10px 40px;
+    color: #fff !important;
   }
   .userAgreement-box /deep/ .el-dialog__body .dialog-content-box{
     height: 100%;

@@ -211,7 +211,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
   // 聊天弹窗 样式=============== ↓ ===========
 
   .mian-box /deep/ .vdr{
-    z-index: 99999 !important;
+    z-index: 9999 !important;
     position: fixed;
     border-radius: 4px;
     box-shadow:0 0 16px 0 rgba(139,152,169,1);

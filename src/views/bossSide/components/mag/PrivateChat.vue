@@ -1,7 +1,7 @@
 <template>
   <div class="chat-container">
     <div class="chat-title">
-      <img :src="friend.avatar" class="chat-avatar"/>
+      <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar"/>
       <div class="chat-name">{{ friend.name }}</div>
     </div>
     <div class="chat-main" ref="scrollView">
@@ -15,15 +15,24 @@
         <div v-for="(message, index) in history.messages" :key="index">
           <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(message, index) }}</div>
-
           
-          <div class="message-phone-box"  @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 4">你已向对方发送交换联系方式</div>
           <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 2">你已同意对方索要联系方式</div>
           
           <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'interview' && message.payload.way_status == 1">已向对方发送面试邀请</div>
+         
+          <!-- boss 索要手机号 4 ↓ -->
+          <div class="message-phone-universal-card"  @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 4">
+            <h4 class="message-phone-universal-card-header">联系方式</h4>
+            <div class="message-phone-universal-card-content">
+              <span>您的手机号：{{ message.payload.real_phone }}</span>
+            </div>
+            <div class="message-phone-box">您已向对方发送交换联系方式</div>
+          </div>
+          <!-- boss 索要手机号 ↑ -->
+
           <!-- 个人 发送过来的手机号 ↓ -->
           <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 3">
-            <h4 class="message-phone-universal-card-header">手机号</h4>
+            <h4 class="message-phone-universal-card-header">联系方式</h4>
             <div class="message-phone-universal-card-content">
               <span>{{ message.payload.real_name }}的手机号：{{ message.payload.real_phone }}</span>
             </div>
@@ -31,7 +40,7 @@
           <!-- 个人 发送过来的手机号 ↑ -->
           <!-- 个人 索要手机号 ↓ -->
           <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 1">
-            <h4 class="message-phone-universal-card-header">手机号</h4>
+            <h4 class="message-phone-universal-card-header">联系方式</h4>
             <div class="message-phone-universal-card-content">
               <span>对方请求交换联系方式</span>
             </div>
@@ -43,15 +52,16 @@
 
 
 
+
           <div class="message-recalled" v-if="message.recalled">
             <div v-if="message.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
               <div>你撤回了一条消息</div>
-              <span v-if="message.type === 'text' && Date.now()-message.timestamp< 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
+              <span v-if="message.type === 'text' && Date.now()-message.timestamp< 3 * 60 * 1000 " @click="editRecalledMessage(message.payload.text)">重新编辑</span>
             </div>
           </div>
           <!-- 内容区域 开始 -->
-          <div class="message-item" v-if="message.type != 'phone' && !message.recalled">
+          <div class="message-item" v-if="message.type != 'phone' && !message.recalled && message.type != 'interview' ">
             <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
             </div> -->
@@ -204,6 +214,9 @@
         <div class="action-item" @click="actionPopup.visible = false">取消</div>
       </div>
     </div>
+    
+   
+
 
   </div>
 </template>
@@ -291,6 +304,7 @@
           visible: false,
           ids: []
         },
+        
       };
     },
     created() {
@@ -370,6 +384,10 @@
       // 点击 邀请面试
       clickYqms(n){
         // n == 1, 发送邀请面试
+        this.$bus.$emit('clickYqms');
+        return
+
+
         let userProfile = this.userProfile;
         let payload = {
           text: '邀请面试',
@@ -728,7 +746,7 @@
   };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .chat-container {
     width: 100%;
     height: 100%;
@@ -1507,4 +1525,5 @@
   }
 
   /* ============ 交换联系方式  ↑ ==================*/
+
 </style>

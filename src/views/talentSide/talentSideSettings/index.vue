@@ -215,7 +215,7 @@
     </div>
     <!-- 账号注销弹窗 -->
     <div class="accountVisible">
-      <accountCancellation  ref="accountCancellation"/>
+      <accountCancellation :id="basic_info.uid" ref="accountCancellation"/>
     </div>
   </div>
 
