@@ -489,6 +489,9 @@
         let userProfile = this.userProfile;
         if(this.userVipRank < 1){
           this.$message.error("需要升级为VIP会员可投递简历!");
+          setTimeout( () =>{
+            that.$router.push('/topUpBuy');
+          },1000)
           return
         }
         let payload = {

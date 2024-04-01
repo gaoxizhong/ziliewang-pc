@@ -237,6 +237,9 @@ export default {
         this.$message.error({
           message: '购买会员后才可操作！'
         })
+        setTimeout( () =>{
+          this.$router.push('/topUpBuy');
+        },1000)
         return
       }
       this.dialog_title = '新增员工';

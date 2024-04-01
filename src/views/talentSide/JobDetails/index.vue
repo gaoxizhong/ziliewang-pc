@@ -154,6 +154,9 @@ export default {
       let that = this;
       if(that.userVipRank < 1){
         this.$message.error("需要升级为VIP会员可投递简历!");
+        setTimeout( () =>{
+          that.$router.push('/topUpBuy');
+        },1000)
         return
       }
       let p = {
@@ -222,6 +225,9 @@ export default {
       let that = this;
       if(that.userVipRank < 1){
         this.$message.error("需要升级为VIP会员可获取对方电话!");
+        setTimeout( () =>{
+          that.$router.push('/topUpBuy');
+        },1000)
         return
       }
       this.$alert(i.company.phone, '电话', {

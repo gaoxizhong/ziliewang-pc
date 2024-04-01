@@ -203,6 +203,9 @@ export default {
     clickInfoVerifyBtn(n){
       if(this.userVipRank < 1){
         this.$message.error("需要升级为VIP会员可评论、回复!");
+        setTimeout( () =>{
+          this.$router.push('/topUpBuy');
+        },1000)
         return
       }
       let num = n; // 1 评论职圈； 2、回复评论
@@ -290,6 +293,9 @@ export default {
     clickRecover(item){
       if(this.userVipRank < 1){
         this.$message.error("需要升级为VIP会员可评论、回复!");
+        setTimeout( () =>{
+          this.$router.push('/topUpBuy');
+        },1000)
         return
       }
       console.log(item)

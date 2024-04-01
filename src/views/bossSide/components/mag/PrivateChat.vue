@@ -1,7 +1,7 @@
 <template>
   <div class="chat-container">
     <div class="chat-title">
-      <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar"/>
+      <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar" @click="clickAvatar"/>
       <div class="chat-name">{{ friend.name }}</div>
     </div>
     <div class="chat-main" ref="scrollView">
@@ -215,6 +215,9 @@
       </div>
     </div>
     
+
+    <!-- 预览在线简历 弹窗  -->
+    <onlineResume ref="onlineResume" :infoData="userData" :basic_info="basic_info" :is_type="is_type" />
    
 
 
@@ -225,6 +228,7 @@
   import {formatDate} from '../../../../utils/utils.js'
   import EmojiDecoder from '../../../../utils/EmojiDecoder';
   import GoeasyVideoPlayer from "../../../../components/GoEasyVideoPlayer";
+  import onlineResume from '../onlineResume.vue';
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
@@ -232,6 +236,7 @@
     name: 'PrivateChat',
     components: {
       GoeasyVideoPlayer,
+      onlineResume
     },
     props:{
       infoData:{
@@ -304,6 +309,10 @@
           visible: false,
           ids: []
         },
+
+        userData:{},
+        basic_info:{},
+        is_type:'',
         
       };
     },
@@ -719,6 +728,9 @@
 
       clickvipRank_0(){
         this.$message.error("需要升级为VIP会员才可发送文件!");
+        setTimeout( () =>{
+          this.$router.push('/topUpBuy');
+        },1000)
         return
       },
       // 获取个人信息
@@ -742,6 +754,23 @@
           }
         })
       },
+      // 点击头像查看简历
+      clickAvatar(){
+        let that = this;
+        that.$axios.post('/api/company/resume/detail',{
+          uid: that.friend.uid
+        }).then( res =>{
+          if(res.code == 0){
+            that.userData = res.data;
+            that.basic_info = res.data.basic_info;
+            that.$refs.onlineResume._data.zx_dialogVisible = true;
+          }else{
+            that.$message.error({
+              message:res.msg
+            })
+          }
+        })
+      }
     },
   };
 </script>

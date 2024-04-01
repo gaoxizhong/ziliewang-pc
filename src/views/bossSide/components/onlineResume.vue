@@ -231,6 +231,9 @@ export default {
         that.$message.error({
           message: '购买会员后才可打招呼！'
         })
+        setTimeout( () =>{
+          that.$router.push('/topUpBuy');
+        },1000)
         return
       }
       let p = {
@@ -258,6 +261,9 @@ export default {
         that.$message.error({
           message: '购买会员后才可打招呼！'
         })
+        setTimeout( () =>{
+          that.$router.push('/topUpBuy');
+        },1000)
         return
       }
       let infoData = {
