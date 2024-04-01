@@ -16,7 +16,7 @@
     <!-- 底部 结束  -->
 
     <!-- 聊天弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentLimitation="'true'" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
         <div class="VueDragResize-title-box">
           <div class="title">聊一聊</div>
@@ -211,7 +211,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
   // 聊天弹窗 样式=============== ↓ ===========
 
   .mian-box /deep/ .vdr{
-    z-index: 9999 !important;
+    z-index: 9997 !important;
     position: fixed;
     border-radius: 4px;
     box-shadow:0 0 16px 0 rgba(139,152,169,1);

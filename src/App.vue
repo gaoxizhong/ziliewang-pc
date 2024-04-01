@@ -15,4 +15,5 @@ export default {
  #app{
   min-height: 100%;
  }
+ 
 </style>

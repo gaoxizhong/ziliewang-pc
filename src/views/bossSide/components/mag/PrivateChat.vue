@@ -219,6 +219,47 @@
     <!-- 预览在线简历 弹窗  -->
     <onlineResume ref="onlineResume" :infoData="userData" :basic_info="basic_info" :is_type="is_type" />
    
+    
+    <div class="yqms-popup">
+      <el-dialog title="邀请面试" :visible.sync="yqmsVisible" width="500px">
+        <div class="cententinfo-box">
+          <div class="items-box">
+            <div class="title">面试职位：</div>
+            <el-select :popper-append-to-body="false" v-model="interviewData.requirement" placeholder="面试职位" @change="changeIndustry">
+              <el-option :label="item" :value="item" v-for="(item,index) in industryList" :key="index">{{ item }}</el-option>
+            </el-select>
+          </div>
+          <div class="items-box">
+            <div class="title">联系人：</div>
+            <el-input v-model="interviewData.name" placeholder="联系人"></el-input>
+          </div>
+          <div class="items-box">
+            <div class="title">联系电话：</div>
+            <el-input v-model="interviewData.phone" placeholder="联系电话"></el-input>
+          </div>
+          <div class="items-box">
+            <div class="title">面试时间：</div>
+           
+            <el-date-picker
+              v-model="interviewData.datetime"
+              type="datetime"
+              placeholder="选择日期时间">
+            </el-date-picker>
+          </div>
+          <div class="items-box">
+            <div class="title">面试地址：</div>
+            <el-input v-model="interviewData.address" placeholder="面试地址"></el-input>
+          </div>
+          <div class="items-box">
+            <div class="title">面试准备事项：</div>
+            <el-input type="textarea" :autosize="{ minRows: 5, maxRows: 12}" placeholder="请您准备好个人纸质简历，正装参加面试、女士淡妆，请准时到达" v-model="interviewData.remark"></el-input>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="clickInterviewInvitation">邀请面试</el-button>
+        </span>
+      </el-dialog>
+    </div>
 
 
   </div>
@@ -393,7 +434,8 @@
       // 点击 邀请面试
       clickYqms(n){
         // n == 1, 发送邀请面试
-        this.$bus.$emit('clickYqms');
+        // this.$bus.$emit('clickYqms');
+        this.yqmsVisible = true;
         return
 
 
@@ -1554,5 +1596,98 @@
   }
 
   /* ============ 交换联系方式  ↑ ==================*/
+  .yqms-popup {
+    /deep/ .el-dialog__wrapper{
+      z-index: 9999 !important;
+    }
+    /deep/ .el-dialog{
+      min-width: 420px;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-top: 0 !important;
+      .el-dialog__header{
+        text-align: left;
+        padding: 10px;
+        .el-dialog__title{
+          font-size: 15px;
+          color: $g_textColor;
+        }
+        .el-dialog__headerbtn{
+          top: 10px;
+        }
+      }
+      .el-dialog__body{
+        height: auto;
+        overflow: hidden;
+        padding: 20px 0;
+        margin: 0 20px;
+        border-top: 1px solid #F2F3F5;
+        .cententinfo-box{
+          width: 100%;
+          .items-box{
+            width: 100%;
+            display: flex;
+            margin-top: 10px;
+            &:nth-of-type(1){
+              margin-top: 0px;
+            }
+            .title{
+              width: 106px;
+              height: 24px;
+              font-size: 14px;
+              font-weight: 400;
+              color: $g_textColor;
+              line-height: 24px;
+              &>span{
+                color: #ff0000;
+                font-size: 14px;
+                font-weight: bold;
+              }
+            }
+            & .el-select{
+              position: relative;
+              flex: 1;
+              .el-select-dropdown{
+                top: 96px !important;
+                left: 96px !important;
+              }
+            }
+            & .el-input__inner{
+              height: 30px;
+              line-height: 30px;
+            }
+            & .el-input{
+              flex: 1;
+              height: 30px;
+              line-height: 30px;
+            }
+            & .el-input__icon{
+              height: 30px;
+              line-height: 30px;
+            }
+            & /deep/ .el-input.is-active .el-input__inner, & /deep/ .el-input__inner:focus{
+              border-color: $g_bg;
+            }
+            & .el-textarea{
+              flex: 1;
+              
+            }
+          }
 
+        }
+      }
+      .el-button{
+        padding: 0;
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+      }
+      .el-button--primary{
+        background-color: $g_color;
+        border-color: $g_color;
+      }
+
+    
+    }
+  }
 </style>
