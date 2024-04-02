@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="navbaerMag-content-box">
-          <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 60"  is_pop="is_pop" ref="chat" />
+          <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 50"  is_pop="is_pop" ref="chat" />
         </div>
       </div>
     </VueDragResize>
@@ -59,7 +59,7 @@ export default {
       height: 0,
       parentH: 0,
       parentW: 0,
-      top: 30,
+      top: 40,
       left: 500,
       zInfex_0: 99,
       is_VueDragResize: false,
@@ -110,9 +110,9 @@ export default {
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
-    this.width = 1000; // 可拖动div 高度
+    this.width = 840; // 可拖动div 高度
     this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
-    this.height = Number(getViewportSize.height - 140); // 可拖动div 高度
+    this.height = Number(getViewportSize.height - 60); // 可拖动div 高度
     this.currentUser = {
       id: localStorage.getItem('realUid'),
       name: this.$store.state.user.staffName,
@@ -193,8 +193,8 @@ export default {
           this.is_VueDragResize = true;
         });
       }
-      this.zInfex_0 = 99;
-      this.top = 56;
+      // this.zInfex_0 = 99;
+      // this.top = 56;
     },
     // 拖拽时可以确定元素位置
     resize(newRect) {
@@ -298,7 +298,6 @@ export default {
     width: 100%;
     height: 100%;
     background: #fff;
-    padding: 10px 0;
     border-radius: 6px;
     display: flex;
     flex-direction: column;

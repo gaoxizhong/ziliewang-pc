@@ -100,7 +100,7 @@ export default {
   color: #333333;
 }
 .conversation-list {
-  width: 300px;
+  width: 260px;
 }
 
 .conversation-list-container {
