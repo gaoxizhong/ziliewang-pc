@@ -168,7 +168,7 @@ export default {
     // 点击消息
     clickMessage(){
       this.navbar_mag = true;
-      this.$bus.$emit('receiveParams', {type:'navbarMag',laiyuan:'is_nav',infoData:{} });
+      this.$bus.$emit('receiveParams', {type:'navbarMag',laiyuan:'nav',infoData:{} });
     },
     // 拖拽时可以确定元素位置
     resize(newRect) {

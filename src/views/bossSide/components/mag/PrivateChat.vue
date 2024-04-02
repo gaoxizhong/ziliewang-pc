@@ -18,7 +18,6 @@
           
           <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 2">你已同意对方索要联系方式</div>
           
-          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'interview' && message.payload.way_status == 1">已向对方发送面试邀请</div>
          
           <!-- boss 索要手机号 4 ↓ -->
           <div class="message-phone-universal-card"  @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 4">
@@ -61,7 +60,7 @@
             </div>
           </div>
           <!-- 内容区域 开始 -->
-          <div class="message-item" v-if="message.type != 'phone' && !message.recalled && message.type != 'interview' ">
+          <div class="message-item" v-if="message.type != 'phone' && !message.recalled ">
             <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && message.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="message.messageId" v-model="messageSelector.ids" @click="selectMessages">
             </div> -->
@@ -96,7 +95,16 @@
                     <img :src="message.payload.url" :style="{height:getImageHeight(message.payload.width,message.payload.height)+'px'}"/>
                   </div>
                   <!-- 图片 结束 -->
-
+                  <!-- 发送的面试邀请 开始 -->
+                  <div v-if="message.type === 'interview'" class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)">
+                    <h4 class="message-phone-universal-card-header">发送面试邀请</h4>
+                    <div class="message-phone-universal-card-content">
+                      <div><span>面试岗位：</span><span>{{message.payload.position_name?message.payload.position_name:''}}</span></div>
+                      <div><span>面试时间：</span><span>{{message.payload.interview_time?message.payload.interview_time:''}}</span></div>
+                    </div>
+                    <div class="message-phone-box">已向对方发送面试邀请</div>
+                  </div>
+                  <!-- 发送的面试邀请 结束 -->
                   <!-- 同意面试邀请 开始 -->
                   <div v-if="message.type === 'interview' &&  message.payload.way_status == 2" class="content-interview">
                     <span>接受了面试邀请</span>
@@ -116,6 +124,8 @@
                   <!-- 视频 开始 -->
                   <goeasy-video-player v-if="message.type === 'video'" :thumbnail="message.payload.thumbnail" :src="message.payload.video.url" />
                   <!-- 视频 结束 -->
+                  
+
                 </div>
                 <div v-if="currentUser.id === message.senderId" :class="message.read ?'message-read':'message-unread'">
                   <div v-if="message.senderId === currentUser.id">{{ message.read ? '已读' : '未读' }}</div>
@@ -219,19 +229,19 @@
     <!-- 预览在线简历 弹窗  -->
     <onlineResume ref="onlineResume" :infoData="userData" :basic_info="basic_info" :is_type="is_type" />
    
-    
+    <!-- 邀请面试信息弹窗 -->
     <div class="yqms-popup">
       <el-dialog title="邀请面试" :visible.sync="yqmsVisible" width="500px">
         <div class="cententinfo-box">
           <div class="items-box">
             <div class="title">面试职位：</div>
-            <el-select :popper-append-to-body="false" v-model="interviewData.requirement" placeholder="面试职位" @change="changeIndustry">
-              <el-option :label="item" :value="item" v-for="(item,index) in industryList" :key="index">{{ item }}</el-option>
+            <el-select :popper-append-to-body="false" v-model="interviewData.position" placeholder="面试职位" @change="changeIndustry">
+              <el-option :label="item.position_name" :value="item" v-for="(item,index) in positionList" :key="index">{{ item.position_name }}</el-option>
             </el-select>
           </div>
           <div class="items-box">
             <div class="title">联系人：</div>
-            <el-input v-model="interviewData.name" placeholder="联系人"></el-input>
+            <el-input v-model="interviewData.staff" placeholder="联系人"></el-input>
           </div>
           <div class="items-box">
             <div class="title">联系电话：</div>
@@ -241,14 +251,15 @@
             <div class="title">面试时间：</div>
            
             <el-date-picker
-              v-model="interviewData.datetime"
+              v-model="interviewData.interview_time"
               type="datetime"
+               value-format="yyyy-MM-dd HH:mm"
               placeholder="选择日期时间">
             </el-date-picker>
           </div>
           <div class="items-box">
             <div class="title">面试地址：</div>
-            <el-input v-model="interviewData.address" placeholder="面试地址"></el-input>
+            <el-input v-model="interviewData.interview_address" placeholder="面试地址"></el-input>
           </div>
           <div class="items-box">
             <div class="title">面试准备事项：</div>
@@ -354,7 +365,11 @@
         userData:{},
         basic_info:{},
         is_type:'',
-        
+        yqmsVisible: false,
+      interviewData: {
+        time:''
+      }, // 邀请面试信息
+      positionList:[]
       };
     },
     created() {
@@ -375,12 +390,17 @@
       this.loadHistoryMessage(true);
       // 获取个人信息
       this.getUserProfile();
+      // 获取职位
+      this.getPositionList();
       this.goEasy.im.on(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     beforeDestroy() {
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     methods: {
+      changeIndustry(e){
+        console.log(e)
+      },
       formatDate,
       onReceivedPrivateMessage(message) {
         if (message.senderId === this.friend.uid) {
@@ -437,28 +457,8 @@
         // this.$bus.$emit('clickYqms');
         this.yqmsVisible = true;
         return
-
-
-        let userProfile = this.userProfile;
-        let payload = {
-          text: '邀请面试',
-          name: userProfile.staff_name,
-          way_status: n,  // 1. 向对方 发送邀请面试请求,2.用户同意面试邀请，
-        }
-        this.goEasy.im.createCustomMessage({
-          type: 'interview',  //字符串，可以任意自定义类型 interview 邀请面试
-          text: '邀请面试',
-          payload,
-          to: this.to,
-          onSuccess: (message) => {
-            this.sendMessage(message);
-          },
-          onFailed: (err) => {
-            console.log("创建消息err:", err);
-          }
-        });
       },
-      // 点击 交换联系方式
+      // 点击 交换联系方式 --- 发送自定义消息
       clickPhoneBtn(n){
         let userProfile = this.userProfile;
         let payload = {
@@ -775,6 +775,19 @@
         },1000)
         return
       },
+      // 获取职位
+      getPositionList(){
+        let that = this;
+        that.$axios.post('/api/company-interview/recruit/position/list',{
+          company_id: localStorage.getItem('company_id')
+        }).then(res =>{
+          if(res.code == 0){
+            this.positionList = res.data;
+          }
+        }).catch(e =>{
+          console.log(e)
+        })
+      },
       // 获取个人信息
       getUserProfile(){
         let that = this;
@@ -812,7 +825,63 @@
             })
           }
         })
-      }
+      },
+       // 点击面试邀请
+      clickInterviewInvitation(){
+        let that = this;
+        let interviewData = that.interviewData;
+        if(!interviewData.position || !interviewData.interview_time || !interviewData.staff || !interviewData.phone || !interviewData.interview_address){
+          that.$message.error({
+            message: '请先添加面试邀请信息！'
+          })
+          return
+        }
+        let p = {
+          company_id: localStorage.getItem('company_id') || '',
+          uid: that.friend.uid,
+          position_id: interviewData.position.id, // 面试职位id
+          interview_time: interviewData.interview_time, // 面试时间
+          staff: interviewData.staff, // 企业联系人
+          phone: interviewData.phone, // 手机号
+          interview_address: interviewData.interview_address, //地址
+          remark: interviewData.remark, // 备注
+        }
+        
+        that.$axios.post('/api/company-interview/create',p).then( res =>{
+          if(res.code == 0){
+            let userProfile = that.userProfile;
+            let payload = {
+              text: '邀请面试',
+              company_id: p.company_id,
+              position_id: p.position_id,
+              interview_time: p.interview_time,// 面试时间
+              interview_address: p.interview_address, //地址
+              remark: p.remark, // 备注
+              staff: p.staff, // 企业联系人
+              position_name:that.interviewData.position.position_name,
+              name: userProfile.staff_name,
+              way_status: 1,  // 1. 向对方 发送邀请面试请求,2.用户同意面试邀请
+            }
+            that.goEasy.im.createCustomMessage({
+              type: 'interview',  //字符串，可以任意自定义类型 面试邀请方式
+              text: '邀请面试',
+              payload,
+              to: that.to,
+              onSuccess: (message) => {
+                that.sendMessage(message);
+              },
+              onFailed: (err) => {
+                console.log("创建消息err:", err);
+              }
+            });
+            that.yqms_dialogVisible = false;
+          }else{
+            that.$message.error({
+              message:res.msg
+            })
+          }
+        })
+      },
     },
   };
 </script>
@@ -1553,7 +1622,7 @@
     padding: 10px;
   }
   .message-phone-universal-card{
-    max-width: 260px;
+    width: 260px;
     margin: 10px auto;
     background: #fff;
     border: 1px solid rgba(202,208,217,.7);

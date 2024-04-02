@@ -1,5 +1,5 @@
 <template>
-  <div class="conversations">
+  <div class="conversations" :style="`width: ${laiyuan == 'nav'? width + 'px':'100%'};height:${laiyuan == 'nav'? height + 'px':'100%'};`">
     <div class="conversation-list">
       <div class="conversation-list-container">
         <div class="conversation-list-content">
@@ -39,10 +39,22 @@ export default {
         return ''
       }
     },
+    width:{
+      type: Number,
+      default() {
+        return 1000
+      }
+    },
+    height:{
+      type: Number,
+      default() {
+        return 500
+      }
+    },
     laiyuan:{
       type: String,
       default() {
-        return 'is_nav'
+        return ''
       }
     },
   },
@@ -55,10 +67,11 @@ export default {
     };
   },
   created() {
-    if(this.laiyuan == 'is_nav'){
+    if(this.laiyuan == 'nav'){
       // 点击头部导航消息按钮
     }else{
-      if(this.infoData){
+      console.log(JSON.stringify(this.infoData))
+      if(JSON.stringify(this.infoData) != '{}'){
         this.chatLocation (JSON.stringify(this.infoData))
       }
     }
@@ -82,7 +95,6 @@ export default {
 <style scoped>
 .conversations {
   width: 100%;
-  height: calc(100vh - 120px);
   position: relative;
   display: flex;
   color: #333333;

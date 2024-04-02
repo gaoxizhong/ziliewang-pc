@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="navbaerMag-content-box">
-          <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" is_pop="is_pop" ref="chat" />
+          <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 60"  is_pop="is_pop" ref="chat" />
         </div>
       </div>
     </VueDragResize>
@@ -59,19 +59,15 @@ export default {
       height: 0,
       parentH: 0,
       parentW: 0,
-      top: 56,
+      top: 30,
       left: 500,
       zInfex_0: 99,
       is_VueDragResize: false,
       title_show: '',
-      laiyuan:'',
+      laiyuan:'is_nav',
       is_pop:'pop',
       infoData: {},
-      yqmsVisible: false,
-      interviewData: {
-        time:''
-      }, // 邀请面试信息
-      industryList:['web前端','后端','UI设计师','项目经理']
+      
     }
   },
   mixins: [ResizeMixin],
@@ -115,8 +111,8 @@ export default {
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
     this.width = 1000; // 可拖动div 高度
-    this.left = Number(getViewportSize.width) - Number(this.width) - 140;
-    this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
+    this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
+    this.height = Number(getViewportSize.height - 140); // 可拖动div 高度
     this.currentUser = {
       id: localStorage.getItem('realUid'),
       name: this.$store.state.user.staffName,
@@ -141,9 +137,7 @@ export default {
     });
   },
   methods: {
-    changeIndustry(e){
-      console.log(e)
-    },
+   
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     },
@@ -186,7 +180,7 @@ export default {
     receiveParams(params){
       console.log(params)
         // '接收到的参数:' params
-        this.laiyuan = params.laiyuan?params.lanyuan:'';
+        this.laiyuan = params.laiyuan?params.laiyuan:'';
       if(params.type){
         this.title_show = params.type //searchTalent 是搜索人才页
       }
@@ -228,70 +222,8 @@ export default {
       console.log('yqmsVisible')
       this.yqmsVisible = true;
     },
-    // 点击发送面试邀请
-    submitForm(){
-      let that = this;
-      let selt_info = that.selt_info;
-      let p = {
-        status: 2, //1.待查看2.发送邀请 3.不合适 4.已参加 5已超时
-        uid: selt_info.uid, // 用户 
-        id: selt_info.company_interview_id, // 面试信息id 
-        company_id: selt_info.company_id, // 企业id
-        position_id: selt_info.position_id,  // 岗位信息id
-        system_msg_id: selt_info.id,  // 消息id
-        type_id:  selt_info.type_id,
-        type: that.ruleForm.type,
-        begin_time: that.ruleForm.begin_time,
-        end_time: that.ruleForm.end_time,
-        staff: that.ruleForm.staff,
-        phone: that.ruleForm.phone,
-        remark: that.ruleForm.remark
-      }
-      console.log(p)
-      that.$axios.post('/api/company-interview/edit',p).then( res =>{
-        if(res.code == 0){
-          that.$message.success({
-            message:'发送面试邀请成功'
-          })
-          this.yqms_dialogVisible = false;
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
-    },
-    // 点击面试邀请
-    clickInterviewInvitation(){
-      let that = this;
-      let p = {
-        status: 2, //1.待查看2.发送邀请 3.不合适 4.已参加 5已超时
-        uid: selt_info.uid, // 用户 
-        id: selt_info.company_interview_id, // 面试信息id 
-        company_id: selt_info.company_id, // 企业id
-        position_id: selt_info.position_id,  // 岗位信息id
-        system_msg_id: selt_info.id,  // 消息id
-        type_id:  selt_info.type_id,
-        type: that.ruleForm.type,
-        begin_time: that.ruleForm.begin_time,
-        end_time: that.ruleForm.end_time,
-        staff: that.ruleForm.staff,
-        phone: that.ruleForm.phone,
-        remark: that.ruleForm.remark
-      }
-      that.$axios.post('/api/company-interview/edit',p).then( res =>{
-        if(res.code == 0){
-          that.$message.success({
-            message:'发送面试邀请成功'
-          })
-          this.yqms_dialogVisible = false;
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
-    },
+   
+   
 
   }
 }
@@ -385,7 +317,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       font-size: 14px;
-      height: auto;
+      height: 40px;
       padding: 10px;
       cursor: move;
       .title{
@@ -402,12 +334,9 @@ export default {
         }
       }
     }
-    .Chat-box{
+    .navbaerMag-content-box{
       flex: 1;
-      height: calc(100% - 60px);
-      padding-top: 10px;
     }
-
   }
 
   

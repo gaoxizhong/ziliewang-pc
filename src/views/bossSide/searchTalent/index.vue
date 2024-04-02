@@ -238,7 +238,7 @@ export default {
       }
       console.log(infoData)
       that.zx_dialogVisible = false;
-      that.$bus.$emit('receiveParams', {type:'searchTalent',infoData });
+      that.$bus.$emit('receiveParams', {type:'searchTalent',laiyuan:'nav',infoData });
       return
       let p = {
         uid: i.uid|| i.basic_info.uid,

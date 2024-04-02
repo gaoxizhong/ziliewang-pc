@@ -53,7 +53,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="users.real_name" label="投递人"></el-table-column>
-        <el-table-column prop="begin_time_text" label="开始时间"></el-table-column>
+        <el-table-column prop="interview_time" label="开始时间"></el-table-column>
         <el-table-column prop="end_time_text" label="结束时间"></el-table-column>
         <el-table-column prop="d" label="面试方式">
           <template slot-scope="scope">
@@ -110,7 +110,7 @@
             <div class="box-items">
               <div class="items items-l">
                 <div class="items-label">面试时间：</div>
-                <div class="items-text">{{infoData?infoData.begin_time_text:''}} 至 {{infoData?infoData.end_time_text:''}}</div>
+                <div class="items-text">{{infoData?infoData.interview_time:''}}</div>
               </div>
             </div>
 

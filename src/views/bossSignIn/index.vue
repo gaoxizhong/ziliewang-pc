@@ -338,6 +338,7 @@ export default {
           localStorage.setItem('tag', 'company'); // 用户身份 user、人才端 company、企业端缓存
           localStorage.setItem('realUid', data.user.id); // 用户uid缓存
           localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
+          localStorage.setItem('company_id', data.user.company_id); // 企业id缓存
           setTimeout(() => {
             this.$router.push('/dashboard');
           }, 500);

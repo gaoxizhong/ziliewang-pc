@@ -96,7 +96,8 @@
                   <div v-if="item.type === 'interview' &&  item.payload.way_status == 1">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-universal-card-content">
-                      <span>对方发起了面试邀请</span>
+                      <div><span>面试岗位：</span><span>{{message.payload.position_name?message.payload.position_name:''}}</span></div>
+                      <div><span>面试时间：</span><span>{{message.payload.interview_time?message.payload.interview_time:''}}</span></div>
                     </div>
                     <div class="message-phone-universal-card-footer">
                       <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickYqms(2)">同意</div>
@@ -107,10 +108,12 @@
                   <div v-if="item.type === 'interview' &&  item.payload.way_status == 2">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-universal-card-content">
-                      <span style="color: #ff0000;">同意了面试邀请</span>
+                      <div><span>面试岗位：</span><span>{{message.payload.position_name?message.payload.position_name:''}}</span></div>
+                      <div><span>面试时间：</span><span>{{message.payload.interview_time?message.payload.interview_time:''}}</span></div>
                     </div>
                     <div class="message-phone-universal-card-footer">
                       <!-- <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn">同意</div> -->
+                      <span style="color: #ff0000;">同意了面试邀请</span>
                     </div>
                   </div>
                   <!-- 同意面试邀请 结束 -->
@@ -1587,7 +1590,7 @@
     padding: 10px;
   }
   .message-phone-universal-card{
-    max-width: 260px;
+    width: 260px;
     margin: 10px auto;
     background: #fff;
     border: 1px solid rgba(202,208,217,.7);

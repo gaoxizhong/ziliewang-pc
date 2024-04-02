@@ -143,7 +143,7 @@
       },
       renderConversations(content) {
         this.conversations = content.conversations; /// 会话列表
-        if(this.laiyuan == 'is_nav'){
+        if(this.laiyuan == 'nav'){
           this.chatLocation(content.conversations[0])
         }
       },
