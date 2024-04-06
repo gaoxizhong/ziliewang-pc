@@ -5,8 +5,8 @@
 const variables = {
   view_width: '100%',
   view_max_width: '1200px',
-  g_color: '#3377FF',
-  g_bg: '#3377FF',
+  g_color: '#1ec5d8',
+  g_bg: '#1ec5d8',
   g_textColor:'#1F2E4D',
   color_333:'#333',
   size_16:'16px',

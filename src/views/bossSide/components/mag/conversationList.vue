@@ -1,8 +1,10 @@
 <template>
   <div class="mag-box">
     <div v-if="conversations.length">
-      <div class="contact-list-title" v-if="title_show != 'navbarMag'">聊天记录</div>
-      <div v-for="(item, key) in conversations" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == item.userId}">
+      <div class="contact-searchQuery-box">
+        <el-input type="text" prefix-icon="el-icon-search" clearable v-model="searchQuery" placeholder="搜索名称" @input="searchQuery_input"></el-input>
+      </div>
+      <div v-for="(item, key) in filteredList" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == item.userId}">
         <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
           <div class="avatar">
             <img :src="item.data.avatar?item.data.avatar:require('../../../../assets/image/img-user.jpg')"/>
@@ -91,6 +93,7 @@
     },
     data() {
       return {
+        searchQuery:'',
         currentUser: {},
         conversations: [], // 会话列表
         // Conversation右键菜单
@@ -105,6 +108,14 @@
           friend: null,
         },
       };
+    },
+    computed: {
+      // filteredList 是一个计算属性，它根据 searchQuery 的值动态过滤 itemList。每次 searchQuery 更新时，filteredList 都会重新计算，以显示与搜索词匹配的项目列表。
+      filteredList() {
+        return this.conversations.filter(item => {
+          return item.data.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+        });
+      }
     },
     created() {
       this.profile.friend = this.infoData; // 好友信息
@@ -125,6 +136,9 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
     },
     methods: {
+      searchQuery_input(e){
+        console.log(e)
+      },
       formatDate,
       loadConversations() {
         this.goEasy.im.latestConversations({
@@ -201,6 +215,19 @@
 
   .mag-box{
     width: 100%;
+  }
+  .contact-searchQuery-box{
+    padding-bottom: 10px;
+  }
+  .contact-searchQuery-box /deep/ .el-input__inner{
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+  }
+  .contact-searchQuery-box /deep/ .el-input__icon{
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
   }
   .no-conversation {
     text-align: center;

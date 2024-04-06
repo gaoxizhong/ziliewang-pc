@@ -38,7 +38,18 @@
           <div class="mb20 redact-item">
             <div class="item-label">学校名称</div>
             <div class="item-content">
-              <el-input v-model="infoData.school" placeholder="学校名称"></el-input>
+              <el-input v-model="dialogVisible_seach" placeholder="学校名称" clearable prefix-icon="el-icon-search" @input="schoolSearchInput"></el-input>
+              <!-- 弹窗 开始 -->
+              <div class="searchList-box" v-if="searchList_info">
+                <div class="suggest-list">
+                  <ul>
+                    <li v-for="(item,index) in schoolSearchList" :key="index" @click="clickSearchItem(item)">
+                      <p class="list-title">{{ item }}</p> 
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- 弹窗 结束 -->
             </div>
           </div>
 
@@ -107,6 +118,8 @@
       </div>
       <!-- 编辑状态模块 结束 -->
     </div>
+
+    <div class="pop-box" @click="clickPopBox" v-if="searchList_info"></div>
   </div>
 
 </template>
@@ -138,7 +151,10 @@ export default {
       education_backgroundList: ['博士','硕士','本科','大专','中专/中技','高中','初中及以下'], //学历
       list_id: '', // 选中的列表id
      
-      startDate:''
+      startDate:'',
+      searchList_info: false,
+      schoolSearchList: [], // 搜索匹配的学校
+      dialogVisible_seach:'',
     }
   },
   mounted(){
@@ -157,6 +173,29 @@ export default {
     }
   },
   methods: {
+    // 点击蒙层
+    clickPopBox(){
+      this.searchList_info = false;
+      this.schoolSearchList = [];
+    },
+    // 点击学校input框搜索列表
+    clickSearchItem(n){
+      this.infoData.school = n;
+      this.dialogVisible_seach = n;
+      this.searchList_info = false;
+    },
+    // 搜索框事件
+    schoolSearchInput(){
+      let that = this;
+      that.$axios.post('/api/education-experience/tip',{
+        input: that.dialogVisible_seach
+      }).then( res =>{
+        if(res.code == 0){
+          that.schoolSearchList = res.data;
+          that.searchList_info = true;
+        }
+      })
+    },
     begin_date_change(e){
       this.startDate = new Date(e);
       this.infoData.end_date = '';
@@ -258,4 +297,54 @@ export default {
 
 <style lang="scss" scoped>
   @import '../../../../styles/myResume.scss';
+  .item-content{
+    position: relative;
+    .searchList-box{
+      position: absolute;
+      top: 44px;
+      left: 0;
+      padding: 10px;
+      background: #fff;
+      box-shadow: 0 0 10px 0 #b2bdca;
+      border-radius: 8px;
+      width: 380px;
+      line-height: 24px;
+      z-index: 99;
+      .suggest-list {
+        position: relative;
+        max-height: 260px;
+        overflow: auto;
+        ul {
+          margin: 0;
+          padding: 6px 0;
+          li {
+            position: relative;
+            padding: 10px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            &:hover{
+              background-color: #f1f2f3;
+            }
+            p {
+              margin-bottom: 0;
+            }
+            p.list-title {
+              color: #222;
+              font-size: 14px;
+              line-height: 20px;
+            }
+          }
+        }
+      }
+    }
+
+  }
+  .pop-box{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 98;
+  }
 </style>

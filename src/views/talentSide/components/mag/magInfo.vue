@@ -20,7 +20,6 @@
       <div class="home-main">
         <buddyChart v-if="menu_type == 'conversations'"/>
         <contacts v-if="menu_type == 'contacts'" :msgList="msgList"/>
-        
       </div>
     </div>
   </div>
@@ -56,16 +55,32 @@ export default {
   mounted(){
     this.getSysMsgList();
   },
+  watch: {
+    $route() {
+      this.setCurrentRoute();
+    },
+    '$store.state.realAvatar'(newVal){
+      this.avatar = newVal;
+      this.$forceUpdate();// 更新数据
+    },
+    '$store.state.name'(newVal){
+        this.name = newVal;
+        this.$forceUpdate();// 更新数据
+    },
+  },
   created(){
     this.currentUser = {
       id: localStorage.getItem('realUid'),
-      name: localStorage.getItem('name'),
-      avatar: localStorage.getItem('realAvatar'),
+      name: this.$store.state.user.name,
+      avatar: this.$store.state.user.realAvatar
     }
    
     this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
   },
   methods:{
+    setCurrentRoute(e){
+     
+    },
     // 获取消息数量
     setUnreadNumber(content) {
       console.log(content)

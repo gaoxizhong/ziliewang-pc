@@ -16,19 +16,19 @@
     <!-- 底部 结束  -->
 
     <!-- 聊天弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentLimitation="'true'" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentLimitation="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
         <div class="VueDragResize-title-box">
           <div class="title">聊一聊</div>
           <div class="icon-box">
-            <span class="gt-span" @click="clickMessage">跳至沟通</span>
+            <!-- <span class="gt-span" @click="clickMessage">跳至沟通</span> -->
             <!-- <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
             <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
           </div>
         </div>
         <div class="Chat-box">
-          <!-- <Chat :is_type="is_type" :company_id="company_id" ref="chat" /> -->
-          <PrivateChat :infoData="infoData" :is_pop="is_pop" ref="chat" />
+          <!-- <PrivateChat :infoData="infoData" :is_pop="is_pop" ref="chat" /> -->
+          <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 50"  is_pop="is_pop" ref="chat" />
         </div>
       </div>
     </VueDragResize>
@@ -43,7 +43,7 @@ import Navbar from './components/Navbar';
 import Footer from '../../components/footer';
 import VueDragResize from 'vue-drag-resize';
 import Sidebar from './components/sidebar';
-import PrivateChat from './components/mag/PrivateChat.vue';
+import buddyChart from './components/mag/buddyChart.vue';
 
   export default {
     provide(){ 
@@ -58,7 +58,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
       Footer,
       VueDragResize,
       Sidebar,
-      PrivateChat,
+      buddyChart,
     },
     data(){
       return {
@@ -67,11 +67,12 @@ import PrivateChat from './components/mag/PrivateChat.vue';
         height: 0,
         parentH: 0,
         parentW: 0,
-        top: 56,
+        top: 40,
         left: 500,
-        zInfex_0: 999,
+        zInfex_0: 99,
         is_VueDragResize: false,
-        is_type: '',
+        title_show: '',
+        laiyuan:'',
         is_pop:'pop',
         infoData: {},
       }
@@ -79,27 +80,35 @@ import PrivateChat from './components/mag/PrivateChat.vue';
     watch: {
       $route() {
         this.setCurrentRoute();
-      }
+      },
+      '$store.state.realAvatar'(newVal){
+        this.avatar = newVal;
+        this.$forceUpdate();// 更新数据
+      },
+      '$store.state.name'(newVal){
+          this.name = newVal;
+          this.$forceUpdate();// 更新数据
+      },
     },
     beforeCreate(){
       console.log('beforeCreate')
     },
     mounted(){
       // 组件间通信
-      this.$bus.$on('talentSide_receiveParams', this.receiveParams);
+      this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
     },
     created(){
       let that = this;
       let getViewportSize = this.$getViewportSize();
       this.parentH = getViewportSize.height; // 组件范围
       this.parentW = getViewportSize.width; // 组件范围 
-      this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
-      this.width = Number(getViewportSize.width * 0.5) > 380 ? 380 : Number(getViewportSize.width * 0.5); // 可拖动div 高度
-      this.left = Number(getViewportSize.width) - Number(this.width) - 480;
+      this.width = 840; // 可拖动div 高度
+      this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
+      this.height = Number(getViewportSize.height - 60); // 可拖动div 高度
       this.currentUser = {
         id: localStorage.getItem('realUid'),
-        name: localStorage.getItem('name'),
-        avatar: localStorage.getItem('realAvatar'),
+        name: this.$store.state.user.name,
+        avatar: this.$store.state.user.realAvatar
       }
       //连接goeasy
       if (this.goEasy.getConnectionStatus() === 'disconnected') {
@@ -135,23 +144,24 @@ import PrivateChat from './components/mag/PrivateChat.vue';
         });
       },
      
-      receiveParams(params){
+      talentSide_receiveParams(params){
         console.log(params)
-          // '接收到的参数:' params
+        // '接收到的参数:' params
+        this.laiyuan = params.laiyuan?params.laiyuan:'';
         if(params.type){
-          this.is_type = params.type //JobDetails 是详情页
+          this.title_show = params.type //JobDetails 是详情页  navbarMag 是导航
         }
         if(params.is_clickMinificationpngBtn){  // 表示点击的 右侧浮动按钮
           this.is_clickMinificationpngBtn = false;
         }else{
-          this.infoData = JSON.parse(params.infoData);
+          this.infoData = params.infoData;
           this.is_VueDragResize = false;
           this.$nextTick(function () {
             this.is_VueDragResize = true;
           });
         }
-        this.zInfex_0 = 99;
-        this.top = 56;
+        // this.zInfex_0 = 99;
+        // this.top = 56;
       },
       //监听到当前路由状态并激活当前菜单
       setCurrentRoute() {
@@ -184,7 +194,7 @@ import PrivateChat from './components/mag/PrivateChat.vue';
       },
         // 点击消息
     clickMessage(){
-      this.$bus.$emit('clickMessage',{ navbar_mag:true } );
+     
     },
   },
 

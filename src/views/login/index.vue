@@ -2,10 +2,11 @@
   <div class="login-container">
     <div class="login-header-box">
       <div class="header-nav-box">
-        <img src="../../assets/image/log-2.png" alt="" class="logo"/>
+        <img src="../../assets/image/06.svg" alt="" class="logo"/>
       </div>
     </div>
-    <div class="home-container" :style="login_bgurl_1">
+    <!-- <div class="home-container" :style="login_bgurl_1"> -->
+    <div class="home-container">
       <div class="home-container-div">
         <div class="form-container-box">
           <!-- 登录模块 开始 -->
@@ -354,7 +355,7 @@ export default {
            that.clickCompanyItems( that.companyList[0] );
           }
           // 企业端
-          // localStorage.setItem('realUid', data.user.id); // 用户uid缓存
+          // localStorage.setItem('staffUid', data.user.id); // 用户uid缓存
           // localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
           // setTimeout(() => {
           //   this.$router.push('/dashboard');
@@ -374,7 +375,7 @@ export default {
       }).then( res =>{
         let data = res.data;
         setToken(data.token);   // 缓存
-        localStorage.setItem('realUid', data.user.id); // 用户uid缓存
+        localStorage.setItem('staffUid', data.user.id); // 用户uid缓存
         localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
         localStorage.setItem('company_id', data.user.company_id); // 企业id缓存
         setTimeout(() => {
@@ -672,7 +673,7 @@ $cursor: #000;
     justify-content: space-between;
     padding: 0 50px 0 20px;
     .logo{
-      height: 36px;
+      width: 190px;
     }
   }
 }
@@ -680,6 +681,7 @@ $cursor: #000;
   width: 100%;
   height: calc(100vh - 50px);
   position: relative;
+  background: #1ec5d8;
 }
 .home-container-div{
   width: $view_width;

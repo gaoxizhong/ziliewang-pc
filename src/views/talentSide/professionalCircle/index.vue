@@ -407,11 +407,11 @@ export default {
   }
   .container-title-box{
     width: 100%;
-    height: 50px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
+    font-size: 14px;
     background: #FFFFFF;
     /deep/ .el-tabs{
         height: 100%;
@@ -420,7 +420,7 @@ export default {
           margin: 0;
           .el-tabs__nav-wrap{
             height: 100%;
-            line-height: 50px;
+            line-height: 40px;
             &::after{
               height: 0;
             }

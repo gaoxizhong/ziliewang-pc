@@ -54,30 +54,17 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import VueDragResize from 'vue-drag-resize';
-
-import buddyChart from '../../views/bossSide/components/mag/buddyChart.vue';
 import { setToken } from '@/utils/auth';
-
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    VueDragResize,
-    buddyChart
   },
   data(){
     return {
-      navbar_mag: false,
       width: 0,
       height: 0,
-      parentH: 0,
-      parentW: 0,
-      top: 56,
-      left: 500,
-      zInfex_0: 99,
       unreadAmount: null,
-      title_show: 'navbarMag'
     }
   },
   computed: {
@@ -106,27 +93,9 @@ export default {
   },
   created(){
     let getViewportSize = this.$getViewportSize();
-    this.parentH = getViewportSize.height; // 组件范围
-    this.parentW = getViewportSize.width; // 组件范围
-    this.width = 1000; // 可拖动div 高度
-    this.left = Number(getViewportSize.width) - Number(this.width) - 140;
-    this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
-
     this.listenConversationUpdate();// 监听会话列表变化
-    this.loadConversations(); //加载会话列表
   },
   methods: {
-    loadConversations() {
-      this.goEasy.im.latestConversations({
-        onSuccess: (result) => {
-          let content = result.content;
-          this.setUnreadNumber(content);
-        },
-        onFailed: (error) => {
-          console.log('获取失败, code:' + error.code + 'content:' + error.content);
-        },
-      });
-    },
     listenConversationUpdate() {
       this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
     },
@@ -167,7 +136,6 @@ export default {
     },
     // 点击消息
     clickMessage(){
-      this.navbar_mag = true;
       this.$bus.$emit('receiveParams', {type:'navbarMag',laiyuan:'nav',infoData:{} });
     },
     // 拖拽时可以确定元素位置
@@ -176,14 +144,6 @@ export default {
       this.height = newRect.height;
       this.top = newRect.top;
       this.left = newRect.left;
-    },
-    // 点击关闭
-    clickCloseBtn(){
-      this.navbar_mag = false;
-    },
-    // 接收组件方法通讯
-    chatLocation(e){
-      this.$bus.$emit('receiveParams', {type:'searchTalent',infoData:e });
     },
   }
 }
@@ -297,43 +257,6 @@ export default {
         }
       }
     }
-  }
-}
-
-// 消息弹窗
-.navbaerMag-box{
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  padding: 10px;
-  padding-top: 0;
-  padding-right: 12px;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  box-shadow:0 0 16px 0 rgba(139,152,169,.4);
-  .navbaerMag-title-box{
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    text-align: center;
-    font-size: 15px;
-    position: relative;
-    cursor: move;
-    &>span{
-      color: $g_textColor;
-    }
-    &>img{
-      position: absolute;
-      top: 10px;
-      right: 8px;
-      cursor: pointer;
-    }
-  }
-  .navbaerMag-content-box{
-    width: 100%;
-    flex: 1;
-    padding: 10px 0;
   }
 }
 </style>

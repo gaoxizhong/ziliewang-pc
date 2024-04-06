@@ -114,7 +114,7 @@ export default {
     this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
     this.height = Number(getViewportSize.height - 60); // 可拖动div 高度
     this.currentUser = {
-      id: localStorage.getItem('realUid'),
+      id: localStorage.getItem('staffUid'),
       name: this.$store.state.user.staffName,
       avatar: this.$store.state.user.staffAvatar
     }
@@ -179,8 +179,8 @@ export default {
     },
     receiveParams(params){
       console.log(params)
-        // '接收到的参数:' params
-        this.laiyuan = params.laiyuan?params.laiyuan:'';
+      // '接收到的参数:' params
+      this.laiyuan = params.laiyuan?params.laiyuan:'';
       if(params.type){
         this.title_show = params.type //searchTalent 是搜索人才页
       }

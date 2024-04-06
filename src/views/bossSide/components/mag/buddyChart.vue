@@ -115,6 +115,7 @@ export default {
   flex: 1;
   overflow-y: auto;
   padding: 10px 8px;
+  padding-top: 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

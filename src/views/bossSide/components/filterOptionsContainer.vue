@@ -45,6 +45,14 @@
         </ul>
       </div>
       <div class="options-row">
+        <div class="row-title">期望城市</div>
+        <ul class="row-options-detail-box">
+          <li class="options-item" :class="expect_city == '全国'? 'selected':''" data-code="410" data-name="全国" @click="clickExpectCity('全国')">全国</li>
+          <li class="options-item" :class="selectExpectCityList.indexOf(item.label) != -1? 'selected':''" :data-code="item.code" :data-name="item.label" @click="clickExpectCity(item.label)" v-for="(item,index) in showCityList" :key="index">{{ item.label }}</li>
+          <li class="options-item" id="filter-option-other-city"><span @click="clickExpectCityOther">其他</span><div class="antd-lp-city"></div></li>
+        </ul>
+      </div>
+      <div class="options-row">
         <div class="row-title">教育经历:</div>
         <ul class="row-options-detail-box">
           <li class="options-item" :class="education_background == ''? 'selected':''" @click="clickeducation('')">不限</li>
@@ -167,7 +175,6 @@
         <div class="dialog-header">
           <h3 class="title">请选择城市</h3>
           <div class="dialog-header-input">
-            <!-- <el-input type="text" v-model="dialogVisible_seach"></el-input> -->
           </div>
           <img src="../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
         </div>
@@ -202,6 +209,48 @@
         </span>
       </div>
     </div>
+    <!-- 选择城市弹窗 -->
+    <div class="dialogVisible-pop-box" v-if="expect_dialogVisible && cityData.length >=0 ">
+      <div class="mask-box"></div>
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <h3 class="title">请选择城市</h3>
+          <div class="dialog-header-input">
+          </div>
+          <img src="../../../assets/image/icon-close.png" alt="" @click="clickexpect_Close"/>
+        </div>
+        <div class="dialog-body">
+          <div class="body-left-box">
+            <div class="left-list-box">
+              <ul>
+                <li :class="selt_expect_province_item == index? 'active':'' " v-for="(item,index) in cityData" :key="index" @click="click_expect_industryListLi(item,index)">{{ item.label }}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="body-right-box">
+            <div class="right-list-box">
+              <div class="category-list-items">
+                <ul>
+                  <li :class="selectExpectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in expect_city_list" :key="idx" @click="click_expect_city_list(items,idx)">{{ items.label }}</li>
+                </ul>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <div class="slet-box">
+            <span>当前选择:</span>
+            <span class="span-item" v-for="(item,index) in selectExpectCityList" :key="index">{{ item }}</span>
+          </div>
+          <div class="slet-btn-box">
+            <el-button @click="clickExpectClearCityOption">清空选项</el-button>
+            <el-button type="primary" @click="clickExpectCityOK">确  定</el-button>
+          </div>
+        </span>
+      </div>
+    </div>
+    
     <!-- 选择职业弹窗 -->
     <div class="dialogVisible-pop-box" v-if="position.dialogVisible">
       <div class="mask-box"></div>
@@ -278,6 +327,14 @@ export default {
       selt_listItems: -1,
       city_list:[], // 城市列表
       city: '全国',
+      // 期望城市
+      expect_dialogVisible: false,
+      selectExpectCityList: [], // 选中的期望城市
+      selt_expect_province_item: 0,  // 选中的期望省下标
+      selt_expect_listItems: -1,
+      expect_city_list:[], // 期望城市列表
+      expect_city: '全国',
+
       work_times_type: 1, //传参- 工作时长类型 1.正常 2.实习生 3.应届生
       work_year: '', // 传参- 工作时长
       salary: '', // 传参- 薪资范围
@@ -414,6 +471,7 @@ export default {
       this.position.selectCategoryList = [];
       this.getfilterInfo();
     },
+    
     // 点击职业弹窗确定按钮
     clickPositionOK(){
       this.position.dialogVisible = false;
@@ -425,10 +483,32 @@ export default {
       this.selectCityList = [];
       this.getfilterInfo();
     },
+    
     // 点击城市弹窗确定按钮
     clickCityOK(){
       this.dialogVisible = false;
       this.getfilterInfo();
+    },
+    
+    // 点击城市
+    clickCity(n){
+      let selectCityList = this.selectCityList;
+      if(n == '全国'){
+        selectCityList = [];
+        this.city = n;
+      }else{
+        if( selectCityList.length >=5 ){
+          this.$message.error('最多可选择五个城市！');
+          return
+        }
+        if( selectCityList.indexOf(n) == -1){
+          selectCityList.push(n)
+        }
+        this.city = selectCityList.join(',')
+      }
+      this.selectCityList = selectCityList;
+      this.getfilterInfo();
+      
     },
     // 点击城市其他
     clickCityOther(){
@@ -439,6 +519,7 @@ export default {
       this.city_list = ele.children;
       this.selt_province_item = index;
     },
+   
     // 点击城市弹窗 城市
     click_city_list(item,index){
       let selectCityList = this.selectCityList;
@@ -460,39 +541,79 @@ export default {
       }
       this.selectCityList = selectCityList;
       this.city = selectCityList.join(',')
-      // let showCityList = this.showCityList;
-      // showCityList.forEach( ele =>{
-      //   if(ele.code == item.code){
-      //     this.showCityList[4] = item;
-      //   }
-      // })
     },
     clickClose(){
       this.dialogVisible = false;
+    },
+     // 点击期望城市弹窗 清空选项城市
+    clickExpectClearCityOption(){
+      this.expect_city= '全国';
+      this.selectExpectCityList = [];
+      this.getfilterInfo();
+    },
+    click_expect_industryListLi(ele,index){
+      this.expect_city_list = ele.children;
+      this.selt_expect_province_item = index;
+    },
+    // 点击期望城市弹窗 城市
+    click_expect_city_list(item,index){
+      let selectExpectCityList = this.selectExpectCityList;
+      if( selectExpectCityList.length >=5 ){
+        this.$message.error('最多可选择五个城市！');
+        return
+      }
+      this.selt_expect_cityName = item.label;
+      this.selt_expect_listItems = index;
+      if(selectExpectCityList.indexOf('全国') != -1 ){
+        selectExpectCityList = []
+        // this.infoData.city = '';
+        selectExpectCityList.push(item.label)
+      }else{
+        if( selectExpectCityList.indexOf(item.label) == -1){
+          selectExpectCityList.push(item.label)
+        }
+       
+      }
+      this.selectExpectCityList = selectExpectCityList;
+      this.expect_city = selectExpectCityList.join(',')
+    },
+    // 点击期望城市弹窗关闭
+    clickexpect_Close(){
+      this.expect_dialogVisible = false;
+    },
+    clickExpectCityOK(){
+      this.expect_dialogVisible = false;
+      this.getfilterInfo();
+    },
+    // 点击期望城市其他
+    clickExpectCityOther(){
+      this.expect_dialogVisible = true;
+    },
+    // 期望城市 ↓ 
+    clickExpectCity(n){
+      let list = this.selectExpectCityList;
+      if(n == '全国'){
+        list = [];
+        this.expect_city = n;
+      }else{
+        if( list.length >=5 ){
+          this.$message.error('最多可选择五个城市！');
+          return
+        }
+        if( list.indexOf(n) == -1){
+          list.push(n)
+        }
+        this.expect_city = list.join(',')
+      }
+      this.selectExpectCityList = list;
+      this.getfilterInfo();
+      
     },
     // 关闭职业弹窗
     clickPositionClose(){
       this.position.dialogVisible = false;
     },
-    clickCity(n){
-      let selectCityList = this.selectCityList;
-      if(n == '全国'){
-        selectCityList = [];
-        this.city = n;
-      }else{
-        if( selectCityList.length >=5 ){
-          this.$message.error('最多可选择五个城市！');
-          return
-        }
-        if( selectCityList.indexOf(n) == -1){
-          selectCityList.push(n)
-        }
-        this.city = selectCityList.join(',')
-      }
-      this.selectCityList = selectCityList;
-      this.getfilterInfo();
-      
-    },
+
     // 薪资
     clickPay(n,value){
       this.pay = n;
@@ -565,6 +686,7 @@ export default {
       let age_end =  this.age.age_end?this.age.age_end:0;
       let info = {
         live_city: this.city == '全国'?'':this.city, // 城市
+        desired_location: this.expect_city == '全国'?'':this.expect_city, // 期望城市
         salary: this.salary,
         work_year: this.work_year, // 工作年限
         // work_times_type: this.work_times_type,
@@ -966,7 +1088,7 @@ export default {
           align-items: center;
         }
         .slet-box{
-          padding-left: 120px;
+          padding-left: 60px;
           &>span{
             display: inline-block;
             padding: 6px 12px;

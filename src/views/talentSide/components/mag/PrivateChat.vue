@@ -18,37 +18,9 @@
         <div v-for="(item, index) in history.messages" :key="index">
           <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(item, index) }}</div>
-          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 3">你已同意对方索要联系方式</div>
-          <!-- 人才 发送请求联系方式 ↓ -->
-          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 1">
-            <h4 class="message-phone-universal-card-header">联系方式</h4>
-            <div class="message-phone-universal-card-content">
-              <span>您的手机号：{{ item.payload.phone }}</span>
-            </div>
-            <div class="message-phone-box">您已向对方发送交换联系方式</div>
-          </div>
-          <!-- 人才 发送请求联系方式 ↑ -->
-          <!-- boss 发送过来的手机号 ↓ -->
-          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 2">
-            <h4 class="message-phone-universal-card-header">联系方式</h4>
-            <div class="message-phone-universal-card-content">
-              <span>{{ item.payload.name }}的手机号：{{ item.payload.phone }}</span>
-            </div>
-          </div>
-          <!-- boss 发送过来的手机号 ↑ -->
-          <!-- boss 索要手机号 ↓ -->
-          <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 4">
-            <h4 class="message-phone-universal-card-header">对方请求交换联系方式</h4>
-            <div class="message-phone-universal-card-content">
-              <span>对方手机号：{{ item.payload.phone }}</span>
-            </div>
-            
-            <div class="message-phone-universal-card-footer">
-              <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(3)">同意交换</div>
-            </div>
-          </div>
-          <!-- boss 索要手机号 ↑ -->
 
+          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 3">你已同意对方索要联系方式</div>
+          
           <div class="message-recalled" v-if="item.recalled">
             <div v-if="item.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
             <div v-else class="message-recalled-self">
@@ -59,9 +31,9 @@
           <!-- 内容区域 开始 -->
           <div class="message-item"  v-if="item.type != 'phone' && !item.recalled">
             <!-- 多选按钮 -->
-            <!-- <div class="message-item-checkbox" v-if="messageSelector.visible && item.status !== 'sending'">
+            <div class="message-item-checkbox" v-if="messageSelector.visible && item.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="item.messageId" v-model="messageSelector.ids" @click="selectMessages">
-            </div> -->
+            </div>
 
             <div class="message-item-content" :class="{ self: item.senderId === currentUser.id }">
               <!-- 头像 开始 -->
@@ -93,11 +65,11 @@
                   </a>
                   <!-- 简历 结束 -->
                   <!-- 面试邀请 开始 -->
-                  <div v-if="item.type === 'interview' &&  item.payload.way_status == 1">
+                  <div class="message-phone-universal-card" v-if="item.type === 'interview' &&  item.payload.way_status == 1">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-universal-card-content">
-                      <div><span>面试岗位：</span><span>{{message.payload.position_name?message.payload.position_name:''}}</span></div>
-                      <div><span>面试时间：</span><span>{{message.payload.interview_time?message.payload.interview_time:''}}</span></div>
+                      <div><span>面试岗位：</span><span>{{item.payload.position_name?item.payload.position_name:''}}</span></div>
+                      <div><span>面试时间：</span><span>{{item.payload.interview_time?item.payload.interview_time:''}}</span></div>
                     </div>
                     <div class="message-phone-universal-card-footer">
                       <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickYqms(2)">同意</div>
@@ -105,11 +77,11 @@
                   </div>
                   <!-- 面试邀请 结束 -->
                   <!-- 同意面试邀请 开始 -->
-                  <div v-if="item.type === 'interview' &&  item.payload.way_status == 2">
+                  <div class="message-phone-universal-card" v-if="item.type === 'interview' &&  item.payload.way_status == 2">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-universal-card-content">
-                      <div><span>面试岗位：</span><span>{{message.payload.position_name?message.payload.position_name:''}}</span></div>
-                      <div><span>面试时间：</span><span>{{message.payload.interview_time?message.payload.interview_time:''}}</span></div>
+                      <div><span>面试岗位：</span><span>{{item.payload.position_name?item.payload.position_name:''}}</span></div>
+                      <div><span>面试时间：</span><span>{{item.payload.interview_time?item.payload.interview_time:''}}</span></div>
                     </div>
                     <div class="message-phone-universal-card-footer">
                       <!-- <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn">同意</div> -->
@@ -117,6 +89,35 @@
                     </div>
                   </div>
                   <!-- 同意面试邀请 结束 -->
+                  <!-- 人才 发送请求联系方式 ↓ -->
+                  <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 1">
+                    <h4 class="message-phone-universal-card-header">联系方式</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>您的手机号：{{ item.payload.phone }}</span>
+                    </div>
+                    <div class="message-phone-box">您已向对方发送交换联系方式</div>
+                  </div>
+                  <!-- 人才 发送请求联系方式 ↑ -->
+                  <!-- boss 发送过来的手机号 ↓ -->
+                  <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 2">
+                    <h4 class="message-phone-universal-card-header">联系方式</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>{{ item.payload.name }}的手机号：{{ item.payload.phone }}</span>
+                    </div>
+                  </div>
+                  <!-- boss 发送过来的手机号 ↑ -->
+                  <!-- boss 索要手机号 ↓ -->
+                  <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 4">
+                    <h4 class="message-phone-universal-card-header">对方请求交换联系方式</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>对方手机号：{{ item.payload.phone }}</span>
+                    </div>
+                    
+                    <div class="message-phone-universal-card-footer">
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(3)">同意交换</div>
+                    </div>
+                  </div>
+                  <!-- boss 索要手机号 ↑ -->
                   <!-- 图片 开始 -->
                   <div v-if="item.type === 'image'" class="content-image" @click="showImagePreviewPopup(item.payload.url)">
                     <img :src="item.payload.url" :style="{height:getImageHeight(item.payload.width,item.payload.height)+'px'}"/>
@@ -149,10 +150,10 @@
       </div>
     </div>
     <div class="chat-footer" :style="`height:${is_pop == 'pop'?'120':'140'}px;`">
-      <!-- <div class="action-delete" v-if="messageSelector.visible">
+      <div class="action-delete" v-if="messageSelector.visible">
         <img class="delete-btn" src="../../../../assets/images/delete.png" @click="deleteMultipleMessages"/>
         <div>删除</div>
-      </div> -->
+      </div>
       <div class="action-box">
         <div class="action-bar">
           <!-- 常用语 -->
@@ -329,16 +330,27 @@
         },
       };
     },
-    
+    watch:{
+      '$store.state.realAvatar'(newVal){
+          this.realAvatar = newVal;
+          this.$forceUpdate();// 更新数据
+      },
+      '$store.state.name'(newVal){
+          this.name = newVal;
+          this.$forceUpdate();// 更新数据
+      },
+    },
+    mounted(){
+      this.currentUser = {  // 我的信息--展示
+        id: localStorage.getItem('realUid'),
+        name: this.$store.state.user.name,
+        avatar: this.$store.state.user.realAvatar
+      };
+    },
     created() {
       this.userVipRank = localStorage.getItem('userVipRank');
-      this.friend = this.infoData; // 好友信息
-      this.currentUser = {  // 我的信息
-        id: localStorage.getItem('realUid'),
-        name: localStorage.getItem('name'),
-        avatar: localStorage.getItem('realAvatar'),
-      };
-      this.to = {
+      this.friend = this.infoData;  // 目标用户信息
+      this.to = { // 目标用户
         type: this.GoEasy.IM_SCENE.PRIVATE,
         id: this.friend.uid,
         data: {name: this.friend.name, avatar: this.friend.avatar,is_friend: this.friend.is_friend},

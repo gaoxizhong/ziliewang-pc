@@ -2,7 +2,7 @@
   <div class="navber-container">
     <div class="navbar">
       <div class="hospital">
-        <img src="../../../assets/image/logo-talentSide.png" alt="">
+        <img src="../../../assets/image/06.svg" alt="">
       </div>
       <div class="navbar-items-box">
         <el-menu
@@ -50,19 +50,6 @@
       </div>
     </div>
 
-    <!-- 点击导航消息按钮 展示消息列表弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".navbaerMag-title-box" :isActive="true" :parentLimitation="'true'" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="navbar_mag">
-      <div class="navbaerMag-box">
-        <div class="navbaerMag-title-box">
-          <span>我的沟通</span>
-          <img src="../../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
-        </div>
-        <div class="navbaerMag-content-box">
-          <ConversationList :title_show="title_show" @chatLocation="chatLocation"/>
-        </div>
-      </div>
-    </VueDragResize>
-    <!-- 点击导航消息按钮 展示消息列表弹窗 结束-->
   </div>
 
 </template>
@@ -79,16 +66,9 @@ export default {
   },
   data(){
     return{
-      navbar_mag: false, // 导航按钮 消息弹窗状态
       width: 0,
       height: 0,
-      parentH: 0,
-      parentW: 0,
-      top:56,
-      left: 500,
-      zInfex_0: 99,
       unreadAmount: null,
-      title_show: 'navbarMag'
     }
   },
   computed: {
@@ -134,32 +114,14 @@ export default {
     this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
   },
   mounted(){
-    // 组件间通信
-    this.$bus.$on('clickMessage', this.clickMessage);
+
   },
   created(){
     let getViewportSize = this.$getViewportSize();
-    this.parentH = getViewportSize.height; // 组件范围
-    this.parentW = getViewportSize.width; // 组件范围
-    this.width = 330; // 可拖动div 高度
-    this.left = Number(getViewportSize.width) - Number(this.width) - 140;
-    this.height = Number(getViewportSize.height * 0.9); // 可拖动div 高度
 
     this.listenConversationUpdate();// 监听会话列表变化
-    this.loadConversations(); //加载会话列表
   },
   methods: {
-    loadConversations() {
-      this.goEasy.im.latestConversations({
-        onSuccess: (result) => {
-          let content = result.content;
-          this.setUnreadNumber(content);
-        },
-        onFailed: (error) => {
-          console.log('获取失败, code:' + error.code + 'content:' + error.content);
-        },
-      });
-    },
     listenConversationUpdate() {
       this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
     },
@@ -182,7 +144,7 @@ export default {
     },
     // 点击消息
     clickMessage(){
-      this.navbar_mag = true;
+      this.$bus.$emit('talentSide_receiveParams', {type:'navbarMag',laiyuan:'nav',infoData:{} });
     },
     // 获取个人信息
     getUserProfile(){
@@ -199,22 +161,6 @@ export default {
       }).catch(e =>{
         console.log(e)
       })
-    },
-    // 拖拽时可以确定元素位置
-    resize(newRect) {
-      this.width = newRect.width;
-      this.height = newRect.height;
-      this.top = newRect.top;
-      this.left = newRect.left;
-    },
-    // 点击关闭
-    clickCloseBtn(){
-      this.navbar_mag = false;
-    },
-    // 接收组件方法通讯
-    chatLocation(e){
-      // 传递通讯
-      this.$bus.$emit('talentSide_receiveParams', {type:'JobDetails',infoData:e });
     },
   },
 };
@@ -238,14 +184,21 @@ export default {
   align-items: center;
   justify-content: space-between;
   .hospital{
-    width: 120px;
-    height: 34px;
+    width: 190px;
+    height: 50px;
+    
+  }
+  .hospital>img{
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
   }
   .navbar-items-box{
     flex: 1;
     display: flex;
     align-items: center;
-    padding-left: 60px;
+    padding-left: 20px;
     /deep/ .el-menu--horizontal>.el-menu-item{
       height: 50px;
       line-height: 50px;
@@ -353,41 +306,6 @@ export default {
         }
       }
     }
-  }
-}
-// 消息弹窗
-.navbaerMag-box{
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  padding: 10px;
-  padding-top: 0;
-  padding-right: 12px;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  .navbaerMag-title-box{
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    text-align: center;
-    font-size: 15px;
-    position: relative;
-    cursor: move;
-    &>span{
-      color: $g_textColor;
-    }
-    &>img{
-      position: absolute;
-      top: 10px;
-      right: 4px;
-      cursor: pointer;
-    }
-  }
-  .navbaerMag-content-box{
-    width: 100%;
-    flex: 1;
-    padding: 10px 0;
   }
 }
 </style>

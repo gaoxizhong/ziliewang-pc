@@ -142,7 +142,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 99;
     .mask-box{
       width: 100%;
       height: 100%;

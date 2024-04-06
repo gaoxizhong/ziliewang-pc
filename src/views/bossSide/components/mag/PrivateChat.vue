@@ -380,18 +380,18 @@
       };
     },
     watch:{
-    '$store.state.staffAvatar'(newVal){
-        this.staffAvatar = newVal;
-        this.$forceUpdate();// 更新数据
-    },
-    '$store.state.staffName'(newVal){
-        this.staffName = newVal;
-        this.$forceUpdate();// 更新数据
-    },
+      '$store.state.staffAvatar'(newVal){
+          this.staffAvatar = newVal;
+          this.$forceUpdate();// 更新数据
+      },
+      '$store.state.staffName'(newVal){
+          this.staffName = newVal;
+          this.$forceUpdate();// 更新数据
+      },
     },
     mounted(){
       this.currentUser = {  // 我的信息--展示
-        id: localStorage.getItem('realUid'),
+        id: localStorage.getItem('staffUid'),
         name: this.$store.state.user.staffName,
         avatar: this.$store.state.user.staffAvatar
       };
