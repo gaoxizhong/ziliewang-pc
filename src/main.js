@@ -100,13 +100,14 @@ new Vue({
     return {
       login_bgurl_1:{
         backgroundImage:'url(' + require('./assets/image/demo2.png') + ')',
-        backgroundRepeat:'no-repeat',
-        backgroundSize: '100% 100%',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       },
       login_bgurl_2:{
         backgroundImage:'url(' + require('./assets/image/bg_2.jpg') + ')',
         backgroundRepeat:'no-repeat',
-        backgroundSize: '100% 100%',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       },
       positionItems: {}, // 职位中心选中的信息
     }

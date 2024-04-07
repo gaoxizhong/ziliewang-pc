@@ -5,8 +5,8 @@
         <img src="../../assets/image/06.svg" alt="" class="logo"/>
       </div>
     </div>
-    <!-- <div class="home-container" :style="login_bgurl_1"> -->
-    <div class="home-container">
+    <div class="home-container" :style="login_bgurl_1">
+    <!-- <div class="home-container"> -->
       <div class="home-container-div">
         <div class="form-container-box">
           <!-- 登录模块 开始 -->
@@ -681,7 +681,7 @@ $cursor: #000;
   width: 100%;
   height: calc(100vh - 50px);
   position: relative;
-  background: #1ec5d8;
+  // background: #1ec5d8;
 }
 .home-container-div{
   width: $view_width;

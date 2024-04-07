@@ -16,22 +16,25 @@
     <!-- 底部 结束  -->
 
     <!-- 聊天弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentLimitation="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
-      <div class="VueDragResize-centent-box">
-        <div class="VueDragResize-title-box">
-          <div class="title">聊一聊</div>
-          <div class="icon-box">
-            <!-- <span class="gt-span" @click="clickMessage">跳至沟通</span> -->
-            <!-- <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
-            <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
+    <transition name="suck-in" mode="out-in">
+      <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentLimitation="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+        <div class="VueDragResize-centent-box">
+          <div class="VueDragResize-title-box">
+            <div class="title">聊一聊</div>
+            <div class="icon-box">
+              <!-- <span class="gt-span" @click="clickMessage">跳至沟通</span> -->
+              <!-- <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
+              <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
+            </div>
+          </div>
+          <div class="Chat-box">
+            <!-- <PrivateChat :infoData="infoData" :is_pop="is_pop" ref="chat" /> -->
+            <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 50"  is_pop="is_pop" ref="chat" />
           </div>
         </div>
-        <div class="Chat-box">
-          <!-- <PrivateChat :infoData="infoData" :is_pop="is_pop" ref="chat" /> -->
-          <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 50"  is_pop="is_pop" ref="chat" />
-        </div>
-      </div>
-    </VueDragResize>
+      </VueDragResize>
+    </transition>
+
     <!-- 聊天弹窗 结束-->
 
     <!-- 侧边栏 -->
@@ -290,6 +293,16 @@ import buddyChart from './components/mag/buddyChart.vue';
       font-size: 14px;
     }
   }
+  //  弹窗 动画样式 -----
+  .suck-in-enter-active, .suck-in-leave-active {
+    transition: all 1.5s ease;
+    transform-origin: right;
+  }
+
+  .suck-in-enter, .suck-in-leave-to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
   // 聊天弹窗 样式=============== ↑ ===========
- 
+  
 </style>
