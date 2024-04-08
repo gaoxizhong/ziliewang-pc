@@ -99,7 +99,7 @@ new Vue({
   data: function(){ // 全局样式
     return {
       login_bgurl_1:{
-        backgroundImage:'url(' + require('./assets/image/demo2.png') + ')',
+        backgroundImage:'url(' + require('./assets/image/demo3.png') + ')',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       },
