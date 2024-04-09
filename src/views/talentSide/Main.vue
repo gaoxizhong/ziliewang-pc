@@ -28,7 +28,6 @@
             </div>
           </div>
           <div class="Chat-box">
-            <!-- <PrivateChat :infoData="infoData" :is_pop="is_pop" ref="chat" /> -->
             <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 50"  is_pop="is_pop" ref="chat" />
           </div>
         </div>
@@ -295,7 +294,7 @@ import buddyChart from './components/mag/buddyChart.vue';
   }
   //  弹窗 动画样式 -----
   .suck-in-enter-active, .suck-in-leave-active {
-    transition: all 1.5s ease;
+    transition: all 0.5s ease;
     transform-origin: right;
   }
 

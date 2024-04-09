@@ -17,7 +17,7 @@
               <div>
                 <div class="items-c-p">{{ infoData.content }}</div>
                 <div class="items-img-box" v-if="infoData.images.length>0">
-                  <img :src="items" alt="" title="图片"  v-for="(items,idx) in infoData.images" :key="idx"/>
+                  <img :src="items" alt="" @click="$preview(idx,infoData.images)" v-for="(items,idx) in infoData.images" :key="idx"/>
                 </div>
                 <div class="items-img-box" v-if="infoData.video">
                   <a href="javascript:0;" title="视频" @click="gotoVideo(infoData.video)">

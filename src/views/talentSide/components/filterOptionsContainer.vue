@@ -42,6 +42,7 @@
       <div class="options-row">
         <div class="row-title">经验</div>
         <ul class="row-options-detail-box">
+          <li class="options-item" :class="exp.value == ''? 'selected':''" @click="clickexp('',0)">不限</li>
           <li class="options-item" :class="exp.value == '应届生'? 'selected':''" @click="clickexp('应届生',3)">应届生</li>
           <li class="options-item" :class="exp.value == '实习生'? 'selected':''" @click="clickexp('实习生',2)">实习生</li>
           <li class="options-item" :class="exp.value == '1年以内'? 'selected':''" @click="clickexp('1年以内','0-1')">1年以内</li>

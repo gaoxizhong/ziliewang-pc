@@ -231,6 +231,7 @@ export default {
         that.$message.error({
           message: '购买会员后才可打招呼！'
         })
+        console.log(1)
         setTimeout( () =>{
           that.$router.push('/topUpBuy');
         },1000)
