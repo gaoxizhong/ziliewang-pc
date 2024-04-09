@@ -1,11 +1,11 @@
 <template>
   <div class="login-container">
-    <div class="login-header-box">
-      <div class="header-nav-box">
-        <img src="../../assets/image/06.svg" alt="" class="logo"/>
-      </div>
-    </div>
     <div class="home-container" :style="login_bgurl_1">
+      <div class="login-header-box">
+        <div class="header-nav-box">
+          <img src="../../assets/image/log-2.png" alt="" class="logo"/>
+        </div>
+      </div>
     <!-- <div class="home-container"> -->
       <div class="home-container-div">
         <div class="form-container-box">
@@ -659,7 +659,7 @@ $cursor: #000;
 .login-header-box{
   width: 100%;
   height: 50px;
-  background: $bg;
+  // background: $bg;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -673,20 +673,22 @@ $cursor: #000;
     justify-content: space-between;
     padding: 0 50px 0 20px;
     .logo{
-      width: 190px;
+      height: 44px;
     }
   }
 }
 .home-container{
   width: 100%;
-  height: calc(100vh - 50px);
+  height: calc(100vh);
   position: relative;
   // background: #1ec5d8;
+  display: flex;
+  flex-direction: column;
 }
 .home-container-div{
   width: $view_width;
   max-width: $view_max_width;
-  height: 100%;
+  flex: 1;
   margin: 0 auto;
   position: relative;
   button.login-btn{
