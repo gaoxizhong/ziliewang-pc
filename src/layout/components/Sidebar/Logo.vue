@@ -56,10 +56,8 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      height: 100%;
-      width: 100%;
+      height: 40px;
       vertical-align: middle;
-      margin-right: 12px;
     }
 
     & .sidebar-title {
