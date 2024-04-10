@@ -4,14 +4,14 @@
     <div class="m-box margin-top-20">
       <div class="title-box">
         <div class="left">
-          <img src="../../../assets/image/bossSide/wallet-three.png" alt="" />
+          <img src="../../assets/image/bossSide/wallet-three.png" alt="" />
           <span>我的资产</span>
         </div>
         <div class="infoData-box">
           <div class="infoData-wddj-box">
             <div>
               <span class="span-1">我的等级：</span>
-              <span class="span-2">{{ userInfo.vip_rank_text }}</span>
+              <span class="span-2">{{ userInfo.vip_rank_text?userInfo.vip_rank_text:'普通用户' }}</span>
               <button class="goldCoin-btn" @click="goToTopUpBuy">购买</button>
             </div>
           </div>
@@ -37,7 +37,7 @@
     </div>
     <div class="m-box margin-top-20 zxzw-data">
       <div class="left">
-        <img src="../../../assets/image/bossSide/myRecruitment-search.png" alt="" />
+        <img src="../../assets/image/bossSide/myRecruitment-search.png" alt="" />
         <span>充值记录</span>
       </div>
 

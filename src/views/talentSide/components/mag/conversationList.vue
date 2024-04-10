@@ -157,9 +157,9 @@
       },
       renderConversations(content) {
         this.conversations = content.conversations; /// 会话列表
-        if(this.laiyuan == 'nav'){
-          this.chatLocation(content.conversations[0])
-        }
+        // if(this.laiyuan == 'nav' && content.conversations.length > 0){
+        //   this.chatLocation(content.conversations[0])
+        // }
       },
      
       showRightClickMenu(e, conversation) {
@@ -205,7 +205,7 @@
           name: conversation.data.name,
           avatar: conversation.data.avatar,
         };
-        this.$emit( 'chatLocation',JSON.stringify(this.profile.friend) );
+        this.$emit( 'chatLocation',this.profile.friend );
       }
     },
   };

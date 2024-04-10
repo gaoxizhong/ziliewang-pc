@@ -321,7 +321,7 @@ export const constantRoutes = [
       {
         path: '/myAssets',
         name: 'myAssets',
-        component: () => import('@/views/bossSide/myAssets/index'),
+        component: () => import('@/views/myAssets/index'),
         meta: { title: '我的资产'},
       }
     ]
@@ -445,9 +445,9 @@ export const constantRoutes = [
       {
         path: 'myAssets',
         name: 'talentSide_myAssets',
-        component: () => import('@/views/bossSide/myAssets/index'),
+        component: () => import('@/views/myAssets/index'),
         meta: { 
-          title: '会员信息',
+          title: '我的资产',
         },
       },
       {

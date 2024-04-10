@@ -32,8 +32,8 @@
             <div class="message-item-content" :class="{ self: message.senderId === currentUser.id }">
               <!-- 头像 开始 -->
               <div class="sender-info">
-                <img v-if="currentUser.id === message.senderId" :src="currentUser.avatar" class="sender-avatar"/>
-                <img v-else :src="friend.avatar" class="sender-avatar"/>
+                <img v-if="currentUser.id === message.senderId" :src="currentUser.avatar?currentUser.avatar:require('../../../../assets/image/img-user.jpg')" class="sender-avatar"/>
+                <img v-else :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="sender-avatar"/>
               </div>
               <!-- 头像 结束 -->
               <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)">

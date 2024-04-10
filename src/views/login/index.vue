@@ -658,7 +658,7 @@ $light_gray: #000;
 $cursor: #000;
 .login-header-box{
   width: 100%;
-  height: 50px;
+  height: 60px;
   // background: $bg;
   display: flex;
   align-items: center;

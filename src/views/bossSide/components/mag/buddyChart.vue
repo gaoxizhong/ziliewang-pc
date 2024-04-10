@@ -67,21 +67,15 @@ export default {
     };
   },
   created() {
-    if(this.laiyuan == 'nav'){
-      // 点击头部导航消息按钮
-    }else{
-      console.log(JSON.stringify(this.infoData))
-      if(JSON.stringify(this.infoData) != '{}'){
-        this.chatLocation (JSON.stringify(this.infoData))
-      }
+    if(JSON.stringify(this.infoData) != '{}'){
+      this.chatLocation (this.infoData)
     }
-    
   },
   
   methods: {
     
     chatLocation (conversation) {
-      this.profile.friend = JSON.parse(conversation);
+      this.profile.friend = conversation;
       console.log(this.profile.friend)
       this.is_chat = false;
       this.$nextTick( () => {

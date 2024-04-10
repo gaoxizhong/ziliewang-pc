@@ -226,26 +226,22 @@ export default {
     // 点击打电话
     async clickMobile(i){
       let that = this;
-      let res =  await that.$axios.post('/api/staff/profile',{})
-      if(res.data.vip_rank < 1){
-        that.$message.error({
-          message: '购买会员后才可打招呼！'
-        })
-        console.log(1)
-        setTimeout( () =>{
-          that.$router.push('/topUpBuy');
-        },1000)
-        return
-      }
       let p = {
         uid: i.uid|| i.basic_info.uid,
       }
       that.$axios.post('/api/company/get-user-mobile',p).then( res =>{
         if(res.code == 0){
-          
           this.$alert(res.data.mobile, '电话', {
             confirmButtonText: '确定',
           });
+        }else if(res.code == 555) {
+            that.$message.error({
+            message: '购买会员后才可打招呼！'
+          })
+          setTimeout( () =>{
+            that.$router.push('/topUpBuy');
+          },1000)
+          return
         }else{
           that.$message.error({
             message:res.msg
@@ -274,7 +270,7 @@ export default {
       }
       console.log(infoData)
       that.zx_dialogVisible = false;
-      that.$bus.$emit('receiveParams', {type:'searchTalent',infoData:JSON.stringify(infoData) });
+      that.$bus.$emit('receiveParams', {type:'searchTalent',laiyuan:'nav',infoData });
       return
       let p = {
         uid: i.uid|| i.basic_info.uid,

@@ -4,7 +4,7 @@
       <div class="bg-teal-500">
         <div class="bg-teal-title">
           <span class="span-1">当前等级</span>
-          <span class="span-2">{{userInfo.vip_rank_text}}</span>
+          <span class="span-2">{{userInfo.vip_rank_text?userInfo.vip_rank_text:'普通用户'}}</span>
         </div>
       </div>
 
