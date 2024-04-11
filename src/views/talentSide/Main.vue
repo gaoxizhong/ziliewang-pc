@@ -294,13 +294,13 @@ import buddyChart from './components/mag/buddyChart.vue';
   }
   //  弹窗 动画样式 -----
   .suck-in-enter-active, .suck-in-leave-active {
-    transition: all 0.5s ease;
+    transition: all 0.8s ease;
     transform-origin: right;
   }
 
   .suck-in-enter, .suck-in-leave-to {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateX(100%) scale(0);
   }
   // 聊天弹窗 样式=============== ↑ ===========
   
