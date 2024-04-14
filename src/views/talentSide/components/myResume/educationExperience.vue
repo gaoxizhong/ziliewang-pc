@@ -193,6 +193,10 @@ export default {
         if(res.code == 0){
           that.schoolSearchList = res.data;
           that.searchList_info = true;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },
@@ -262,6 +266,10 @@ export default {
         if(res.code == 0){
           that.$message.success( text );
           return f()
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },
@@ -276,6 +284,10 @@ export default {
           that.$message.success( '删除成功！' );
           data.splice(idx);
           that.data = data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },

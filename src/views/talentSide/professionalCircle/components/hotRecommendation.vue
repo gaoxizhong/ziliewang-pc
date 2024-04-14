@@ -52,6 +52,10 @@ export default {
       that.$axios.post('/api/profession-circle/hot-recommend-position',{}).then( res =>{
         if(res.code == 0){
           that.OtherPositionsList = res.data
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)

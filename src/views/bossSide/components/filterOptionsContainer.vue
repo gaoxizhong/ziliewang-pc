@@ -305,6 +305,7 @@ export default {
   },
   data(){
     return {
+      ipCity: localStorage.getItem('ipCity') || '',
       dialogVisible: false,
       cityData: pcas, // 城市信息
       showCityList:[
@@ -369,6 +370,9 @@ export default {
     this.getIndustryList();
     // 获取职位列表信息
     this.getPositionList();
+    if(this.ipCity){
+      this.clickCity(this.ipCity)
+     }
   },
   methods:{
     // 点击选择的城市删除

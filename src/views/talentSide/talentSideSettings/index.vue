@@ -86,20 +86,20 @@
           <!-- 手机号码 -->
           <div class="container-right-items" id="set_phone">
             <div class="title">手机号码</div>
-            <div class="info-box" >当前手机号: {{ basic_info.phone }}</div>
+            <div class="info-box" >当前手机号: {{ basic_info.real_phone }}</div>
             <button @click="clickSetPhone">修改手机号</button>
           </div>
           <!-- 我的邮箱 -->
           <div class="container-right-items" id="set_email">
             <div class="title">我的邮箱</div>
-            <div class="info-box">当前邮箱: {{ basic_info.email }}</div>
+            <div class="info-box">当前邮箱: {{ basic_info.real_email }}</div>
             <button  @click="clickSetEmail">修改邮箱</button>
 
           </div>
           <!-- 密码设置 -->
           <div class="container-right-items" id="set_password">
             <div class="title">密码设置</div>
-            <div class="info-box">当前登录账号: {{ basic_info.phone }}</div>
+            <div class="info-box">当前登录账号: {{ basic_info.real_phone }}</div>
             <button @click="clickSetPassword">密码设置</button>
           </div>
           <!-- 账号注销 -->
@@ -146,7 +146,7 @@
     <div class="setPhoneVisible">
       <el-dialog title="修改手机号" :visible.sync="setPhoneVisible" width="500px" :before-close="closePhoneVisible">
         <div class="cententinfo-box">
-          <div class="cententinfo-title">手机号: {{ basic_info.phone }}</div>
+          <div class="cententinfo-title">手机号: {{ basic_info.real_phone }}</div>
           <div class="demo-input-suffix">
             <span>新手机号:</span>
             <el-input v-model="phone" type="number" name="phone" placeholder="新手机号"></el-input>
@@ -183,7 +183,7 @@
     <div class="setPasswordVisible">
       <el-dialog title="密码设置" :visible.sync="setPasswordVisible" width="500px" :before-close="closePasswordVisible">
         <div class="cententinfo-box">
-          <div class="cententinfo-title">手机号: {{ basic_info.phone }}</div>
+          <div class="cententinfo-title">手机号: {{ basic_info.real_phone }}</div>
           <div class="demo-input-suffix">
             <span>新密码:</span>
             <el-input v-model="password" type="password" name="password" placeholder="8-16位字母、数字、字符，不支持空格" show-password></el-input>

@@ -198,6 +198,10 @@ export default {
           that.formData = res.data;
           that.company_recruitment_list = res.data.company_recruitment_list.list;
           that.company_recruitment_count = res.data.company_recruitment_count;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch( e =>{
         loadingInstance.close();

@@ -180,6 +180,10 @@ export default {
           if(that.url_type == 'user'){
             that.userInfo = res.data.basic_info;
           }
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     }, 
@@ -197,6 +201,10 @@ export default {
       that.$axios.post('/api/order/list',{}).then( res =>{
         if(res.code == 0){
           that.orderList = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },

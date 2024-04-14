@@ -99,6 +99,10 @@ export default{
         if(res.code == 0){
           that.infoDataList = res.data.list;
           that.paginationData.total = res.data.count;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },

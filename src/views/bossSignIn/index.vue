@@ -257,13 +257,13 @@ export default {
     },
     beforeAvatarUpload(file) {
       console.log(file)
-      const isJPG = file.type === 'image/png' || 'image/jpeg';
+      const isJPG = file.type == 'image/png' || 'image/jpeg'|| 'image/jpg'|| 'image/gif'|| 'image/webp';
       // const isLt2M = file.size / 1024 / 1024 < 2;
       // const isLt500Kb = file.size / 1024 <= 500;
       const isLt1M = file.size / 1024 / 1024 < 1;
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 jpeg 或 png 格式!');
+        this.$message.error('上传图片只能是图片格式!');
       }
       if (!isLt1M) {
         this.$message.error('上传图片大小不能超过 1M!');
@@ -272,7 +272,7 @@ export default {
     },
 
     // 点击提交
-    submitForm(){
+    async submitForm(){
       let that = this;
       let p = {
         company_name: that.company_name, // 公司名称
@@ -330,7 +330,7 @@ export default {
         that.$message.warning('密码不能为空!');
         return
       }
-      that.$axios.post('/api/company/apply',p).then( res =>{
+      await that.$axios.post('/api/company/apply',p).then( res =>{
         if(res.code == 0){
           that.$message.success('提交成功！');
           let data = res.data;
@@ -340,7 +340,8 @@ export default {
           localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
           localStorage.setItem('company_id', data.user.company_id); // 企业id缓存
           setTimeout(() => {
-            this.$router.push('/dashboard');
+            that.getIpcity();
+            that.$router.push('/dashboard');
           }, 500);
         }else{
           that.$message.error({
@@ -366,8 +367,17 @@ export default {
       this.password = ''; // 个人密码
 
     },
-    // 自动登录
-
+   
+    getIpcity(){
+      let that = this;
+      that.$axios.post('/api/user/at/city',{}).then( res =>{
+        if(res.code == 0){
+          localStorage.setItem('ipCity',res.data.current_city);
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
   }
 }
 </script>

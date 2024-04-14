@@ -221,7 +221,7 @@ export default {
     // 点击聊一聊
     async clickChat(i){
       let that = this;
-      let res =  await that.$axios.post('/api/staff/profile',{})
+      let res =  await that.$axios.post('/api/staff/profile',{});
       if(res.data.vip_rank < 1){
         that.$message.error({
           message: '购买会员后才可打招呼！'

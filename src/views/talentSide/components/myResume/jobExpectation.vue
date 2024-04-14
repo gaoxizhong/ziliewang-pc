@@ -289,6 +289,10 @@ export default {
           that.expected_salary_end = '';
           that.selectedOptions = [];
           return f()
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },
@@ -303,6 +307,10 @@ export default {
           that.$message.success( '删除成功！' );
           data.splice(idx);
           that.data = data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },

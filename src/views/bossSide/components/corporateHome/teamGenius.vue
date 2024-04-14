@@ -121,7 +121,7 @@ export default {
           that.useDataList = res.data
         }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
         }
       })
@@ -140,7 +140,11 @@ export default {
       let that = this;
       that.$axios.post('/api/staff/profile',{}).then(res =>{
         if(res.code == 0){
-          this.userProfile = res.data;
+          that.userProfile = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)
@@ -160,7 +164,7 @@ export default {
           that.details_dialogVisible = true
         }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
         }
       })

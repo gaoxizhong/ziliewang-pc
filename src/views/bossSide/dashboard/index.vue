@@ -251,6 +251,10 @@ export default {
       that.$axios.post('/api/staff/profile',{}).then( res =>{
         if(res.code == 0){
           that.userInfo = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     }, 

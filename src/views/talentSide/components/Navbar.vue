@@ -1,16 +1,16 @@
 <template>
-  <div class="navber-container">
+  <div class="navber-container" :style="`background:${backgroundColor};`">
     <div class="navbar">
       <div class="hospital">
-        <img src="../../../assets/image/06.svg" alt="">
+        <img src="../../../assets/image/logo-2.png" alt="">
       </div>
       <div class="navbar-items-box">
         <el-menu
         :default-active="activeMenu"
         class="el-menu-demo"
         mode="horizontal"
-        background-color="#001529"
-        text-color="#ffffffcc"
+        :background-color="backgroundColor"
+        text-color="#ffffff"
         router 
         active-text-color="#fff" >
           <el-menu-item index="/talentHome">首页</el-menu-item>
@@ -69,6 +69,7 @@ export default {
       width: 0,
       height: 0,
       unreadAmount: null,
+      backgroundColor:'#262f34'
     }
   },
   computed: {
@@ -153,10 +154,14 @@ export default {
         if(res.code == 0){
           let role = res.data.basic_info.role;
           if(role == 1){
-            this.$router.push('/talentSide/enterpriseInfoRequest')
+            that.$router.push('/talentSide/enterpriseInfoRequest')
           }else{
-            this.$router.push('/')
+            that.$router.push('/')
           }
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)
@@ -170,7 +175,6 @@ export default {
 .navber-container{
   width: 100%;
   height: 50px;
-  background: #001529;
   color: #fff;
 }
 .navbar {
@@ -184,9 +188,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   .hospital{
-    width: 190px;
-    height: 50px;
-    
+    height: 40px;
   }
   .hospital>img{
     width: 100%;
@@ -208,7 +210,7 @@ export default {
       padding: 0 10px;
     }
     /deep/ .el-menu--horizontal>.el-menu-item.is-active{
-      background-color: #000A14 !important;
+      background-color: #000a14 !important;
       border-bottom-color: $g_bg !important;
     }
   }

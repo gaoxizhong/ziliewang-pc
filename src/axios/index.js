@@ -57,32 +57,37 @@ service.interceptors.response.use(
     }
     const dataAxios = response.data;
     const { code } = dataAxios;
-    // 根据 code 进行判断}
-    if (code === 0) {
-      // 如果没有 code 代表这不是项目后端开发的接口 比如可能是 VXAdmin 请求最新版本
-      return dataAxios;
-    } else {
-      if (code == 777) {
-        messageOnce.error({
-          message: `${dataAxios.msg}`,
-          type: 'error',
-          duration: 5 * 1000,
-        });
-        setToken('');
-        // 清除缓存的权限菜单
-        sessionStorage.removeItem("route");
-        //跳转登录页面
-        router.push({path:`/login?redirect=${router.currentRoute.fullPath}`})
-        return
+    if(code == 555) {  //  判断非会员时跳转
+      messageOnce.error({
+        message: `${dataAxios.msg}`,
+        type: 'error',
+        duration: 5 * 1000,
+      })
+      let tag = localStorage.getItem('tag'); // 用户身份 user、人才端 company、企业端缓存
+      
+      let to_url = '';
+      if(tag == 'user'){
+        to_url = '/talentSide/topUpBuy';
+      }else{
+        to_url = '/topUpBuy';
       }
+      setTimeout( () =>{
+        router.push({path:to_url});
+      },1500)
+    }else if (code == 777) {
       messageOnce.error({
         message: `${dataAxios.msg}`,
         type: 'error',
         duration: 5 * 1000,
       });
+      //跳转登录页面
+      // router.push({path:`/login?redirect=${router.currentRoute.fullPath}`})
+      router.push({path:'/login'})
       return Promise.reject(dataAxios.data);
-      //   //  发送的接口为response.config.url，进行报错处理
+    }else{
+      return dataAxios;
     }
+      
   },
   error => {
     loadingCount--;

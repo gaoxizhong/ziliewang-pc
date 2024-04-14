@@ -153,6 +153,10 @@ export default {
       }).then(res =>{
         if(res.code == 0){
           this.dataList = res.data
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },
@@ -178,6 +182,10 @@ export default {
       this.$axios.post('/api/profession-circle/msg/comment-reply',{}).then(res =>{
         if(res.code == 0){
           this.commentReplyList = res.data
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
       })
     },
@@ -190,6 +198,10 @@ export default {
       }).then( res =>{
         if(res.code == 0){
           this.$message.success('关注成功！');
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
         dataList[index].status = 1;
         this.dataList = dataList;
@@ -206,6 +218,10 @@ export default {
       }).then( res =>{
         if(res.code == 0){
           this.$message.success('取消成功！');
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
         dataList[index].status = 2;
         this.dataList = dataList;

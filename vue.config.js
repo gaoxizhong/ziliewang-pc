@@ -47,6 +47,10 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    externals: {
+      AgoraRTCSdkNg: 'AgoraRTC',
+      // websdk: 'websdk'
     }
   },
   css: {

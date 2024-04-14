@@ -100,6 +100,10 @@ export default {
         if(res.code == 0){
           that.jobsSearchList = res.data.list;
           that.searchList_info = true;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },

@@ -70,6 +70,10 @@ export default {
       }).then( res =>{
         if( res.code == 0 ){
           that.liveList = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch( e=>{
         console.log(e)

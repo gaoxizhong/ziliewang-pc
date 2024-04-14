@@ -198,6 +198,7 @@ export default {
   },
   data(){
     return {
+      ipCity: localStorage.getItem('ipCity') || '',
       dialogVisible: false,
       position: pcas,
       showCityList:[
@@ -218,7 +219,7 @@ export default {
       selectCityList: [], // 选中的城市
       selt_item: 0,
       selt_listItems: -1,
-      position_list:[],
+      position_list:[], // 省会列表
       city: '全国',
       work_times_type: 1, //工作时长类型 1.正常 2.实习生 3.应届生
       work_times: '', // 工作时长
@@ -240,6 +241,9 @@ export default {
   },
   created(){
      this.position_list = this.position[this.selt_item].children;
+     if(this.ipCity){
+      this.clickCity(this.ipCity)
+     }
   },
   methods:{
     // 点击城市其他

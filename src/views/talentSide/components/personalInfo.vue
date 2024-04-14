@@ -112,11 +112,15 @@ export default {
       let that = this;
       that.$axios.post('/api/user/profile',{}).then(res =>{
         if(res.code == 0){
-          this.infoData = res.data;
-          this.basic_info = res.data.basic_info;
-          this.curriculum_vitae = res.data.basic_info.curriculum_vitae;
+          that.infoData = res.data;
+          that.basic_info = res.data.basic_info;
+          that.curriculum_vitae = res.data.basic_info.curriculum_vitae;
           // 简历完善度、
          that.perfection_degree = getPerfectionDegree(res.data);
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)

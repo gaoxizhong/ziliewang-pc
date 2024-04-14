@@ -93,7 +93,7 @@ export default {
         tag: 'friend'
       }).then(res => {
         if (res.code == 0) {
-          this.msgList = res.data;
+          that.msgList = res.data;
         } else {
           that.$message.error({
             message: res.msg

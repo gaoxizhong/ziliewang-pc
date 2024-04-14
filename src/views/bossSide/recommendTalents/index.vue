@@ -300,7 +300,6 @@ export default {
       }
       that.$axios.post('/api/company/get-user-mobile',p).then( res =>{
         if(res.code == 0){
-          
           this.$alert(res.data.mobile, '电话', {
             confirmButtonText: '确定',
           });

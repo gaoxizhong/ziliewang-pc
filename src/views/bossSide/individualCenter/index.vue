@@ -255,7 +255,11 @@ export default {
       let that = this;
       that.$axios.post('/api/common-language/list',{}).then(res =>{
         if(res.code == 0){
-          this.phraseslist = res.data;
+          that.phraseslist = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)
@@ -390,6 +394,10 @@ export default {
       that.$axios.post('/api/staff/profile',{}).then( res =>{
         if(res.code == 0){
           that.infoData = res.data;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },  
@@ -438,6 +446,10 @@ export default {
           if(that.setPhoneVisible){
             that.closePhoneVisible();
           }
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },
@@ -467,11 +479,11 @@ export default {
     },
     beforeAvatarUpload(file) {
       console.log(file)
-      const isJPG = file.type === 'image/png' || 'image/jpeg';
+      const isJPG = file.type == 'image/png' || 'image/jpeg'|| 'image/jpg'|| 'image/gif'|| 'image/webp';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error('上传图片只能是 jpeg 或 png 格式!');
+        this.$message.error('上传图片只能是图片格式!');
       }
       if (!isLt2M) {
         this.$message.error('上传图片大小不能超过 2MB!');

@@ -234,19 +234,13 @@ export default {
           this.$alert(res.data.mobile, '电话', {
             confirmButtonText: '确定',
           });
-        }else if(res.code == 555) {
-            that.$message.error({
-            message: '购买会员后才可打招呼！'
-          })
-          setTimeout( () =>{
-            that.$router.push('/topUpBuy');
-          },1000)
-          return
         }else{
           that.$message.error({
             message:res.msg
           })
         }
+      }).catch(e =>{
+        console.log(e)
       })
     },
 

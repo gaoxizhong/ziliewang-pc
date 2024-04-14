@@ -257,6 +257,10 @@ export default {
             this.$store.dispatch('user/set_realAvatar', this.data.avatar);
           }
           return f()
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },
@@ -289,11 +293,11 @@ export default {
     },
     beforeAvatarUpload(file) {
       console.log(file)
-      const isJPG = file.type === 'image/png' || 'image/jpeg';
+      const isJPG = file.type == 'image/png' || 'image/jpeg'|| 'image/jpg'|| 'image/gif'|| 'image/webp';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error('上传图片只能是 jpeg 或 png 格式!');
+        this.$message.error('上传图片只能是图片格式!');
       }
       if (!isLt2M) {
         this.$message.error('上传图片大小不能超过 2MB!');

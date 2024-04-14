@@ -245,8 +245,8 @@ export default {
           that.$message.success({
             message:res.msg
           })
-        infoData.is_collection == 1?infoData.is_collection = 2 : infoData.is_collection = 1;
-        that.infoData = infoData;
+          infoData.is_collection == 1?infoData.is_collection = 2 : infoData.is_collection = 1;
+          that.infoData = infoData;
         }else{
           that.$message.error({
             message:res.msg
@@ -280,7 +280,7 @@ export default {
       that.$axios.post('/api/company/get-user-mobile',p).then( res =>{
         if(res.code == 0){
           
-          this.$alert(res.data.mobile, '电话', {
+          that.$alert(res.data.mobile, '电话', {
             confirmButtonText: '确定',
           });
         }else{

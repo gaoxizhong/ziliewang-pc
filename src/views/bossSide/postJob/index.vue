@@ -451,7 +451,7 @@ export default {
           return f(id);
         }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
         }
       })
@@ -547,7 +547,7 @@ export default {
           
         }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
         }
       })

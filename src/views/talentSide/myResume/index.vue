@@ -281,6 +281,10 @@ export default {
 
           this.perfection_degree_basic_info = getPerfectionDegree(res.data).basic_info;
           console.log(this.perfection_degree)
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)
@@ -328,6 +332,10 @@ export default {
           if(type == 'delet'){
             this.curriculum_vitae = '';
           }
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       })
     },

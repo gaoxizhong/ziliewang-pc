@@ -282,6 +282,47 @@ export default {
       this.sign_login = 'changePassword';
     },
     // 用户登录
+    async submitInfo(p,f){
+      let that = this;
+      await that.$axios.post('/api/login',p).then( res =>{
+        if(res.code == 0){
+          let data = res.data;
+          localStorage.setItem('tag', data.tag); // 用户身份 user、人才端 company、企业端缓存
+          if(data.tag == 'user'){
+            setToken(data.token);   // 缓存
+            // 求职者
+            localStorage.setItem('name', data.user.real_name); // 用户名缓存
+            localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
+            localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
+            that.$store.dispatch('user/set_realAvatar', data.user.avatar); // vuex
+            that.$store.dispatch('user/SET_NAME', data.user.real_name);
+            localStorage.setItem('userVipRank', data.user.vip_rank); // 用户会员等级
+
+            setTimeout(() => {
+              f();
+              that.$router.push('/talentSide');
+            }, 1000);
+          }
+          if(data.tag == 'company'){
+            that.companyList = data.company_staff_list;
+            if(that.companyList.length>=2){
+              that.myfirmVisible = true;
+            }
+            if(that.companyList.length == 1){
+            that.clickCompanyItems( that.companyList[0] );
+            }
+          }
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+        
+        
+      }).catch( e=>{
+        console.log(e)
+      })
+    },
     LoginUserInfo(){
       let that = this;
       let login_way = that.login_way;
@@ -329,43 +370,18 @@ export default {
         p.password = login_user.password,
         p.login_type = 'pass_login'
       }
-      that.$axios.post('/api/login',p).then( res =>{
-        let data = res.data;
-        localStorage.setItem('tag', data.tag); // 用户身份 user、人才端 company、企业端缓存
-        if(data.tag == 'user'){
-          setToken(data.token);   // 缓存
-          // 求职者
-          localStorage.setItem('name', data.user.real_name); // 用户名缓存
-          localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
-          localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
-          this.$store.dispatch('user/set_realAvatar', data.user.avatar); // vuex
-          this.$store.dispatch('user/SET_NAME', data.user.real_name);
-          localStorage.setItem('userVipRank', data.user.vip_rank); // 用户会员等级
 
-          setTimeout(() => {
-            this.$router.push('/talentSide');
-          }, 1000);
+      that.submitInfo(p,that.getIpcity);
+    },
+    getIpcity(){
+      let that = this;
+      that.$axios.post('/api/user/at/city',{}).then( res =>{
+        if(res.code == 0){
+          localStorage.setItem('ipCity',res.data.current_city);
         }
-        if(data.tag == 'company'){
-          that.companyList = data.company_staff_list;
-          if(that.companyList.length>=2){
-            that.myfirmVisible = true;
-          }
-          if(that.companyList.length == 1){
-           that.clickCompanyItems( that.companyList[0] );
-          }
-          // 企业端
-          // localStorage.setItem('staffUid', data.user.id); // 用户uid缓存
-          // localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
-          // setTimeout(() => {
-          //   this.$router.push('/dashboard');
-          // }, 1000);
-        }
-        
-      }).catch( e=>{
+      }).catch(e =>{
         console.log(e)
       })
-
     },
     // 点击企业列表项
     clickCompanyItems(i){
@@ -373,14 +389,22 @@ export default {
       that.$axios.post('/api/select-company-login',{
         id: i.id
       }).then( res =>{
-        let data = res.data;
-        setToken(data.token);   // 缓存
-        localStorage.setItem('staffUid', data.user.id); // 用户uid缓存
-        localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
-        localStorage.setItem('company_id', data.user.company_id); // 企业id缓存
-        setTimeout(() => {
-          this.$router.push('/dashboard');
-        }, 1000);
+        if(res.code == 0){
+          let data = res.data;
+          setToken(data.token);   // 缓存
+          localStorage.setItem('staffUid', data.user.id); // 用户uid缓存
+          localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
+          localStorage.setItem('company_id', data.user.company_id); // 企业id缓存
+          setTimeout(() => {
+            that.getIpcity();
+            that.$router.push('/dashboard');
+          }, 1000);
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+        
         
       }).catch( e=>{
         console.log(e)
@@ -456,38 +480,16 @@ export default {
           that.$message.success({
             message:'注册成功'
           })
-          
-          that.$axios.post('/api/login',{
+          let data = {
             phone: p.phone,
             password: p.password,
             tag: that.tag,
             login_type: 'pass_login'
-          }).then( res =>{
-            let data = res.data;
-            setToken(data.token);   // 缓存
-            localStorage.setItem('tag', data.tag); // 用户身份 user、人才端 company、企业端缓存
-            if(data.tag == 'user'){
-              // 求职者
-              localStorage.setItem('name', data.user.real_name); // 用户名缓存
-              localStorage.setItem('realAvatar', data.user.avatar); // 用户头像缓存
-              localStorage.setItem('realUid', data.user.uid); // 用户uid缓存
-              localStorage.setItem('userVipRank', data.user.vip_rank); // 用户会员等级
-              this.$store.dispatch('user/set_realAvatar', data.user.avatar); // vuex
-              this.$store.dispatch('user/SET_NAME', data.user.real_name);
-              setTimeout(() => {
-                this.$router.push('/myResume');
-              }, 1000);
-            }
-          }).catch( e=>{
-            console.log(e)
-          })
-          // setTimeout(()=>{
-          //   this.sign_login = 'login';
-          // },1500)
-          return
+          }
+          that.submitInfo(data,that.getIpcity);
         }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
           return
         }
@@ -546,7 +548,7 @@ export default {
         }
         if(res.code == 1){
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
           return
         }
@@ -636,7 +638,7 @@ export default {
 
       })
     },
-
+    
     // 点击用户协议
     clickUserAgreement(){
       this.$refs.userAgreement._data.dialogVisible = true;

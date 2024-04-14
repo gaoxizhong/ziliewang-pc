@@ -173,6 +173,10 @@ export default {
       }).then( res =>{
         if( res.code == 0 ){
           this.infoData = res.data;
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
       }).catch( e =>{
         console.log(e)
@@ -214,6 +218,7 @@ export default {
         p.content = that.recover_value;
       }
       that.$axios.post('/api/profession-circle/comment',p).then( res =>{
+        console.log(res)
         if( res.code == 0 ){
           let text = '';
           if(num == 1){
@@ -232,17 +237,9 @@ export default {
             that.getInfoData();
           },1500)
           
-        }else if(res.code == 555) {
-          that.$message.error({
-            message: '需要升级为VIP会员可评论、回复!'
-          })
-          setTimeout( () =>{
-            that.$router.push('/topUpBuy');
-          },1000)
-          return
         }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
         }
       }).catch( e =>{
@@ -268,6 +265,10 @@ export default {
               this.getInfoData();
             },1000)
            
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
       }).catch( e =>{
         console.log(e)
@@ -290,6 +291,10 @@ export default {
             //获取职圈详情
             this.getInfoData();
           },1000)
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
       }).catch( e =>{
         console.log(e)
@@ -300,7 +305,7 @@ export default {
       if(this.userVipRank < 1){
         this.$message.error("需要升级为VIP会员可评论、回复!");
         setTimeout( () =>{
-          this.$router.push('/topUpBuy');
+          this.$router.push('/talentSide/topUpBuy');
         },1000)
         return
       }

@@ -166,7 +166,7 @@ export default {
           that.tableData = res.data
         }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
         }
       })
@@ -179,7 +179,7 @@ export default {
           that.roleList = res.data
         }else{
           that.$message.error({
-            message:res.data.msg
+            message:res.msg
           })
         }
       })
@@ -232,7 +232,7 @@ export default {
     },
     async addAccount() {
 
-      let res =  await this.$axios.post('/api/staff/profile',{})
+      let res =  await this.$axios.post('/api/staff/profile',{});
       if(res.data.vip_rank < 3){
         this.$message.error({
           message: '购买会员后才可操作！'

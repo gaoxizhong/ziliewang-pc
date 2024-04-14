@@ -233,7 +233,11 @@ export default {
           that.video_files_path = [];
           // 获取用户职圈信息
           that.getMyProfessionCircle();
-        } 
+        } else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
         that.is_return = true;
       }).catch(e =>{
         console.log(e)
@@ -261,6 +265,10 @@ export default {
           this.infoData = res.data.users;
           this.infoList = res.data.list;
           this.count_list = res.data.count_list;
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)
@@ -276,7 +284,7 @@ export default {
     },
     beforeAvatarUpload(file) {
       console.log(file)
-      const isJPG = file.type == ('image/png' || 'image/jpeg'|| 'image/jpg'|| 'image/gif'|| 'image/webp');
+      const isJPG = file.type == 'image/png' || 'image/jpeg'|| 'image/jpg'|| 'image/gif'|| 'image/webp';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {

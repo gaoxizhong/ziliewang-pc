@@ -144,10 +144,11 @@
     </div>
     <div class="chat-footer" :style="`height:${is_pop == 'pop'?'120':'140'}px;`">
       <div class="action-delete" v-if="messageSelector.visible">
-        <img class="delete-btn" src="../../../../assets/images/delete.png" @click="deleteMultipleMessages"/>
-        <div>删除</div>
+        <!-- <img class="delete-btn" src="../../../../assets/images/delete.png" @click="deleteMultipleMessages"/> -->
+        <div @click="cancelMultipleMessages">取消选择</div>
+        <div class="delete-text" @click="deleteMultipleMessages">删除</div>
       </div>
-      <div class="action-box">
+      <div class="action-box" v-else>
         <div class="action-bar">
           <!-- 常用语 -->
           <div class="action-item">
@@ -538,6 +539,10 @@
             if(res.code == 0){
               that.phraseslist = res.data;
               that.cyy.visible = true;
+            }else{
+              that.$message.error({
+                message:res.msg
+              })
             }
           }).catch(e =>{
             console.log(e)
@@ -640,11 +645,19 @@
         this.actionPopup.visible = false;
         this.deleteMessage();
       },
+      // 确认删除按钮
       deleteMultipleMessages() {
         if (this.messageSelector.ids.length > 0) {
           this.messageSelector.visible = false;
           this.deleteMessage();
         }
+      },
+      // 取消选择按钮
+      cancelMultipleMessages(){
+        this.messageSelector.ids = [];
+        setTimeout( ()=>{
+          this.messageSelector.visible = false;
+        },1000)
       },
       deleteMessage() {
         let conf = confirm("确认删除？");
@@ -801,6 +814,10 @@
         }).then(res =>{
           if(res.code == 0){
             this.positionList = res.data;
+          }else{
+            that.$message.error({
+              message:res.msg
+            })
           }
         }).catch(e =>{
           console.log(e)
@@ -811,7 +828,11 @@
         let that = this;
         that.$axios.post('/api/staff/profile',{}).then(res =>{
           if(res.code == 0){
-            this.userProfile = res.data;
+            that.userProfile = res.data;
+          }else{
+            that.$message.error({
+              message:res.msg
+            })
           }
         }).catch(e =>{
           console.log(e)
@@ -1004,7 +1025,7 @@
     background: #FFFFFF;
     width: 18px;
     height: 18px;
-    border: 1px solid #cccccc;
+    border: 1px solid #d02129;
     border-radius: 50%;
   }
 
@@ -1277,14 +1298,22 @@
 
   .action-delete {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    // flex-direction: column;
+    justify-content: space-between;
+    // align-items: center;
     width: 100%;
     height: 100%;
     background-color: #FFFFFF;
   }
-
+  .action-delete>div{
+    cursor: pointer;
+    font-size: 14px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .action-delete>div.delete-text{
+    color: #ff0000;
+  }
   .delete-btn {
     width: 25px;
     height: 25px;
@@ -1393,7 +1422,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    background: rgba(51, 51, 51, 0.4);
+    background: #f6f6f666;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1406,6 +1435,7 @@
     z-index: 100;
     border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 0 16px 0 #8b98a9;
   }
 
   .action-popup-main .action-item {

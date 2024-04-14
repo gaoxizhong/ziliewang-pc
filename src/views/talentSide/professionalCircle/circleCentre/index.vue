@@ -160,6 +160,10 @@ export default {
           this.infoData = res.data.users;
           this.infoList = res.data.list;
           this.count_list = res.data.count_list;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)
@@ -173,6 +177,10 @@ export default {
         if(res.code == 0){
           this.$message.success('关注成功！');
           this.getUserProfile();
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
       }).catch(e =>{
         console.log(e)
@@ -185,6 +193,10 @@ export default {
       }).then( res =>{
         if(res.code == 0){
           this.$message.success('取消成功！');
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
         this.getUserProfile();
       }).catch(e =>{

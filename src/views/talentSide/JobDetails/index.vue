@@ -163,14 +163,6 @@ export default {
             message:'投递成功'
           })
           that.infoData.is_deliver = 1;
-        }else if(res.code == 555) {
-          that.$message.error({
-            message: '需要升级为VIP会员可投递简历!'
-          })
-          setTimeout( () =>{
-            that.$router.push('/topUpBuy');
-          },1000)
-          return
         }else{
           that.$message.error({
             message:res.msg
@@ -227,7 +219,7 @@ export default {
       if(that.userVipRank < 1){
         this.$message.error("需要升级为VIP会员可获取对方电话!");
         setTimeout( () =>{
-          that.$router.push('/topUpBuy');
+          that.$router.push('/talentSide/topUpBuy');
         },1000)
         return
       }

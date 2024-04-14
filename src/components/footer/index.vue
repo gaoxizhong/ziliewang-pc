@@ -25,7 +25,7 @@ export default {
 <style lang="scss" scoped>
   .footer-box{
     width: 100%;
-    background: #061528;
+    background: #6cc3d6;
     height: 62px;
     &>div{
       width: 100%;
