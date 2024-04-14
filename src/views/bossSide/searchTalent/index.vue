@@ -79,7 +79,7 @@
     <!-- 列表模块 结束  -->
 
      <!-- 分页控制 -->
-     <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged"></mPagination>
+     <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged" v-if="jobList.length > 0"></mPagination>
 
 
      <!-- 预览在线简历 弹窗  -->
@@ -118,13 +118,14 @@ export default {
   },
   created(){
     this.search_value = this.$route.query.input_name;
-    this.getSearchinfo();
+    // this.getSearchinfo();
   },
   methods:{
      // 筛选
      getfilterInfo(e){
       let info = JSON.parse(e);
       this.filterInfo = info;
+      this.jobList = [];
       this.paginationData= {
         total: 10,
         currentPage: 1,

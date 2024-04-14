@@ -54,7 +54,7 @@
         <!-- <jobList :data="infoData" :tag="tag"/> -->
             
         <!-- 分页控制 -->
-        <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged"></mPagination>
+        <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged" v-if="infoList.length>0"></mPagination>
       </div>
       <!-- 左侧列表模块 结束 -->
       <!-- 右侧 个人信息操作模块 开始 -->
@@ -98,7 +98,7 @@ export default {
       infoList: [], // 列表
       // 分页数据
       paginationData: {
-        total: 10,
+        total: 0,
         currentPage: 1,
         pageSize: 20,
       },
@@ -106,7 +106,7 @@ export default {
     }
   },
   created(){
-    this.getSearchinfo();
+    // this.getSearchinfo();
     this.gethotJobList();
     // 获取个人信息
     this.getUserProfile();
@@ -119,8 +119,9 @@ export default {
     getfilterInfo(e){
       let info = JSON.parse(e);
       this.filterInfo = info;
+      this.infoList = [];
       this.paginationData= {
-        total: 10,
+        total: 0,
         currentPage: 1,
         pageSize: 20,
       };
