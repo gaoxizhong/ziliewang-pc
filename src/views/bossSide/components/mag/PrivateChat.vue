@@ -382,7 +382,8 @@
         is_type:'',
         yqmsVisible: false,
       interviewData: {
-        time:''
+        interview_address:'',
+        time:'',
       }, // 邀请面试信息
       positionList:[],
       staffAvatar:'', // 企业端头像
@@ -433,7 +434,12 @@
   
       /** 确认地图地址 */
       confirmMapAddress(addressInfo) {
-        this.interviewData.interview_address = addressInfo;
+        let that = this;
+        that.addressInfo = addressInfo;
+        that.$nextTick( () =>{
+        })
+        that.interviewData.interview_address = addressInfo.province +addressInfo.city +addressInfo.district +addressInfo.address ;
+        console.log(that.interviewData.interview_address)
       },
       changeIndustry(e){
         console.log(e)
@@ -1819,7 +1825,7 @@
               display: flex;
               align-items: center;
               font-size: 13px;
-              color: #d2d2d2;
+              color: #adadad;
               cursor: pointer;
               &>img{
                 width: 24px;

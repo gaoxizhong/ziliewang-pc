@@ -1,6 +1,6 @@
 <template>
   <div class="baidu-map-box">
-    <el-dialog title="位置选择" :visible.sync="openMap" width="900px" :style="`z-index`">
+    <el-dialog title="位置选择" :visible.sync="openMap" width="900px">
       <el-form label-width="80px">
         <el-row>
           <el-col :span="8">
@@ -154,9 +154,13 @@ export default {
 }
 .baidu-map-box{
   /deep/ .el-dialog{
-
+    min-width: 420px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    box-shadow: 0 0 16px 0 #99a5b4;
     .el-dialog__body{
-      padding: 20px 0;
+      padding: 0;
       .el-form{
         padding: 0 20px;
       }
@@ -173,7 +177,7 @@ export default {
       line-height: 35px;
     }
     .el-form-item__content{
-      line-height: none;
+      line-height: 35px;
     }
   }
   
