@@ -110,7 +110,7 @@ export default {
     let getViewportSize = this.$getViewportSize();
     this.parentH = getViewportSize.height; // 组件范围
     this.parentW = getViewportSize.width; // 组件范围
-    this.width = 840; // 可拖动div 高度
+    this.width = Number(getViewportSize.width)/2; // 可拖动div 宽
     this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
     this.height = Number(getViewportSize.height - 60); // 可拖动div 高度
     this.currentUser = {
@@ -273,7 +273,7 @@ export default {
   // 聊天弹窗 样式=============== ↓ ===========
 
   .app-wrapper /deep/ .vdr{
-    z-index: 9997 !important;
+    // z-index: 9997 !important;
     position: fixed;
     border-radius: 4px;
     box-shadow:0 0 16px 0 rgba(139,152,169,1);

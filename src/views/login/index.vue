@@ -236,6 +236,7 @@ export default {
     localStorage.setItem('staffVipRank', ''); // 企业用户会员等级
     localStorage.setItem('userVipRank', ''); // 人才端用户会员等级
     localStorage.setItem('company_id', ''); // 企业id缓存
+    localStorage.setItem('ipCity','');
     this.login_bgurl_1 = this.$root.login_bgurl_1;
     this.login_bgurl_2 = this.$root.login_bgurl_2;
     this.$nextTick(() => {
@@ -282,7 +283,7 @@ export default {
       this.sign_login = 'changePassword';
     },
     // 用户登录
-    async submitInfo(p,f){
+    async submitInfo(p){
       let that = this;
       await that.$axios.post('/api/login',p).then( res =>{
         if(res.code == 0){
@@ -299,7 +300,6 @@ export default {
             localStorage.setItem('userVipRank', data.user.vip_rank); // 用户会员等级
 
             setTimeout(() => {
-              f();
               that.$router.push('/talentSide');
             }, 1000);
           }
@@ -371,17 +371,7 @@ export default {
         p.login_type = 'pass_login'
       }
 
-      that.submitInfo(p,that.getIpcity);
-    },
-    getIpcity(){
-      let that = this;
-      that.$axios.post('/api/user/at/city',{}).then( res =>{
-        if(res.code == 0){
-          localStorage.setItem('ipCity',res.data.current_city);
-        }
-      }).catch(e =>{
-        console.log(e)
-      })
+      that.submitInfo(p);
     },
     // 点击企业列表项
     clickCompanyItems(i){
@@ -396,7 +386,6 @@ export default {
           localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
           localStorage.setItem('company_id', data.user.company_id); // 企业id缓存
           setTimeout(() => {
-            that.getIpcity();
             that.$router.push('/dashboard');
           }, 1000);
         }else{
@@ -486,7 +475,7 @@ export default {
             tag: that.tag,
             login_type: 'pass_login'
           }
-          that.submitInfo(data,that.getIpcity);
+          that.submitInfo(data);
         }else{
           that.$message.error({
             message:res.msg

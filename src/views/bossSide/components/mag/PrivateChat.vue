@@ -36,7 +36,7 @@
                 <img v-else :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="sender-avatar"/>
               </div>
               <!-- 头像 结束 -->
-              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message)">
+              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(message,$event)">
               <!-- <div class="message-content"> -->
                 <div class="message-payload">
                   <div class="pending" v-if="message.status === 'sending'"></div>
@@ -61,7 +61,7 @@
                   </div>
                   <!-- 图片 结束 -->
                   <!-- 发送的面试邀请 开始 -->
-                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 1" class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)">
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 1" class="message-phone-universal-card">
                     <h4 class="message-phone-universal-card-header">发送面试邀请</h4>
                     <div class="message-phone-universal-card-content">
                       <div><span>面试岗位：</span><span>{{message.payload.position_name?message.payload.position_name:''}}</span></div>
@@ -71,7 +71,7 @@
                   </div>
                   <!-- 发送的面试邀请 结束 -->
                   <!-- 同意面试邀请 开始 -->
-                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 2" class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)">
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 2" class="message-phone-universal-card">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-box">接受了您的面试邀请</div>
                   </div>
@@ -79,7 +79,7 @@
 
 
                   <!-- boss 索要手机号 4 ↓ -->
-                  <div class="message-phone-universal-card"  @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 4">
+                  <div class="message-phone-universal-card"  v-if="message.type === 'phone' && message.payload.way_status == 4">
                     <h4 class="message-phone-universal-card-header">联系方式</h4>
                     <div class="message-phone-universal-card-content">
                       <span>您的手机号：{{ message.payload.real_phone }}</span>
@@ -88,7 +88,7 @@
                   </div>
                   <!-- boss 索要手机号 ↑ -->
 
-                  <div class="message-phone-universal-card"  @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 2">
+                  <div class="message-phone-universal-card"  v-if="message.type === 'phone' && message.payload.way_status == 2">
                     <h4 class="message-phone-universal-card-header">联系方式</h4>
                     <div class="message-phone-universal-card-content">
                       <span>您的手机号：{{ message.payload.real_phone }}</span>
@@ -97,7 +97,7 @@
                   </div>
                   
                   <!-- 个人 发送过来的手机号 ↓ -->
-                  <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 3">
+                  <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 3">
                     <h4 class="message-phone-universal-card-header">联系方式</h4>
                     <div class="message-phone-universal-card-content">
                       <span>{{ message.payload.real_name }}的手机号：{{ message.payload.real_phone }}</span>
@@ -105,7 +105,7 @@
                   </div>
                   <!-- 个人 发送过来的手机号 ↑ -->
                   <!-- 个人 索要手机号 ↓ -->
-                  <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(message)" v-if="message.type === 'phone' && message.payload.way_status == 1">
+                  <div class="message-phone-universal-card" v-if="message.type === 'phone' && message.payload.way_status == 1">
                     <h4 class="message-phone-universal-card-header">联系方式</h4>
                     <div class="message-phone-universal-card-content">
                       <span>对方请求交换联系方式</span>
@@ -223,11 +223,11 @@
     </div>
     <!-- 消息删除撤回弹窗 -->
     <div class="action-popup" v-if="actionPopup.visible" @click="actionPopup.visible = false">
-      <div class="action-popup-main">
+      <div class="action-popup-main" :style="`top:${topY}px;left:${leftX}px;`">
         <div class="action-item" @click="deleteSingleMessage">删除</div>
         <div class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</div>
         <div class="action-item" @click="showCheckBox">多选</div>
-        <div class="action-item" @click="actionPopup.visible = false">取消</div>
+        <div class="action-item" @click="showCancel">取消</div>
       </div>
     </div>
     
@@ -237,7 +237,7 @@
    
     <!-- 邀请面试信息弹窗 -->
     <div class="yqms-popup">
-      <el-dialog title="邀请面试" :visible.sync="yqmsVisible" width="500px">
+      <el-dialog title="邀请面试" :visible.sync="yqmsVisible" width="580px">
         <div class="cententinfo-box">
           <div class="items-box">
             <div class="title">面试职位：</div>
@@ -266,6 +266,10 @@
           <div class="items-box">
             <div class="title">面试地址：</div>
             <el-input v-model="interviewData.interview_address" placeholder="面试地址"></el-input>
+            <div class="icon-dt-box" @click="showMap">
+              <img src="../../../../assets/image/icon-dt.png" alt="" />
+              <span>选择地址</span>
+            </div>
           </div>
           <div class="items-box">
             <div class="title">面试准备事项：</div>
@@ -277,7 +281,8 @@
         </span>
       </el-dialog>
     </div>
-
+    <!-- 百度地图位置选择 -->
+    <BMapAddressSelect ref="bmapAddressSelect" @confirmMapAddress="confirmMapAddress"></BMapAddressSelect>
 
   </div>
 </template>
@@ -287,6 +292,7 @@
   import EmojiDecoder from '../../../../utils/EmojiDecoder';
   import GoeasyVideoPlayer from "../../../../components/GoEasyVideoPlayer";
   import onlineResume from '../onlineResume.vue';
+  import BMapAddressSelect from "../../../../components/BMapAddressSelect/index";
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
@@ -294,7 +300,8 @@
     name: 'PrivateChat',
     components: {
       GoeasyVideoPlayer,
-      onlineResume
+      onlineResume,
+      BMapAddressSelect
     },
     props:{
       infoData:{
@@ -321,6 +328,8 @@
         '[傲慢]': 'emoji_8@2x.png',
       };
       return {
+        leftX: 0,
+        topY: 0,
         userProfile:{}, // 个人信息
         phraseslist:[], // 常用语
         userVipRank: 0,
@@ -417,6 +426,15 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     methods: {
+      /** 显示地图 */
+      showMap() {
+        this.$refs.bmapAddressSelect.show();
+      },
+  
+      /** 确认地图地址 */
+      confirmMapAddress(addressInfo) {
+        this.interviewData.interview_address = addressInfo;
+      },
       changeIndustry(e){
         console.log(e)
       },
@@ -631,7 +649,9 @@
           }
         });
       },
-      showActionPopup(message) {
+      showActionPopup(message,e) {
+        this.leftX = e.layerX;
+        this.topY = e.layerY;
         const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
         this.messageSelector.ids = [message.messageId];
         if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === this.currentUser.id && message.status === 'success') {
@@ -644,6 +664,11 @@
       deleteSingleMessage() {
         this.actionPopup.visible = false;
         this.deleteMessage();
+      },
+      showCancel(){
+        this.messageSelector.ids = [];
+        this.messageSelector.visible = false;
+        this.actionPopup.visible = false;
       },
       // 确认删除按钮
       deleteMultipleMessages() {
@@ -1023,8 +1048,8 @@
     top: -3px;
     left: -3px;
     background: #FFFFFF;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border: 1px solid #d02129;
     border-radius: 50%;
   }
@@ -1032,7 +1057,7 @@
   .message-item-checkbox input[type="checkbox"]:checked::before {
     content: "\2713";
     background-color: #d02129;
-    width: 18px;
+    width: 20px;
     color: #FFFFFF;
     text-align: center;
     font-weight: bold;
@@ -1436,6 +1461,7 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 16px 0 #8b98a9;
+    position: absolute;
   }
 
   .action-popup-main .action-item {
@@ -1714,14 +1740,15 @@
 
   /* ============ 交换联系方式  ↑ ==================*/
   .yqms-popup {
-    /deep/ .el-dialog__wrapper{
-      z-index: 9999 !important;
-    }
+    // /deep/ .el-dialog__wrapper{
+    //   z-index: 9999 !important;
+    // }
     /deep/ .el-dialog{
       min-width: 420px;
       top: 50%;
       transform: translateY(-50%);
       margin-top: 0 !important;
+      box-shadow: 0 0 16px 0 #99a5b4;
       .el-dialog__header{
         text-align: left;
         padding: 10px;
@@ -1787,7 +1814,20 @@
             }
             & .el-textarea{
               flex: 1;
-              
+            }
+            .icon-dt-box{
+              display: flex;
+              align-items: center;
+              font-size: 13px;
+              color: #d2d2d2;
+              cursor: pointer;
+              &>img{
+                width: 24px;
+              }
+              &>span{
+                display: inline-block;
+                line-height: 30px;
+              }
             }
           }
 

@@ -127,12 +127,12 @@
     <div class="selected-options-box">
       <div class="selected-options-title">已选条件：</div>
       <ul class="selected-options-list-box">
-        <block v-for="(item,index) in selectCityList" :key="index">
-          <li class="selected-item">
+        <template v-for="(item,index) in selectCityList">
+          <li class="selected-item" :key="index">
             <span class="anticon anticon-close">{{ item }}</span>
             <i class="el-icon-close" @click="clickselectCityList(index)"></i>
           </li>
-        </block>
+        </template>
         
         <li class="selected-item" v-if=" city == '全国' ">
           <span class="anticon anticon-close">全国</span>
@@ -147,20 +147,20 @@
           <i class="el-icon-close" @click="clickAnticon('exp')"></i>
         </li>
         <!-- 行业选项 开始 -->
-        <block v-for="(item,index) in desired_industry" :key="index">
-          <li class="selected-item">
+        <template v-for="(item,index) in desired_industry">
+          <li class="selected-item" :key="index">
             <span class="anticon anticon-close">{{ item }}</span>
             <i class="el-icon-close" @click="clickDesiredList(index)"></i>
           </li>
-        </block>
+        </template>
         <!-- 行业选项 结束 -->
         <!-- 职业选项 开始 -->
-        <block v-for="(item,index) in position.selectCategoryList" :key="index">
-          <li class="selected-item">
+        <template v-for="(item,index) in position.selectCategoryList">
+          <li class="selected-item" :key="index">
             <span class="anticon anticon-close">{{ item }}</span>
             <i class="el-icon-close" @click="clickCategoryList(index)"></i>
           </li>
-        </block>
+        </template>
         <!-- 职业选项 结束 -->
       </ul>
       <div class="selected-clear" ref="search-jobs-clear-options" id="search-jobs-clear-options" @click="clickALLAnticon">
@@ -363,15 +363,16 @@ export default {
       areaList:[],
     }
   },
-  created(){
-    console.log(pcas)
-     this.city_list = this.cityData[this.selt_province_item].children;
-    // 获取行业列表信息
+  async created(){
+    this.city_list = this.cityData[this.selt_province_item].children;
+     // 获取行业列表信息
     this.getIndustryList();
     // 获取职位列表信息
     this.getPositionList();
-    if(this.ipCity){
-      this.clickCity(this.ipCity)
+     let res = await this.$axios.post('/api/user/at/city',{});
+     if(res.code == 0){
+     let ipCity = res.data.current_city;
+      this.clickCity(ipCity)
      }
   },
   methods:{

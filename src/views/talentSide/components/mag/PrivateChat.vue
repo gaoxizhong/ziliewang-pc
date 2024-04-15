@@ -232,11 +232,11 @@
     </div>
     <!-- 消息删除撤回弹窗 -->
     <div class="action-popup" v-if="actionPopup.visible" @click="actionPopup.visible = false">
-      <div class="action-popup-main">
+      <div class="action-popup-main" :style="`top:${topY}px;left:${leftX}px;`">
         <div class="action-item" @click="deleteSingleMessage">删除</div>
         <div class="action-item" v-if="actionPopup.recallable" @click="recallMessage">撤回</div>
         <div class="action-item" @click="showCheckBox">多选</div>
-        <div class="action-item" @click="actionPopup.visible = false">取消</div>
+        <div class="action-item" @click="showCancel">取消</div>
       </div>
     </div>
 
@@ -696,6 +696,11 @@
         }
         this.actionPopup.visible = true;
       },
+      showCancel(){
+        this.messageSelector.ids = [];
+        this.messageSelector.visible = false;
+        this.actionPopup.visible = false;
+      },
       deleteSingleMessage() {
         this.actionPopup.visible = false;
         this.deleteMessage();
@@ -995,8 +1000,8 @@
     top: -3px;
     left: -3px;
     background: #FFFFFF;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border: 1px solid #d02129;
     border-radius: 50%;
   }
@@ -1004,7 +1009,7 @@
   .message-item-checkbox input[type="checkbox"]:checked::before {
     content: "\2713";
     background-color: #d02129;
-    width: 18px;
+    width: 20px;
     color: #FFFFFF;
     text-align: center;
     font-weight: bold;
@@ -1475,6 +1480,7 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 16px 0 #8b98a9;
+    position: absolute;
   }
 
   .action-popup-main .action-item {

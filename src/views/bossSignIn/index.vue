@@ -340,7 +340,6 @@ export default {
           localStorage.setItem('staffVipRank', data.user.vip_rank); // 用户会员等级
           localStorage.setItem('company_id', data.user.company_id); // 企业id缓存
           setTimeout(() => {
-            that.getIpcity();
             that.$router.push('/dashboard');
           }, 500);
         }else{
@@ -367,17 +366,7 @@ export default {
       this.password = ''; // 个人密码
 
     },
-   
-    getIpcity(){
-      let that = this;
-      that.$axios.post('/api/user/at/city',{}).then( res =>{
-        if(res.code == 0){
-          localStorage.setItem('ipCity',res.data.current_city);
-        }
-      }).catch(e =>{
-        console.log(e)
-      })
-    },
+
   }
 }
 </script>

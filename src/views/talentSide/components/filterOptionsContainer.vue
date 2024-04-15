@@ -109,12 +109,12 @@
     <div class="selected-options-box" v-if=" selectCityList.length>0 || city == '全国' || pay.value || release_time.value || exp.value || educational_experience.value || company_scale.value || corporate_finance.value || business_nature.value">
       <div class="selected-options-title">已选条件：</div>
       <ul class="selected-options-list-box">
-        <block v-for="(item,index) in selectCityList" :key="index">
-          <li class="selected-item">
+        <template v-for="(item,index) in selectCityList">
+          <li class="selected-item" :key="index">
             <span class="anticon anticon-close">{{ item }}</span>
             <i class="el-icon-close" @click="clickselectCityList(index)"></i>
           </li>
-        </block>
+        </template>
         <li class="selected-item" v-if=" city == '全国' ">
           <span class="anticon anticon-close">全国</span>
           <i class="el-icon-close" @click="clickAnticon(-1)"></i>
@@ -198,7 +198,6 @@ export default {
   },
   data(){
     return {
-      ipCity: localStorage.getItem('ipCity') || '',
       dialogVisible: false,
       position: pcas,
       showCityList:[
@@ -239,10 +238,12 @@ export default {
       firm_natureList: ['有限责任','股份制','国有企业','合伙企业','个体工商户','私营企业','合资企业','外资企业','独资企业','政府机关/非盈利机构','事业单位'],
     }
   },
-  created(){
+  async created(){
      this.position_list = this.position[this.selt_item].children;
-     if(this.ipCity){
-      this.clickCity(this.ipCity)
+     let res = await this.$axios.post('/api/user/at/city',{});
+     if(res.code == 0){
+     let ipCity = res.data.current_city;
+      this.clickCity(ipCity)
      }
   },
   methods:{
