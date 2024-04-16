@@ -150,61 +150,72 @@
       </div>
       <div class="action-box" v-else>
         <div class="action-bar">
-          <!-- 常用语 -->
-          <div class="action-item">
-            <div v-if="cyy.visible" class="sentence-panel">
-              <div class="header">
-                <h3 class="title">常用语</h3>
-                <a href="javascript:0;" class="set-btn" @click="clickSetBtn">设置</a>
+          <div class="action-bar-left">
+            <!-- 常用语 -->
+            <div class="action-item">
+              <div v-if="cyy.visible" class="sentence-panel">
+                <div class="header">
+                  <h3 class="title">常用语</h3>
+                  <a href="javascript:0;" class="set-btn" @click="clickSetBtn">设置</a>
+                </div>
+                <ul>
+                  <li v-for="(item,index) in phraseslist" :key="index" @click="clickCyy(item.common_language)"> {{ item.common_language }}</li>
+                </ul>
               </div>
-              <ul>
-                <li v-for="(item,index) in phraseslist" :key="index" @click="clickCyy(item.common_language)"> {{ item.common_language }}</li>
-              </ul>
+              <i class="iconfont icon-changyongyu" title="常用语" @click="showCyyBox"></i>
             </div>
-            <i class="iconfont icon-changyongyu" title="常用语" @click="showCyyBox"></i>
-          </div>
-          <!-- 表情 -->
-          <!-- <div class="action-item">
-            <div v-if="emoji.visible" class="emoji-box">
-              <img
-                v-for="(emojiItem, emojiKey, index) in emoji.map"
-                class="emoji-item"
-                :key="index"
-                :src="emoji.url + emojiItem"
-                @click="chooseEmoji(emojiKey)"
-              />
+            <!-- 表情 -->
+            <!-- <div class="action-item">
+              <div v-if="emoji.visible" class="emoji-box">
+                <img
+                  v-for="(emojiItem, emojiKey, index) in emoji.map"
+                  class="emoji-item"
+                  :key="index"
+                  :src="emoji.url + emojiItem"
+                  @click="chooseEmoji(emojiKey)"
+                />
+              </div>
+              <i class="iconfont icon-biaoqing" title="表情" @click="showEmojiBox"></i>
+            </div> -->
+            <!-- 图片 -->
+            <div class="action-item">
+              <label for="img-input" v-if="userVipRank > 0">
+                <i class="iconfont icon-tupian" title="图片"></i>
+              </label>
+              <label  @click="clickvipRank_0" v-else>
+                <i class="iconfont icon-tupian" title="图片"></i>
+              </label>
+              <input v-show="false" id="img-input" accept="image/*" multiple type="file" @change="sendImageMessage"/>
             </div>
-            <i class="iconfont icon-biaoqing" title="表情" @click="showEmojiBox"></i>
-          </div> -->
-          <!-- 图片 -->
-          <div class="action-item">
-            <label for="img-input" v-if="userVipRank > 0">
-              <i class="iconfont icon-tupian" title="图片"></i>
-            </label>
-            <label  @click="clickvipRank_0" v-else>
-              <i class="iconfont icon-tupian" title="图片"></i>
-            </label>
-            <input v-show="false" id="img-input" accept="image/*" multiple type="file" @change="sendImageMessage"/>
+            <!-- 视频 -->
+            <!-- <div class="action-item">
+              <label for="video-input"><i class="iconfont icon-film" title="视频"></i></label>
+              <input v-show="false" id="video-input" accept="video/*" type="file"
+                    @change="sendVideoMessage"/>
+            </div> -->
+            <!-- 文件 -->
+            <!-- <div class="action-item">
+              <label for="file-input" v-if="userVipRank > 0">
+                <i class="iconfont icon-wenjianjia" title="文件"></i>
+              </label>
+              <label @click="clickvipRank_0" v-else>
+                <i class="iconfont icon-wenjianjia" title="文件"></i>
+              </label>
+              <input v-show="false" id="file-input" type="file"  @change="sendFileMessage"/>
+            </div> -->
+            <i class="vline"></i>
+            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(4)">联系方式</div>
+            <div class="btn-resume toolbar-btn unable" title="邀请面试" @click="clickYqms(1)">邀面试</div>
           </div>
-          <!-- 视频 -->
-          <!-- <div class="action-item">
-            <label for="video-input"><i class="iconfont icon-film" title="视频"></i></label>
-            <input v-show="false" id="video-input" accept="video/*" type="file"
-                   @change="sendVideoMessage"/>
-          </div> -->
-          <!-- 文件 -->
-          <!-- <div class="action-item">
-            <label for="file-input" v-if="userVipRank > 0">
-              <i class="iconfont icon-wenjianjia" title="文件"></i>
-            </label>
-            <label @click="clickvipRank_0" v-else>
-              <i class="iconfont icon-wenjianjia" title="文件"></i>
-            </label>
-            <input v-show="false" id="file-input" type="file"  @change="sendFileMessage"/>
-          </div> -->
-          <i class="vline"></i>
-          <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(4)">联系方式</div>
-          <div class="btn-resume toolbar-btn unable" title="邀请面试" @click="clickYqms(1)">邀面试</div>
+          <div class="action-bar-right">
+            <div class="action-item">
+              <i class="iconfont icon-dianhua" title="电话" @click="clickCall"></i>
+            </div>
+            <div class="action-item">
+              <i class="iconfont icon-shipin" title="视频" @click="clickInit"></i>
+            </div>
+          </div>
+
         </div>
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
@@ -427,6 +438,14 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     methods: {
+      // 点击视频按钮
+      clickInit(){
+        this.$bus.$emit('clickInit',{to:this.to,currentUser:this.currentUser});
+      },
+      // 点击电话按钮
+      clickCall(){
+        this.$bus.$emit('clickCall',{to:this.to,currentUser:this.currentUser});
+      },
       /** 显示地图 */
       showMap() {
         this.$refs.bmapAddressSelect.show();
@@ -1366,9 +1385,21 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     /* padding: 6px 10px 0 10px; */
   }
-
+  .action-bar-left{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .action-bar-right{
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
   .action-bar .action-item {
     text-align: left;
     padding: 4px 0;

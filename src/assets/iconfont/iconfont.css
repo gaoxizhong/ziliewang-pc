@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4419062 */
-  src: url('iconfont.woff2?t=1706109174770') format('woff2'),
-       url('iconfont.woff?t=1706109174770') format('woff'),
-       url('iconfont.ttf?t=1706109174770') format('truetype');
+  src: url('iconfont.woff2?t=1713255084796') format('woff2'),
+       url('iconfont.woff?t=1713255084796') format('woff'),
+       url('iconfont.ttf?t=1713255084796') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,42 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dianhua:before {
+  content: "\e624";
+}
+
+.icon-shipin:before {
+  content: "\e60a";
+}
+
+.icon-sousuo:before {
+  content: "\e6c8";
+}
+
+.icon-meeting-management-arrangements-for-the-meeting:before {
+  content: "\e604";
+}
+
+.icon-iconfontpaixingbang:before {
+  content: "\e639";
+}
+
+.icon-menu_sqhd2:before {
+  content: "\e64f";
+}
+
+.icon-zhuangtaiqi:before {
+  content: "\e6af";
+}
+
+.icon-zhuangtaishijian:before {
+  content: "\e6b9";
+}
+
+.icon-gongzuozhuangtai:before {
+  content: "\e67c";
 }
 
 .icon-shenfen:before {

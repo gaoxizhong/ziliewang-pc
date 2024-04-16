@@ -46,6 +46,11 @@ Vue.prototype.GoEasy = GoEasy;
 Vue.prototype.goEasy = goEasy;
 // ==============  引入 实时通讯   ↑  ================
 
+// ==============  引入 腾讯云 实时音视频  ↓   ================
+import VueCompositionAPI from '@vue/composition-api'
+Vue.use(VueCompositionAPI)
+// ==============  引入 腾讯云 实时音视频  ↑  ================
+
 Vue.prototype.globalData = {
   currentUser: null
 };

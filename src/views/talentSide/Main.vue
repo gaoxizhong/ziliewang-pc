@@ -38,6 +38,13 @@
 
     <!-- 侧边栏 -->
     <Sidebar />
+
+    <!-- 聊天弹窗 结束-->
+    <div style="width: 50rem; height: 35rem position: fixed; border: 1px solid salmon;">
+      <TUICallKit />
+    </div>
+
+    
   </div>
 </template>
 <script>
@@ -46,6 +53,8 @@ import Footer from '../../components/footer';
 import VueDragResize from 'vue-drag-resize';
 import Sidebar from './components/sidebar';
 import buddyChart from './components/mag/buddyChart.vue';
+import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
+import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
 
   export default {
     provide(){ 
@@ -61,6 +70,7 @@ import buddyChart from './components/mag/buddyChart.vue';
       VueDragResize,
       Sidebar,
       buddyChart,
+      TUICallKit
     },
     data(){
       return {
@@ -77,6 +87,13 @@ import buddyChart from './components/mag/buddyChart.vue';
         laiyuan:'',
         is_pop:'pop',
         infoData: {},
+        // 腾讯云 SDKAppID、userSig 的获取参考下面步骤
+        // 主叫的 userID
+        // userID: '',    
+        // 被叫的 userID
+        // callUserID: '',
+        SDKAppID: 1600032579,    // Replace with your SDKAppID
+        SecretKey: '46c5cdb58daafc522d269cfffe9c3bd5b836ad57b648c5d08200d226b2e97b1a',  // Replace with your SecretKey
       }
     },
     watch: {
@@ -98,6 +115,10 @@ import buddyChart from './components/mag/buddyChart.vue';
     mounted(){
       // 组件间通信
       this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
+      // 腾讯云-- 点击视频
+      this.$bus.$on('clickInit', this.clickInit);
+      // 腾讯云-- 点击电话
+      this.$bus.$on('clickCall', this.clickCall);
     },
     created(){
       let that = this;
@@ -195,10 +216,39 @@ import buddyChart from './components/mag/buddyChart.vue';
         this.$bus.$emit('talentSide_clickSidebar',{ is_clickMinificationpngBtn:true } );
       },
         // 点击消息
-    clickMessage(){
-     
+      clickMessage(){
+      
+      },
+
+        // 腾讯云 音视频
+      async clickInit(e) {
+        console.log(e)
+        try {
+          const { userSig } = GenerateTestUserSig.genTestUserSig({
+            userID: e.currentUser.id,
+            SDKAppID: Number(this.SDKAppID),
+            SecretKey: this.SecretKey,
+          });
+          await TUICallKitServer.init({
+            SDKAppID: Number(this.SDKAppID),
+            userID: e.currentUser.id,
+            userSig,
+            // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
+          });
+          alert("[TUICallKit] Initialization succeeds.");
+        } catch (error) {
+          alert(`[TUICallKit] Initialization failed. Reason: ${error}`);
+        }
+      },
+      async clickCall(e) {
+        try {
+          // 1v1 video call
+          await TUICallKitServer.call({ userID: e.to.id, type: TUICallType.VIDEO_CALL });
+        } catch (error) {
+          alert(`[TUICallKit] Call failed. Reason: ${error}`);
+        }
+      },
     },
-  },
 
   }
 </script>
