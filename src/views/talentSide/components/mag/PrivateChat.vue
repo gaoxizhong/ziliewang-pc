@@ -19,7 +19,7 @@
           <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(item, index) }}</div>
 
-          <div class="message-phone-box" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 3">你已同意对方索要联系方式</div>
+          <div class="message-phone-box" v-if="item.type === 'phone' && item.payload.way_status == 3">你已同意对方索要联系方式</div>
           
           <div class="message-recalled" v-if="item.recalled">
             <div v-if="item.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
@@ -29,7 +29,7 @@
             </div>
           </div>
           <!-- 内容区域 开始 -->
-          <div class="message-item"  v-if="item.type != 'phone' && !item.recalled">
+          <div class="message-item"  v-if="!item.recalled">
             <!-- 多选按钮 -->
             <div class="message-item-checkbox" v-if="messageSelector.visible && item.status !== 'sending'">
               <input class="input-checkbox" type="checkbox" :value="item.messageId" v-model="messageSelector.ids" @click="selectMessages">
@@ -43,7 +43,7 @@
               </div>
               <!-- 头像 结束 -->
 
-              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(item)">
+              <div class="message-content" @contextmenu.prevent.stop="e => showActionPopup(item,$event)">
               <!-- <div class="message-content"> -->
                 <div class="message-payload">
                   <!-- 加载中 icon -->
@@ -90,7 +90,7 @@
                   </div>
                   <!-- 同意面试邀请 结束 -->
                   <!-- 人才 发送请求联系方式 ↓ -->
-                  <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 1">
+                  <div class="message-phone-universal-card" v-if="item.type === 'phone' && item.payload.way_status == 1">
                     <h4 class="message-phone-universal-card-header">联系方式</h4>
                     <div class="message-phone-universal-card-content">
                       <span>您的手机号：{{ item.payload.phone }}</span>
@@ -99,7 +99,7 @@
                   </div>
                   <!-- 人才 发送请求联系方式 ↑ -->
                   <!-- boss 发送过来的手机号 ↓ -->
-                  <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 2">
+                  <div class="message-phone-universal-card" v-if="item.type === 'phone' && item.payload.way_status == 2">
                     <h4 class="message-phone-universal-card-header">联系方式</h4>
                     <div class="message-phone-universal-card-content">
                       <span>{{ item.payload.name }}的手机号：{{ item.payload.phone }}</span>
@@ -107,7 +107,7 @@
                   </div>
                   <!-- boss 发送过来的手机号 ↑ -->
                   <!-- boss 索要手机号 ↓ -->
-                  <div class="message-phone-universal-card" @contextmenu.prevent.stop="e => showActionPopup(item)" v-if="item.type === 'phone' && item.payload.way_status == 4">
+                  <div class="message-phone-universal-card" v-if="item.type === 'phone' && item.payload.way_status == 4">
                     <h4 class="message-phone-universal-card-header">对方请求交换联系方式</h4>
                     <div class="message-phone-universal-card-content">
                       <span>对方手机号：{{ item.payload.phone }}</span>
@@ -157,61 +157,72 @@
       </div>
       <div class="action-box">
         <div class="action-bar">
-          <!-- 常用语 -->
-          <div class="action-item">
-            <div v-if="cyy.visible" class="sentence-panel">
-              <div class="header">
-                <h3 class="title">常用语</h3>
-                <a href="javascript:0;" class="set-btn" @click="clickSetBtn">设置</a>
+          <div class="action-bar-left">
+            <!-- 常用语 -->
+            <div class="action-item">
+              <div v-if="cyy.visible" class="sentence-panel">
+                <div class="header">
+                  <h3 class="title">常用语</h3>
+                  <a href="javascript:0;" class="set-btn" @click="clickSetBtn">设置</a>
+                </div>
+                <ul>
+                  <li v-for="(item,index) in phraseslist" :key="index" @click="clickCyy(item.common_language)"> {{ item.common_language }}</li>
+                </ul>
               </div>
-              <ul>
-                <li v-for="(item,index) in phraseslist" :key="index" @click="clickCyy(item.common_language)"> {{ item.common_language }}</li>
-              </ul>
+              <i class="iconfont icon-changyongyu" title="常用语" @click="showCyyBox"></i>
             </div>
-            <i class="iconfont icon-changyongyu" title="常用语" @click="showCyyBox"></i>
-          </div>
-          <!-- 表情 -->
-          <!-- <div class="action-item">
-            <div v-if="emoji.visible" class="emoji-box">
-              <img
-                v-for="(emojiItem, emojiKey, index) in emoji.map"
-                class="emoji-item"
-                :key="index"
-                :src="emoji.url + emojiItem"
-                @click="chooseEmoji(emojiKey)"
-              />
+            <!-- 表情 -->
+            <!-- <div class="action-item">
+              <div v-if="emoji.visible" class="emoji-box">
+                <img
+                  v-for="(emojiItem, emojiKey, index) in emoji.map"
+                  class="emoji-item"
+                  :key="index"
+                  :src="emoji.url + emojiItem"
+                  @click="chooseEmoji(emojiKey)"
+                />
+              </div>
+              <i class="iconfont icon-biaoqing" title="表情" @click="showEmojiBox"></i>
+            </div> -->
+            <!-- 图片 -->
+            <div class="action-item">
+              <label for="img-input" v-if="userVipRank > 0">
+                <i class="iconfont icon-tupian" title="图片"></i>
+              </label>
+              <label  @click="clickvipRank_0" v-else>
+                <i class="iconfont icon-tupian" title="图片"></i>
+              </label>
+              <input v-show="false" id="img-input" accept="image/*" multiple type="file" @change="sendImageMessage"/>
             </div>
-            <i class="iconfont icon-biaoqing" title="表情" @click="showEmojiBox"></i>
-          </div> -->
-          <!-- 图片 -->
-          <div class="action-item">
-            <label for="img-input" v-if="userVipRank > 0">
-              <i class="iconfont icon-tupian" title="图片"></i>
-            </label>
-            <label  @click="clickvipRank_0" v-else>
-              <i class="iconfont icon-tupian" title="图片"></i>
-            </label>
-            <input v-show="false" id="img-input" accept="image/*" multiple type="file" @change="sendImageMessage"/>
+            <!-- 视频 -->
+            <!-- <div class="action-item">
+              <label for="video-input"><i class="iconfont icon-film" title="视频"></i></label>
+              <input v-show="false" id="video-input" accept="video/*" type="file"
+                    @change="sendVideoMessage"/>
+            </div> -->
+            <!-- 文件 -->
+            <!-- <div class="action-item">
+              <label for="file-input" v-if="userVipRank > 0">
+                <i class="iconfont icon-wenjianjia" title="文件"></i>
+              </label>
+              <label @click="clickvipRank_0" v-else>
+                <i class="iconfont icon-wenjianjia" title="文件"></i>
+              </label>
+              <input v-show="false" id="file-input" type="file" @change="sendFileMessage"/>
+            </div> -->
+            <i class="vline"></i>
+            <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickToolbarBtn('resume')">发简历</div>
+            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">联系方式</div>
           </div>
-          <!-- 视频 -->
-          <!-- <div class="action-item">
-            <label for="video-input"><i class="iconfont icon-film" title="视频"></i></label>
-            <input v-show="false" id="video-input" accept="video/*" type="file"
-                   @change="sendVideoMessage"/>
-          </div> -->
-          <!-- 文件 -->
-          <!-- <div class="action-item">
-            <label for="file-input" v-if="userVipRank > 0">
-              <i class="iconfont icon-wenjianjia" title="文件"></i>
-            </label>
-            <label @click="clickvipRank_0" v-else>
-              <i class="iconfont icon-wenjianjia" title="文件"></i>
-            </label>
-            <input v-show="false" id="file-input" type="file" @change="sendFileMessage"/>
-          </div> -->
-          <i class="vline"></i>
-          <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickToolbarBtn('resume')">发简历</div>
-          <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">联系方式</div>
+          <div class="action-bar-right">
+            <div class="action-item">
+              <i class="iconfont icon-dianhua" title="电话" @click="user_clickInit"></i>
+            </div>
+            <div class="action-item">
+              <i class="iconfont icon-shipin" title="视频" @click="user_clickCall"></i>
+            </div>
+          </div>
+          
         </div>
 
         <!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
@@ -280,6 +291,8 @@
         '[傲慢]': 'emoji_8@2x.png',
       };
       return {
+        leftX: 0,
+        topY: 0,
         userVipRank: localStorage.getItem('userVipRank') || 0,
         sessionList:[], // 会话记录列表
         detailData:{}, // 职位信息
@@ -387,6 +400,14 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
     },
     methods: {
+      // 点击电话按钮
+      user_clickInit(){
+        this.$bus.$emit('user_clickInit',{to:this.to,currentUser:this.currentUser});
+      },
+      // 点击视频按钮
+      user_clickCall(){
+        this.$bus.$emit('user_clickCall',{to:this.to,currentUser:this.currentUser});
+      },
       formatDate,
       onReceivedPrivateMessage(message) {
         if (message.senderId === this.friend.uid) {
@@ -685,8 +706,9 @@
           }
         });
       },
-      showActionPopup(message) {
-        console.log(message)
+      showActionPopup(message,e) {
+        this.leftX = e.layerX;
+        this.topY = e.layerY;
         const MAX_RECALLABLE_TIME = 3 * 60 * 1000; //3分钟以内的消息才可以撤回
         this.messageSelector.ids = [message.messageId];
         if ((Date.now() - message.timestamp) < MAX_RECALLABLE_TIME && message.senderId === this.currentUser.id && message.status === 'success') {
@@ -1300,7 +1322,20 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     /* padding: 6px 10px 0 10px; */
+  }
+  .action-bar-left{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .action-bar-right{
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .action-bar .action-item {

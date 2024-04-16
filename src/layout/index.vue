@@ -27,7 +27,7 @@
       </div>
     </VueDragResize>
     <!-- 聊天弹窗 结束-->
-    <div style="width: 50rem; height: 35rem position: fixed; border: 1px solid salmon;">
+    <div style="width: 50rem; height: 35rem; position: fixed; border: 1px solid salmon;" class="TUICallKit-box">
       <TUICallKit />
     </div>
   </div>
@@ -40,7 +40,9 @@ import ResizeMixin from './mixin/ResizeHandler'
 import buddyChart from '../views/bossSide/components/mag/buddyChart.vue';
 import VueDragResize from 'vue-drag-resize';
 import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
+import { TUICallEngine, TUICallEvent, TUICallType } from "tuicall-engine-webrtc";
 import * as GenerateTestUserSig from "../debug/GenerateTestUserSig-es";
+let tuiCallEngine = null;
 export default {
   name: 'Layout',
   components: {
@@ -74,9 +76,9 @@ export default {
       
       // 腾讯云 SDKAppID、userSig 的获取参考下面步骤
        // 主叫的 userID
-      // userID: '',    
+      userID:'gzx1601',    
        // 被叫的 userID
-      // callUserID: '',
+      callUserID: 'qdy1602',
       SDKAppID: 1600032579,    // Replace with your SDKAppID
       SecretKey: '46c5cdb58daafc522d269cfffe9c3bd5b836ad57b648c5d08200d226b2e97b1a',  // Replace with your SecretKey
 
@@ -118,10 +120,11 @@ export default {
     // 组件间通信
     this.$bus.$on('clickYqms', this.clickYqms);
 
-    // 腾讯云-- 点击视频
-    this.$bus.$on('clickInit', this.clickInit);
     // 腾讯云-- 点击电话
+    this.$bus.$on('clickInit', this.clickInit);
+    // 腾讯云-- 点击视频
     this.$bus.$on('clickCall', this.clickCall);
+
   },
   created(){
     let getViewportSize = this.$getViewportSize();
@@ -154,7 +157,7 @@ export default {
     });
   },
   methods: {
-   
+
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     },
@@ -246,13 +249,13 @@ export default {
       console.log(e)
       try {
         const { userSig } = GenerateTestUserSig.genTestUserSig({
-          userID: e.currentUser.id,
+          userID: this.userID,
           SDKAppID: Number(this.SDKAppID),
           SecretKey: this.SecretKey,
         });
         await TUICallKitServer.init({
           SDKAppID: Number(this.SDKAppID),
-          userID: e.currentUser.id,
+          userID: this.callUserID,
           userSig,
           // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
         });
@@ -264,7 +267,7 @@ export default {
     async clickCall(e) {
       try {
         // 1v1 video call
-        await TUICallKitServer.call({ userID: e.to.id, type: TUICallType.VIDEO_CALL });
+        await TUICallKitServer.call({ userID: this.userID, type: TUICallType.VIDEO_CALL });
       } catch (error) {
         alert(`[TUICallKit] Call failed. Reason: ${error}`);
       }

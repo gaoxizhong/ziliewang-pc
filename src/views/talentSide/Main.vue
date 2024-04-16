@@ -115,10 +115,10 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     mounted(){
       // 组件间通信
       this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
-      // 腾讯云-- 点击视频
-      this.$bus.$on('clickInit', this.clickInit);
       // 腾讯云-- 点击电话
-      this.$bus.$on('clickCall', this.clickCall);
+      this.$bus.$on('user_clickInit', this.user_clickInit);
+      // 腾讯云-- 点击视频
+      this.$bus.$on('user_clickCall', this.user_clickCall);
     },
     created(){
       let that = this;
@@ -220,8 +220,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       
       },
 
-        // 腾讯云 音视频
-      async clickInit(e) {
+      // 腾讯云 音视频
+      async user_clickInit(e) {
         console.log(e)
         try {
           const { userSig } = GenerateTestUserSig.genTestUserSig({
@@ -240,7 +240,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
           alert(`[TUICallKit] Initialization failed. Reason: ${error}`);
         }
       },
-      async clickCall(e) {
+      async user_clickCall(e) {
         try {
           // 1v1 video call
           await TUICallKitServer.call({ userID: e.to.id, type: TUICallType.VIDEO_CALL });

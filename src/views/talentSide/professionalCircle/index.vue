@@ -27,7 +27,7 @@
         <div class="info-right-container">
           <!-- 列表项 开始 -->
           <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
-            <div class="right-container-item" @click.stop="clicklistItems(item)" v-if="item.users">
+            <div class="right-container-item" v-if="item.users">
               <div class="title">
                 <div class="title-left" @click.stop="clickName(item)">
                   <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" />
@@ -38,9 +38,9 @@
 
               <div class="items-c-box">
                 <div>
-                  <div class="items-c-p">{{ item.content }}</div>
+                  <div class="items-c-p" @click.stop="clicklistItems(item)">{{ item.content }}</div>
                   <div class="items-img-box" v-if="item.images.length>0">
-                    <img :src="items" alt="" title="图片" v-for="(items,idx) in item.images" :key="idx"/>
+                    <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
                   </div>
                   <div class="items-img-box" v-if="item.video">
                     <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
@@ -48,7 +48,7 @@
                     </a>
                   </div>
                 </div>
-                <div class="items-bottom-btn">
+                <div class="items-bottom-btn"  @click.stop="clicklistItems(item)">
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/preview-open.png" alt="" />
                     <span>{{ item.read_num?item.read_num:0 }}阅读</span>

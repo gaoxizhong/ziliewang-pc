@@ -15,6 +15,7 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "dependencies": {
+    "@tencentcloud/call-uikit-vue": "^3.2.2",
     "@tencentcloud/call-uikit-vue2.6": "^3.2.2",
     "@vue/composition-api": "^1.7.2",
     "axios": "0.18.0",
@@ -28,6 +29,7 @@
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "qrcode": "^1.5.3",
+    "tuicall-engine-webrtc": "^3.0.3",
     "v-preview-image": "^2.0.7",
     "vue": "2.6.10",
     "vue-drag-resize": "^1.5.4",

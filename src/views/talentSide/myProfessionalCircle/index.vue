@@ -19,7 +19,7 @@
           <!-- 列表项 开始 -->
           <div class="container-items-box" v-for="(item,index) in infoList" :key="index">
             <!-- <div class="right-container-title"><span>回忆那么真</span><span>发布了动态</span></div> -->
-            <div class="right-container-item" @click.stop="clicklistItems(item)">
+            <div class="right-container-item">
               <div class="title">
                 <div class="title-left">
                   <img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg' )" alt="" />
@@ -29,16 +29,16 @@
               </div>
 
               <div class="items-c-box">
-                <div class="items-c-p">{{ item.content }}</div>
+                <div class="items-c-p" @click.stop="clicklistItems(item)">{{ item.content }}</div>
                 <div class="items-img-box" v-if="item.images.length>0">
-                  <img :src="items" alt="" title="图片" v-for="(items,idx) in item.images" :key="idx"/>
+                  <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
                 </div>
                 <div class="items-img-box" v-if="item.video">
                   <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
                     <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
                   </a>
                 </div>
-                <div class="items-bottom-btn">
+                <div class="items-bottom-btn" @click.stop="clicklistItems(item)">
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/preview-open.png" alt="" />
                     <span>{{ item.read_num }}阅读</span>

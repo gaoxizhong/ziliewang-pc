@@ -209,10 +209,10 @@
           </div>
           <div class="action-bar-right">
             <div class="action-item">
-              <i class="iconfont icon-dianhua" title="电话" @click="clickCall"></i>
+              <i class="iconfont icon-dianhua" title="电话" @click="clickInit"></i>
             </div>
             <div class="action-item">
-              <i class="iconfont icon-shipin" title="视频" @click="clickInit"></i>
+              <i class="iconfont icon-shipin" title="视频" @click="clickCall"></i>
             </div>
           </div>
 
@@ -438,11 +438,11 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     methods: {
-      // 点击视频按钮
+      // 点击电话按钮
       clickInit(){
         this.$bus.$emit('clickInit',{to:this.to,currentUser:this.currentUser});
       },
-      // 点击电话按钮
+      // 点击视频按钮
       clickCall(){
         this.$bus.$emit('clickCall',{to:this.to,currentUser:this.currentUser});
       },

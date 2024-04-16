@@ -75,16 +75,16 @@
               </div>
 
               <div class="items-c-box">
-                <div class="items-c-p">{{ item.content }}</div>
+                <div class="items-c-p" @click.stop="clicklistItems(item)">{{ item.content }}</div>
                 <div class="items-img-box" v-if="item.images.length>0">
-                  <img :src="items" alt="" title="图片"  v-for="(items,idx) in item.images" :key="idx"/>
+                  <img :src="items" alt="" title="图片"  @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
                 </div>
                 <div class="items-img-box" v-if="item.video">
                   <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
                     <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
                   </a>
                 </div>
-                <div class="items-bottom-btn">
+                <div class="items-bottom-btn" @click.stop="clicklistItems(item)">
                   <div class="bottom-btn-items">
                     <img src="../../../../assets/image/preview-open.png" alt="" />
                     <span>{{ item.comment_num }}阅读</span>
@@ -148,6 +148,15 @@ export default {
     this.getUserProfile();
   },
   methods: {
+    // 点击列表
+    clicklistItems(i){
+      this.$router.push({
+        path:'/professionalCircle/circleDetails',   //跳转的路径
+        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+          id:i.id,
+        }
+      })
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },
