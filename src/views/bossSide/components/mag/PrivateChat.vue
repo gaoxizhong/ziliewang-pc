@@ -208,12 +208,12 @@
             <div class="btn-resume toolbar-btn unable" title="邀请面试" @click="clickYqms(1)">邀面试</div>
           </div>
           <div class="action-bar-right">
-            <!-- <div class="action-item">
-              <i class="iconfont icon-dianhua" title="电话" @click="clickInit"></i>
+            <div class="action-item">
+              <i class="iconfont icon-dianhua" title="电话" @click="clickAUDIOCall"></i>
             </div>
             <div class="action-item">
-              <i class="iconfont icon-shipin" title="视频" @click="clickCall"></i>
-            </div> -->
+              <i class="iconfont icon-shipin" title="视频" @click="clickVIDEOCall"></i>
+            </div>
           </div>
 
         </div>
@@ -438,13 +438,13 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     methods: {
-      // 点击电话按钮
-      // clickInit(){
-      //   this.$bus.$emit('clickInit',{to:this.to,currentUser:this.currentUser});
-      // },
-      // 点击视频按钮
-      clickCall(){
-        this.$bus.$emit('clickCall',{to:this.to,currentUser:this.currentUser});
+      // 音视频 -- 语音
+      clickAUDIOCall(){
+        this.$bus.$emit('clickAUDIOCall',{to:this.to,currentUser:this.currentUser});
+      },
+      // 音视频 -- 视频
+      clickVIDEOCall(){
+        this.$bus.$emit('clickVIDEOCall',{to:this.to,currentUser:this.currentUser});
       },
       /** 显示地图 */
       showMap() {

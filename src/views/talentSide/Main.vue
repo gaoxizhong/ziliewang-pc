@@ -40,9 +40,17 @@
     <Sidebar />
 
     <!-- 聊天弹窗 结束-->
-    <div style="width: 50rem; height: 35rem; position: fixed; border: 1px solid salmon;">
-      <TUICallKit />
-    </div>
+    <!-- <div  class="TUICallKit-box" v-if="show_TUICallKit">
+      <TUICallKit 
+        :allowedMinimized="true" 
+        :allowedFullScreen="true"
+        :beforeCalling="beforeCalling"
+        :afterCalling="afterCalling"
+        :onMinimized="onMinimized"
+        :kickedOut="handleKickedOut"
+        :statusChanged="handleStatusChanged"
+      />
+    </div> -->
 
     
   </div>
@@ -53,8 +61,8 @@ import Footer from '../../components/footer';
 import VueDragResize from 'vue-drag-resize';
 import Sidebar from './components/sidebar';
 import buddyChart from './components/mag/buddyChart.vue';
-import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
-import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
+// import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
+// import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
 
   export default {
     provide(){ 
@@ -70,7 +78,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       VueDragResize,
       Sidebar,
       buddyChart,
-      TUICallKit
+      // TUICallKit
     },
     data(){
       return {
@@ -87,11 +95,12 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         laiyuan:'',
         is_pop:'pop',
         infoData: {},
+        show_TUICallKit: false,
         // 腾讯云 SDKAppID、userSig 的获取参考下面步骤
         // 主叫的 userID
-        // userID: '',    
+        userID:'gzx1601',    
         // 被叫的 userID
-        // callUserID: '',
+        callUserID: 'qdy1602',
         SDKAppID: 1600032579,    // Replace with your SDKAppID
         SecretKey: '46c5cdb58daafc522d269cfffe9c3bd5b836ad57b648c5d08200d226b2e97b1a',  // Replace with your SecretKey
       }
@@ -116,9 +125,9 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       // 组件间通信
       this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
       // 腾讯云-- 点击电话
-      this.$bus.$on('user_clickInit', this.user_clickInit);
+      // this.$bus.$on('user_clickAUDIOCallt', this.user_clickAUDIOCallt);
       // 腾讯云-- 点击视频
-      this.$bus.$on('user_clickCall', this.user_clickCall);
+      // this.$bus.$on('user_clickVIDEOCall', this.user_clickVIDEOCall);
     },
     created(){
       let that = this;
@@ -220,8 +229,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       
       },
 
-      // 腾讯云 音视频
-      async user_clickInit(e) {
+      // 腾讯云 初始化
+      async Init() {
         console.log(e)
         try {
           const { userSig } = GenerateTestUserSig.genTestUserSig({
@@ -240,7 +249,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
           alert(`[TUICallKit] Initialization failed. Reason: ${error}`);
         }
       },
-      async user_clickCall(e) {
+      // 视频
+      async user_clickVIDEOCall(e) {
         try {
           // 1v1 video call
           await TUICallKitServer.call({ userID: e.to.id, type: TUICallType.VIDEO_CALL });
@@ -353,5 +363,14 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     transform: translateX(100%) scale(0);
   }
   // 聊天弹窗 样式=============== ↑ ===========
-  
+  .TUICallKit-box{
+    width: 50rem;
+    height: 35rem;
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 999;
+    border: 1px solid salmon;
+  }
 </style>

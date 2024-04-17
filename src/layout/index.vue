@@ -27,8 +27,12 @@
       </div>
     </VueDragResize>
     <!-- 聊天弹窗 结束-->
-    <div style="width: 50rem; height: 35rem; position: fixed; border: 1px solid salmon;" class="TUICallKit-box">
-      <TUICallKit />
+    <div  class="TUICallKit-box" v-if="show_TUICallKit">
+      <TUICallKit 
+        :allowedMinimized="true" 
+        :allowedFullScreen="true"
+        beforeCalling="beforeCalling"
+      />
     </div>
   </div>
 </template>
@@ -39,7 +43,7 @@ import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import buddyChart from '../views/bossSide/components/mag/buddyChart.vue';
 import VueDragResize from 'vue-drag-resize';
-import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
+import { TUICallKit, TUICallKitServer, TUICallType, STATUS } from "@tencentcloud/call-uikit-vue2.6";
 import * as GenerateTestUserSig from "../debug/GenerateTestUserSig-es";
 export default {
   name: 'Layout',
@@ -71,10 +75,11 @@ export default {
       laiyuan:'is_nav',
       is_pop:'pop',
       infoData: {},
-      
+      show_TUICallKit: false,
       // 腾讯云 SDKAppID、userSig 的获取参考下面步骤
+      
        // 主叫的 userID
-      userID:'gzx1601',    
+       userID:'gzx1601',    
        // 被叫的 userID
       callUserID: 'qdy1602',
       SDKAppID: 1600032579,    // Replace with your SDKAppID
@@ -118,10 +123,10 @@ export default {
     // 组件间通信
     this.$bus.$on('clickYqms', this.clickYqms);
 
-    // 腾讯云-- 点击电话
-    // this.$bus.$on('clickInit', this.clickInit);
+    // 腾讯云-- 初始化
+    this.$bus.$on('clickAUDIOCall', this.clickAUDIOCall);
     // 腾讯云-- 点击视频
-    this.$bus.$on('clickCall', this.clickCall);
+    this.$bus.$on('clickVIDEOCall', this.clickVIDEOCall);
 
   },
   created(){
@@ -242,9 +247,9 @@ export default {
     },
    
 
-    // 腾讯云 音视频
-    async clickInit(e) {
-      console.log(e)
+    // 腾讯云 音视频  相关api ↓
+    // 初始化
+    async Init() {
       try {
         const { userSig } = GenerateTestUserSig.genTestUserSig({
           userID: this.userID,
@@ -253,25 +258,54 @@ export default {
         });
         await TUICallKitServer.init({
           SDKAppID: Number(this.SDKAppID),
-          userID: this.callUserID,
+          userID: this.userID,
           userSig,
           // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
         });
-        alert("[TUICallKit] Initialization succeeds.");
+        console.log('初始化成功');
       } catch (error) {
         alert(`[TUICallKit] Initialization failed. Reason: ${error}`);
       }
     },
-    async clickCall(e) {
+    // 语音通话
+    async clickAUDIOCall(e) {
+      console.log(e)
       try {
+        await this.Init();
+        this.show_TUICallKit = true;
         // 1v1 video call
-        await TUICallKitServer.call({ userID: this.userID, type: TUICallType.VIDEO_CALL });
+        await TUICallKitServer.call({ 
+            userID: this.callUserID,
+            type: TUICallType.AUDIO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
+          });
       } catch (error) {
         alert(`[TUICallKit] Call failed. Reason: ${error}`);
       }
     },
-
+    // 视频通话
+    async clickVIDEOCall(e) {
+      console.log(e)
+      try {
+        await this.Init();
+        this.show_TUICallKit = true;
+        // 1v1 video call
+        await TUICallKitServer.call({ 
+            userID: this.callUserID,
+            type: TUICallType.VIDEO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
+          });
+      } catch (error) {
+        alert(`[TUICallKit] Call failed. Reason: ${error}`);
+      }
+    },
+    // 拨打电话前与收到通话邀请前会执行此函数
+    beforeCalling(type, error) {
+      console.log("拨打电话前与收到通话邀请前会执行此函数:", type, error);
+    },
    
+
+
+
+
 
   }
 }
@@ -386,5 +420,14 @@ export default {
     }
   }
 
-  
+  .TUICallKit-box{
+    width: 50rem;
+    height: 35rem;
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 999;
+    border: 1px solid salmon;
+  }
 </style>

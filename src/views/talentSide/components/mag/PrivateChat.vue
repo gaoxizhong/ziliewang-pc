@@ -219,7 +219,7 @@
               <i class="iconfont icon-dianhua" title="电话" @click="user_clickInit"></i>
             </div>
             <div class="action-item">
-              <i class="iconfont icon-shipin" title="视频" @click="user_clickCall"></i>
+              <i class="iconfont icon-shipin" title="视频" @click="user_clickVIDEOCall"></i>
             </div> -->
           </div>
           
@@ -401,12 +401,12 @@
     },
     methods: {
       // 点击电话按钮
-      user_clickInit(){
-        this.$bus.$emit('user_clickInit',{to:this.to,currentUser:this.currentUser});
+      user_clickAUDIOCall(){
+        this.$bus.$emit('user_clickAUDIOCallt',{to:this.to,currentUser:this.currentUser});
       },
       // 点击视频按钮
-      user_clickCall(){
-        this.$bus.$emit('user_clickCall',{to:this.to,currentUser:this.currentUser});
+      user_clickVIDEOCall(){
+        this.$bus.$emit('user_clickVIDEOCall',{to:this.to,currentUser:this.currentUser});
       },
       formatDate,
       onReceivedPrivateMessage(message) {
