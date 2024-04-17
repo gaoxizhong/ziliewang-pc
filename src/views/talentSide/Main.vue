@@ -40,7 +40,7 @@
     <Sidebar />
 
     <!-- 聊天弹窗 结束-->
-    <div style="width: 50rem; height: 35rem position: fixed; border: 1px solid salmon;">
+    <div style="width: 50rem; height: 35rem; position: fixed; border: 1px solid salmon;">
       <TUICallKit />
     </div>
 

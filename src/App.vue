@@ -5,9 +5,9 @@
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+  export default {
+    name: 'App'
+  }
 </script>
 <style>
   /*引入阿里字体图标*/

@@ -4,12 +4,14 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+// lang i18n
+// import locale from 'element-ui/lib/locale/lang/en' 
 import './utils/rem'
 
 import '@/styles/index.scss' // global css
 
-import App from './App'
+import App from './App.vue';
+// const App = require('./App')
 import store from './store'
 import router from './router'
 
@@ -21,17 +23,19 @@ import axios from '@/axios/index';
 import '@/utils/dialogDrag'
 
 // 引入弹窗可拖拽调解大小第二种方法
-import VueDragResize from 'vue-drag-resize'
-Vue.component('vue-drag-resize', VueDragResize)
+// import VueDragResize from 'vue-drag-resize'
+// const VueDragResize = require('VueDragResize')
+
+// Vue.component('vue-drag-resize', VueDragResize)
 
 // ==============  引入视频直播  ↓   ================
-import VueVideoPlayer from 'vue-video-player'
+// import VueVideoPlayer from 'vue-video-player'
 // 使用视频直播组件
-Vue.use(VueVideoPlayer)
+// Vue.use(VueVideoPlayer)
 
 // 引入视频直播样式 
-import 'video.js/dist/video-js.css'
-import 'vue-video-player/src/custom-theme.css'
+// import 'video.js/dist/video-js.css'
+// import 'vue-video-player/src/custom-theme.css'
 // ==============  引入视频直播  ↑  ================
 
 // ==============  引入 实时通讯  ↓   ================
@@ -56,7 +60,9 @@ Vue.prototype.globalData = {
 };
 
 // 引入图片预览
-import vPreviewImage from 'v-preview-image'
+// import vPreviewImage from 'v-preview-image'
+const vPreviewImage = require('v-preview-image')
+
 Vue.use(vPreviewImage)
 
 

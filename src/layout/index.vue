@@ -40,9 +40,7 @@ import ResizeMixin from './mixin/ResizeHandler'
 import buddyChart from '../views/bossSide/components/mag/buddyChart.vue';
 import VueDragResize from 'vue-drag-resize';
 import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
-import { TUICallEngine, TUICallEvent, TUICallType } from "tuicall-engine-webrtc";
 import * as GenerateTestUserSig from "../debug/GenerateTestUserSig-es";
-let tuiCallEngine = null;
 export default {
   name: 'Layout',
   components: {
@@ -121,7 +119,7 @@ export default {
     this.$bus.$on('clickYqms', this.clickYqms);
 
     // 腾讯云-- 点击电话
-    this.$bus.$on('clickInit', this.clickInit);
+    // this.$bus.$on('clickInit', this.clickInit);
     // 腾讯云-- 点击视频
     this.$bus.$on('clickCall', this.clickCall);
 

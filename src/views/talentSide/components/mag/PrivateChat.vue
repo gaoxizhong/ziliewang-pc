@@ -215,12 +215,12 @@
             <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">联系方式</div>
           </div>
           <div class="action-bar-right">
-            <div class="action-item">
+            <!-- <div class="action-item">
               <i class="iconfont icon-dianhua" title="电话" @click="user_clickInit"></i>
             </div>
             <div class="action-item">
               <i class="iconfont icon-shipin" title="视频" @click="user_clickCall"></i>
-            </div>
+            </div> -->
           </div>
           
         </div>
