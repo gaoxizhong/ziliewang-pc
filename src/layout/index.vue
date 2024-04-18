@@ -27,11 +27,14 @@
       </div>
     </VueDragResize>
     <!-- 聊天弹窗 结束-->
-    <div  class="TUICallKit-box" v-if="show_TUICallKit">
+
+    <!-- 音视频聊天窗 -->
+    <div class="TUICallKit-box" v-if="show_TUICallKit">
       <TUICallKit 
         :allowedMinimized="true" 
         :allowedFullScreen="true"
-        beforeCalling="beforeCalling"
+        :beforeCalling="beforeCalling"
+        :afterCalling="afterCalling"
       />
     </div>
   </div>
@@ -43,7 +46,7 @@ import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import buddyChart from '../views/bossSide/components/mag/buddyChart.vue';
 import VueDragResize from 'vue-drag-resize';
-import { TUICallKit, TUICallKitServer, TUICallType, STATUS } from "@tencentcloud/call-uikit-vue2.6";
+import { TUICallKit, TUICallKitServer,videoResolution, TUICallType, STATUS } from "@tencentcloud/call-uikit-vue2.6";
 import * as GenerateTestUserSig from "../debug/GenerateTestUserSig-es";
 export default {
   name: 'Layout',
@@ -84,7 +87,7 @@ export default {
       callUserID: 'qdy1602',
       SDKAppID: 1600032579,    // Replace with your SDKAppID
       SecretKey: '46c5cdb58daafc522d269cfffe9c3bd5b836ad57b648c5d08200d226b2e97b1a',  // Replace with your SecretKey
-
+      // videoResolution: videoResolution, // 设置分辨率
     }
   },
   mixins: [ResizeMixin],
@@ -123,11 +126,12 @@ export default {
     // 组件间通信
     this.$bus.$on('clickYqms', this.clickYqms);
 
-    // 腾讯云-- 初始化
+    // 腾讯云-- 语音
     this.$bus.$on('clickAUDIOCall', this.clickAUDIOCall);
     // 腾讯云-- 点击视频
     this.$bus.$on('clickVIDEOCall', this.clickVIDEOCall);
-
+    // 设置分辨率
+    // this.videoResolution = videoResolution;
   },
   created(){
     let getViewportSize = this.$getViewportSize();
@@ -301,6 +305,12 @@ export default {
     beforeCalling(type, error) {
       console.log("拨打电话前与收到通话邀请前会执行此函数:", type, error);
     },
+    // 结束通话后会执行此函数
+    afterCalling() {
+      console.log("结束通话后会执行此函数: afterCalling");
+      // this.show_TUICallKit = false;
+    },
+
    
 
 
@@ -429,5 +439,6 @@ export default {
     transform: translate(-50%,-50%);
     z-index: 999;
     border: 1px solid salmon;
+    transition: all 0.5s;
   }
 </style>

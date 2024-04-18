@@ -40,17 +40,14 @@
     <Sidebar />
 
     <!-- 聊天弹窗 结束-->
-    <!-- <div  class="TUICallKit-box" v-if="show_TUICallKit">
+    <div  class="TUICallKit-box" v-if="show_TUICallKit">
       <TUICallKit 
         :allowedMinimized="true" 
         :allowedFullScreen="true"
         :beforeCalling="beforeCalling"
         :afterCalling="afterCalling"
-        :onMinimized="onMinimized"
-        :kickedOut="handleKickedOut"
-        :statusChanged="handleStatusChanged"
       />
-    </div> -->
+    </div>
 
     
   </div>
@@ -61,8 +58,8 @@ import Footer from '../../components/footer';
 import VueDragResize from 'vue-drag-resize';
 import Sidebar from './components/sidebar';
 import buddyChart from './components/mag/buddyChart.vue';
-// import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
-// import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
+import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
+import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
 
   export default {
     provide(){ 
@@ -78,7 +75,7 @@ import buddyChart from './components/mag/buddyChart.vue';
       VueDragResize,
       Sidebar,
       buddyChart,
-      // TUICallKit
+      TUICallKit
     },
     data(){
       return {
@@ -125,9 +122,9 @@ import buddyChart from './components/mag/buddyChart.vue';
       // 组件间通信
       this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
       // 腾讯云-- 点击电话
-      // this.$bus.$on('user_clickAUDIOCallt', this.user_clickAUDIOCallt);
+      this.$bus.$on('user_clickAUDIOCallt', this.user_clickAUDIOCallt);
       // 腾讯云-- 点击视频
-      // this.$bus.$on('user_clickVIDEOCall', this.user_clickVIDEOCall);
+      this.$bus.$on('user_clickVIDEOCall', this.user_clickVIDEOCall);
     },
     created(){
       let that = this;
@@ -230,34 +227,65 @@ import buddyChart from './components/mag/buddyChart.vue';
       },
 
       // 腾讯云 初始化
+      // 初始化
       async Init() {
-        console.log(e)
         try {
           const { userSig } = GenerateTestUserSig.genTestUserSig({
-            userID: e.currentUser.id,
+            userID: this.userID,
             SDKAppID: Number(this.SDKAppID),
             SecretKey: this.SecretKey,
           });
           await TUICallKitServer.init({
             SDKAppID: Number(this.SDKAppID),
-            userID: e.currentUser.id,
+            userID: this.userID,
             userSig,
             // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
           });
-          alert("[TUICallKit] Initialization succeeds.");
+          console.log('初始化成功');
         } catch (error) {
           alert(`[TUICallKit] Initialization failed. Reason: ${error}`);
         }
       },
-      // 视频
-      async user_clickVIDEOCall(e) {
+      // 语音通话
+      async user_clickAUDIOCall(e) {
+        console.log(e)
         try {
+          await this.Init();
+          this.show_TUICallKit = true;
           // 1v1 video call
-          await TUICallKitServer.call({ userID: e.to.id, type: TUICallType.VIDEO_CALL });
+          await TUICallKitServer.call({ 
+              userID: this.callUserID,
+              type: TUICallType.AUDIO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
+            });
         } catch (error) {
           alert(`[TUICallKit] Call failed. Reason: ${error}`);
         }
       },
+      // 视频通话
+      async user_clickVIDEOCall(e) {
+        console.log(e)
+        try {
+          await this.Init();
+          this.show_TUICallKit = true;
+          // 1v1 video call
+          await TUICallKitServer.call({ 
+              userID: this.callUserID,
+              type: TUICallType.VIDEO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
+            });
+        } catch (error) {
+          alert(`[TUICallKit] Call failed. Reason: ${error}`);
+        }
+      },
+      // 拨打电话前与收到通话邀请前会执行此函数
+      beforeCalling(type, error) {
+        console.log("拨打电话前与收到通话邀请前会执行此函数:", type, error);
+      },
+      // 结束通话后会执行此函数
+      afterCalling() {
+        console.log("结束通话后会执行此函数: afterCalling");
+        this.show_TUICallKit = false;
+      }
+
     },
 
   }
@@ -372,5 +400,7 @@ import buddyChart from './components/mag/buddyChart.vue';
     transform: translate(-50%,-50%);
     z-index: 999;
     border: 1px solid salmon;
+    transition: all 0.5s;
+
   }
 </style>
