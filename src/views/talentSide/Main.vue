@@ -40,12 +40,13 @@
     <Sidebar />
 
     <!-- 聊天弹窗 结束-->
-    <div  class="TUICallKit-box" v-if="show_TUICallKit">
+    <div class="TUICallKit-box" :class="show_TUICallKit ? 'show-TUICallKit' : '' ">
       <TUICallKit 
         :allowedMinimized="true" 
         :allowedFullScreen="true"
         :beforeCalling="beforeCalling"
         :afterCalling="afterCalling"
+        :statusChanged="handleStatusChanged"
       />
     </div>
 
@@ -58,7 +59,7 @@ import Footer from '../../components/footer';
 import VueDragResize from 'vue-drag-resize';
 import Sidebar from './components/sidebar';
 import buddyChart from './components/mag/buddyChart.vue';
-import { TUICallKit, TUICallKitServer, TUICallType } from "@tencentcloud/call-uikit-vue2.6";
+import { TUICallKit, TUICallKitServer, TUICallType,STATUS } from "@tencentcloud/call-uikit-vue2.6";
 import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
 
   export default {
@@ -95,9 +96,9 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         show_TUICallKit: false,
         // 腾讯云 SDKAppID、userSig 的获取参考下面步骤
         // 主叫的 userID
-        userID:'gzx1601',    
+        userID: localStorage.getItem('realUid'),    
         // 被叫的 userID
-        callUserID: 'qdy1602',
+        callUserID: '',
         SDKAppID: 1600032579,    // Replace with your SDKAppID
         SecretKey: '46c5cdb58daafc522d269cfffe9c3bd5b836ad57b648c5d08200d226b2e97b1a',  // Replace with your SecretKey
       }
@@ -122,7 +123,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       // 组件间通信
       this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
       // 腾讯云-- 点击电话
-      this.$bus.$on('user_clickAUDIOCallt', this.user_clickAUDIOCallt);
+      this.$bus.$on('user_clickAUDIOCall', this.user_clickAUDIOCall);
       // 腾讯云-- 点击视频
       this.$bus.$on('user_clickVIDEOCall', this.user_clickVIDEOCall);
     },
@@ -143,6 +144,9 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       if (this.goEasy.getConnectionStatus() === 'disconnected') {
          this.connectGoEasy(); 
       }
+
+      // 腾讯云 音视频 初始化 ↓
+      this.Init();
     },
     beforeDestroy() {
       //断开连接
@@ -204,8 +208,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         });
       },
 
-       // 拖拽时可以确定元素位置
-       resize(newRect) {
+      // 拖拽时可以确定元素位置
+      resize(newRect) {
         this.width = newRect.width;
         this.height = newRect.height;
         this.top = newRect.top;
@@ -250,11 +254,10 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       async user_clickAUDIOCall(e) {
         console.log(e)
         try {
-          await this.Init();
           this.show_TUICallKit = true;
           // 1v1 video call
           await TUICallKitServer.call({ 
-              userID: this.callUserID,
+              userID: e.to.id,
               type: TUICallType.AUDIO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
             });
         } catch (error) {
@@ -263,13 +266,11 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       },
       // 视频通话
       async user_clickVIDEOCall(e) {
-        console.log(e)
         try {
-          await this.Init();
           this.show_TUICallKit = true;
           // 1v1 video call
           await TUICallKitServer.call({ 
-              userID: this.callUserID,
+              userID: e.to.id,
               type: TUICallType.VIDEO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
             });
         } catch (error) {
@@ -278,13 +279,26 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       },
       // 拨打电话前与收到通话邀请前会执行此函数
       beforeCalling(type, error) {
-        console.log("拨打电话前与收到通话邀请前会执行此函数:", type, error);
+        console.log("拨打电话前与收到通话邀请前会执行此函数-type:"+ type, );
+        console.log("拨打电话前与收到通话邀请前会执行此函数-error:"+ error);
+
       },
       // 结束通话后会执行此函数
       afterCalling() {
         console.log("结束通话后会执行此函数: afterCalling");
         this.show_TUICallKit = false;
-      }
+      },
+      // 组件抛出的事件，当通话状态发生变化时，会触发该事件
+      handleStatusChanged(args) {
+        const { oldStatus, newStatus } = args;
+        if(newStatus === STATUS.BE_INVITED){
+          // 收到通话邀请
+          this.show_TUICallKit = true;
+        }
+        if (newStatus === STATUS.CALLING_C2C_VIDEO) {
+          console.log(`[TUICallkit Demo] statusChanged: ${oldStatus} -> ${newStatus}`);
+        }
+      },
 
     },
 
@@ -395,12 +409,15 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     width: 50rem;
     height: 35rem;
     position: fixed; 
+    top: -50rem;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 9998;
+    transition: all 0.1s;
+  }
+  .TUICallKit-box.show-TUICallKit{
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    z-index: 999;
-    border: 1px solid salmon;
-    transition: all 0.5s;
-
   }
 </style>

@@ -29,12 +29,13 @@
     <!-- 聊天弹窗 结束-->
 
     <!-- 音视频聊天窗 -->
-    <div class="TUICallKit-box" v-if="show_TUICallKit">
+    <div class="TUICallKit-box" :class="show_TUICallKit ? 'show-TUICallKit' : '' ">
       <TUICallKit 
         :allowedMinimized="true" 
         :allowedFullScreen="true"
         :beforeCalling="beforeCalling"
         :afterCalling="afterCalling"
+        :statusChanged="handleStatusChanged"
       />
     </div>
   </div>
@@ -80,11 +81,11 @@ export default {
       infoData: {},
       show_TUICallKit: false,
       // 腾讯云 SDKAppID、userSig 的获取参考下面步骤
-      
-       // 主叫的 userID
-       userID:'gzx1601',    
-       // 被叫的 userID
-      callUserID: 'qdy1602',
+    
+      // 主叫的 userID
+      userID: localStorage.getItem('staffUid'),    
+      // 被叫的 userID
+      callUserID: '',
       SDKAppID: 1600032579,    // Replace with your SDKAppID
       SecretKey: '46c5cdb58daafc522d269cfffe9c3bd5b836ad57b648c5d08200d226b2e97b1a',  // Replace with your SecretKey
       // videoResolution: videoResolution, // 设置分辨率
@@ -150,6 +151,9 @@ export default {
     }
     this.listenConversationUpdate(); //监听会话列表变化
     this.loadConversations(); //加载会话列表
+
+    // 腾讯云 音视频 初始化 ↓
+    this.Init();
   },
    beforeDestroy() {
     this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
@@ -266,7 +270,7 @@ export default {
           userSig,
           // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
         });
-        console.log('初始化成功');
+        console.log('userID:'+ this.userID +'-初始化成功');
       } catch (error) {
         alert(`[TUICallKit] Initialization failed. Reason: ${error}`);
       }
@@ -275,11 +279,10 @@ export default {
     async clickAUDIOCall(e) {
       console.log(e)
       try {
-        await this.Init();
         this.show_TUICallKit = true;
         // 1v1 video call
         await TUICallKitServer.call({ 
-            userID: this.callUserID,
+            userID: e.to.id,
             type: TUICallType.AUDIO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
           });
       } catch (error) {
@@ -288,13 +291,11 @@ export default {
     },
     // 视频通话
     async clickVIDEOCall(e) {
-      console.log(e)
       try {
-        await this.Init();
         this.show_TUICallKit = true;
         // 1v1 video call
         await TUICallKitServer.call({ 
-            userID: this.callUserID,
+            userID: e.to.id,
             type: TUICallType.VIDEO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
           });
       } catch (error) {
@@ -308,7 +309,19 @@ export default {
     // 结束通话后会执行此函数
     afterCalling() {
       console.log("结束通话后会执行此函数: afterCalling");
-      // this.show_TUICallKit = false;
+      this.show_TUICallKit = false;
+    },
+     // 组件抛出的事件，当通话状态发生变化时，会触发该事件
+     handleStatusChanged(args) {
+      console.log(args)
+      const { oldStatus, newStatus } = args;
+      if(newStatus === STATUS.BE_INVITED){
+        // 收到通话邀请
+        this.show_TUICallKit = true;
+      }
+      if (newStatus === STATUS.CALLING_C2C_VIDEO) {
+        console.log(STATUS.CALLING_C2C_VIDEO);
+      }
     },
 
    
@@ -434,11 +447,16 @@ export default {
     width: 50rem;
     height: 35rem;
     position: fixed; 
+    top: -50rem;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 9998;
+    transition: all 0.1s;
+  }
+  .TUICallKit-box.show-TUICallKit{
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    z-index: 999;
-    border: 1px solid salmon;
-    transition: all 0.5s;
   }
+
 </style>

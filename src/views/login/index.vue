@@ -233,9 +233,9 @@ export default {
   },
   created() {
     localStorage.setItem('tag', ''); // 用户身份 user、人才端 company、企业端缓存
-    localStorage.setItem('staffVipRank', ''); // 企业用户会员等级
-    localStorage.setItem('userVipRank', ''); // 人才端用户会员等级
-    localStorage.setItem('company_id', ''); // 企业id缓存
+    // localStorage.setItem('staffVipRank', ''); // 企业用户会员等级
+    // localStorage.setItem('userVipRank', ''); // 人才端用户会员等级
+    // localStorage.setItem('company_id', ''); // 企业id缓存
     localStorage.setItem('ipCity','');
     this.login_bgurl_1 = this.$root.login_bgurl_1;
     this.login_bgurl_2 = this.$root.login_bgurl_2;

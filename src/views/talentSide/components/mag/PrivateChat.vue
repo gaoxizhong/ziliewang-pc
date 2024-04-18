@@ -215,12 +215,12 @@
             <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">联系方式</div>
           </div>
           <div class="action-bar-right">
-            <!-- <div class="action-item">
-              <i class="iconfont icon-dianhua" title="电话" @click="user_clickInit"></i>
+            <div class="action-item">
+              <i class="iconfont icon-dianhua" title="电话" @click="user_clickAUDIOCall"></i>
             </div>
             <div class="action-item">
               <i class="iconfont icon-shipin" title="视频" @click="user_clickVIDEOCall"></i>
-            </div> -->
+            </div>
           </div>
           
         </div>
@@ -402,7 +402,7 @@
     methods: {
       // 点击电话按钮
       user_clickAUDIOCall(){
-        this.$bus.$emit('user_clickAUDIOCallt',{to:this.to,currentUser:this.currentUser});
+        this.$bus.$emit('user_clickAUDIOCall',{to:this.to,currentUser:this.currentUser});
       },
       // 点击视频按钮
       user_clickVIDEOCall(){
