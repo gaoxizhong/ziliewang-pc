@@ -260,13 +260,13 @@ export default {
     async Init() {
       try {
         const { userSig } = GenerateTestUserSig.genTestUserSig({
-          userID: this.userID,
+          userID: this.userID + '',
           SDKAppID: Number(this.SDKAppID),
           SecretKey: this.SecretKey,
         });
         await TUICallKitServer.init({
           SDKAppID: Number(this.SDKAppID),
-          userID: this.userID,
+          userID: this.userID + '',
           userSig,
           // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
         });
@@ -282,7 +282,7 @@ export default {
         this.show_TUICallKit = true;
         // 1v1 video call
         await TUICallKitServer.call({ 
-            userID: e.to.id,
+            userID: e.to.id + '',
             type: TUICallType.AUDIO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
           });
       } catch (error) {
@@ -295,7 +295,7 @@ export default {
         this.show_TUICallKit = true;
         // 1v1 video call
         await TUICallKitServer.call({ 
-            userID: e.to.id,
+            userID: e.to.id + '',
             type: TUICallType.VIDEO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
           });
       } catch (error) {

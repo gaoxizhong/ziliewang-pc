@@ -885,6 +885,9 @@
 
       clickvipRank_0(){
         this.$message.error("需要升级为VIP会员才可发送文件!");
+        setTimeout(() =>{
+          this.$router.push('/talentSide/topUpBuy');
+        },1000)
         return
       },
       // 获取个人信息
