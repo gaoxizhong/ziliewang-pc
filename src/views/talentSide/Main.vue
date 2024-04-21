@@ -6,9 +6,9 @@
     <!-- 主题 开始 -->
     <div ref="keepAliveContainer" class="container-box">
       <keep-alive>
-        <router-view v-if="$route.meta.keepAlive && isRouterAlive" :key="$route.fullPath"/>
+        <router-view v-if="$route.meta.keepAlive && isRouterAlive" :key="$route.fullPath" ref="routerView"/>
       </keep-alive>
-      <router-view v-if="!$route.meta.keepAlive && isRouterAlive" :key="$route.fullPath"></router-view>
+      <router-view v-if="!$route.meta.keepAlive && isRouterAlive" :key="$route.fullPath" ref="routerView"></router-view>
     </div>
     <!-- 主题 结束 -->
     <!-- 底部 开始  -->
@@ -100,7 +100,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         // 被叫的 userID
         callUserID: '',
         SDKAppID: 1600032579,    // Replace with your SDKAppID
-        SecretKey: '46c5cdb58daafc522d269cfffe9c3bd5b836ad57b648c5d08200d226b2e97b1a',  // Replace with your SecretKey
+        to:{}
       }
     },
     watch: {
@@ -122,10 +122,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     mounted(){
       // 组件间通信
       this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
-      // 腾讯云-- 点击电话
-      this.$bus.$on('user_clickAUDIOCall', this.user_clickAUDIOCall);
-      // 腾讯云-- 点击视频
-      this.$bus.$on('user_clickVIDEOCall', this.user_clickVIDEOCall);
+      // 腾讯云-- 点击电话、视频
+      this.$bus.$on('user_clickCall', this.user_clickCall);
     },
     created(){
       let that = this;
@@ -234,72 +232,90 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       // 初始化
       async Init() {
         try {
-          const { userSig } = GenerateTestUserSig.genTestUserSig({
-            userID: this.userID + '',
-            SDKAppID: Number(this.SDKAppID),
-            SecretKey: this.SecretKey,
-          });
-          await TUICallKitServer.init({
-            SDKAppID: Number(this.SDKAppID),
-            userID: this.userID + '',
-            userSig,
-            // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
-          });
-          console.log('初始化成功');
+          await this.$axios.post('/api/thirdparty/list',{
+            tag:'tencent_cloud_im'
+          }).then( res =>{
+            if(res.code == 0){
+              const userSig = res.data.value;
+              TUICallKitServer.init({
+                SDKAppID: Number(this.SDKAppID),
+                userID: this.userID + '',
+                userSig,
+                // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
+              });
+              console.log('初始化成功');
+            }else{
+              console.log(res.msg)
+            }
+          })
+          
         } catch (error) {
-          alert(`[TUICallKit] Initialization failed. Reason: ${error}`);
+          console.log(error)
         }
       },
-      // 语音通话
-      async user_clickAUDIOCall(e) {
+      // 通话
+      async user_clickCall(e) {
         try {
+          this.to = e.to;
           this.show_TUICallKit = true;
           // 1v1 video call
           await TUICallKitServer.call({ 
               userID: e.to.id + '',
-              type: TUICallType.AUDIO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
+              type: e.type == 1? TUICallType.AUDIO_CALL: TUICallType.VIDEO_CALL, //1、语音通话(TUICallType.AUDIO_CALL )、2、视频通话(TUICallType.VIDEO_CALL )
             });
         } catch (error) {
-          alert(`[TUICallKit] Call failed. Reason: ${error}`);
-        }
-      },
-      // 视频通话
-      async user_clickVIDEOCall(e) {
-        try {
-          this.show_TUICallKit = true;
-          // 1v1 video call
-          await TUICallKitServer.call({ 
-              userID: e.to.id + '',
-              type: TUICallType.VIDEO_CALL, //语音通话(TUICallType.AUDIO_CALL )、视频通话(TUICallType.VIDEO_CALL )
-            });
-        } catch (error) {
-          alert(`[TUICallKit] Call failed. Reason: ${error}`);
+          alert(`对方未上线!`);
         }
       },
       // 拨打电话前与收到通话邀请前会执行此函数
       beforeCalling(type, error) {
-        console.log("拨打电话前与收到通话邀请前会执行此函数-type:"+ type, );
-        console.log("拨打电话前与收到通话邀请前会执行此函数-error:"+ error);
+        console.log("拨打电话前与收到通话邀请前会执行此函数-type:", type, error);
 
       },
       // 结束通话后会执行此函数
       afterCalling() {
-        console.log("结束通话后会执行此函数: afterCalling");
+        console.log('结束通话后会执行此函数')
         this.show_TUICallKit = false;
       },
       // 组件抛出的事件，当通话状态发生变化时，会触发该事件
       handleStatusChanged(args) {
+        console.log(args)
         const { oldStatus, newStatus } = args;
+        // type:1 正在语音； 2、正在视频；3、通话结束；4、视频结束;5、发起呼叫；6、呼叫失败
         if(newStatus === STATUS.BE_INVITED){
           // 收到通话邀请
+          console.log('收到通话邀请:',STATUS.BE_INVITED);
           this.show_TUICallKit = true;
         }
-        if (newStatus === STATUS.CALLING_C2C_VIDEO) {
-          console.log(`[TUICallkit Demo] statusChanged: ${oldStatus} -> ${newStatus}`);
+        if (oldStatus === STATUS.IDLE && newStatus === STATUS.DIALING_C2C) {
+          // 正在 1v1 呼叫
+          console.log('正在 1v1 呼叫:',STATUS.DIALING_C2C);
+          // this.$refs.chat.$refs.privateChat.user_TUICallKitInfo({to: this.to,type: 5,text: '发起呼叫' })
         }
+        if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.IDLE) {
+          this.$emit('user_TUICallKitInfo',{to: this.to,type: 6,text: '呼叫未接通' })
+          // this.$refs.chat.$refs.privateChat.user_TUICallKitInfo({to: this.to,type: 6,text: '呼叫未接通' })
+        }
+        if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.CALLING_C2C_AUDIO) {
+          // 正在 1v1 语音通话；
+          console.log('正在 1v1 语音通话:',STATUS.CALLING_C2C_AUDIO);
+          this.$emit('user_TUICallKitInfo',{to: this.to,type: 1,text:'语音通话' });
+        }
+        if (newStatus === STATUS.CALLING_C2C_VIDEO) {
+          // 正在 1v1 视频通话
+          console.log('正在 1v1 视频通话:',STATUS.CALLING_C2C_VIDEO);
+        }
+        
       },
 
     },
+    // // 与生命周期同级
+    // provide() {
+    //   return {
+    //     //子组件调用的名字：对应的方法（当前页面，祖父级元素的方法）
+    //     user_TUICallKitInfo: this.user_TUICallKitInfo
+    //   };
+    // },
 
   }
 </script>

@@ -209,10 +209,10 @@
           </div>
           <div class="action-bar-right">
             <div class="action-item">
-              <i class="iconfont icon-dianhua" title="电话" @click="clickAUDIOCall"></i>
+              <i class="iconfont icon-dianhua" title="电话" @click="clickCall(1)"></i>
             </div>
             <div class="action-item">
-              <i class="iconfont icon-shipin" title="视频" @click="clickVIDEOCall"></i>
+              <i class="iconfont icon-shipin" title="视频" @click="clickCall(2)"></i>
             </div>
           </div>
 
@@ -438,13 +438,9 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
     },
     methods: {
-      // 音视频 -- 语音
-      clickAUDIOCall(){
-        this.$bus.$emit('clickAUDIOCall',{to:this.to,currentUser:this.currentUser});
-      },
-      // 音视频 -- 视频
-      clickVIDEOCall(){
-        this.$bus.$emit('clickVIDEOCall',{to:this.to,currentUser:this.currentUser});
+      // 音视频 -- 语音、视频按钮
+      clickCall(t){
+        this.$bus.$emit('clickCall',{to:this.to,currentUser:this.currentUser,type: t});
       },
       /** 显示地图 */
       showMap() {

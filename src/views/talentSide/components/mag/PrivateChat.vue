@@ -54,6 +54,9 @@
                   <!-- 内容 开始 -->
                   <div v-if="item.type === 'text'" class="content-text" v-html="emoji.decoder.decode(item.payload.text)"></div>
                   <!-- 内容 结束 -->
+                  <!-- 音视频 开始 -->
+                  <div v-if="item.type === 'TUICallKit'" class="content-text" v-html="item.payload.text"></div>
+                  <!-- 音视频 结束 -->
                   <!-- 简历 开始 -->
                   <a v-if="item.type === 'resume'" :href="item.payload.resume" target="_blank" download="download">
                     <div class="content-file" title="点击下载">
@@ -216,10 +219,10 @@
           </div>
           <div class="action-bar-right">
             <div class="action-item">
-              <i class="iconfont icon-dianhua" title="电话" @click="user_clickAUDIOCall"></i>
+              <i class="iconfont icon-dianhua" title="电话" @click="user_clickCall(1)"></i>
             </div>
             <div class="action-item">
-              <i class="iconfont icon-shipin" title="视频" @click="user_clickVIDEOCall"></i>
+              <i class="iconfont icon-shipin" title="视频" @click="user_clickCall(2)"></i>
             </div>
           </div>
           
@@ -250,7 +253,7 @@
         <div class="action-item" @click="showCancel">取消</div>
       </div>
     </div>
-
+    
   </div>
 </template>
 
@@ -360,6 +363,7 @@
         name: this.$store.state.user.name,
         avatar: this.$store.state.user.realAvatar
       };
+      this.$bus.$on('user_TUICallKitInfo',this.user_TUICallKitInfo);
     },
     created() {
       this.userVipRank = localStorage.getItem('userVipRank');
@@ -400,13 +404,9 @@
       this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
     },
     methods: {
-      // 点击电话按钮
-      user_clickAUDIOCall(){
-        this.$bus.$emit('user_clickAUDIOCall',{to:this.to,currentUser:this.currentUser});
-      },
-      // 点击视频按钮
-      user_clickVIDEOCall(){
-        this.$bus.$emit('user_clickVIDEOCall',{to:this.to,currentUser:this.currentUser});
+      // 点击电话、视频按钮
+      user_clickCall(t){
+        this.$bus.$emit('user_clickCall',{to:this.to,currentUser:this.currentUser,type: t});
       },
       formatDate,
       onReceivedPrivateMessage(message) {
@@ -432,6 +432,7 @@
         this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.renderConversations);
       },
       renderConversations(content) {
+        console.log(content)
         this.conversations = content.conversations; /// 会话列表
       },
       /**
@@ -538,6 +539,43 @@
         this.goEasy.im.createCustomMessage({
           type: 'resume',  //字符串，可以任意自定义类型 resume 简历
           text: '发送简历',
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            console.log(message)
+            this.sendMessage(message);
+            this.clickDeliver();
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
+      },
+      // 投简历
+      clickDeliver(){
+        let that = this;
+        let p = {
+          position_id: that.friend.position_id,// 岗位id
+          company_id: that.friend.company_id,// 公司id
+          company_uid: that.to.id,//  发布人uid
+        }
+        that.$axios.post('/api/user/deliver',p).then( res =>{
+          console.log(res)
+        })
+      },
+      // 腾讯云 语音自定义事件
+      user_TUICallKitInfo(e){
+        console.log(e)
+        let txy_type = e.type;
+        let text = e.text;
+        // type:1、 正在语音； 2、正在视频；3、通话结束；4、视频结束;5、发起呼叫；6、呼叫失败
+        let payload = {
+          text,
+          txy_type,
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'TUICallKit',  //字符串，可以任意自定义类型 TUICallKit 腾讯云音视频
+          text,
           payload,
           to: this.to,
           onSuccess: (message) => {

@@ -24,6 +24,10 @@
         <div class="right-items-box">
           <div @click="clickProfessionalCircle">
             <img src="../../../assets/image/nav_1.png" alt="" />
+            <span>朋友圈</span>
+          </div>
+          <div @click="clickmyGoodFriend">
+            <img src="../../../assets/image/nav_hy.png" alt="" />
             <span>我的好友</span>
           </div>
           <div @click="clickMessage" class="communication-box">
@@ -143,29 +147,13 @@ export default {
     clickProfessionalCircle(){
       this.$router.push('/professionalCircle');
     },
+    // 点击我的好友
+    clickmyGoodFriend(){
+      this.$router.push('/myGoodFriend');
+    },
     // 点击消息
     clickMessage(){
       this.$bus.$emit('talentSide_receiveParams', {type:'navbarMag',laiyuan:'nav',infoData:{} });
-    },
-    // 获取个人信息
-    getUserProfile(){
-      let that = this;
-      that.$axios.post('/api/user/profile',{}).then(res =>{
-        if(res.code == 0){
-          let role = res.data.basic_info.role;
-          if(role == 1){
-            that.$router.push('/talentSide/enterpriseInfoRequest')
-          }else{
-            that.$router.push('/')
-          }
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      }).catch(e =>{
-        console.log(e)
-      })
     },
   },
 };
@@ -228,9 +216,9 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 10px;
+      margin-right: 6px;
       div{
-        padding: 0 12px;
+        padding: 0 4px;
         font-size: 14px;
         display: flex;
         align-items: center;

@@ -86,10 +86,12 @@ export default {
     
   },
   mounted() {
-    // 获取个人信息
-    this.getUserProfile();
     // 组件间通信
     this.$bus.$on('getVip', this.getUserProfile);
+  },
+  created() {
+    // 获取个人信息
+    this.getUserProfile();
   },
   methods: {
     

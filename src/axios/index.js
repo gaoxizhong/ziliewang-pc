@@ -83,7 +83,7 @@ service.interceptors.response.use(
       //跳转登录页面
       // router.push({path:`/login?redirect=${router.currentRoute.fullPath}`})
       router.push({path:'/login'})
-      return Promise.reject(dataAxios.data);
+      // return Promise.reject(dataAxios.data);
     }else{
       return dataAxios;
     }

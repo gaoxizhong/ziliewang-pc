@@ -50,7 +50,7 @@
             </div>
           </div>
           <!-- 屏蔽公司 -->
-          <!-- <div class="container-right-items" id="set_shield">
+          <div class="container-right-items" id="set_shield">
             <div class="title">屏蔽公司</div>
             <div class="info-box">你可以屏蔽HR或猎头所在公司</div>
             <button @click="clickSetShield">
@@ -64,7 +64,7 @@
                 <span class="items-cancel">取消屏蔽</span>
               </div>
             </div>
-          </div> -->
+          </div>
           <!-- 手机号码保护 -->
           <div class="container-right-items" id="phone_protect">
             <div class="title">手机号码保护</div>

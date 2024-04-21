@@ -11,7 +11,7 @@
     </div>
     <!-- 聊天部分 开始-->
     <div class="contact-main">
-      <PrivateChat :infoData="profile.friend"  v-if="is_chat"/>
+      <PrivateChat :infoData="profile.friend" ref="privateChat" v-if="is_chat"/>
     </div>
     <!-- 聊天部分 结束-->
   </div>

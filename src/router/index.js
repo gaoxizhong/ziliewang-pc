@@ -416,6 +416,15 @@ export const constantRoutes = [
         },
       },
       {
+        path: '/myGoodFriend',
+        name: 'myGoodFriend',
+        component: () => import('@/views/talentSide/myGoodFriend'),
+        meta: { 
+          title: '我的好友',
+          keepAlive: true,
+        },
+      },
+      {
         path: '/attentionFans',
         name: 'attentionFans',
         component: () => import('@/views/talentSide/attentionFans'),

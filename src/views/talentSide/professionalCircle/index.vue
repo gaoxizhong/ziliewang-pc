@@ -4,7 +4,6 @@
     <div class="container-title-box">
       <div style="width: 1200px; position: relative;">
         <el-tabs v-model="tag" @tab-click="handleClick">
-          <el-tab-pane label="好友列表" name="buddyList"></el-tab-pane>
           <!-- <el-tab-pane label="聊天记录" name="chatHistory"></el-tab-pane> -->
           <el-tab-pane label="好友动态" name="attention"></el-tab-pane>
           <el-tab-pane label="头条" name="hot"></el-tab-pane>
@@ -13,14 +12,6 @@
         <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
       </div>
     </div>
-    <!-- 好友列表 开始 -->
-    <div class="interaction-box" v-if=" tag == 'buddyList' ">
-      <magInfo /> 
-    </div>
-    <!-- 好友列表 结束 -->
-    <!-- <div class="interaction-box"  v-if=" tag == 'chatHistory' ">
-      
-    </div> -->
     <!-- 好友动态 、 头条 开始 -->
     <div class="container info-box" v-if=" tag == 'hot'|| tag == 'attention'">
       <div class="info-left-box">
@@ -175,7 +166,7 @@ export default {
   data(){
     return{
       content_tag: 2,
-      tag: 'buddyList',
+      tag: 'attention',
       page: 1,
       dataList:[],
       dialogVisible: false,
