@@ -9,7 +9,7 @@
 import magInfo from '../components/mag/magInfo.vue';
 
 export default {
-  name: '我的好友',
+  name: 'myGoodFriend',
   components: {
     magInfo,
   },

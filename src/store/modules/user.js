@@ -10,6 +10,7 @@ const state = {
   realAvatar: localStorage.getItem('realAvatar') || '', // 用户端的个人头像
   role: '',
   navbarMessagePrompt: false, // 消息提示
+  TUStatusInfo: {}, // 腾讯云 音视频状态
 }
 
 const mutations = {

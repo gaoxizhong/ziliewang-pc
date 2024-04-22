@@ -402,13 +402,17 @@
       };
     },
     watch:{
-      '$store.state.staffAvatar'(newVal){
+      '$store.state.user.staffAvatar'(newVal){
           this.staffAvatar = newVal;
           this.$forceUpdate();// 更新数据
       },
-      '$store.state.staffName'(newVal){
-          this.staffName = newVal;
-          this.$forceUpdate();// 更新数据
+      '$store.state.user.staffName'(newVal){
+        this.staffName = newVal;
+        this.$forceUpdate();// 更新数据
+      },
+      '$store.state.TUICallKit.TUStatusInfo'(newVal){
+        this.TUICallKitInfo(newVal);
+        this.$forceUpdate();// 更新数据
       },
     },
     mounted(){
@@ -966,6 +970,30 @@
             })
           }
         })
+      },
+      // 腾讯云 语音自定义事件
+      TUICallKitInfo(e){
+        console.log(e)
+        let txy_type = e.type;
+        let text = e.text;
+        // type:1、 正在语音； 2、正在视频；3、通话结束；4、视频结束;5、发起呼叫；6、呼叫失败
+        let payload = {
+          text,
+          txy_type,
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'TUICallKit',  //字符串，可以任意自定义类型 TUICallKit 腾讯云音视频
+          text,
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            console.log(message)
+            this.sendMessage(message);
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
       },
     },
   };

@@ -100,7 +100,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         // 被叫的 userID
         callUserID: '',
         SDKAppID: 1600032579,    // Replace with your SDKAppID
-        to:{}
+        to:{},
+        TUICallKit_type: 0
       }
     },
     watch: {
@@ -257,6 +258,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       async user_clickCall(e) {
         try {
           this.to = e.to;
+          this.TUICallKit_type = e.type;
           this.show_TUICallKit = true;
           // 1v1 video call
           await TUICallKitServer.call({ 
@@ -264,7 +266,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
               type: e.type == 1? TUICallType.AUDIO_CALL: TUICallType.VIDEO_CALL, //1、语音通话(TUICallType.AUDIO_CALL )、2、视频通话(TUICallType.VIDEO_CALL )
             });
         } catch (error) {
-          alert(`对方未上线!`);
+          alert(error);
         }
       },
       // 拨打电话前与收到通话邀请前会执行此函数
@@ -275,7 +277,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       // 结束通话后会执行此函数
       afterCalling() {
         console.log('结束通话后会执行此函数')
-        this.show_TUICallKit = false;
+        // this.show_TUICallKit = false;
       },
       // 组件抛出的事件，当通话状态发生变化时，会触发该事件
       handleStatusChanged(args) {
@@ -290,32 +292,56 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         if (oldStatus === STATUS.IDLE && newStatus === STATUS.DIALING_C2C) {
           // 正在 1v1 呼叫
           console.log('正在 1v1 呼叫:',STATUS.DIALING_C2C);
-          // this.$refs.chat.$refs.privateChat.user_TUICallKitInfo({to: this.to,type: 5,text: '发起呼叫' })
+          let text = '';
+          if(this.TUICallKit_type == 1){
+            text = '发起语音通话...'
+          }
+          if(this.TUICallKit_type == 2){
+            text = '发起视频通话...'
+          }
+          this.user_TUICallKitInfo({to: this.to,type: 5,text });
+
         }
         if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.IDLE) {
-          this.$emit('user_TUICallKitInfo',{to: this.to,type: 6,text: '呼叫未接通' })
-          // this.$refs.chat.$refs.privateChat.user_TUICallKitInfo({to: this.to,type: 6,text: '呼叫未接通' })
+          console.log('呼叫未接通')
+          this.show_TUICallKit = false;
+          let text = '';
+          if(this.TUICallKit_type == 1){
+            text = '语音通话未接通'
+          }
+          if(this.TUICallKit_type == 2){
+            text = '视频通话未接通'
+          }
+          this.user_TUICallKitInfo({to: this.to,type: 6,text });
         }
         if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.CALLING_C2C_AUDIO) {
           // 正在 1v1 语音通话；
           console.log('正在 1v1 语音通话:',STATUS.CALLING_C2C_AUDIO);
-          this.$emit('user_TUICallKitInfo',{to: this.to,type: 1,text:'语音通话' });
+        }
+        if (oldStatus === STATUS.CALLING_C2C_AUDIO && newStatus === STATUS.IDLE) {
+          // 语音通话结束；
+          console.log('语音通话结束');
+          this.show_TUICallKit = false;
+          this.user_TUICallKitInfo({to: this.to,type: 3,text: '通话结束' });
         }
         if (newStatus === STATUS.CALLING_C2C_VIDEO) {
           // 正在 1v1 视频通话
           console.log('正在 1v1 视频通话:',STATUS.CALLING_C2C_VIDEO);
         }
+        if (oldStatus === STATUS.CALLING_C2C_VIDEO && newStatus === STATUS.IDLE) {
+          // 语音通话结束；
+          console.log('视频通话结束');
+          this.show_TUICallKit = false;
+          this.user_TUICallKitInfo({to: this.to,type: 4,text: '视频结束' });
+        }
         
       },
-
+      user_TUICallKitInfo(obj){
+        console.log(obj)
+        this.$store.dispatch('TUICallKit/SET_userTUStatusInfo', obj);
+      },
     },
-    // // 与生命周期同级
-    // provide() {
-    //   return {
-    //     //子组件调用的名字：对应的方法（当前页面，祖父级元素的方法）
-    //     user_TUICallKitInfo: this.user_TUICallKitInfo
-    //   };
-    // },
+   
 
   }
 </script>

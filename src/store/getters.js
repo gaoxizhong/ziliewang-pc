@@ -9,5 +9,8 @@ const getters = {
   staffName: state => state.user.staffName,
   role: state => state.user.role,
   permission_routes: state => state.permission.routes,
+  suer_TUStatusInfo: state => state.TUICallKit.suer_TUStatusInfo, // 人才端 腾讯云音视频状态数据
+  TUStatusInfo: state => state.TUICallKit.TUStatusInfo, // 企业端 腾讯云音视频状态数据
+
 }
 export default getters

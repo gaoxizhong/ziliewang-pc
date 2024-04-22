@@ -348,13 +348,17 @@
       };
     },
     watch:{
-      '$store.state.realAvatar'(newVal){
+      '$store.state.user.realAvatar'(newVal){
           this.realAvatar = newVal;
           this.$forceUpdate();// 更新数据
       },
-      '$store.state.name'(newVal){
+      '$store.state.user.name'(newVal){
           this.name = newVal;
           this.$forceUpdate();// 更新数据
+      },
+      '$store.state.TUICallKit.suer_TUStatusInfo'(newVal){
+        this.user_TUICallKitInfo(newVal);
+        this.$forceUpdate();// 更新数据
       },
     },
     mounted(){
@@ -363,7 +367,6 @@
         name: this.$store.state.user.name,
         avatar: this.$store.state.user.realAvatar
       };
-      this.$bus.$on('user_TUICallKitInfo',this.user_TUICallKitInfo);
     },
     created() {
       this.userVipRank = localStorage.getItem('userVipRank');

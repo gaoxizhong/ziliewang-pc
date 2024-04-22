@@ -88,6 +88,7 @@ export default {
       callUserID: '',
       SDKAppID: 1600032579,    // Replace with your SDKAppID
       // videoResolution: videoResolution, // 设置分辨率
+      TUICallKit_type: 0
     }
   },
   mixins: [ResizeMixin],
@@ -280,6 +281,7 @@ export default {
     async clickCall(e) {
       try {
         this.show_TUICallKit = true;
+        this.TUICallKit_type = e.type;
         // 1v1 video call
         await TUICallKitServer.call({ 
             userID: e.to.id + '',
@@ -298,27 +300,66 @@ export default {
       console.log("结束通话后会执行此函数: afterCalling");
       this.show_TUICallKit = false;
     },
-     // 组件抛出的事件，当通话状态发生变化时，会触发该事件
-     handleStatusChanged(args) {
+    // 组件抛出的事件，当通话状态发生变化时，会触发该事件
+    handleStatusChanged(args) {
       console.log(args)
       const { oldStatus, newStatus } = args;
+      // type:1 正在语音； 2、正在视频；3、通话结束；4、视频结束;5、发起呼叫；6、呼叫失败
       if(newStatus === STATUS.BE_INVITED){
         // 收到通话邀请
         console.log('收到通话邀请:',STATUS.BE_INVITED);
         this.show_TUICallKit = true;
       }
-      if (newStatus === STATUS.CALLING_C2C_AUDIO) {
-        // 正在 1v1 语音通话
+      if (oldStatus === STATUS.IDLE && newStatus === STATUS.DIALING_C2C) {
+        // 正在 1v1 呼叫
+        console.log('正在 1v1 呼叫:',STATUS.DIALING_C2C);
+        let text = '';
+        if(this.TUICallKit_type == 1){
+          text = '发起语音通话...'
+        }
+        if(this.TUICallKit_type == 2){
+          text = '发起视频通话...'
+        }
+        this.user_TUICallKitInfo({to: this.to,type: 5,text });
+
+      }
+      if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.IDLE) {
+        console.log('呼叫未接通')
+        this.show_TUICallKit = false;
+        this.TUICallKitInfo({to: this.to,type: 6,text: '呼叫未接通' });
+      }
+      if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.CALLING_C2C_AUDIO) {
+        // 正在 1v1 语音通话；
         console.log('正在 1v1 语音通话:',STATUS.CALLING_C2C_AUDIO);
+      }
+      if (oldStatus === STATUS.CALLING_C2C_AUDIO && newStatus === STATUS.IDLE) {
+        // 语音通话结束；
+        console.log('语音通话结束');
+        this.show_TUICallKit = false;
+        let text = '';
+        if(this.TUICallKit_type == 1){
+          text = '语音通话未接通'
+        }
+        if(this.TUICallKit_type == 2){
+          text = '视频通话未接通'
+        }
+        this.TUICallKitInfo({to: this.to,type: 3,text });
       }
       if (newStatus === STATUS.CALLING_C2C_VIDEO) {
         // 正在 1v1 视频通话
         console.log('正在 1v1 视频通话:',STATUS.CALLING_C2C_VIDEO);
       }
-      if (newStatus === STATUS.DIALING_C2C) {
-        // 正在 1v1 呼叫
-        console.log('正在 1v1 呼叫:',STATUS.DIALING_C2C);
+      if (oldStatus === STATUS.CALLING_C2C_VIDEO && newStatus === STATUS.IDLE) {
+        // 语音通话结束；
+        console.log('视频通话结束');
+        this.show_TUICallKit = false;
+        this.user_TUICallKitInfo({to: this.to,type: 4,text: '视频结束' });
       }
+      
+    },
+    TUICallKitInfo(obj){
+      console.log(obj)
+      this.$store.dispatch('TUICallKit/SET_TUStatusInfo', obj);
     },
 
    
