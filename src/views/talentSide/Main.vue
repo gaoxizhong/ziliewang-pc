@@ -300,7 +300,9 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
             text = '发起视频通话...'
           }
           this.user_TUICallKitInfo({to: this.to,type: 5,text });
-
+          // 正在 1v1 语音通话；
+          console.log('正在 1v1 语音通话:',STATUS.CALLING_C2C_AUDIO);
+          
         }
         if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.IDLE) {
           console.log('呼叫未接通')
@@ -317,6 +319,14 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.CALLING_C2C_AUDIO) {
           // 正在 1v1 语音通话；
           console.log('正在 1v1 语音通话:',STATUS.CALLING_C2C_AUDIO);
+          // 初始化计数器
+          let counter = 0;
+          // 创建计时器，每1000毫秒（即每秒）执行一次函数
+         let countTime = setInterval(function() {
+              this.counter++; // 增加计数器的值
+              console.log(this.counter); // 在控制台输出当前计数器的值
+          }, 1000);
+
         }
         if (oldStatus === STATUS.CALLING_C2C_AUDIO && newStatus === STATUS.IDLE) {
           // 语音通话结束；
