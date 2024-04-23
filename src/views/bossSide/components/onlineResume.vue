@@ -10,7 +10,7 @@
             </div>
             <div class="item-right item-right-1">
               <div style="text-align: left;">
-                <h2 class="name">{{ basic_info.name?basic_info.name:'暂无' }}</h2>
+                <h2 class="name">{{ basic_info.is_name_protect == 1? basic_info.name: basic_info.real_name  }}</h2>
                 <div class="info-labels fr">
                   <span class="label-text">
                     <img src="../../../assets/image/Frame_1.png" alt="" class="fz fz-age"/>

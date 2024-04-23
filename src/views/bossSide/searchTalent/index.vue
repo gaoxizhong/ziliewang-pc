@@ -46,7 +46,7 @@
           <img :src="item.avatar?item.avatar:require('../../../assets/image/bossSide/img-user.png')" alt="" class="avatar-box">
           <div class="left-info-box">
             <div class="left-info-t">
-              <span class="left-info-name">{{ item.name }}</span>
+              <span class="left-info-name">{{ item.is_name_protect == 1? item.name: item.real_name }}</span>
               <img :src="require(`../../../assets/image/bossSide/sex-${item.sex == 2? 2 : 1}.png`)" alt="" >
               <span class="icon-span">今日活跃</span>
             </div>

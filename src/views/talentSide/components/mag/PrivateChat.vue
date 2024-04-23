@@ -570,12 +570,19 @@
       user_TUICallKitInfo(e){
         console.log(e)
         let txy_type = e.type;
-        let text = e.text;
-        // type:1、 正在语音； 2、正在视频；3、通话结束；4、视频结束;5、发起呼叫；6、呼叫失败
+        let counter = e.counter;
+        let text = '';
         let payload = {
-          text,
           txy_type,
         }
+        // type:1、 正在语音； 2、正在视频；3、通话结束；4、视频结束;5、发起呼叫；6、呼叫失败
+        if(txy_type == 3 || txy_type == 4){
+          payload.text = e.text + counter;
+          payload.counter = counter;
+        }else{
+          payload.text = e.text;
+        }
+        
         this.goEasy.im.createCustomMessage({
           type: 'TUICallKit',  //字符串，可以任意自定义类型 TUICallKit 腾讯云音视频
           text,

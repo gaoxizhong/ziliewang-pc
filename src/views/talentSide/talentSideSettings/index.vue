@@ -60,8 +60,8 @@
 
             <div class="shield-boss-box">
               <div v-for="(item,index) in shieldBossList" :key="index" class="items-box">
-                <span class="items-name">南京金碧房地产开发有限公司</span>
-                <span class="items-cancel">取消屏蔽</span>
+                <span class="items-name">{{  item.company.company_name }}</span>
+                <span class="items-cancel" @click="clickRemovePb(item)">取消屏蔽</span>
               </div>
             </div>
           </div>
@@ -133,7 +133,18 @@
         <div class="cententinfo-box">
           <div class="demo-input-suffix">
             <span>公司名称:</span>
-            <el-input v-model="corporation" type="text" name="corporation" placeholder="公司名称"></el-input>
+            <el-input v-model="corporation" type="text" name="corporation" placeholder="公司名称" clearable prefix-icon="el-icon-search" @input="schoolSearchInput"></el-input>
+            <!-- 弹窗 开始 -->
+            <div class="searchList-box" v-if="searchList_info">
+              <div class="suggest-list">
+                <ul>
+                  <li v-for="(item,index) in corporationList" :key="index" @click="clickSearchItem(item)">
+                    <p class="list-title">{{ item.company_name }}</p> 
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- 弹窗 结束 -->
           </div>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -217,6 +228,9 @@
     <div class="accountVisible">
       <accountCancellation :id="basic_info.uid" ref="accountCancellation"/>
     </div>
+
+
+    <div class="pop-box" @click="clickPopBox" v-if="searchList_info"></div>
   </div>
 
 </template>
@@ -249,10 +263,14 @@ export default {
       phrases_id:'',
       isDisable: false,
       statusMsg:'获取验证码',
-      corporation:'', // 公司名称
-      shieldBossList:[{}],
+      shieldBossList:[],
       is_phone_protect: true,
       is_name_protect: true,
+      // 搜索屏蔽公司
+      searchList_info: false,
+      corporationList: [], // 搜索匹配的公司
+      corporation:'', // 公司名称
+      selt_corporation: {}
     }
   },
   computed: {
@@ -267,8 +285,33 @@ export default {
     // 获取常用语
     this.geturlCommonLanguageList();
     this.clickLeItems(this.setType);
+    // 获取屏蔽企业列表
+    this.getUsershieldcompanyList();
   },
   methods: {
+    // 点击蒙层
+    clickPopBox(){
+      this.searchList_info = false;
+      this.corporationList = [];
+    },
+    // 点击学校input框搜索列表
+    clickSearchItem(n){
+      this.selt_corporation = n;
+      this.corporation = n.company_name;
+      this.searchList_info = false;
+    },
+    // 搜索框事件
+    schoolSearchInput(){
+      let that = this;
+      that.$axios.post('/api/company/search',{
+        search: that.corporation
+      }).then( res =>{
+        if(res.code == 0){
+          that.corporationList = res.data.list;
+          that.searchList_info = true;
+        }
+      })
+    },
     // 手机号码保护
     changePhoneProtect(e){
       let is_phone_protect = e ? 1 : 2;
@@ -286,7 +329,8 @@ export default {
       })
     },
     // 姓名保护
-    changeNameProtect(){
+    changeNameProtect(e){
+      let is_name_protect = e ? 1 : 2;
       this.$axios.post('/api/user/save',{
         is_name_protect,
       }).then(res =>{
@@ -400,25 +444,14 @@ export default {
       this.phrases_id = i;
       this.setPhrasesVisible = true;
     },
-    // 添加屏蔽的公司
-    clickShieldCorporationQR(){
+    // 获取屏蔽企业列表
+    getUsershieldcompanyList(){
       let that = this;
-      let p = {
-        corporation: that.corporation,
-      };
-      that.$axios.post('',p).then( res =>{
+      let p = {};
+      that.$axios.post('/api/usershieldcompany/list',p).then( res =>{
         if(res.code == 0){
-          that.$message.success({
-            message:'添加成功'
-          })
-          setTimeout(()=>{
-             // 获取个人信息
-             that.getUserProfile();
-             that.setShieldVisible = false;
-          },1500)
-          return
-        }
-        if(res.code == 1){
+          that.shieldBossList = res.data;
+        }else{
           that.$message.error({
             message:res.msg
           })
@@ -426,6 +459,75 @@ export default {
         }
 
       }).catch( e =>{
+        that.$message.error({
+          message:e.message
+        })
+        console.log(e)
+      })
+    },
+    // 取消屏蔽公司
+    clickRemovePb(n){
+      let that = this;
+      let selt_corporation = n;
+      let p = {
+        uid: that.basic_info.uid,
+        company_id:selt_corporation.company_id,
+      };
+      that.$axios.post('/api/usershieldcompany/remove',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:'取消屏蔽成功'
+          })
+          setTimeout(()=>{
+            // 获取屏蔽公司列表
+            that.getUsershieldcompanyList();
+          },1000)
+          return
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        that.$message.error({
+          message:e.message
+        })
+        console.log(e)
+      })
+    },
+    // 添加屏蔽的公司
+    clickShieldCorporationQR(){
+      let that = this;
+      let selt_corporation = that.selt_corporation;
+      console.log(selt_corporation)
+      let p = {
+        uid: that.basic_info.uid,
+        company_id:selt_corporation.id,
+      };
+      that.$axios.post('/api/usershieldcompany/create',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:'添加成功'
+          })
+          setTimeout(()=>{
+             // 获取屏蔽公司列表
+             that.getUsershieldcompanyList();
+             that.setShieldVisible = false;
+          },1000)
+          return
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        that.$message.error({
+          message:e.message
+        })
         console.log(e)
       })
     },
@@ -785,7 +887,6 @@ export default {
     }
     .el-dialog__body{
       height: auto;
-      overflow: hidden;
       padding: 20px 0;
       margin: 0 20px;
       border-top: 1px solid #F2F3F5;
@@ -837,6 +938,7 @@ export default {
           .el-input__inner {
             font-size: 14px;
             padding: 14px 10px;
+            padding-left: 30px;
             width: 100%;
             border: 1px solid #e9e9e9;
             border-radius: 4px;
@@ -919,4 +1021,50 @@ export default {
     }
   }
 }
+.searchList-box{
+  position: absolute;
+  top: 44px;
+  left: 0;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 0 10px 0 #b2bdca;
+  border-radius: 8px;
+  width: 380px;
+  line-height: 24px;
+  z-index: 99;
+  .suggest-list {
+    position: relative;
+    max-height: 260px;
+    overflow: auto;
+    ul {
+      margin: 0;
+      padding: 6px 0;
+      li {
+        position: relative;
+        padding: 10px 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        &:hover{
+          background-color: #f1f2f3;
+        }
+        p {
+          margin-bottom: 0;
+        }
+        p.list-title {
+          color: #222;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}
+.pop-box{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 98;
+  }
 </style>

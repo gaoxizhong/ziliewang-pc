@@ -305,7 +305,9 @@ export default {
     },
     getSysMsgList(){
       let that = this;
-      that.$axios.post('/api/company-interview/index',{}).then( res =>{
+      that.$axios.post('/api/company-interview/index',{
+        status: 3
+      }).then( res =>{
         if(res.code == 0){
           that.tableData = res.data;
         }else{

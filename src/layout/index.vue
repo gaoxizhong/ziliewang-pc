@@ -320,7 +320,7 @@ export default {
         if(this.TUICallKit_type == 2){
           text = '发起视频通话...'
         }
-        this.user_TUICallKitInfo({to: this.to,type: 5,text });
+        this.TUICallKitInfo({to: this.to,type: 5,text });
 
       }
       if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.IDLE) {
@@ -345,7 +345,7 @@ export default {
         }
         this.TUICallKitInfo({to: this.to,type: 3,text });
       }
-      if (newStatus === STATUS.CALLING_C2C_VIDEO) {
+      if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.CALLING_C2C_VIDEO) {
         // 正在 1v1 视频通话
         console.log('正在 1v1 视频通话:',STATUS.CALLING_C2C_VIDEO);
       }
@@ -353,7 +353,7 @@ export default {
         // 语音通话结束；
         console.log('视频通话结束');
         this.show_TUICallKit = false;
-        this.user_TUICallKitInfo({to: this.to,type: 4,text: '视频结束' });
+        this.TUICallKitInfo({to: this.to,type: 4,text: '视频结束' });
       }
       
     },

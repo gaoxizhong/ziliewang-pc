@@ -22,6 +22,9 @@
       </div>
       <div class="right-menu">
         <div class="right-items-box">
+          <div @click="clickxsms">
+            <span>线上面试</span>
+          </div>
           <div @click="clickProfessionalCircle">
             <img src="../../../assets/image/nav_1.png" alt="" />
             <span>朋友圈</span>
@@ -143,6 +146,10 @@ export default {
       sessionStorage.removeItem("route")
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
+    // 点击线上面试
+    clickxsms(){
+      this.$router.push('/myDelivery?subTag=3')
+    },
     // 点击职圈
     clickProfessionalCircle(){
       this.$router.push('/professionalCircle');
@@ -218,7 +225,7 @@ export default {
       justify-content: center;
       margin-right: 6px;
       div{
-        padding: 0 4px;
+        padding: 0 6px;
         font-size: 14px;
         display: flex;
         align-items: center;
@@ -227,7 +234,7 @@ export default {
         img{
           width: 14px;
           height: 14px;
-          margin-right: 4px;
+          margin-right: 6px;
         }
         .corner-mark-box{
           line-height: initial;

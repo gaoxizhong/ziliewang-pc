@@ -45,6 +45,9 @@
                   <!-- 内容 开始 -->
                   <div v-if="message.type === 'text'" class="content-text" v-html="emoji.decoder.decode(message.payload.text)"></div>
                   <!-- 内容 结束 -->
+                  <!-- 音视频 开始 -->
+                  <div v-if="message.type === 'TUICallKit'" class="content-text" v-html="message.payload.text"></div>
+                  <!-- 音视频 结束 -->
                   <!-- 简历 开始 -->
                   <a v-if="message.type === 'resume'" :href="message.payload.resume" target="_blank" download="download">
                     <div class="content-file" title="点击下载">

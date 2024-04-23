@@ -101,7 +101,9 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         callUserID: '',
         SDKAppID: 1600032579,    // Replace with your SDKAppID
         to:{},
-        TUICallKit_type: 0
+        TUICallKit_type: 0,
+        countTime: null,
+        counter: 0
       }
     },
     watch: {
@@ -322,7 +324,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
           // 初始化计数器
           let counter = 0;
           // 创建计时器，每1000毫秒（即每秒）执行一次函数
-         let countTime = setInterval(function() {
+           this.countTime = setInterval(function() {
               this.counter++; // 增加计数器的值
               console.log(this.counter); // 在控制台输出当前计数器的值
           }, 1000);
@@ -331,10 +333,12 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         if (oldStatus === STATUS.CALLING_C2C_AUDIO && newStatus === STATUS.IDLE) {
           // 语音通话结束；
           console.log('语音通话结束');
+          clearInterval(this.countTime);
           this.show_TUICallKit = false;
-          this.user_TUICallKitInfo({to: this.to,type: 3,text: '通话结束' });
+          let counter = this.counter;
+          this.user_TUICallKitInfo({to: this.to,type: 3,text: '通话结束',counter });
         }
-        if (newStatus === STATUS.CALLING_C2C_VIDEO) {
+        if (oldStatus === STATUS.DIALING_C2C && newStatus === STATUS.CALLING_C2C_VIDEO) {
           // 正在 1v1 视频通话
           console.log('正在 1v1 视频通话:',STATUS.CALLING_C2C_VIDEO);
         }
@@ -376,7 +380,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
   // 聊天弹窗 样式=============== ↓ ===========
 
   .mian-box /deep/ .vdr{
-    z-index: 9997 !important;
+    z-index: 2000 !important;
     position: fixed;
     border-radius: 4px;
     box-shadow:0 0 16px 0 rgba(139,152,169,1);
@@ -463,7 +467,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     top: -50rem;
     left: 50%;
     transform: translate(-50%,-50%);
-    z-index: 9998;
+    z-index: 2001;
     transition: all 0.1s;
   }
   .TUICallKit-box.show-TUICallKit{

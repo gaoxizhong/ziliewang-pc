@@ -17,9 +17,14 @@
         <div class="right-c"></div>
         <div class="right-status-box">
           <div class="right-status-text">
-            <span v-if="item.status == 1">已投递</span>
-            <span v-if="item.status == 2">面试邀请</span>
-            <span v-if="item.status == 3">不合适</span>
+            <span v-if="item.status == 1">待接受</span>
+            <span v-if="item.status == 2">不接受</span>
+            <span v-if="item.status == 3">待参加</span>
+            <span v-if="item.status == 4">未参加</span>
+            <span v-if="item.status == 5">已超时</span>
+            <span v-if="item.status == 6">已完成</span>
+            <span v-if="item.status == 7">不合适</span>
+            <span v-if="item.status == 8">已投递</span>
             <!-- <i class="el-icon-arrow-right"></i> -->
           </div>
           <div class="status-time">{{item.createtime}}</div>

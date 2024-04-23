@@ -3,8 +3,13 @@
     <!-- 我的面试安排页 -->
     <div class="tab-box">
       <div class="tab-left">
-        <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">待面试</div>
-        <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">历史记录</div>
+        <div :class="tabStatus == 1?'hover-items':'' " @click="clickStatus(1)">待接受</div>
+        <div :class="tabStatus == 2?'hover-items':'' " @click="clickStatus(2)">不接受</div>
+        <div :class="tabStatus == 3?'hover-items':'' " @click="clickStatus(3)">待参加</div>
+        <div :class="tabStatus == 4?'hover-items':'' " @click="clickStatus(4)">未参加</div>
+        <div :class="tabStatus == 5?'hover-items':'' " @click="clickStatus(5)">已超时</div>
+        <div :class="tabStatus == 6?'hover-items':'' " @click="clickStatus(6)">已完成</div>
+        <div :class="tabStatus == 7?'hover-items':'' " @click="clickStatus(7)">不合适</div>
       </div>
     </div>
 
@@ -29,8 +34,7 @@
           <el-form-item label="面试者" prop="interviewee">
             <el-select v-model="ruleForm.interviewee" placeholder="面试者">
               <el-option label="不限" value="不限"></el-option>
-              <el-option label="郜喜忠" value="郜喜忠"></el-option>
-              <el-option label="仇登耀" value="仇登耀"></el-option>
+              <el-option :label="item.publish_name" :value="item.publish_name" v-for="(item,index) in jobList" :key="index"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -155,10 +159,14 @@ export default {
       },
       dialogVisible:false,
       infoData:{},
+      jobList: [],
     }
   },
   mounted(){
     this.getSysMsgList();
+  },
+  created(){
+    this.getinfoList();
   },
   methods:{
     handleClose(done) {
@@ -174,11 +182,14 @@ export default {
     },
     clickStatus(n){
       this.tabStatus = n;
+      this.getSysMsgList();
     },
     // 获取聊天列表
     getSysMsgList(){
       let that = this;
-      that.$axios.post('/api/company-interview/index',{}).then( res =>{
+      that.$axios.post('/api/company-interview/index',{
+        status: that.tabStatus
+      }).then( res =>{
         if(res.code == 0){
           that.tableData = res.data;
         }else{
@@ -195,7 +206,18 @@ export default {
       this.infoData = i;
       this.dialogVisible = true;
     },
-    
+    getinfoList(){
+      let that = this;
+      that.$axios.post('/api/company-position/list',{}).then( res =>{
+        if(res.code == 0){
+          that.jobList = res.data
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      })
+    },
   
     
   }

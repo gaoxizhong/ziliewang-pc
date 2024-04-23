@@ -9,10 +9,14 @@
               <div class="sub-tab-box">
                 <ul>
                   <li :class="sub_tag == 0 ? 'is-active':'' " @click.stop="clickSubTag(0)">全部状态</li>
-                  <li :class="sub_tag == 1 ? 'is-active':'' " @click.stop="clickSubTag(1)">已投递</li>
-                  <!-- <li :class="sub_tag == 2 ? 'is-active':'' " @click.stop="clickSubTag(2)">已查看</li> -->
-                  <li :class="sub_tag == 2 ? 'is-active':'' " @click.stop="clickSubTag(2)">面试邀约</li>
-                  <li :class="sub_tag == 3 ? 'is-active':'' " @click.stop="clickSubTag(3)">不合适</li>
+                  <li :class="sub_tag == 1 ? 'is-active':'' " @click.stop="clickSubTag(1)">待接受</li>
+                  <li :class="sub_tag == 2 ? 'is-active':'' " @click.stop="clickSubTag(2)">不接受</li>
+                  <li :class="sub_tag == 3 ? 'is-active':'' " @click.stop="clickSubTag(3)">待参加</li>
+                  <li :class="sub_tag == 4 ? 'is-active':'' " @click.stop="clickSubTag(4)">未参加</li>
+                  <li :class="sub_tag == 5 ? 'is-active':'' " @click.stop="clickSubTag(5)">已超时</li>
+                  <li :class="sub_tag == 6 ? 'is-active':'' " @click.stop="clickSubTag(6)">已完成</li>
+                  <li :class="sub_tag == 7 ? 'is-active':'' " @click.stop="clickSubTag(7)">不合适</li>
+                  <li :class="sub_tag == 8 ? 'is-active':'' " @click.stop="clickSubTag(8)">已投递</li>
                 </ul>
               </div>
             </el-tab-pane>
@@ -61,6 +65,7 @@ export default {
   },
   created(){
     this.tag = this.$route.query.tag || 'myDelivery';
+    this.sub_tag = this.$route.query.subTag || 0;
     console.log(this.tag)
     if(this.tag == 'myDelivery'){
         // 我的投递
@@ -167,7 +172,7 @@ export default {
               li{
                 font-size: 14px;
                 color: $g_textColor;
-                margin-left: 20px;
+                margin-left: 4px;
                 padding: 6px 12px;
                 border-radius: 6px;
                 cursor: pointer;
