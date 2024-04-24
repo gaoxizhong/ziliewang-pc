@@ -179,7 +179,12 @@
                 </span>
               </div>
             </div>
-
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">联系电话：</div>
+                <div class="items-text">{{infoData?infoData.phone:''}}</div>
+              </div>
+            </div>
             <div class="box-items">
               <div class="items items-l">
                 <div class="items-label">面试岗位：</div>
@@ -190,16 +195,17 @@
             <div class="box-items">
               <div class="items items-l">
                 <div class="items-label">面试时间：</div>
-                <div class="items-text">{{infoData?infoData.begin_time_text:''}} 至 {{infoData?infoData.end_time_text:''}}</div>
+                <div class="items-text">{{infoData?infoData.interview_time:''}}</div>
               </div>
             </div>
 
             <div class="box-items">
               <div class="items items-l">
-                <div class="items-label">面试者：</div>
+                <div class="items-label">面试官：</div>
                 <div class="items-text">{{infoData?infoData.staff:''}}</div>
               </div>
             </div>
+            
             <div class="box-items">
               <div class="items items-l">
                 <div class="items-label">备注：</div>

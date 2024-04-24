@@ -73,6 +73,7 @@
                     <div class="message-phone-universal-card-content">
                       <div><span>面试岗位：</span><span>{{item.payload.position_name?item.payload.position_name:''}}</span></div>
                       <div><span>面试时间：</span><span>{{item.payload.interview_time?item.payload.interview_time:''}}</span></div>
+                      <div><span>面试地址：</span><span>{{item.payload.interview_address?item.payload.interview_address:''}}</span></div>
                     </div>
                     <div class="message-phone-universal-card-footer">
                       <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="getUserIinterviewInvite(3,item.payload)">同意</div>
@@ -82,13 +83,9 @@
                   <!-- 面试邀请 结束 -->
                   <!-- 同意面试邀请 开始 -->
                   <div class="message-phone-universal-card" v-if="item.type === 'interview' &&  item.payload.way_status == 3">
-                    <h4 class="message-phone-universal-card-header">面试邀请</h4>
-                    <div class="message-phone-universal-card-content">
-                      <div><span>面试岗位：</span><span>{{item.payload.position_name?item.payload.position_name:''}}</span></div>
-                      <div><span>面试时间：</span><span>{{item.payload.interview_time?item.payload.interview_time:''}}</span></div>
-                    </div>
+                    <h4 class="message-phone-universal-card-header" style="color: #ff0000;">同意了面试邀请</h4>
                     <div class="message-phone-universal-card-footer">
-                      <span style="color: #ff0000;">同意了面试邀请</span>
+                      <span class="span-ckms" @click="goTomyDelivery">查看面试信息</span>
                     </div>
                   </div>
                   <!-- 同意面试邀请 结束 -->
@@ -498,11 +495,11 @@
           name: userProfile.basic_info.real_name,
           way_status: yqms_tag,   // 1. 向对方 发送邀请面试请求,2.用户拒绝面试邀请， 3.用户同意面试邀请
         }
-        if(n == 2){
+        if(yqms_tag == 2){
           text = '同意面试邀请';
           payload.text = text;
         }
-        if(n == 3){
+        if(yqms_tag == 3){
           text = '拒绝面试邀请';
           payload.text = text;
         }
@@ -1000,7 +997,10 @@
           }
         })
       },
-
+      // 点击查看面试信息
+      goTomyDelivery(){
+        this.$router.push('/myDelivery');
+      },
     },
   };
 </script>
@@ -1784,6 +1784,11 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
+  }
+  .message-phone-universal-card-footer .span-ckms{
+    font-size: 13px;
+    color: #356ce9;
+    cursor: pointer;
   }
   .message-phone-universal-card-btn{
     width: 111px;
