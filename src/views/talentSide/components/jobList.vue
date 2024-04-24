@@ -34,8 +34,8 @@
 
       <div class="items-right-box" style="flex-direction: column;justify-content: center;" v-else>
         <img src="../../../assets/image/img-user.jpg" alt="" class="items-boss-img" />
-        <div class="items-boss-name">刘女士</div>
-        <div class="items-boss-g">人事</div>
+        <div class="items-boss-name">BOSS</div>
+        <div class="items-boss-g">HR</div>
       </div>
     </div>
     <el-empty description="暂无数据..." v-if="infoList.length == 0"></el-empty>

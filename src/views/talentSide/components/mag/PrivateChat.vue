@@ -75,20 +75,28 @@
                       <div><span>面试时间：</span><span>{{item.payload.interview_time?item.payload.interview_time:''}}</span></div>
                     </div>
                     <div class="message-phone-universal-card-footer">
-                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickYqms(2)">同意</div>
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="getUserIinterviewInvite(3,item.payload)">同意</div>
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="getUserIinterviewInvite(2,item.payload)">拒绝</div>
                     </div>
                   </div>
                   <!-- 面试邀请 结束 -->
                   <!-- 同意面试邀请 开始 -->
-                  <div class="message-phone-universal-card" v-if="item.type === 'interview' &&  item.payload.way_status == 2">
+                  <div class="message-phone-universal-card" v-if="item.type === 'interview' &&  item.payload.way_status == 3">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-universal-card-content">
                       <div><span>面试岗位：</span><span>{{item.payload.position_name?item.payload.position_name:''}}</span></div>
                       <div><span>面试时间：</span><span>{{item.payload.interview_time?item.payload.interview_time:''}}</span></div>
                     </div>
                     <div class="message-phone-universal-card-footer">
-                      <!-- <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn">同意</div> -->
                       <span style="color: #ff0000;">同意了面试邀请</span>
+                    </div>
+                  </div>
+                  <!-- 同意面试邀请 结束 -->
+                   <!-- 拒绝面试邀请 开始 -->
+                   <div class="message-phone-universal-card" v-if="item.type === 'interview' &&  item.payload.way_status == 2">
+                    <h4 class="message-phone-universal-card-header">面试邀请</h4>
+                    <div class="message-phone-universal-card-footer">
+                      <span style="color: #ff0000;">拒绝了面试邀请</span>
                     </div>
                   </div>
                   <!-- 同意面试邀请 结束 -->
@@ -345,6 +353,7 @@
           visible: false,
           ids: []
         },
+        yqms_tag: 1, // 面试邀请 3、 同意 2、拒绝
       };
     },
     watch:{
@@ -480,17 +489,27 @@
       onAudioPlayEnd() {
         this.audioPlayer.playingMessage = null;
       },
-      // 同意面试邀请
-      clickYqms(n){
+
+      clickYqms(){
         let userProfile = this.userProfile;
+        let yqms_tag = this.yqms_tag;
+        let text = '';
         let payload = {
-          text: '同意面试邀请',
           name: userProfile.basic_info.real_name,
-          way_status: n,   // 1. 向对方 发送邀请面试请求,2.用户同意面试邀请，
+          way_status: yqms_tag,   // 1. 向对方 发送邀请面试请求,2.用户拒绝面试邀请， 3.用户同意面试邀请
         }
+        if(n == 2){
+          text = '同意面试邀请';
+          payload.text = text;
+        }
+        if(n == 3){
+          text = '拒绝面试邀请';
+          payload.text = text;
+        }
+       
         this.goEasy.im.createCustomMessage({
           type: 'interview',  //字符串，可以任意自定义类型 interview 联系方式
-          text: '同意面试邀请',
+          text, 
           payload,
           to: this.to,
           onSuccess: (message) => {
@@ -500,6 +519,24 @@
             console.log("创建消息err:", err);
           }
         });
+      },
+      // 同意面试邀请、拒绝面试邀请
+      getUserIinterviewInvite(n,info){
+        let that = this;
+        that.yqms_tag = n;
+        let p = {
+          id: info.interview_id,// 岗位id
+          status: n,
+        }
+        that.$axios.post('/api/user/operate-interview-invite',p).then( res =>{
+          if(res.code == 0){
+            that.clickYqms();
+          }else{
+            that.$message.error({
+              message:res.msg
+            })
+          }
+        })
       },
       // 点击 交换联系方式
       clickPhoneBtn(n){
@@ -1744,8 +1781,9 @@
   }
   .message-phone-universal-card-footer {
     display: flex;
-    justify-content: center;
-    padding-bottom: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
   }
   .message-phone-universal-card-btn{
     width: 111px;
@@ -1760,6 +1798,7 @@
   .message-phone-universal-card-btn-main {
     color: #0058ff;
     border: 1px solid #0058ff;
+    margin: 0 10px;
   }
 
   /* ============ 交换联系方式  ↑ ==================*/

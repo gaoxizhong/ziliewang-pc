@@ -48,7 +48,7 @@ import ResizeMixin from './mixin/ResizeHandler'
 import buddyChart from '../views/bossSide/components/mag/buddyChart.vue';
 import VueDragResize from 'vue-drag-resize';
 import { TUICallKit, TUICallKitServer,videoResolution, TUICallType, STATUS } from "@tencentcloud/call-uikit-vue2.6";
-import * as GenerateTestUserSig from "../debug/GenerateTestUserSig-es";
+// import * as GenerateTestUserSig from "../debug/GenerateTestUserSig-es";
 export default {
   name: 'Layout',
   components: {

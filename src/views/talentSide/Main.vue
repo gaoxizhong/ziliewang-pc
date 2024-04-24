@@ -110,13 +110,13 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       $route() {
         this.setCurrentRoute();
       },
-      '$store.state.realAvatar'(newVal){
+      '$store.state.user.realAvatar'(newVal){
         this.avatar = newVal;
         this.$forceUpdate();// 更新数据
       },
-      '$store.state.name'(newVal){
-          this.name = newVal;
-          this.$forceUpdate();// 更新数据
+      '$store.state.user.name'(newVal){
+        this.name = newVal;
+        this.$forceUpdate();// 更新数据
       },
     },
     beforeCreate(){

@@ -74,12 +74,17 @@
                   </div>
                   <!-- 发送的面试邀请 结束 -->
                   <!-- 同意面试邀请 开始 -->
-                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 2" class="message-phone-universal-card">
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 3" class="message-phone-universal-card">
                     <h4 class="message-phone-universal-card-header">面试邀请</h4>
                     <div class="message-phone-box">接受了您的面试邀请</div>
                   </div>
                   <!-- 同意面试邀请 结束 -->
-
+                  <!-- 拒绝面试邀请 开始 -->
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 2" class="message-phone-universal-card">
+                    <h4 class="message-phone-universal-card-header">面试邀请</h4>
+                    <div class="message-phone-box">拒绝了您的面试邀请</div>
+                  </div>
+                  <!-- 拒绝面试邀请 结束 -->
 
                   <!-- boss 索要手机号 4 ↓ -->
                   <div class="message-phone-universal-card"  v-if="message.type === 'phone' && message.payload.way_status == 4">
@@ -944,8 +949,9 @@
             let userProfile = that.userProfile;
             let payload = {
               text: '邀请面试',
+              interview_id: res.data.id, // 面试id
               company_id: p.company_id,
-              position_id: p.position_id,
+              position_id: p.position_id, // 职位id
               interview_time: p.interview_time,// 面试时间
               interview_address: p.interview_address, //地址
               remark: p.remark, // 备注
@@ -966,7 +972,7 @@
                 console.log("创建消息err:", err);
               }
             });
-            that.yqms_dialogVisible = false;
+            that.yqmsVisible = false;
           }else{
             that.$message.error({
               message:res.msg
