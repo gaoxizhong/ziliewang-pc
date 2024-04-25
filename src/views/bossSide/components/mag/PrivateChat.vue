@@ -1796,6 +1796,7 @@
   .message-phone-universal-card-btn{
     flex: 1;
     width: auto;
+    max-width: 90px;
     padding: 6px 10px;
     color: #222;
     font-size: 13px;
