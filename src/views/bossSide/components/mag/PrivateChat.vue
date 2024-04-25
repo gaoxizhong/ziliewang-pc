@@ -463,10 +463,10 @@
       confirmMapAddress(addressInfo) {
         let that = this;
         that.addressInfo = addressInfo;
+        console.log(that.interviewData)
         that.$nextTick( () =>{
         })
         that.interviewData.interview_address = addressInfo.province +addressInfo.city +addressInfo.district +addressInfo.address ;
-        console.log(that.interviewData.interview_address)
       },
       changeIndustry(e){
         console.log(e)

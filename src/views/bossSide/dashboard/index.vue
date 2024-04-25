@@ -77,17 +77,18 @@
                     <span>{{ scope.$index + 1 + (tableDataPage.page - 1) * tableDataPage.size }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="users.real_name" label="投递人" width="90"></el-table-column>
-                <el-table-column prop="begin_time_text" label="开始时间"></el-table-column>
-                <el-table-column prop="end_time_text" label="结束时间"></el-table-column>
-                <el-table-column prop="d" label="面试方式" width="90">
+                <el-table-column prop="users.real_name" label="投递人" width="100" align="center"></el-table-column>
+                <el-table-column prop="interview_time" label="开始时间" align="center"></el-table-column>
+                <!-- <el-table-column prop="end_time_text" label="结束时间"></el-table-column> -->
+                <!-- <el-table-column prop="companyposition.staff" label="面试官"></el-table-column> -->
+                <el-table-column prop="companyposition.position_name" label="面试职位" align="center"></el-table-column>
+
+                <el-table-column label="面试方式" align="center">
                   <template slot-scope="scope">
                     <span>{{ scope.row.type == 1?'线上':'线下' }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="companyposition.position_name" label="面试职位" width="100"></el-table-column>
-                <!-- <el-table-column prop="staff" label="面试者"></el-table-column> -->
-                <el-table-column label="操作" width="80">
+                <el-table-column label="操作" width="80" align="center">
                   <template slot-scope="scope">
                     <span class="blue" @click.stop="clickViewDetails(scope.row)">查看详情</span>
                     <!-- <span class="blue">导出</span> -->

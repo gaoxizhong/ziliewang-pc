@@ -100,7 +100,7 @@ export default {
       paginationData: {
         total: 0,
         currentPage: 1,
-        pageSize: 20,
+        pageSize: 10,
       },
       filterInfo:{}
     }
@@ -123,7 +123,7 @@ export default {
       this.paginationData= {
         total: 0,
         currentPage: 1,
-        pageSize: 20,
+        pageSize: 10,
       };
       this.getSearchinfo();
     },
@@ -207,6 +207,7 @@ export default {
         if(res.code == 0){
           that.infoList = res.data.list;
           that.paginationData.total = res.data.total;
+          that.scrollToTop();
         }else{
           that.$message.error({
             message:res.msg
@@ -214,6 +215,14 @@ export default {
         }
       })
     },
+    //滚动到顶部
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        // behavior: 'smooth' // 平滑滚动
+      });
+    }
   },
 };
 </script>

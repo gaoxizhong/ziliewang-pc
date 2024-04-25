@@ -36,8 +36,8 @@ export default {
       searchAddresKeywords: "",
       addressInfo: {
         // 地址信息
-        longitude: "", // 经度
-        latitude: "", // 纬度
+        longitude: 116.404, // 经度
+        latitude: 39.915, // 纬度
         province: "", // 省
         city: "", // 市
         district: "", // 区
@@ -53,7 +53,7 @@ export default {
       this.$nextTick(function () {
         /** 初始化地图Start */
         var map = new BMap.Map("baidu-map-container"); // 创建地图实例
-        var point = new BMap.Point(116.404, 39.915); // 设置中心点坐标
+        var point = new BMap.Point(that.addressInfo.longitude,that.addressInfo.latitude ); // 设置中心点坐标
         map.centerAndZoom(point, 13); // 地图初始化，同时设置地图展示级别
         map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
         /** 初始化地图End */

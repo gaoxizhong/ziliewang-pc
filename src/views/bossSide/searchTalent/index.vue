@@ -106,9 +106,9 @@ export default {
       jobList:[],  // 列表
       // 分页数据
       paginationData: {
-        total: 10,
+        total: 0,
         currentPage: 1,
-        pageSize: 20,
+        pageSize: 10,
       },
       infoData:{},
       basic_info:{},
@@ -127,9 +127,9 @@ export default {
       this.filterInfo = info;
       this.jobList = [];
       this.paginationData= {
-        total: 10,
+        total: 0,
         currentPage: 1,
-        pageSize: 20,
+        pageSize: 10,
       };
       this.getSearchinfo();
     },
@@ -194,12 +194,21 @@ export default {
         if(res.code == 0){
           that.jobList = res.data.list;
           that.paginationData.total = res.data.total;
+          that.scrollToTop();
         }else{
           that.$message.error({
             message:res.msg
           })
         }
       })
+    },
+    //滚动到顶部
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        // behavior: 'smooth' // 平滑滚动
+      });
     },
     // 点击列表
     clickItems(i){
