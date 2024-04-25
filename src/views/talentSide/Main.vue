@@ -133,9 +133,9 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       let getViewportSize = this.$getViewportSize();
       this.parentH = getViewportSize.height; // 组件范围
       this.parentW = getViewportSize.width; // 组件范围 
-      this.width = 840; // 可拖动div 高度
+      this.width = Number(getViewportSize.width)/2; // 可拖动div 宽度
+      this.height = Number(getViewportSize.height - 120); // 可拖动div 高度
       this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
-      this.height = Number(getViewportSize.height - 60); // 可拖动div 高度
       this.currentUser = {
         id: localStorage.getItem('realUid'),
         name: this.$store.state.user.name,

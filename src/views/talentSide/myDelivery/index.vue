@@ -97,9 +97,10 @@ export default {
     },
     // 我的投递
     getUserMyDeliverList(num){
-      console.log(num)
       let that = this;
-      that.$axios.post('/api/user/my-deliver-list',{}).then( res =>{
+      that.$axios.post('/api/user/company-interview-list',{
+        status: num
+      }).then( res =>{
         if(res.code == 0){
           let infoList = res.data;
           let arr = [];

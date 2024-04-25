@@ -1757,7 +1757,7 @@
     padding: 10px;
   }
   .message-phone-universal-card{
-    width: 260px;
+    max-width: 260px;
     margin: 10px auto;
     background: #fff;
     border: 1px solid rgba(202,208,217,.7);
@@ -1791,8 +1791,9 @@
     cursor: pointer;
   }
   .message-phone-universal-card-btn{
-    width: 111px;
-    padding: 6px 0;
+    flex: 1;
+    width: auto;
+    padding: 6px 10PX;
     color: #222;
     font-size: 13px;
     text-align: center;
