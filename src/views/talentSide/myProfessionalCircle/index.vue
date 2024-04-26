@@ -52,8 +52,9 @@
                     <span>{{ item.comment_num}}评论</span>
                   </div>
                 </div>
-              </div>
 
+              </div>
+              <img src="../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"/>
             </div>
           </div>
           <!-- 列表项 结束 -->
@@ -245,6 +246,33 @@ export default {
       })
       
     },
+    // 删除
+    clickItemDelete(i,idx){
+      let that = this;
+      let item = i;
+      let index = idx;
+      let infoList = that.infoList;
+      console.log(item)
+      let p = {
+        id: item.id,
+      }
+      that.$axios.post('/api/profession-circle/delete',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success('删除成功！');
+          infoList.splice(index,1);
+          that.infoList = infoList;
+        } else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+        that.is_return = true;
+      }).catch(e =>{
+        console.log(e)
+        that.is_return = true;
+      })
+
+    },
     handleClose(done) {
       this.dialogVisible = false;
     },
@@ -422,6 +450,7 @@ export default {
         .container-items-box{
           background: #fff;
           margin-top: 0.8rem;
+          position: relative;
           .right-container-title{
             margin-top: 1rem;
             width: 100%;
@@ -528,7 +557,18 @@ export default {
               }
             }
           }
-
+          .item-delete-img{
+            width: 24px;
+            height: 24px;
+            position: absolute;
+            right: 20px;
+            bottom: 24px;
+            display: none;
+            cursor: pointer;
+          }
+          &:hover .item-delete-img{
+            display: block;
+          }
         }
         
       }

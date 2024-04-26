@@ -11,16 +11,6 @@
           <span @click="clickAttention('fans')">{{ infoData.fan_num }}</span>个粉丝
       </p>
       </div>
-      <!-- <div class="user-top-num">
-        <div @click="clickAttention('attention')">
-          <span class="title">{{ infoData.attention_num }}</span>
-          <span class="text">关注</span>
-        </div>
-        <div @click="clickAttention('fans')">
-          <span class="title">{{ infoData.fan_num }}</span>
-          <span class="text">粉丝</span>
-        </div>
-      </div> -->
     </div>
 
     <div class="left-box user-m-box">
