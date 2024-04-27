@@ -372,13 +372,24 @@ export const constantRoutes = [
         },
       },
       {
-        path: '/myProfessionalCircle',
-        name: 'myProfessionalCircle',
-        component: () => import('@/views/talentSide/myProfessionalCircle/index.vue'),
+        path: '/careerIdentity',
+        name: 'careerIdentity',
+        component: () => import('@/views/talentSide/careerIdentity/index.vue'),
         meta: { 
-          title: '我的职圈',
+          title: '职业身份',
           keepAlive: false,
         },
+        children:[
+          {
+            path: '/dynamicState',
+            name: 'dynamicState',
+            component: () => import('@/views/talentSide/careerIdentity/dynamicState/index.vue'),
+            meta: { 
+              title: '动态',
+              keepAlive: true,
+            },
+          },
+        ]
       },
       {
         path: '/talentSideSettings',

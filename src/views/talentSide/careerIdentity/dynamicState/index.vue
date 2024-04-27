@@ -2,9 +2,6 @@
   <div class="container" id="myProfessionalCircle">
 
     <div class="info-box">
-      <!-- 左侧模块 开始 -->
-      <myProfessionalCircleLeft :infoData="infoData"/>
-      <!-- 左侧模块 结束 -->
       <!-- 右侧模块 开始 -->
       <div class="info-right-box">
         <div class="info-right-top">
@@ -22,7 +19,7 @@
             <div class="right-container-item">
               <div class="title">
                 <div class="title-left">
-                  <img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg' )" alt="" />
+                  <img :src="infoData.avatar?infoData.avatar:require('../../../../assets/image/img-user.jpg' )" alt="" />
                   <span>{{ infoData.real_name }}</span>
                 </div>
                 <div class="title-t">{{ item.createtime }}</div>
@@ -40,21 +37,21 @@
                 </div>
                 <div class="items-bottom-btn" @click.stop="clicklistItems(item)">
                   <div class="bottom-btn-items">
-                    <img src="../../../assets/image/preview-open.png" alt="" />
+                    <img src="../../../../assets/image/preview-open.png" alt="" />
                     <span>{{ item.read_num }}阅读</span>
                   </div>
                   <div class="bottom-btn-items">
-                    <img src="../../../assets/image/thumbs-up.png" alt="" />
+                    <img src="../../../../assets/image/thumbs-up.png" alt="" />
                     <span>{{ item.point_num }}赞</span>
                   </div>
                   <div class="bottom-btn-items">
-                    <img src="../../../assets/image/comment.png" alt="" />
+                    <img src="../../../../assets/image/comment.png" alt="" />
                     <span>{{ item.comment_num}}评论</span>
                   </div>
                 </div>
 
               </div>
-              <img src="../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"/>
+              <img src="../../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"/>
             </div>
           </div>
           <!-- 列表项 结束 -->
@@ -137,13 +134,11 @@
 
 <script>
 import { getToken, setToken, removeToken } from '@/utils/auth';
-import myProfessionalCircleLeft from './components/myProfessionalCircleLeft.vue';
-import videoDialog from '../components/videoDialog.vue';
+import videoDialog from '../../components/videoDialog.vue';
 
 export default {
-  name: 'myProfessionalCircle',
+  name: 'dynamicState',
   components: {
-    myProfessionalCircleLeft,
     videoDialog
   },
   data(){

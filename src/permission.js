@@ -6,8 +6,8 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken,removeToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
-import { bossSideRoutes } from '@/utils/bossSideRoutes' // 企业端路由
-import { talentSideRoutes } from '@/utils/talentSideRoutes' // 人才端路由
+// import { bossSideRoutes } from '@/utils/bossSideRoutes' // 企业端路由
+// import { talentSideRoutes } from '@/utils/talentSideRoutes' // 人才端路由
 const tag = localStorage.getItem('tag'); // 类型 企业、人才
 
 // console.log(bossSideRoutes)
