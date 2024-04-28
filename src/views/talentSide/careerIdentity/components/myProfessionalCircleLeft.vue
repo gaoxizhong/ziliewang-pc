@@ -45,9 +45,6 @@
         </ul>
       </div>
     </div>
-    <!-- <div class="left-box user-b-box">
-      <div @click="logout">退出登录</div>
-    </div> -->
   </div>
 </template>
 
@@ -159,44 +156,7 @@ export default {
           }
         }
       }
-      .user-top-num{
-        border-top: 1px solid #F2F3F5;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        div{
-          flex: 1;
-          text-align: center;
-          padding: 0.6rem 0;
-          font-size: 0.7rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          .title{
-            font-size: 1.2rem;
-            font-family: DIN Alternate-Bold, DIN Alternate;
-            font-weight: bold;
-            color: #4E5969;
-            line-height: 1.6rem;
-          }
-          .text{
-            font-size: 0.7rem;
-            font-weight: 400;
-            color: #86909C;
-            line-height: 1.1rem;
-          }
-          &:nth-of-type(1){
-            border-right: 1px solid #F2F3F5;
-          }
-        }
-      }
-    }
-    .user-top-num{
-      width: 100%;
-    }
-    .user-top-num>div{
-      cursor: pointer;
+     
     }
     .user-m-box{
       margin-top: 10px;
@@ -219,69 +179,60 @@ export default {
           color: $g_textColor;
         }
       }
-    }
-    .user-b-box{
-      width: 100%;
-      margin-top: 0.8rem;
-      div{
-        width: 100%;
-        cursor: pointer;
-        color: $g_color;
-        font-weight: bold;
-        font-size: 0.7rem;
-        padding: 0.5rem 0;
-        text-align: center;
+      .option-box{
+        padding-top: 10px;
+        .option-title{
+          font-size: 15px;
+          line-height: 24px;
+        }
       }
+      .options-item{
+        display: flex;
+        margin-top: 10px;
+        .image-box{
+          width: 42px;
+          height: 42px;
+          background: #b9b9b9;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          img{
+            width: 30px;
+            height: 30px;
+          }
+        }
+        .education-image-box{
+          width: 42px;
+          height: 42px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .item-info{
+          flex: 1;
+          padding-left: 12px;
+          border-bottom: 1px solid #f0f3f7;
+          div{
+            font-size: 14px;
+            line-height: 20px;
+          }
+          p{
+            font-size: 13px;
+            line-height: 20px;
+            color: #6b6b6b;
+          }
+        }
+      }
+
     }
+    
   }
-  .option-box{
-    padding-top: 10px;
-    .option-title{
-      font-size: 15px;
-      line-height: 24px;
-    }
-  }
-  .options-item{
-    display: flex;
-    margin-top: 10px;
-    .image-box{
-      width: 42px;
-      height: 42px;
-      background: #b9b9b9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      img{
-        width: 30px;
-        height: 30px;
-      }
-    }
-    .education-image-box{
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      img{
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .item-info{
-      flex: 1;
-      padding-left: 12px;
-      border-bottom: 1px solid #f0f3f7;
-      div{
-        font-size: 14px;
-        line-height: 20px;
-      }
-      p{
-        font-size: 13px;
-        line-height: 20px;
-        color: #6b6b6b;
-      }
-    }
-  }
+
+ 
   
  
 </style>

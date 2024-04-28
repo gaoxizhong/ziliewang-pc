@@ -375,10 +375,7 @@ export const constantRoutes = [
         path: '/careerIdentity',
         name: 'careerIdentity',
         component: () => import('@/views/talentSide/careerIdentity/index.vue'),
-        meta: { 
-          title: '职业身份',
-          keepAlive: false,
-        },
+        redirect: '/dynamicState',
         children:[
           {
             path: '/dynamicState',

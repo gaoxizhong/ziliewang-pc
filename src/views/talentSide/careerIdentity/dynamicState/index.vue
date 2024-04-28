@@ -1,66 +1,62 @@
 <template>
   <div class="container" id="myProfessionalCircle">
-
-    <div class="info-box">
-      <!-- 右侧模块 开始 -->
-      <div class="info-right-box">
-        <div class="info-right-top">
-          <el-tabs v-model="activeName" @tab-click="handleClick">
-            <!-- <el-tab-pane :label=" `全部${ count_list.all_count?count_list.all_count:0 } ` " name="first"></el-tab-pane> -->
-            <el-tab-pane :label=" `动态${ count_list.dynamic_state_count?count_list.dynamic_state_count:0 }` " name="second"></el-tab-pane>
-            <el-tab-pane :label=" `评论${ count_list.comment_count?count_list.comment_count:0 }` " name="fourth"></el-tab-pane>
-          </el-tabs>
-          <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
-        </div>
-        <div class="info-right-container">
-          <!-- 列表项 开始 -->
-          <div class="container-items-box" v-for="(item,index) in infoList" :key="index">
-            <!-- <div class="right-container-title"><span>回忆那么真</span><span>发布了动态</span></div> -->
-            <div class="right-container-item">
-              <div class="title">
-                <div class="title-left">
-                  <img :src="infoData.avatar?infoData.avatar:require('../../../../assets/image/img-user.jpg' )" alt="" />
-                  <span>{{ infoData.real_name }}</span>
-                </div>
-                <div class="title-t">{{ item.createtime }}</div>
-              </div>
-
-              <div class="items-c-box">
-                <div class="items-c-p" @click.stop="clicklistItems(item)">{{ item.content }}</div>
-                <div class="items-img-box" v-if="item.images.length>0">
-                  <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
-                </div>
-                <div class="items-img-box" v-if="item.video">
-                  <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
-                    <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
-                  </a>
-                </div>
-                <div class="items-bottom-btn" @click.stop="clicklistItems(item)">
-                  <div class="bottom-btn-items">
-                    <img src="../../../../assets/image/preview-open.png" alt="" />
-                    <span>{{ item.read_num }}阅读</span>
-                  </div>
-                  <div class="bottom-btn-items">
-                    <img src="../../../../assets/image/thumbs-up.png" alt="" />
-                    <span>{{ item.point_num }}赞</span>
-                  </div>
-                  <div class="bottom-btn-items">
-                    <img src="../../../../assets/image/comment.png" alt="" />
-                    <span>{{ item.comment_num}}评论</span>
-                  </div>
-                </div>
-
-              </div>
-              <img src="../../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"/>
-            </div>
-          </div>
-          <!-- 列表项 结束 -->
-
-        </div>
+    <!-- 右侧模块 开始 -->
+    <div class="dynamicState-box">
+      <div class="dynamicState-top">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <!-- <el-tab-pane :label=" `全部${ count_list.all_count?count_list.all_count:0 } ` " name="first"></el-tab-pane> -->
+          <el-tab-pane :label=" `动态${ count_list.dynamic_state_count?count_list.dynamic_state_count:0 }` " name="second"></el-tab-pane>
+          <el-tab-pane :label=" `评论${ count_list.comment_count?count_list.comment_count:0 }` " name="fourth"></el-tab-pane>
+        </el-tabs>
+        <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
       </div>
-      <!-- 右侧模块 结束 -->
+      <div class="dynamicState-container">
+        <!-- 列表项 开始 -->
+        <div class="container-items-box" v-for="(item,index) in infoList" :key="index">
+          <!-- <div class="right-container-title"><span>回忆那么真</span><span>发布了动态</span></div> -->
+          <div class="right-container-item">
+            <div class="title">
+              <div class="title-left">
+                <img :src="infoData.avatar?infoData.avatar:require('../../../../assets/image/img-user.jpg' )" alt="" />
+                <span>{{ infoData.real_name }}</span>
+              </div>
+              <div class="title-t">{{ item.createtime }}</div>
+            </div>
 
+            <div class="items-c-box">
+              <div class="items-c-p" @click.stop="clicklistItems(item)">{{ item.content }}</div>
+              <div class="items-img-box" v-if="item.images.length>0">
+                <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
+              </div>
+              <div class="items-img-box" v-if="item.video">
+                <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
+                  <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
+                </a>
+              </div>
+              <div class="items-bottom-btn" @click.stop="clicklistItems(item)">
+                <div class="bottom-btn-items">
+                  <img src="../../../../assets/image/preview-open.png" alt="" />
+                  <span>{{ item.read_num }}阅读</span>
+                </div>
+                <div class="bottom-btn-items">
+                  <img src="../../../../assets/image/thumbs-up.png" alt="" />
+                  <span>{{ item.point_num }}赞</span>
+                </div>
+                <div class="bottom-btn-items">
+                  <img src="../../../../assets/image/comment.png" alt="" />
+                  <span>{{ item.comment_num}}评论</span>
+                </div>
+              </div>
+
+            </div>
+            <img src="../../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"/>
+          </div>
+        </div>
+        <!-- 列表项 结束 -->
+
+      </div>
     </div>
+    <!-- 右侧模块 结束 -->
     <!-- 、、、、 发布弹窗 、、、、 -->
     <el-dialog :visible.sync="dialogVisible" width="640px" :before-close="handleClose">
       <div class="login-type-box">
@@ -388,185 +384,179 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .info-box{
-    width: 100%;
-    display: flex;
-    text-align: left;
-    .info-right-box{
-      flex: 1;
-      padding-left: 0.8rem;
-      .info-right-top{
-        width: 100%;
-        height: 3.6rem;
-        background: #FFFFFF;
-        border-radius: 4px 4px 4px 4px;
-        position: relative;
-        .fb-btn{
-          width: 4.65rem;
-          height: 2rem;
-          line-height: 2rem;
-          background: $g_bg;
-          border-radius: 4px;
-          color: #fff;
-          font-size: 0.7rem;
-          text-align: center;
-          position: absolute;
-          top: 50%;
-          right: 20px;
-          transform: translateY(-50%);
-          cursor: pointer;
-        }
-        /deep/ .el-tabs{
+  .dynamicState-box{
+    flex: 1;
+    .dynamicState-top{
+      width: 100%;
+      height: 50px;
+      background: #FFFFFF;
+      border-radius: 4px 4px 4px 4px;
+      position: relative;
+      .fb-btn{
+        width: 96px;
+        height: 35px;
+        line-height: 35px;
+        background: $g_bg;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 14px;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+      /deep/ .el-tabs{
+        height: 100%;
+        .el-tabs__header {
           height: 100%;
-          .el-tabs__header {
+          .el-tabs__nav-wrap{
             height: 100%;
-            .el-tabs__nav-wrap{
+            line-height: 50px;
+            &::after{
+              height: 0;
+            }
+            .el-tabs__nav-scroll {
               height: 100%;
-              line-height: 3.6rem;
-              &::after{
-                height: 0;
+              padding: 0 20px;
+              .el-tabs__item.is-active{
+                color: $g_color;
               }
-              .el-tabs__nav-scroll {
-                height: 100%;
-                padding: 0 20px;
-                .el-tabs__item.is-active{
-                  color: $g_color;
-                }
-                .el-tabs__active-bar{
-                  bottom: 1px;
-                  background-color: $g_bg;
-                }
+              .el-tabs__active-bar{
+                bottom: 1px;
+                background-color: $g_bg;
               }
             }
           }
         }
       }
-      .info-right-container{
-        .container-items-box{
-          background: #fff;
-          margin-top: 0.8rem;
-          position: relative;
-          .right-container-title{
-            margin-top: 1rem;
-            width: 100%;
-            height: 44px;
-            line-height: 44px;
-            border-bottom: 1px solid #F2F3F5;
-            span{
-              margin-left: 20px;
+    }
+    .dynamicState-container{
+      .container-items-box{
+        background: #fff;
+        margin-top: 16px;
+        position: relative;
+        .right-container-title{
+          margin-top: 16px;
+          width: 100%;
+          height: 44px;
+          line-height: 44px;
+          border-bottom: 1px solid #F2F3F5;
+          span{
+            margin-left: 20px;
+            font-size: 14px;
+            color: #86909C;
+            line-height: 22px;
+          }
+
+        }
+        .right-container-item{
+          padding: 1.2rem;
+          margin-top: 0;
+          &:nth-child(1){
+            margin-top: 0;
+          }
+          .title{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .title-left{
+              display: flex;
+              align-items: center;
+              img{
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                margin-right: 8px;
+              }
+              span{
+                font-size: 14px;
+                font-weight: 400;
+                color: #4E5969;
+                line-height: 22px;
+              }
+            }
+            
+            .title-t{
               font-size: 14px;
+              font-weight: 400;
               color: #86909C;
               line-height: 22px;
             }
-
           }
-          .right-container-item{
-            padding: 1.2rem;
-            margin-top: 0;
-            &:nth-child(1){
-              margin-top: 0;
+          .items-c-box{
+            width: 100%;
+            padding-left: 2rem;
+            .items-c-p{
+              font-size: 14px;
+              font-weight: 400;
+              color: #1F2E4D;
+              line-height: 28px;
             }
-            .title{
+            .items-img-box{
+              width: 100%;
+              height: auto;
               display: flex;
-              align-items: center;
-              justify-content: space-between;
-              .title-left{
-                display: flex;
-                align-items: center;
-                img{
-                  width: 30px;
-                  height: 30px;
-                  border-radius: 50%;
-                  margin-right: 8px;
-                }
-                span{
-                  font-size: 14px;
-                  font-weight: 400;
-                  color: #4E5969;
-                  line-height: 22px;
+              flex-wrap: wrap;
+              margin-top: 0.8rem;
+              img{
+                width: 140px;
+                height: 100px;
+                margin-left: 0.5rem;
+                &:nth-child(1){
+                  margin: 0;
                 }
               }
-             
-              .title-t{
+              &>a{
+                width: 140px;
+                height: 100px;
+                margin-left: 0.5rem;
+                &:nth-child(1){
+                  margin: 0;
+                }
+                
+              }
+            }
+          }
+          .items-bottom-btn{
+            display: flex;
+            align-items: center;
+            margin-top: 0.8rem;
+            .bottom-btn-items{
+              margin-right: 16px;
+              display: flex;
+              align-items: center;
+              cursor: pointer;
+              img{
+                width: 14px;
+                height: 14px;
+                margin-right: 4px;
+                display: inline-block;
+              }
+              span{
                 font-size: 14px;
                 font-weight: 400;
                 color: #86909C;
                 line-height: 22px;
               }
             }
-            .items-c-box{
-              width: 100%;
-              padding-left: 2rem;
-              .items-c-p{
-                font-size: 14px;
-                font-weight: 400;
-                color: #1F2E4D;
-                line-height: 28px;
-              }
-              .items-img-box{
-                width: 100%;
-                height: auto;
-                display: flex;
-                flex-wrap: wrap;
-                margin-top: 0.8rem;
-                img{
-                  width: 140px;
-                  height: 100px;
-                  margin-left: 0.5rem;
-                  &:nth-child(1){
-                    margin: 0;
-                  }
-                }
-                &>a{
-                  width: 140px;
-                  height: 100px;
-                  margin-left: 0.5rem;
-                  &:nth-child(1){
-                    margin: 0;
-                  }
-                  
-                }
-              }
-            }
-            .items-bottom-btn{
-              display: flex;
-              align-items: center;
-              margin-top: 0.8rem;
-              .bottom-btn-items{
-                margin-right: 16px;
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                img{
-                  width: 14px;
-                  height: 14px;
-                  margin-right: 4px;
-                  display: inline-block;
-                }
-                span{
-                  font-size: 14px;
-                  font-weight: 400;
-                  color: #86909C;
-                  line-height: 22px;
-                }
-              }
-            }
-          }
-          .item-delete-img{
-            width: 24px;
-            height: 24px;
-            position: absolute;
-            right: 20px;
-            bottom: 24px;
-            display: none;
-            cursor: pointer;
-          }
-          &:hover .item-delete-img{
-            display: block;
           }
         }
-        
+        .item-delete-img{
+          width: 24px;
+          height: 24px;
+          position: absolute;
+          right: 20px;
+          bottom: 24px;
+          display: none;
+          cursor: pointer;
+        }
+        &:hover .item-delete-img{
+          display: block;
+        }
       }
+      
     }
   }
   #myProfessionalCircle /deep/ .el-dialog{
