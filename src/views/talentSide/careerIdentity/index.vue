@@ -12,24 +12,42 @@
             <p class="user-name">{{ infoData.real_name }}</p>
             <p class="user-introduce">{{ infoData.position }}</p>
           </div>
-          <div class="siderbar-info-list_2mXEH">
-            <ul>
-              <li class="siderbar-info-item_1jlrQ">
-                <p class="siderbar-info-item-num">{{ infoData.attention_num }}</p>
-                <p class="siderbar-info-item-title">关注</p>
-              </li>
-              <li class="siderbar-info-item_1jlrQ">
-                <p class="siderbar-info-item-num">{{ infoData.fan_num }}</p>
-                <p class="siderbar-info-item-title">粉丝</p>
-              </li>
-            </ul>
+          <div class="gz-sx-btn" v-if="uid != see_uid">
+            <div>
+              <div class="left" @click="clickAttention" v-if=" infoData.is_already_attention ==  2">
+                <img src="../../../assets/image/Frame_10.png" alt="" />
+                <span>关注</span>
+              </div>
+              <div class="left" @click="clickCancelAttention" v-if=" infoData.is_already_attention ==  1">
+                <span>已关注</span>
+              </div>
+            </div>
+            <div>
+              <div class="right" @click="clickAddBlacklist" v-if=" infoData.is_already_black ==  2">
+                <!-- <img src="../../../assets/image/Frame_10.png" alt="" /> -->
+                <span>加入黑名单</span>
+              </div>
+              <div class="right" @click="clickCancelBlacklist" v-if=" infoData.is_already_black ==  1">
+                <span>取消黑名单</span>
+              </div>
+            </div>
+          </div>
+          <div class="user-top-num">
+            <div @click="clickAttentionTab('attention')">
+              <span class="title">{{ infoData.attention_num }}</span>
+              <span class="text">关注</span>
+            </div>
+            <div @click="clickAttentionTab('fans')">
+              <span class="title">{{ infoData.fan_num }}</span>
+              <span class="text">粉丝</span>
+            </div>
           </div>
         </div>
       </div>
       <!-- 左侧模块 结束 -->
       <!-- 中间模块 开始 -->
       <div class="info-m-box">
-        <router-view></router-view>
+        <dynamicState :see_uid="see_uid" :infoData="infoData" :count_list="count_list" :infoList="infoList" @getMyProfessionCircle="getUserProfile"/>
       </div>
       <!-- 中间模块 结束 -->
       <div class="info-right-box">
@@ -67,33 +85,45 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
 <script>
 // import myProfessionalCircleLeft from './components/myProfessionalCircleLeft.vue';
 import videoDialog from '../components/videoDialog.vue';
-
+import dynamicState from './dynamicState/index.vue';
 export default {
   name: 'careerIdentity',
   components: {
     // myProfessionalCircleLeft,
+    dynamicState,
     videoDialog
   },
   data(){
     return{
-      infoData:{}, // 信息
+      see_uid:'',
+      uid:'',
+      infoData: {}, // 信息
+      count_list: {},
+      infoList:[],
     }
   },
   computed: {
     
   },
   mounted(){
+    
+  },
+  created(){
+    this.see_uid = this.$route.query.see_uid || localStorage.getItem('realUid');
+    this.uid = localStorage.getItem('realUid');
     // 获取用户职圈信息
-    this.getMyProfessionCircle();
+    this.getUserProfile();
   },
   methods: {
-    clickAttention(name){
+    
+    clickAttentionTab(name){
       this.$router.push({
         path:'/attentionFans',   //跳转的路径
         query:{           //路由传参时push和query搭配使用 ，作用时传递参数
@@ -102,11 +132,84 @@ export default {
         }
       })
     },
+
+    // 点击关注按钮
+    clickAttention(){
+      this.$axios.post('/api/user-attention/attention',{
+        attention_uid: this.see_uid
+      }).then( res =>{
+        if(res.code == 0){
+          this.$message.success('关注成功！');
+          this.getUserProfile();
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
+    // 取消关注
+    clickCancelAttention(){
+      this.$axios.post('/api/user-attention/cancel-attention',{
+        attention_uid: this.see_uid
+      }).then( res =>{
+        if(res.code == 0){
+          this.$message.success('取消成功！');
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
+        }
+        this.getUserProfile();
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
+    // 加入黑名单
+    clickAddBlacklist(){
+      this.$axios.post('/api/user-defriend/create',{
+        defriend_uid: this.see_uid
+      }).then( res =>{
+        if(res.code == 0){
+          this.$message.success('加入黑名单成功！');
+          this.getUserProfile();
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
+    // 取消黑名单
+    clickCancelBlacklist(){
+      this.$axios.post('/api/user-defriend/delete',{
+        defriend_uid: this.see_uid
+      }).then( res =>{
+        if(res.code == 0){
+          this.$message.success('取消成功！');
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
+        }
+        this.getUserProfile();
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
     // 获取用户职圈信息
-    getMyProfessionCircle(){
-      this.$axios.post('/api/profession-circle/my',{}).then( res =>{
+    getUserProfile(){
+      this.$axios.post('/api/profession-circle/my',{
+        see_uid: this.see_uid
+      }).then( res =>{
         if(res.code == 0){
           this.infoData = res.data.users;
+          this.infoList = res.data.list;
+          this.count_list = res.data.count_list;
         }else{
           this.$message.error({
             message:res.msg
@@ -135,7 +238,7 @@ export default {
   }
   // 左侧
   .info-left-box{
-    width: 220px;
+    width: 260px;
     .user-top-box{
       width: 100%;
       .user-top{
@@ -166,58 +269,72 @@ export default {
             cursor: pointer;
           }
         }
-        .gz-sx-btn{
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-top: 0.6rem;
-          div{
-            flex: 1;
-            padding: 0.5rem;
-            border-radius: 2px;
-            font-size: 0.7rem;
-            text-align: center;
-            margin: 0 0.4rem;
-            cursor: pointer;
+        
+      }
+      .gz-sx-btn{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        &>div{
+          flex: 1;
+          padding: 0 10px;
+          border-radius: 2px;
+          font-size: 13px;
+          text-align: center;
+          cursor: pointer;
+          &>div{
+            padding: 8px 0;
             img{
-              width: 0.6rem;
-              height: 0.6rem;
-            }
-            &.left{
-              background: $g_color;
-              color: #fff;
-              img{
-                margin-right: 4px;
-              }
-            }
-            &.right{
-              border: 1px solid #E5E6EB;
-              box-shadow: 0px 2px 0px 0px rgba(0,0,0,0.04);
-              color: $g_textColor;
+              width: 12px;
+              height:12px;
             }
           }
+          .left{
+            background: $g_color;
+            color: #fff;
+            img{
+              margin-right: 4px;
+            }
+          }
+          .right{
+            border: 1px solid #E5E6EB;
+            box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.04);
+            color: $g_textColor;
+          }
+          
         }
       }
-      .siderbar-info-list_2mXEH{
-        padding-top: 12px;
-        .siderbar-info-item_1jlrQ {
-          display: block;
-          margin: 20px auto 0 auto;
-          width: auto;
-          .siderbar-info-item-num{
-            font-size: 18px;
-            color: #222222;
-            text-align: center;
-            line-height: 18px;
-            height: 18px;
+      .user-top-num{
+        border-top: 1px solid #F2F3F5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        div{
+          flex: 1;
+          text-align: center;
+          padding: 10px 0;
+          font-size: 14px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          .title{
+            font-size: 1.2rem;
+            font-family: DIN Alternate-Bold, DIN Alternate;
+            font-weight: bold;
+            color: #4E5969;
           }
-          .siderbar-info-item-title{
-            margin-top: 4px;
-            font-size: 12px;
-            color: #9195A3;
-            line-height: 12px;
-            text-align: center;
+          .text{
+            font-size: 14px;
+            font-weight: 400;
+            color: #86909C;
+            line-height: 22px;
+          }
+          &:nth-of-type(1){
+            border-right: 1px solid #F2F3F5;
           }
         }
       }
@@ -228,7 +345,7 @@ export default {
   // 中间
   .info-m-box{
     flex: 1;
-    padding: 0 20px;
+    padding: 0 10px;
   }
 
   // 右侧
@@ -309,5 +426,7 @@ export default {
 
     }
   }
+
+
 
 </style>

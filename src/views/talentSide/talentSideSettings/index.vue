@@ -20,6 +20,7 @@
             <li :class="setType =='set_password'? 'hover': '' " @click="clickLeItems('set_password')">密码设置</li>
             <li :class="setType =='account_cancellation'? 'hover': '' " @click="clickLeItems('account_cancellation')">账号注销</li>
             <li :class="setType =='set_expressions'? 'hover': '' " @click="clickLeItems('set_expressions')">常用语设置</li>
+            <li @click="clickDrawerItem">用户黑名单</li>
           </ul>
         </div>
       </div>
@@ -228,9 +229,36 @@
     <div class="accountVisible">
       <accountCancellation :id="basic_info.uid" ref="accountCancellation"/>
     </div>
+    <!-- 用户黑名单 --  侧边抽屉 -->
+    <div id="drawer-box">
+      <el-drawer title="黑名单" :visible.sync="drawer" :direction="direction" :before-close="drawer_handleClose">
+        <div class="items-box">
+          <ul>
+            <li class="s-list-nav" v-for="(item,index) in userDefriendList" :key="index">
+              <div class="itemWrap">
+                <div class="s-avatar">
+                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg')" alt="" />
+                </div>
 
+                <div class="s-list-info">
+                  <div class="s-list-name"><span>{{ item.name }}</span></div>
+                  <!-- <div class="s-list-intro"><span>ta很懒，什么也没有留下</span></div> -->
+                </div>
+
+                <div class="s-list-button">
+                  <div class="s-button" @click="clickRemoveUserDefriend(item,index)">取消</div>
+                </div>
+
+              </div>
+            </li>
+            
+          </ul>
+        </div>
+      </el-drawer>
+    </div>
 
     <div class="pop-box" @click="clickPopBox" v-if="searchList_info"></div>
+
   </div>
 
 </template>
@@ -270,7 +298,12 @@ export default {
       searchList_info: false,
       corporationList: [], // 搜索匹配的公司
       corporation:'', // 公司名称
-      selt_corporation: {}
+      selt_corporation: {},
+
+      // 用户黑名单
+      direction: 'rtl',
+      drawer: false,
+      userDefriendList: []
     }
   },
   computed: {
@@ -287,8 +320,18 @@ export default {
     this.clickLeItems(this.setType);
     // 获取屏蔽企业列表
     this.getUsershieldcompanyList();
+    
   },
   methods: {
+    // 点击黑名单
+    clickDrawerItem(){
+      // 获取用户黑名单列表
+      this.getUserDefriendList();
+    },
+    // 关闭侧边栏
+    drawer_handleClose() {
+      this.drawer = false;
+    },
     // 点击蒙层
     clickPopBox(){
       this.searchList_info = false;
@@ -531,6 +574,61 @@ export default {
         console.log(e)
       })
     },
+
+    // 获取用户黑名单列表
+    getUserDefriendList(){
+      let that = this;
+      let p = {
+        page: 1,
+        pagesize: 100
+      };
+      that.$axios.post('/api/user-defriend/list',p).then( res =>{
+        if(res.code == 0){
+          that.userDefriendList = res.data.list;
+          that.drawer = true;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        that.$message.error({
+          message:e.message
+        })
+        console.log(e)
+      })
+    },
+    // 取消用户黑名单
+    clickRemoveUserDefriend(n,idx){
+      let that = this;
+      let selt_corporation = n;
+      let p = {
+        defriend_uid:selt_corporation.defriend_uid,
+      };
+      that.$axios.post('/api/user-defriend/delete',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:'取消成功'
+          })
+          let userDefriendList = that.userDefriendList;
+          userDefriendList.splice(idx,1);
+          that.userDefriendList = userDefriendList;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        that.$message.error({
+          message:e.message
+        })
+        console.log(e)
+      })
+    },
     // 删除用语
     deletePhrasesQR(i){
       let that = this;
@@ -686,9 +784,7 @@ export default {
         console.log(e)
       })
     },
-    handleClose(){
-
-    },
+   
   },
 };
 </script>
@@ -1060,11 +1156,87 @@ export default {
   }
 }
 .pop-box{
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 98;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 98;
+}
+
+// 黑名单
+#drawer-box{
+  /deep/ .el-drawer__header{
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e2e2;
   }
+  .items-box{
+    width: 100%;
+    padding: 5px 20px 20px 20px;
+    .s-list-nav{
+      width: 100%;
+      position: relative;
+      .itemWrap{
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        .s-avatar{
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          overflow: hidden;
+          &>img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .s-list-info{
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin: 14px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          .s-list-name {
+            font-size: 15px;
+            color: #1e1f24;
+          }
+          .s-list-name span {
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .s-list-intro {
+            font-size: 13px;
+            height: 16px;
+            width: 100%;
+            color: #848691;
+            display: flex;
+            align-items: center;
+          }
+          .s-list-intro span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+        .s-list-button .s-button {
+          height: 28px;
+          width: 60px;
+          background-color: $g_bg;
+          color: #fff;
+          border-radius: 20px;
+          font-size: 13px;
+          line-height: 28px;
+          text-align: center;
+          cursor: pointer;
+        }
+
+      }
+    }
+  }
+}
 </style>

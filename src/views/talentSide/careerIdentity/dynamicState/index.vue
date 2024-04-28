@@ -49,7 +49,7 @@
               </div>
 
             </div>
-            <img src="../../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"/>
+            <img src="../../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"  v-if="uid == infoData.uid"/>
           </div>
         </div>
         <!-- 列表项 结束 -->
@@ -137,12 +137,30 @@ export default {
   components: {
     videoDialog
   },
+  props:{
+    infoData:{
+      type: Object,
+      default() {
+        return null
+      }
+    },
+    count_list:{
+      type: Object,
+      default() {
+        return null
+      }
+    },
+    infoList:{
+      type: Array,
+      default() {
+        return []
+      }
+    },
+  },
   data(){
     return{
+      uid:'',
       activeName: 'second',
-      infoData:{}, // 信息
-      infoList:[],
-      count_list:{},
       dialogVisible: false,
       uploadData:{
         up_tag: 'other'
@@ -161,8 +179,7 @@ export default {
     
   },
   mounted(){
-    // 获取用户职圈信息
-    this.getMyProfessionCircle();
+    this.uid = localStorage.getItem('realUid');
   },
   methods: {
     clickTab(n){
@@ -224,7 +241,7 @@ export default {
           that.upImgList = [];
           that.video_files_path = [];
           // 获取用户职圈信息
-          that.getMyProfessionCircle();
+          that.$emit('getMyProfessionCircle',{});
         } else{
           that.$message.error({
             message:res.msg
@@ -276,22 +293,6 @@ export default {
     },
     handleClick(tab, event) {
       console.log(tab, event);
-    },
-    // 获取用户职圈信息
-    getMyProfessionCircle(){
-      this.$axios.post('/api/profession-circle/my',{}).then( res =>{
-        if(res.code == 0){
-          this.infoData = res.data.users;
-          this.infoList = res.data.list;
-          this.count_list = res.data.count_list;
-        }else{
-          this.$message.error({
-            message:res.msg
-          })
-        }
-      }).catch(e =>{
-        console.log(e)
-      })
     },
     // 上传图片
     uploadArticleCover(param){

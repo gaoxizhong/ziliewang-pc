@@ -76,7 +76,8 @@ export default {
       width: 0,
       height: 0,
       unreadAmount: null,
-      backgroundColor:'#262f34'
+      backgroundColor:'#262f34',
+      uid: localStorage.getItem('realUid'),
     }
   },
   computed: {
@@ -90,7 +91,13 @@ export default {
     },
     activeMenu() {
       const route = this.$route;
-      const { meta, path } = route;
+      let { meta, path,query,fullPath } = route;
+      console.log(route)
+      if(path == '/careerIdentity'){
+        if( query.see_uid && query.see_uid != localStorage.getItem('realUid')){
+          path = fullPath
+        }
+      }
       // if (meta.activeMenu) {
       //   return meta.activeMenu;
       // }

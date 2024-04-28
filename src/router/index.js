@@ -375,18 +375,9 @@ export const constantRoutes = [
         path: '/careerIdentity',
         name: 'careerIdentity',
         component: () => import('@/views/talentSide/careerIdentity/index.vue'),
-        redirect: '/dynamicState',
-        children:[
-          {
-            path: '/dynamicState',
-            name: 'dynamicState',
-            component: () => import('@/views/talentSide/careerIdentity/dynamicState/index.vue'),
-            meta: { 
-              title: '动态',
-              keepAlive: true,
-            },
-          },
-        ]
+        meta: { 
+          title: '职业身份',
+        },
       },
       {
         path: '/talentSideSettings',
@@ -403,15 +394,6 @@ export const constantRoutes = [
         meta: { 
           title: '职圈',
           keepAlive: true,
-        },
-      },
-      {
-        path: '/professionalCircle/circleCentre',
-        name: 'circleCentre',
-        component: () => import('@/views/talentSide/professionalCircle/circleCentre'),
-        meta: { 
-          title: '个人职圈',
-          keepAlive: false,
         },
       },
       {
