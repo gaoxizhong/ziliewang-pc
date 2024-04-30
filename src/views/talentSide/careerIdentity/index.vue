@@ -2,8 +2,6 @@
   <div class="container" id="myProfessionalCircle">
 
     <div class="info-box">
-      <!-- <myProfessionalCircleLeft :infoData="infoData" /> -->
-
       <!-- 左侧模块 开始 -->
       <div class="info-left-box">
         <div class="view-box user-top-box">
@@ -90,13 +88,11 @@
 </template>
 
 <script>
-// import myProfessionalCircleLeft from './components/myProfessionalCircleLeft.vue';
 import videoDialog from '../components/videoDialog.vue';
 import dynamicState from './dynamicState/index.vue';
 export default {
   name: 'careerIdentity',
   components: {
-    // myProfessionalCircleLeft,
     dynamicState,
     videoDialog
   },

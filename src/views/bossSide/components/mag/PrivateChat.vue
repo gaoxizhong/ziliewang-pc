@@ -64,11 +64,12 @@
                   </div>
                   <!-- 图片 结束 -->
                   <!-- 发送的面试邀请 开始 -->
-                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 1" class="message-phone-universal-card">
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 1" class="message-phone-universal-card" @click.stop="clickInterview(message)">
                     <h4 class="message-phone-universal-card-header">发送面试邀请</h4>
                     <div class="message-phone-universal-card-content">
                       <div><span>面试岗位：</span><span>{{message.payload.position_name?message.payload.position_name:''}}</span></div>
                       <div><span>面试时间：</span><span>{{message.payload.interview_time?message.payload.interview_time:''}}</span></div>
+                      <div><span>面试地址：</span><span>{{message.payload.interview_address?message.payload.interview_address:''}}</span></div>
                     </div>
                     <div class="message-phone-box">已向对方发送面试邀请</div>
                   </div>
@@ -980,6 +981,10 @@
           }
         })
       },
+      // 点击发送出去的面试邀请信息
+      clickInterview(i){
+        console.log(i)
+      },
       // 腾讯云 语音自定义事件
       TUICallKitInfo(e){
         console.log(e)
@@ -1004,6 +1009,7 @@
           }
         });
       },
+
     },
   };
 </script>
