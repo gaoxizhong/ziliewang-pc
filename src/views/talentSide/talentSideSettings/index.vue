@@ -31,20 +31,24 @@
             <div class="title">谁能查看我的简历</div>
             <div class="radio-group-box">
               <el-radio-group v-model="resume_radio" @change="resume_change">
-                <el-radio :label="1">
-                  <h2>企业HR、猎头</h2>
-                  <span>系统会将您的简历推给HR或猎头，找工作选此选项</span>
+                <el-radio :label="3">
+                  <h2>企业用户</h2>
+                  <span>系统会将您的简历推给企业用户，找工作选此选项</span>
                 </el-radio>
                 <el-radio :label="2">
-                  <h2>猎头</h2>
-                  <span>系统只会将您的简历推给猎头，但您主动投递时，HR可以查看您的简历</span>
+                  <h2>个人用户</h2>
+                  <span>个人用户</span>
                 </el-radio>
-                <el-radio :label="3">
-                  <h2>企业HR</h2>
-                  <span>系统只会将您的简历推给HR，但您主动投递时，猎头可以查看您的简历</span>
+                <el-radio :label="1">
+                  <h2>都可以看</h2>
+                  <span>系统将您的简历推给所有用户查看</span>
                 </el-radio>
                 <el-radio :label="4">
                   <h2>均不可查看</h2>
+                  <span>除非您主动投递，招聘方将看不到您的简历。记得寻找工作机会时及时开放您的简历</span>
+                </el-radio>
+                <el-radio :label="4">
+                  <h2>仅显示职业身份</h2>
                   <span>除非您主动投递，招聘方将看不到您的简历。记得寻找工作机会时及时开放您的简历</span>
                 </el-radio>
               </el-radio-group>

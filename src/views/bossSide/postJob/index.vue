@@ -288,6 +288,9 @@ export default {
         position_desc: [
           { required: true, message: '请填写职位描述', trigger: 'blur' }
         ],
+        position_lightspot: [
+          { required: true, message: '请填写职业亮点', trigger: 'blur' }
+        ],
         position_type: [
           { required: true, message: '请选择职位类别', trigger: 'change' }
         ],
@@ -534,12 +537,12 @@ export default {
       that.$axios.post(url,p).then( res =>{
         if(res.code == 0){
           if(position_id){
-            that.$message.success(' 发布成功！');
+            that.$message.success(' 修改成功！');
             // setTimeout( ()=>{
             //   that.resetForm();
             // },1500)
           }else{
-            that.$message.success(' 修改成功！');
+            that.$message.success(' 发布成功！');
           }
           setTimeout( ()=>{
             that.$router.push('/jobCenter')

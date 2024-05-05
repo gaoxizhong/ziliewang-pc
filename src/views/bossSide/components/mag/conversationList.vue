@@ -8,8 +8,7 @@
         <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
           <div class="avatar">
             <img :src="item.data.avatar?item.data.avatar:require('../../../../assets/image/img-user.jpg')"/>
-            <div v-if="item.unread>0"
-                class="unread-count">
+            <div v-if="item.unread>0" class="unread-count">
               <span class="unread">{{ item.unread }}</span>
             </div>
           </div>
@@ -109,6 +108,16 @@
         },
       };
     },
+    watch:{
+      '$store.state.user.staffAvatar'(newVal){
+          this.staffAvatar = newVal;
+          this.$forceUpdate();// 更新数据
+      },
+      '$store.state.user.staffName'(newVal){
+        this.staffName = newVal;
+        this.$forceUpdate();// 更新数据
+      },
+    },
     computed: {
       // filteredList 是一个计算属性，它根据 searchQuery 的值动态过滤 itemList。每次 searchQuery 更新时，filteredList 都会重新计算，以显示与搜索词匹配的项目列表。
       filteredList() {
@@ -119,14 +128,18 @@
     },
     created() {
       this.profile.friend = this.infoData; // 好友信息
+      console.log(this.profile.friend)
       //隐藏Conversation右键菜单
       document.addEventListener('click', () => {
         this.hideRightClickMenu();
       });
-      this.currentUser = {
-        id: localStorage.getItem('realUid'),
-        name: localStorage.getItem('name'),
-        avatar: localStorage.getItem('realAvatar'),
+      this.currentUser = { // 自己信息
+        id: localStorage.getItem('staffUid'),
+        name: this.$store.state.user.staffName,
+        avatar: this.$store.state.user.staffAvatar,
+        position_id: this.profile.friend?this.profile.friend.position_id : '', // 岗位id
+        company_id: localStorage.getItem('company_id'),// 公司id
+        position_name: this.profile.friend?this.profile.friend.position_name:'',
       }
       this.listenConversationUpdate(); //监听会话列表变化
       this.loadConversations(); //加载会话列表
@@ -197,10 +210,14 @@
         }
       },
       chatLocation (conversation) {
+        console.log(conversation)
         this.profile.friend = {
           uid: conversation.userId,
           name: conversation.data.name,
           avatar: conversation.data.avatar,
+          company_id: conversation.data.company_id, 
+          position_id: conversation.data.position_id, // 岗位id
+          position_name: conversation.data.position_name,
         };
         this.$emit( 'chatLocation',this.profile.friend );
       }

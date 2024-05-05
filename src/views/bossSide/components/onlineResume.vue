@@ -144,6 +144,18 @@
         </div>
       </el-dialog>
     </div>
+
+    <!-- 选择岗位 弹窗 -->
+    <div class="positionList-dialogbox">
+      <el-dialog title="选择岗位" :center="false" :visible.sync="position_dialogVisible" width="300px" :before-close="position_handleClose">
+        <div class="positionList-box">
+          <ul>
+            <li v-for="(item,index) in positionList" :key="index" @click="clickpositionList(item)">{{ item.position_name }}</li>
+          </ul>
+        </div>
+      </el-dialog>
+    </div>
+
   </div>
 </template>
 
@@ -182,6 +194,9 @@ export default {
   data(){
     return{
       zx_dialogVisible: false,
+      positionList:[], // 岗位列表
+      position_dialogVisible: false,
+      seltPositionData: {}
     }
   },
   computed: {
@@ -244,8 +259,8 @@ export default {
       })
     },
 
-     // 点击聊一聊
-     async clickChat(i){
+    // 点击聊一聊
+    async clickChat(i){
       let that = this;
       let res =  await that.$axios.post('/api/staff/profile',{})
       if(res.data.vip_rank < 1){
@@ -257,27 +272,57 @@ export default {
         },1000)
         return
       }
+      that.seltPositionData = i;
+      that.getPositionList(); // 获取职位
+      
+    },
+     // 点击岗位列表
+     clickpositionList(i){
+      let that = this;
+      let seltPositionData = that.seltPositionData;
+      let name = '';
+      if(seltPositionData.is_name_protect == 1){
+        name = seltPositionData.name
+      }else{
+        name = seltPositionData.real_name
+      }
       let infoData = {
-        uid: i.uid || i.basic_info.uid,
-        name: i.name || i.basic_info.name,
-        avatar: i.avatar || i.basic_info.avatar,
+        uid: seltPositionData.uid || seltPositionData.basic_info.uid,
+        name: name || seltPositionData.basic_info.name,
+        avatar: seltPositionData.avatar || seltPositionData.basic_info.avatar,
+        company_id: i.company_id, // 企业id
+        position_id: i.id,  // 岗位id
+        position_name: i.position_name,
       }
-      console.log(infoData)
       that.zx_dialogVisible = false;
+      that.position_dialogVisible = false;
       that.$bus.$emit('receiveParams', {type:'searchTalent',laiyuan:'nav',infoData });
-      return
-      let p = {
-        uid: i.uid|| i.basic_info.uid,
-        content:'看过您的简历后，希望可以和您聊聊，谢谢！'
-      }
-      that.$axios.post('/api/company/find-user',p).then( res =>{
+    },
+    position_handleClose(){
+      this.position_dialogVisible = false;
+    },
+    // 获取职位
+    getPositionList(){
+      let that = this;
+      that.$axios.post('/api/company-interview/recruit/position/list',{
+        company_id: localStorage.getItem('company_id')
+      }).then(res =>{
         if(res.code == 0){
-          that.$router.push('/interaction?user_uid=' + i.uid);
+          that.positionList = res.data;
+          if(that.positionList.length <= 0){
+            that.$message.error({
+              message: '请先发布岗位！'
+            })
+          }else{
+            that.position_dialogVisible = true;
+          }
         }else{
           that.$message.error({
             message:res.msg
           })
         }
+      }).catch(e =>{
+        console.log(e)
       })
     },
   },
@@ -526,5 +571,39 @@ export default {
     background: #e0e0e0;
     margin: 0 10px;
     display: inline-block;
+  }
+  .positionList-dialogbox{
+    /deep/ .el-dialog{
+      .el-dialog__header{
+        text-align: left;
+        padding: 10px;
+        .el-dialog__title{
+          font-size: 15px;
+          color: $g_textColor;
+        }
+        .el-dialog__headerbtn{
+          top: 10px;
+        }
+      }
+      .el-dialog__body{
+        max-height: 400px;
+        padding: 0 0 20px 0;
+        margin: 0 10px;
+        border-top: 1px solid #F2F3F5;
+        .positionList-box{
+          height: auto;
+          width: 100%;
+          li{
+            font-size: 14px;
+            padding: 10px;
+            cursor: pointer;
+            &:hover{
+              background: #e0e0e041;
+              color: $g_color;
+            }
+          }
+        }
+      }
+    }
   }
 </style>

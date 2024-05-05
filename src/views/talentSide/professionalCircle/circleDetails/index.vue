@@ -522,87 +522,87 @@ export default {
   }
 
   .container{
-  /deep/ .el-dialog{
-    min-width: 420px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-top: 0 !important;
-    .el-dialog__header{
-      text-align: left;
-      .el-dialog__title{
-        font-size: 15px;
-        color: $g_textColor;
-      }
-    }
-    .el-dialog__body{
-      height: auto;
-      overflow: hidden;
-      padding: 20px;
-      .cententinfo-box{
-        width: 100%;
-        margin-top: 10px;
-        .cententinfo-title{
-          font-size: 14px;
-          font-weight: 400;
+    /deep/ .el-dialog{
+      min-width: 420px;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-top: 0 !important;
+      .el-dialog__header{
+        text-align: left;
+        .el-dialog__title{
+          font-size: 15px;
           color: $g_textColor;
-          line-height: 22px;
-          text-align: left;
         }
-        .demo-input-suffix{
+      }
+      .el-dialog__body{
+        height: auto;
+        overflow: hidden;
+        padding: 20px;
+        .cententinfo-box{
           width: 100%;
-          display: flex;
-          align-items: center;
-          span{
-            width: auto;
+          margin-top: 10px;
+          .cententinfo-title{
             font-size: 14px;
             font-weight: 400;
-            color: #000000;
+            color: $g_textColor;
             line-height: 22px;
+            text-align: left;
           }
-          .el-input {
-            position: relative;
-            font-size: 14px;
-            flex: 1;
-            margin-left: 10px;
-           }
-          .el-input__inner {
-            font-size: 14px;
-            padding: 14px 10px;
+          .demo-input-suffix{
             width: 100%;
-            border: 1px solid #e9e9e9;
-            border-radius: 4px;
-            outline: none;
-            box-sizing: border-box;
-            display: block;
-            box-shadow: none;
-            transition: border .3s;
-            background-color: #fff;
-            resize: none;
-          }
-          .el-input__inner:hover{
-            border-color: $g_color;
-          }
-          .el-input.is-active .el-input__inner, .el-input__inner:focus{
-            border-color: $g_color;
-            outline: 0;
+            display: flex;
+            align-items: center;
+            span{
+              width: auto;
+              font-size: 14px;
+              font-weight: 400;
+              color: #000000;
+              line-height: 22px;
+            }
+            .el-input {
+              position: relative;
+              font-size: 14px;
+              flex: 1;
+              margin-left: 10px;
+            }
+            .el-input__inner {
+              font-size: 14px;
+              padding: 14px 10px;
+              width: 100%;
+              border: 1px solid #e9e9e9;
+              border-radius: 4px;
+              outline: none;
+              box-sizing: border-box;
+              display: block;
+              box-shadow: none;
+              transition: border .3s;
+              background-color: #fff;
+              resize: none;
+            }
+            .el-input__inner:hover{
+              border-color: $g_color;
+            }
+            .el-input.is-active .el-input__inner, .el-input__inner:focus{
+              border-color: $g_color;
+              outline: 0;
+            }
+
           }
 
         }
-
       }
-    }
-    .el-button{
-      padding: 0;
-      width: 100px;
-      height: 40px;
-      line-height: 40px;
-    }
-    .el-button--primary{
-      background-color: $g_color;
-      border-color: $g_color;
-    }
+      .el-button{
+        padding: 0;
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+      }
+      .el-button--primary{
+        background-color: $g_color;
+        border-color: $g_color;
+      }
 
-    
+      
+    }
   }
-}
 </style>

@@ -99,7 +99,6 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         userID: localStorage.getItem('realUid'),    
         // 被叫的 userID
         callUserID: '',
-        SDKAppID: 1600032579,    // Replace with your SDKAppID
         to:{},
         TUICallKit_type: 0,
         countTime: null,
@@ -134,7 +133,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       this.parentH = getViewportSize.height; // 组件范围
       this.parentW = getViewportSize.width; // 组件范围 
       this.width = Number(getViewportSize.width)/2; // 可拖动div 宽度
-      this.height = Number(getViewportSize.height - 120); // 可拖动div 高度
+      this.height = Number(getViewportSize.height - 80); // 可拖动div 高度
       this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
       this.currentUser = {
         id: localStorage.getItem('realUid'),
@@ -239,9 +238,10 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
             tag:'tencent_cloud_im'
           }).then( res =>{
             if(res.code == 0){
-              const userSig = res.data.value;
+              const userSig = atob(res.data.user_sig);
+              let SDKAppID = atob(res.data.sdk_appid);
               TUICallKitServer.init({
-                SDKAppID: Number(this.SDKAppID),
+                SDKAppID: Number(SDKAppID),
                 userID: this.userID + '',
                 userSig,
                 // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入

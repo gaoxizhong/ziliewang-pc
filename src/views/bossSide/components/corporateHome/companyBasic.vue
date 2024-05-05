@@ -33,8 +33,17 @@
       <el-form-item label="法人" prop="legal_person">
         <el-input v-model="jbxx_ruleForm.legal_person" placeholder="法人"></el-input>
       </el-form-item>
-      <el-form-item label="组织代码" prop="legal_person">
+      <el-form-item label="组织代码" prop="organization_code">
         <el-input v-model="jbxx_ruleForm.organization_code" placeholder="组织代码" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="注册资本" prop="registered_capital">
+        <el-input v-model="jbxx_ruleForm.registered_capital" placeholder="注册资本" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="核准日期" prop="approval_date">
+        <el-input v-model="jbxx_ruleForm.approval_date" placeholder="核准日期" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="成立日期" prop="establishment_date">
+        <el-input v-model="jbxx_ruleForm.establishment_date" placeholder="成立日期" disabled></el-input>
       </el-form-item>
       <el-form-item label="所属主行业" prop="industry">
         <el-select v-model="jbxx_ruleForm.industry" placeholder="请选择主行业">
@@ -109,6 +118,9 @@ export default {
         logo:'', // 头像
         legal_person:'', // 法人
         organization_code:'',
+        registered_capital:'',
+        approval_date:'',
+        establishment_date:'',
         business_license:'', // 营业执照
         industry: '', // 所属主页
         business_nature:'', // 企业性质
@@ -220,6 +232,12 @@ export default {
           that.jbxx_ruleForm.business_nature = res.data.business_nature;
           that.jbxx_ruleForm.company_scale = res.data.company_scale;
           that.jbxx_ruleForm.corporate_finance = res.data.corporate_finance;
+
+          that.jbxx_ruleForm.registered_capital = res.data.registered_capital;
+          that.jbxx_ruleForm.approval_date = res.data.approval_date;
+          that.jbxx_ruleForm.establishment_date = res.data.establishment_date;
+
+         
         }else{
           that.$message.error({
             message:res.msg
@@ -259,6 +277,9 @@ export default {
         business_nature: that.jbxx_ruleForm.business_nature, // 企业性质
         company_scale: that.jbxx_ruleForm.company_scale, // 企业规模
         corporate_finance: that.jbxx_ruleForm.corporate_finance, // 上市状态
+        registered_capital: that.jbxx_ruleForm.registered_capital,
+        approval_date: that.jbxx_ruleForm.approval_date,
+        establishment_date: that.jbxx_ruleForm.establishment_date,
       }
    
       that.$axios.post('/api/company/edit',p).then( res =>{

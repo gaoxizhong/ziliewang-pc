@@ -68,7 +68,7 @@ export default {
   },
   created() {
     if(JSON.stringify(this.infoData) != '{}'){
-      this.chatLocation (this.infoData)
+      this.chatLocation(this.infoData)
     }
     
   },

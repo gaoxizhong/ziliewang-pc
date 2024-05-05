@@ -47,7 +47,18 @@
           <div class="title"><span>* </span>法人</div>
           <el-input v-model="legal_person" placeholder="法人"></el-input>
         </div>
-        
+        <div class="items-box">
+          <div class="title"><span>* </span>注册资本</div>
+          <el-input v-model="registered_capital" placeholder="注册资本"></el-input>
+        </div>
+        <div class="items-box">
+          <div class="title"><span>* </span>成立日期</div>
+          <el-input v-model="establishment_date" placeholder="成立日期"></el-input>
+        </div>
+        <div class="items-box">
+          <div class="title"><span>* </span>核准日期</div>
+          <el-input v-model="approval_date" placeholder="核准日期"></el-input>
+        </div>
         <div class="items-box">
           <div class="title"><span>* </span>公司注册地址</div>
           <el-input v-model="company_register_address" placeholder="公司注册地址"></el-input>
@@ -56,6 +67,7 @@
           <div class="title"><span>* </span>组织代码</div>
           <el-input v-model="organization_code" placeholder="组织代码"></el-input>
         </div>
+        
         <div class="items-box">
           <div class="title"><span>* </span>所属主行业</div>
           <el-select v-model="industry" placeholder="请选择主行业">
@@ -139,6 +151,9 @@ export default {
       industryList: [],
       company_name: '',// 公司名称
       legal_person: '', //法人
+      registered_capital:'', //注册资本
+      approval_date:'', // 核准日期
+      establishment_date:'', // 成立日期
       company_register_address: '', // 注册地址
       organization_code: '',  //组织代码
       industry:'', // 所属主行业
@@ -247,7 +262,9 @@ export default {
           that.legal_person= res.data.legal_person; //法人
           that.company_register_address= res.data.company_register_address; // 注册地址
           that.organization_code= res.data.organization_code;  //组织代码
-          
+          that.registered_capital= res.data.registered_capital;  //注册资本
+          that.approval_date= res.data.approval_date; // 核准日期
+          that.establishment_date= res.data.establishment_date; // 成立日期
         }else{
           that.$message.error({
             message:res.msg
@@ -289,6 +306,9 @@ export default {
         id_card: that.id_card,
         phone: that.phone,
         password: that.password,
+        registered_capital: that.registered_capital, //注册资本
+        approval_date: that.approval_date, // 核准日期
+        establishment_date: that.establishment_date, // 成立日期
       }
       if(p.company_name == ''){
         that.$message.warning('公司名称不能为空!');
@@ -364,7 +384,9 @@ export default {
       this.id_card = '';
       this.phone = ''; //  个人手机号
       this.password = ''; // 个人密码
-
+      this.registered_capital = ''; //注册资本
+      this.approval_date = ''; // 核准日期
+      this.establishment_date = ''; // 成立日期
     },
 
   }

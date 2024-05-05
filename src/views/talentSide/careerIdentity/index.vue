@@ -45,7 +45,7 @@
       <!-- 左侧模块 结束 -->
       <!-- 中间模块 开始 -->
       <div class="info-m-box">
-        <dynamicState :see_uid="see_uid" :infoData="infoData" :count_list="count_list" :infoList="infoList" @getMyProfessionCircle="getUserProfile"/>
+        <dynamicState :see_uid="see_uid" />
       </div>
       <!-- 中间模块 结束 -->
       <div class="info-right-box">

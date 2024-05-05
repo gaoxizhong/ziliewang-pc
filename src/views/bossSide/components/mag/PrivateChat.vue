@@ -1,8 +1,11 @@
 <template>
   <div class="chat-container">
     <div class="chat-title">
-      <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar" @click="clickAvatar"/>
-      <div class="chat-name">{{ friend.name }}</div>
+      <div class="chat-title-l">
+        <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar"/>
+        <div class="chat-name">{{ friend.name }}</div>
+      </div>
+      <div class="position-name">{{ infoData.position_name }}</div>
     </div>
     <div class="chat-main" ref="scrollView">
       <div class="message-list" ref="messageList">
@@ -64,14 +67,14 @@
                   </div>
                   <!-- 图片 结束 -->
                   <!-- 发送的面试邀请 开始 -->
-                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 1" class="message-phone-universal-card" @click.stop="clickInterview(message)">
-                    <h4 class="message-phone-universal-card-header">发送面试邀请</h4>
+                  <div v-if="message.type === 'interview' &&  message.payload.way_status == 1" class="message-phone-universal-card">
+                    <h4 class="message-phone-universal-card-header">已向对方发送面试邀请</h4>
                     <div class="message-phone-universal-card-content">
                       <div><span>面试岗位：</span><span>{{message.payload.position_name?message.payload.position_name:''}}</span></div>
                       <div><span>面试时间：</span><span>{{message.payload.interview_time?message.payload.interview_time:''}}</span></div>
                       <div><span>面试地址：</span><span>{{message.payload.interview_address?message.payload.interview_address:''}}</span></div>
                     </div>
-                    <div class="message-phone-box">已向对方发送面试邀请</div>
+                    <div class="message-phone-box view-btn" @click.stop="clickInterview(message)">查看面试信息</div>
                   </div>
                   <!-- 发送的面试邀请 结束 -->
                   <!-- 同意面试邀请 开始 -->
@@ -301,6 +304,62 @@
         </span>
       </el-dialog>
     </div>
+     <!-- 查看面试邀请详情----弹窗 -->
+    <div class="container-zx">
+      <el-dialog :title="ms_infoData.text" :center="false" :visible.sync="ms_dialogVisible" width="600px" :before-close="ms_handleClose">
+        <div class="pc-preview-wrapper">
+          <div class="talent-box">
+
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">投递人：</div>
+                <div class="items-text">{{ ms_infoData.name?ms_infoData.name:'' }}</div>
+              </div>
+            </div>
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">联系电话：</div>
+                <div class="items-text">{{ms_infoData?ms_infoData.phone:'暂无'}}</div>
+              </div>
+            </div>
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试岗位：</div>
+                <div class="items-text">{{ms_infoData.interview_address?ms_infoData.interview_address:''}}</div>
+              </div>
+            </div>
+
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试时间：</div>
+                <div class="items-text">{{ms_infoData.interview_time?ms_infoData.interview_time:''}}</div>
+              </div>
+            </div>
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试地址：</div>
+                <div class="items-text">{{ms_infoData.staff?ms_infoData.staff:''}}</div>
+              </div>
+            </div>
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试官：</div>
+                <div class="items-text">{{ms_infoData.staff?ms_infoData.staff:''}}</div>
+              </div>
+            </div>
+            
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">备注：</div>
+                <div class="items-text">{{ms_infoData.remark?ms_infoData.remark:''}}</div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </el-dialog>
+    </div>
     <!-- 百度地图位置选择 -->
     <BMapAddressSelect ref="bmapAddressSelect" @confirmMapAddress="confirmMapAddress"></BMapAddressSelect>
 
@@ -401,13 +460,16 @@
         basic_info:{},
         is_type:'',
         yqmsVisible: false,
-      interviewData: {
-        interview_address:'',
-        time:'',
-      }, // 邀请面试信息
-      positionList:[],
-      staffAvatar:'', // 企业端头像
-      staffName:'', // 企业端名称
+        interviewData: {
+          interview_address:'',
+          time:'',
+        }, // 邀请面试信息
+        positionList:[],
+        staffAvatar:'', // 企业端头像
+        staffName:'', // 企业端名称
+        //查看面试信息弹窗
+        ms_dialogVisible: false,
+        ms_infoData: {}
       };
     },
     watch:{
@@ -425,20 +487,32 @@
       },
     },
     mounted(){
-      this.currentUser = {  // 我的信息--展示
-        id: localStorage.getItem('staffUid'),
-        name: this.$store.state.user.staffName,
-        avatar: this.$store.state.user.staffAvatar
-      };
+      
     },
     created() {
       this.userVipRank = localStorage.getItem('staffVipRank');
       this.friend = this.infoData; // 目标用户信息
+      this.currentUser = {  // 我的信息--展示
+        id: localStorage.getItem('staffUid'),
+        name: this.$store.state.user.staffName,
+        avatar: this.$store.state.user.staffAvatar,
+        position_id: this.infoData.position_id, // 岗位id
+        company_id: this.infoData.company_id,// 公司id
+        position_name: this.infoData.position_name,
+      };
+      console.log('currentUser:',this.currentUser);
       this.to = { // 目标用户
         type: this.GoEasy.IM_SCENE.PRIVATE,
         id: this.friend.uid,
-        data: {name: this.friend.name, avatar: this.friend.avatar},
+        data: {
+          name: this.infoData.name,
+          avatar: this.infoData.avatar,
+          position_id: this.infoData.position_id, // 岗位id
+          company_id: this.infoData.company_id,// 公司id
+          position_name: this.infoData.position_name,
+        },
       };
+      console.log('to:',this.to);
       // 获取历史记录
       this.loadHistoryMessage(true);
       // 获取个人信息
@@ -529,8 +603,29 @@
         this.yqmsVisible = true;
         return
       },
-      // 点击 交换联系方式 --- 发送自定义消息
+      // 点击 交换联系方式按钮
       clickPhoneBtn(n){
+        let that = this;
+        let userProfile = this.userProfile;
+        let p = {
+          position_id: that.infoData.position_id, // 岗位id
+          company_id: localStorage.getItem('company_id'),// 公司id
+          company_phone: userProfile.phone,
+          uid: that.to.id
+        }
+        that.$axios.post('/api/company-interview/get-contact-information',p).then( res =>{
+          console.log(res)
+          if( res.code == 0){
+            that.sendPhoneMsg(n);
+          }else{
+            that.$message.error({
+              message: res.msg
+            })
+          }
+        })
+      },
+      // 点击 交换联系方式 --- 发送自定义消息
+      sendPhoneMsg(n){
         let userProfile = this.userProfile;
         let payload = {
           text: '交换联系方式',
@@ -983,7 +1078,11 @@
       },
       // 点击发送出去的面试邀请信息
       clickInterview(i){
-        console.log(i)
+        this.ms_infoData = i.payload;
+        this.ms_dialogVisible = true;
+      },
+      ms_handleClose(){
+        this.ms_dialogVisible = false;
       },
       // 腾讯云 语音自定义事件
       TUICallKitInfo(e){
@@ -1028,17 +1127,26 @@
     padding: 6px 10px;
     display: flex;
     align-items: center;
-    font-size: 18px;
+    justify-content: space-between;
+    font-size: 14px;
     border-bottom: 1px solid #f2f2f2;
   }
-
+  .position-name{
+    width: auto;
+    color: #37f;
+  }
+  .chat-title-l{
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
   .chat-avatar {
     width: 35px;
     height: 35px;
   }
 
   .chat-name {
-    width: 400px;
+    width: auto;
     font-size: 15px;
     margin-left: 10px;
     white-space: nowrap;
@@ -1678,6 +1786,7 @@
     position: relative;
     display: inline-block;
     font-size: 12px;
+    overflow: hidden;
   }
   .unable {
     color: #999;
@@ -1923,6 +2032,87 @@
       }
 
     
+    }
+  }
+  .view-btn{
+    cursor: pointer;
+  }
+
+  .container-zx /deep/ .el-dialog{
+    min-width: 320px;
+    max-height: 500px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    .el-dialog__header{
+      text-align: left;
+      .el-dialog__title{
+        font-size: 16px;
+        color: $g_textColor;
+      }
+    }
+    .el-dialog__body{
+      padding: 20px 30px 30px;
+      height: calc(100vh - 128px);
+      overflow: overlay;
+      padding: 10px;
+      .pc-preview-wrapper{
+        border-radius: 4px;
+        padding: 10px 20px;
+        color: $g_textColor;
+        line-height: 26px;
+        
+        .box-items{
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          margin-top: 10px;
+          &:nth-of-type(1){
+            margin-top: 0;
+          }
+          .items{
+            flex: 1;
+            display: flex;
+            align-items: center;
+            .items-label{
+              width: 80px;
+              font-size: 15px;
+              font-weight: bold;
+              text-align: right;
+            }
+            .items-text{
+              font-size: 14px;
+              color: #414a60;
+              padding-left: 4px;
+            }
+            
+          }
+          .items-l{
+            justify-content: flex-start;
+          }
+          .items-r{
+            justify-content: flex-end;
+            .label-text{
+              display: inline-block;
+              vertical-align: middle;
+              font-size: 13px;
+              img{
+                width: 14px;
+                height: 14px;
+              }
+            }
+            .vline {
+              margin: 0 0.9rem;
+            }
+            .fz {
+              margin-left: 5px;
+              display: inline-block;
+              width: 16px;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
     }
   }
 </style>

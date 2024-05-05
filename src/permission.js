@@ -1,18 +1,9 @@
 import router from './router'
 import store from './store'
-import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken,removeToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
-
-// import { bossSideRoutes } from '@/utils/bossSideRoutes' // 企业端路由
-// import { talentSideRoutes } from '@/utils/talentSideRoutes' // 人才端路由
-const tag = localStorage.getItem('tag'); // 类型 企业、人才
-
-// console.log(bossSideRoutes)
-// console.log(talentSideRoutes)
-// console.log(tag)
 
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -28,13 +19,16 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken();
+  let tag = localStorage.getItem('tag');
   if (hasToken) {
     if (to.path === '/login') {
-      // if is logged in, redirect to the home page
-      next({ path: '/' })
+      if(tag == 'company'){
+        next({ path: '/' })
+      }else{
+        next({ path: '/talentHome' })
+      }
       NProgress.done()
     } else {
-      let tag = localStorage.getItem('tag');
       if(tag == 'company' ){
         const hasGetUserInfo = store.getters.staffName
         if (hasGetUserInfo) {

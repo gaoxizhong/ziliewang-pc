@@ -219,7 +219,7 @@
               <input v-show="false" id="file-input" type="file" @change="sendFileMessage"/>
             </div> -->
             <i class="vline"></i>
-            <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickToolbarBtn('resume')">发简历</div>
+            <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickDeliver('resume')">发简历</div>
             <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">联系方式</div>
           </div>
           <div class="action-bar-right">
@@ -391,6 +391,8 @@
             let detailData = res.data;
             detailData.job_benefits = detailData.job_benefits.split(',');
             this.detailData = detailData;
+            this.to.data.company_id = res.data.company_id;
+            this.friend.company_id = res.data.company_id;
           }else{
             this.$message.error({
               message:res.msg
@@ -535,8 +537,29 @@
           }
         })
       },
-      // 点击 交换联系方式
+      // 点击 交换联系方式按钮
       clickPhoneBtn(n){
+        let that = this;
+        let userProfile = this.userProfile;
+        let p = {
+          position_id: that.friend.position_id,// 岗位id
+          company_id: that.friend.company_id,// 公司id
+          user_phone: userProfile.basic_info.real_phone,
+        }
+        console.log(p)
+        that.$axios.post('/api/company-deliver/get-contact-information',p).then( res =>{
+          console.log(res)
+          if( res.code == 0){
+            that.sendPhoneMsg(n);
+          }else{
+            that.$message.error({
+              message: res.msg
+            })
+          }
+        })
+      },
+      // 发送出 交换联系方式消息
+      sendPhoneMsg(n){
         let userProfile = this.userProfile;
         let payload = {
           text: '交换联系方式',
@@ -559,16 +582,9 @@
           }
         });
       },
-      // 点击 发简历按钮
+      // 发送出简历消息
       clickToolbarBtn(){
-        let userProfile = this.userProfile;
-        if(this.userVipRank < 1){
-          this.$message.error("需要升级为VIP会员可投递简历!");
-          setTimeout( () =>{
-            that.$router.push('/talentSide/topUpBuy');
-          },1000)
-          return
-        }
+        let userProfile = that.userProfile;
         let payload = {
           text: '发送简历',
           resume: userProfile.basic_info.curriculum_vitae
@@ -581,16 +597,23 @@
           onSuccess: (message) => {
             console.log(message)
             this.sendMessage(message);
-            this.clickDeliver();
           },
           onFailed: (err) => {
             console.log("创建消息err:", err);
           }
         });
       },
-      // 投简历
+      // 点击 发简历按钮
       clickDeliver(){
         let that = this;
+        if(that.userVipRank < 1){
+          this.$message.error("需要升级为VIP会员可投递简历!");
+          setTimeout( () =>{
+            that.$router.push('/talentSide/topUpBuy');
+          },1000)
+          return
+        }
+        console.log(that.friend)
         let p = {
           position_id: that.friend.position_id,// 岗位id
           company_id: that.friend.company_id,// 公司id
@@ -598,6 +621,13 @@
         }
         that.$axios.post('/api/user/deliver',p).then( res =>{
           console.log(res)
+          if( res.code == 0){
+            that.clickToolbarBtn();
+          }else{
+            that.$message.error({
+              message: res.msg
+            })
+          }
         })
       },
       // 腾讯云 语音自定义事件
@@ -999,7 +1029,7 @@
       },
       // 点击查看面试信息
       goTomyDelivery(){
-        this.$router.push('/myDelivery');
+        this.$router.push('/myDelivery?subTag=3');
       },
     },
   };
@@ -1744,6 +1774,7 @@
     position: relative;
     display: inline-block;
     font-size: 12px;
+    overflow: hidden;
   }
   .unable {
     color: #999;

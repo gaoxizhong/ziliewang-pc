@@ -23,16 +23,7 @@
       </div>
       <!-- 检索及热门职位 结束 -->
     </div>
-    <!-- <div class="job-tab-box m-box margin-top-20">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="智能推荐" name="recommended"></el-tab-pane>
-        <el-tab-pane label="最新" name="latest"></el-tab-pane>
-      </el-tabs>
-      <div class="tab-right" @click="myCollection">
-        <img src="../../../assets/image/bossSide/icon-star.png" alt="" />
-        <span>我的收藏</span>
-      </div>
-    </div> -->
+ 
     <!-- 高级筛选模块 开始-->
     <div class="screen-box m-box margin-top-20">
       <filterOptionsContainer  @getfilterInfo="getfilterInfo"/>
@@ -78,12 +69,23 @@
     </div>
     <!-- 列表模块 结束  -->
 
-     <!-- 分页控制 -->
-     <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged" v-if="jobList.length > 0"></mPagination>
+    <!-- 分页控制 -->
+    <mPagination :data="paginationData" @pageChangeEvent="pageHasChanged" v-if="jobList.length > 0"></mPagination>
 
 
-     <!-- 预览在线简历 弹窗  -->
-     <onlineResume ref="onlineResume" :infoData="infoData" :basic_info="basic_info" :is_type="is_type" />
+    <!-- 预览在线简历 弹窗  -->
+    <onlineResume ref="onlineResume" :infoData="infoData" :basic_info="basic_info" :is_type="is_type" />
+    <!-- 选择岗位 弹窗 -->
+    <div class="positionList-dialogbox">
+      <el-dialog title="选择岗位" :center="false" :visible.sync="position_dialogVisible" width="300px" :before-close="position_handleClose">
+        <div class="positionList-box">
+          <ul>
+            <li v-for="(item,index) in positionList" :key="index" @click="clickpositionList(item)">{{ item.position_name }}</li>
+          </ul>
+        </div>
+      </el-dialog>
+    </div>
+
   </div>
 </template>
 
@@ -113,7 +115,10 @@ export default {
       infoData:{},
       basic_info:{},
       activeName: 'recommended',
-      filterInfo:{}
+      filterInfo:{},
+      positionList:[], // 岗位列表
+      position_dialogVisible: false,
+      seltPositionData: {}
     }
   },
   created(){
@@ -121,8 +126,58 @@ export default {
     // this.getSearchinfo();
   },
   methods:{
-     // 筛选
-     getfilterInfo(e){
+    // 点击岗位列表
+    clickpositionList(i){
+      let that = this;
+      let seltPositionData = that.seltPositionData;
+      console.log(i)
+      let name = '';
+      if(seltPositionData.is_name_protect == 1){
+        name = seltPositionData.name
+      }else{
+        name = seltPositionData.real_name
+      }
+      let infoData = {
+        uid: seltPositionData.uid || seltPositionData.basic_info.uid,
+        name: name || seltPositionData.basic_info.name,
+        avatar: seltPositionData.avatar || seltPositionData.basic_info.avatar,
+        company_id: i.company_id, // 企业id
+        position_id: i.id,  // 岗位id
+        position_name: i.position_name,
+      }
+      that.zx_dialogVisible = false;
+      that.position_dialogVisible = false;
+      that.$bus.$emit('receiveParams', {type:'searchTalent',laiyuan:'nav',infoData });
+    },
+    position_handleClose(){
+      this.position_dialogVisible = false;
+    },
+    // 获取职位
+    getPositionList(){
+      let that = this;
+      that.$axios.post('/api/company-interview/recruit/position/list',{
+        company_id: localStorage.getItem('company_id')
+      }).then(res =>{
+        if(res.code == 0){
+          that.positionList = res.data;
+          if(that.positionList.length <= 0){
+            that.$message.error({
+              message: '请先发布岗位！'
+            })
+          }else{
+            that.position_dialogVisible = true;
+          }
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    },
+    // 筛选
+    getfilterInfo(e){
       let info = JSON.parse(e);
       this.filterInfo = info;
       this.jobList = [];
@@ -241,28 +296,10 @@ export default {
         },1000)
         return
       }
-      let infoData = {
-        uid: i.uid || i.basic_info.uid,
-        name: i.name || i.basic_info.name,
-        avatar: i.avatar || i.basic_info.avatar,
-      }
-      console.log(infoData)
-      that.zx_dialogVisible = false;
-      that.$bus.$emit('receiveParams', {type:'searchTalent',laiyuan:'nav',infoData });
+      that.seltPositionData = i;
+      that.getPositionList(); // 获取职位
       return
-      let p = {
-        uid: i.uid|| i.basic_info.uid,
-        content:'看过您的简历后，希望可以和您聊聊，谢谢！'
-      }
-      that.$axios.post('/api/company/find-user',p).then( res =>{
-        if(res.code == 0){
-          that.$router.push('/interaction?user_uid=' + i.uid);
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
+     
     },
       
     
@@ -677,5 +714,39 @@ export default {
   }
   .screen-box {
     padding: 20px 20px 10px 20px;
+  }
+  .positionList-dialogbox{
+    /deep/ .el-dialog{
+      .el-dialog__header{
+        text-align: left;
+        padding: 10px;
+        .el-dialog__title{
+          font-size: 15px;
+          color: $g_textColor;
+        }
+        .el-dialog__headerbtn{
+          top: 10px;
+        }
+      }
+      .el-dialog__body{
+        max-height: 400px;
+        padding: 0 0 20px 0;
+        margin: 0 10px;
+        border-top: 1px solid #F2F3F5;
+        .positionList-box{
+          height: auto;
+          width: 100%;
+          li{
+            font-size: 14px;
+            padding: 10px;
+            cursor: pointer;
+            &:hover{
+              background: #e0e0e041;
+              color: $g_color;
+            }
+          }
+        }
+      }
+    }
   }
 </style>

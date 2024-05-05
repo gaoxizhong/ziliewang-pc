@@ -86,7 +86,6 @@ export default {
       userID: localStorage.getItem('staffUid'),    
       // 被叫的 userID
       callUserID: '',
-      SDKAppID: 1600032579,    // Replace with your SDKAppID
       // videoResolution: videoResolution, // 设置分辨率
       TUICallKit_type: 0
     }
@@ -142,7 +141,7 @@ export default {
     this.currentUser = {
       id: localStorage.getItem('staffUid'),
       name: this.$store.state.user.staffName,
-      avatar: this.$store.state.user.staffAvatar
+      avatar: this.$store.state.user.staffAvatar,
     }
     if (this.goEasy.getConnectionStatus() === 'disconnected') {
       this.connectGoEasy();  //连接goeasy
@@ -173,7 +172,11 @@ export default {
     connectGoEasy() {
       this.goEasy.connect({
         id: this.currentUser.id,
-        data: {name: this.currentUser.name, avatar: this.currentUser.avatar},
+        data: {
+          name: this.currentUser.name,
+          avatar: this.currentUser.avatar,
+          text:'测试'
+        },
         onSuccess: function () { 
           console.log("G连接成功.") 
         },
@@ -261,9 +264,10 @@ export default {
           tag:'tencent_cloud_im'
         }).then( res =>{
           if(res.code == 0){
-            const userSig = res.data.value;
+            const userSig = atob(res.data.user_sig);
+            let SDKAppID = atob(res.data.sdk_appid);
             TUICallKitServer.init({
-              SDKAppID: Number(this.SDKAppID),
+              SDKAppID: Number(SDKAppID),
               userID: this.userID + '',
               userSig,
               // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入

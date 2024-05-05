@@ -27,9 +27,9 @@
                 <div class="title-t">{{ item.createtime }}</div>
               </div>
 
-              <div class="items-c-box">
+              <div class="items-dt-box">
                 <div>
-                  <div class="items-c-p" @click.stop="clicklistItems(item)">{{ item.content }}</div>
+                  <div class="items-dt-p">{{ item.content }}</div>
                   <div class="items-img-box" v-if="item.images.length>0">
                     <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
                   </div>
@@ -39,24 +39,74 @@
                     </a>
                   </div>
                 </div>
-                <div class="items-bottom-btn"  @click.stop="clicklistItems(item)">
+                <div class="items-bottom-btn">
                   <div class="bottom-btn-items">
                     <img src="../../../assets/image/preview-open.png" alt="" />
                     <span>{{ item.read_num?item.read_num:0 }}阅读</span>
                   </div>
-                  <div class="bottom-btn-items" v-if="item.is_point == 2">
+                  <div class="bottom-btn-items" @click="clickPoint('',item.id,index)" v-if="item.is_point == 2">
                     <img src="../../../assets/image/thumbs-up.png" alt="" />
                     <span>{{ item.point_num?item.point_num:0 }} 赞</span>
                   </div>
-                  <div class="bottom-btn-items" v-else>
+                  <div class="bottom-btn-items" @click="clickCancelPoint('',item.id,index)" v-else>
                     <img src="../../../assets/image/thumbs-up.png" alt="" />
                     <span class="point-hover">{{ item.point_num?item.point_num:0 }} 已赞</span>
                   </div>
-                  <div class="bottom-btn-items">
+                  <div class="bottom-btn-items" @click.stop="clickReview(item,index)">
                     <img src="../../../assets/image/comment.png" alt="" />
                     <span>{{ item.comment_num?item.comment_num:0 }}评论</span>
                   </div>
                 </div>
+
+                <!-- 评论区域 开始 -->
+                <div class="items-review-box" :class="item.show_review?'show-box':''">
+                  <div class="fabu-box">
+                    <el-input type="text" v-model="content" placeholder="评论千万条，友善第一条"></el-input>
+                    <el-button type="primary" @click="clickInfoVerifyBtn(1)">评论</el-button>
+                  </div>
+                  <!-- 评论列表模块 开始 -->
+                  <div class="comment-box">
+                    <div class="comment-title-box"><span>{{ infoData.comment_num }}</span>评论</div>
+
+                    <div class="comment-list-box">
+                      <ul>
+                        <li v-for="(items,index) in infoData.comment_list" :key="index">
+                          <div class="title">
+                            <div class="title-left" @click.stop="clickName(items)">
+                              <img :src="items.avatar?items.avatar:require('../../../assets/image/img-user.jpg')" alt="" class="avatar-img"/>
+                              <span>{{ items.name }}</span>
+                              <img src="../../../assets/image/right-one.png" alt="" class="right-one" v-if="items.reply_id"/>
+                              <span v-if="items.reply_id">{{ items.publish_name }}</span>
+                            </div>
+                            <div class="title-t">{{ items.createtime }}</div>
+                          </div>
+                          <div class="items-c-box">
+
+                            <div class="items-c-p">{{ items.content }}</div>
+
+                            <div class="items-bottom-btn">
+                              <div class="bottom-btn-items" @click="clickPoint('commentID',item.id,index,items.id)" v-if="items.is_point == 2">
+                                <img src="../../../assets/image/thumbs-up.png" alt="" />
+                                <span>{{ items.point_num }} 赞</span>
+                              </div>
+                              <div class="bottom-btn-items" @click="clickCancelPoint('commentID',item.id,index,items.id) " v-else>
+                                <img src="../../../assets/image/thumbs-up.png" alt="" />
+                                <span class="point-hover">{{ items.point_num }} 已赞</span>
+                              </div>
+                              <div class="bottom-btn-items" @click.stop="clickRecover(items)">
+                                <img src="../../../assets/image/comment.png" alt="" />
+                                <span>{{ items.comment_num }} 回复</span>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+
+                  </div>
+                  <!-- 评论列表模块 结束 -->
+                </div>
+                <!-- 评论区域 结束 -->
               </div>
 
             </div>
@@ -145,6 +195,21 @@
 
     <!-- 视频弹窗 -->
     <videoDialog :infoData="video_url"  ref="video" />
+
+    <!-- 回复弹窗 -->
+    <div class="recoverVisible">
+      <el-dialog title="回复评论" :visible.sync="recoverVisible" width="482px" :before-close="recoverValueClose">
+        <div class="cententinfo-box">
+          <div class="demo-input-suffix">
+            <el-input v-model="recover_value" type="text" name="recover_value" placeholder="回复评论"></el-input>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="recoverVisible = false">取 消</el-button>
+          <el-button type="primary" @click="clickInfoVerifyBtn(2)">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 
 </template>
@@ -179,7 +244,17 @@ export default {
       is_return: true,
       video_url: {
         video_url: '',
-      }
+      },
+      // 点击选中的列表项
+      seltItemInfoData: {},
+      infoData:{},
+      content:'',
+      id: '',
+      is_content: false, // 评论框展示判断
+      recoverVisible: false,
+      recover_value: '',
+      reply_content:'', // 回复弹窗 value
+      reply_id: 0,
     }
   },
   computed: {
@@ -194,6 +269,9 @@ export default {
     }
   },
   methods: {
+    recoverValueClose(){
+
+    },
     clickTab(n){
       this.content_tag = n;
       this.textarea = '';
@@ -214,8 +292,13 @@ export default {
         page: this.page,
         tag: this.tag
       }).then(res =>{
+        
         if(res.code == 0){
-          this.dataList = res.data
+          let dataList = res.data;
+          dataList.forEach( ele =>{
+            ele.show_review = false
+          })
+          this.dataList = dataList;
         }else{
           that.$message.error({
             message:res.msg
@@ -236,12 +319,175 @@ export default {
       
     },
     // 点击列表
-    clicklistItems(i){
-      this.$router.push({
-        path:'/professionalCircle/circleDetails',   //跳转的路径
-        query:{           //路由传参时push和query搭配使用 ，作用时传递参数
-          id:i.id,
+    // clicklistItems(i){
+    //   this.$router.push({
+    //     path:'/professionalCircle/circleDetails',
+    //     query:{ 
+    //       id:i.id,
+    //     }
+    //   })
+    // },
+
+// 点击点赞
+clickPoint(s,it_id,idx,c_id){
+      console.log('clickPoint')
+      let that = this;
+      let index = idx;
+      let dataList =that.dataList;
+      let p = {
+        profession_circle_id: it_id,
+      }
+      if(s == 'commentID'){
+        // 职圈评论id
+        p.comment_id = c_id;
+      }
+      that.$axios.post('/api/profession-circle/point',p).then( res =>{
+        if( res.code == 0 ){
+          that.$message.success('点赞成功！');
+            if(s == 'commentID'){
+              // 职圈评论
+              setTimeout( () =>{
+              //获取职圈详情
+                that.getInfoData();
+              },1000)
+            }else{
+              dataList[index].point_num++;
+              dataList[index].is_point = 1;
+              that.dataList = dataList;
+              console.log(that.dataList)
+            }
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
         }
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
+    // 取消
+    clickCancelPoint(s,it_id,idx,c_id){
+      let that = this;
+      let index = idx;
+      let dataList =that.dataList;
+      let p = {
+        profession_circle_id: it_id,
+      }
+      if(s == 'commentID'){
+        // 职圈评论id
+        p.comment_id = c_id;
+      }
+      that.$axios.post('/api/profession-circle/cancel-point',p).then( res =>{
+        if( res.code == 0 ){
+          that.$message.success('取消成功！');
+          if(s == 'commentID'){
+              // 职圈评论
+              setTimeout( () =>{
+              //获取职圈详情
+              that.getInfoData();
+              },1000)
+            }else{
+              dataList[index].point_num--;
+              dataList[index].is_point = 2;
+              that.dataList = dataList;
+              console.log(that.dataList)
+            }
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
+    // 点击评论列表回复
+    clickRecover(item){
+      if(this.userVipRank < 1){
+        this.$message.error("需要升级为VIP会员可评论、回复!");
+        setTimeout( () =>{
+          this.$router.push('/talentSide/topUpBuy');
+        },1000)
+        return
+      }
+      this.reply_id = item.id;
+      this.recoverVisible = true;
+    },
+    // 点击列表 评论按钮
+    clickReview(i,idx){
+      let that = this;
+      that.seltItemInfoData = i;
+      that.id = i.id;
+      that.getInfoData();
+      let dataList = that.dataList;
+      if(dataList[idx].show_review == true){
+        dataList[idx].show_review = false;
+        that.dataList = dataList;
+        return
+      }
+      dataList.forEach( ele =>{
+        ele.show_review = false;
+      })
+      dataList[idx].show_review = true;
+      that.dataList = dataList;
+    },
+    // 获取详情
+   async getInfoData(){
+      await this.$axios.post('/api/profession-circle/detail',{
+        profession_circle_id: this.id
+      }).then( res =>{
+        if( res.code == 0 ){
+          this.infoData = res.data;
+        }else{
+          this.$message.error({
+            message:res.msg
+          })
+        }
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
+    // 发布评论
+    clickInfoVerifyBtn(n){
+      let that = this;
+      let num = n; // 1 评论职圈； 2、回复评论
+      let p = {
+        profession_circle_id: that.id,
+      }
+      if( num == 1){
+        p.content= that.content;
+      }
+      if( num == 2){
+        p.reply_id = that.reply_id;
+        p.content = that.recover_value;
+      }
+      that.$axios.post('/api/profession-circle/comment',p).then( res =>{
+        console.log(res)
+        if( res.code == 0 ){
+          let text = '';
+          if(num == 1){
+            text = '评论成功！';
+            that.content = '';
+          }
+          if(num == 2){
+            text = '回复成功！';
+            that.recoverVisible = false;
+            that.recover_value = '';
+          }
+          that.$message.success(text);
+          setTimeout( ()=>{
+            // this.is_content = false;
+            //获取职圈详情
+            that.getInfoData();
+          },1500)
+          
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+      }).catch( e =>{
+        console.log(e)
       })
     },
      // 点击发布
@@ -323,8 +569,8 @@ export default {
       }
       return isJPG && isLt2M;
     },
-        // 上传视频限制
-        beforeVideoUpload(file) {
+    // 上传视频限制
+    beforeVideoUpload(file) {
       console.log(file.type)
       const isJPG = file.type == ('video/mp4' || 'video/avi' || 'video/wmv' || 'video/flv' || 'video/rmvb' || 'video/mov');
       const isLt10M = file.size / 1024 / 1024 < 10;
@@ -388,6 +634,8 @@ export default {
       }
       this.$refs.video._data.video_dialogVisible = true;
     },
+
+   
   },
 };
 </script>
@@ -450,23 +698,11 @@ export default {
       .info-right-container{
         .container-items-box{
           background: #fff;
-          .right-container-title{
-            margin-top: 16px;
-            width: 100%;
-            height: 44px;
-            line-height: 44px;
-            border-bottom: 1px solid #F2F3F5;
-            span{
-              margin-left: 20px;
-              font-size: 14px;
-              color: #86909C;
-              line-height: 22px;
-            }
-
-          }
+          padding: 16px 16px 0 16px;
           .right-container-item{
-            padding: 1.2rem;
             margin-top: 0;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #F2F3F5;
             &:nth-child(1){
               margin-top: 0;
             }
@@ -479,13 +715,13 @@ export default {
                 align-items: center;
                 cursor: pointer;
                 img{
-                  width: 30px;
-                  height: 30px;
+                  width: 20px;
+                  height: 20px;
                   border-radius: 50%;
                   margin-right: 8px;
                 }
                 span{
-                  font-size: 14px;
+                  font-size: 12px;
                   font-weight: 400;
                   color: #4E5969;
                   line-height: 22px;
@@ -493,16 +729,16 @@ export default {
               }
              
               .title-t{
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 400;
                 color: #86909C;
                 line-height: 22px;
               }
             }
-            .items-c-box{
+            .items-dt-box{
               width: 100%;
-              padding-left: 2rem;
-              .items-c-p{
+              padding-left: 20px;
+              .items-dt-p{
                 font-size: 14px;
                 font-weight: 400;
                 color: #1F2E4D;
@@ -532,11 +768,91 @@ export default {
                   
                 }
               }
+              // 评论展示
+              .items-review-box{
+                transition: all 0.5s;
+                padding-left: 16px;
+                padding-right: 16px;
+                background: #f6f6f694;
+                margin-top: 10px;
+                height: 0;
+                overflow: auto;
+                &.show-box{
+                  height: auto;
+                  padding-top: 16px;
+                  padding-bottom: 16px;
+                  max-height: 450px;
+                }
+                .fabu-box{
+                  width: 100%;
+                  height: auto;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  /deep/ .el-button{
+                    padding: 0;
+                    width: 100px;
+                    height: 2rem;
+                    line-height: 2rem;
+                    margin-left: 20px;
+                  }
+                  /deep/ .el-button--primary{
+                    background-color: $g_color;
+                    border-color: $g_color;
+                  }
+                  /deep/ .el-input__inner{
+                    height: 2rem;
+                    line-height: 2rem;
+                    font-size: 13px;
+                  }
+                }
+                .comment-box{
+                  width: 100%;
+                  margin-top: 20px;
+                  .comment-title-box{
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: $g_textColor;
+                    line-height: 24px;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    &::after{
+                      width: 3px;
+                      height: 70%;
+                      content: '';
+                      background: $g_bg;
+                      position: absolute;
+                      left: 0;
+                      top: 50%;
+                      transform: translateY(-50%);
+                    }
+                    span{
+                      padding: 0 0.5rem;
+                    }
+                  }
+                  .comment-list-box{
+                    width: 100%;
+                    margin-top: 14px;
+                    ul{
+                      width: 100%;
+                      li{
+                        width: 100%;
+                        margin-top: 10px;
+                        .items-bottom-btn{
+                          margin-top: 6px;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
             }
             .items-bottom-btn{
               display: flex;
               align-items: center;
-              margin-top: 0.8rem;
+              margin-top: 14px;
               .bottom-btn-items{
                 margin-right: 16px;
                 display: flex;
@@ -549,7 +865,7 @@ export default {
                   display: inline-block;
                 }
                 span{
-                  font-size: 14px;
+                  font-size: 12px;
                   font-weight: 400;
                   color: #86909C;
                   line-height: 22px;
@@ -564,7 +880,7 @@ export default {
     }
     .info-right-box{
       width: 380px;
-      padding-left: 0.8rem;
+      padding-left: 14px;
     }
   }
   .fb-btn{
@@ -717,6 +1033,94 @@ export default {
     .el-button--primary{
       background-color: $g_color;
       border-color: $g_color;
+    }
+  }
+
+
+
+  // 评论回复弹窗
+  .recoverVisible{
+    /deep/ .el-dialog{
+      min-width: 420px;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-top: 0 !important;
+      .el-dialog__header{
+        text-align: left;
+        .el-dialog__title{
+          font-size: 15px;
+          color: $g_textColor;
+        }
+      }
+      .el-dialog__body{
+        height: auto;
+        overflow: hidden;
+        padding: 20px;
+        .cententinfo-box{
+          width: 100%;
+          margin-top: 10px;
+          .cententinfo-title{
+            font-size: 14px;
+            font-weight: 400;
+            color: $g_textColor;
+            line-height: 22px;
+            text-align: left;
+          }
+          .demo-input-suffix{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            span{
+              width: auto;
+              font-size: 14px;
+              font-weight: 400;
+              color: #000000;
+              line-height: 22px;
+            }
+            .el-input {
+              position: relative;
+              font-size: 14px;
+              flex: 1;
+              margin-left: 10px;
+            }
+            .el-input__inner {
+              font-size: 14px;
+              padding: 14px 10px;
+              width: 100%;
+              border: 1px solid #e9e9e9;
+              border-radius: 4px;
+              outline: none;
+              box-sizing: border-box;
+              display: block;
+              box-shadow: none;
+              transition: border .3s;
+              background-color: #fff;
+              resize: none;
+            }
+            .el-input__inner:hover{
+              border-color: $g_color;
+            }
+            .el-input.is-active .el-input__inner, .el-input__inner:focus{
+              border-color: $g_color;
+              outline: 0;
+            }
+
+          }
+
+        }
+      }
+      .el-button{
+        padding: 0;
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+      }
+      .el-button--primary{
+        background-color: $g_color;
+        border-color: $g_color;
+      }
+
+      
     }
   }
   @media screen and (max-width: 1366px) {

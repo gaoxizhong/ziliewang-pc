@@ -210,6 +210,7 @@ export default {
         name: that.infoData.publish_name || 'BOSS',
         avatar: that.infoData.avatar || 'https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20240127/e4ffd5fcef38311336c5676416b317fa.jpg',
       }
+      console.log(infoData)
       that.$bus.$emit('talentSide_receiveParams', {type:'JobDetails',laiyuan:'nav',infoData:infoData });
       that.$bus.$emit('talentSide_clickSidebar', {type:'clickChat'});
     },

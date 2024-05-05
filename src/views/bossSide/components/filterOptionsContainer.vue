@@ -371,7 +371,7 @@ export default {
     this.getPositionList();
      let res = await this.$axios.post('/api/user/at/city',{});
      if(res.code == 0){
-     let ipCity = res.data.current_city;
+     let ipCity = res.data.current_city || '北京';
       this.clickCity(ipCity)
      }
   },
