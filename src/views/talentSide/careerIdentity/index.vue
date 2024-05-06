@@ -1,5 +1,62 @@
 <template>
   <div class="container" id="myProfessionalCircle">
+    <div class="new-title-box view-box">
+      <div class="live-video-hero-image">
+        <div class="profile-background-image"></div>
+      </div>
+      <div class="ph5">
+        <div class="display-flex">
+          <div class="pv-top-card--photo">
+            <div class="pv-top-card__photo-wrapper">
+              <img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg' )" alt="" />
+            </div>
+          </div>
+          <div class="gz-sx-btn" v-if="uid != see_uid">
+            <div>
+              <div class="left" @click="clickAttention" v-if=" infoData.is_already_attention ==  2">
+                <img src="../../../assets/image/Frame_10.png" alt="" />
+                <span>关注</span>
+              </div>
+              <div class="left" @click="clickCancelAttention" v-if=" infoData.is_already_attention ==  1">
+                <span>已关注</span>
+              </div>
+            </div>
+            <div>
+              <div class="right" @click="clickAddBlacklist" v-if=" infoData.is_already_black ==  2">
+                <!-- <img src="../../../assets/image/Frame_10.png" alt="" /> -->
+                <span>加入黑名单</span>
+              </div>
+              <div class="right" @click="clickCancelBlacklist" v-if=" infoData.is_already_black ==  1">
+                <span>取消黑名单</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt2 relative name-box">
+          <div class="name-title">
+            <span class="name-1">{{ infoData.real_name }}</span>
+            <span class="name-2">&nbsp;&nbsp; —— &nbsp;&nbsp; {{ infoData.position }}</span>
+          </div>
+        </div>
+
+        <div class="user-top-num">
+          <div @click="clickAttentionTab('attention')">
+            <span class="title">关注: </span>
+            <span class="text">{{ infoData.attention_num }}</span>
+          </div>
+          <div @click="clickAttentionTab('fans')">
+            <span class="title">粉丝: </span>
+            <span class="text">{{ infoData.fan_num }}</span>
+          </div>
+        </div>
+
+      </div>
+      
+    </div>
+    <!-- 动态列表 开始 -->
+    <dynamicState :see_uid="see_uid" />
+    <!-- 动态列表 结束 -->
 
     <div class="info-box">
       <!-- 左侧模块 开始 -->
@@ -221,17 +278,150 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .view-box{
+    background: #FFFFFF;
+    border-radius: 6px;
+    opacity: 1;
+    overflow: hidden;
+  }
+ .mt2, .mv2 {
+    margin-top: 10px;
+  }
+  .relative{
+    position: relative !important;
+  }
+  .new-title-box{
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15), 0 2px 3px rgba(0, 0, 0, .2);
+    .live-video-hero-image{
+      width: 100%;
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+      .profile-background-image{
+        position: relative;
+        width: 100%;
+        padding-bottom: 200px;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        background:  50% / cover;
+        background: url('../../../assets/image/circle-info-bg.svg') 50% / cover;;
+
+      }
+    }
+    .ph5{
+      padding: 0 20px;
+      .display-flex{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .pv-top-card--photo{
+          margin-top: -112px;
+          z-index: 4;
+          .pv-top-card__photo-wrapper {
+            width: 160px;
+            height: 160px;
+            box-sizing: border-box;
+            background-clip: border-box;
+            border-radius: 49.9%;
+            background-color: #fff;
+            border: 4px solid #fff;
+            box-shadow: none;
+            margin: auto;
+            position: relative;
+            & img {
+              width: 152px;
+              height: 152px;
+              border-radius: 50%;
+            }
+          }
+        }
+        .gz-sx-btn{
+          width: 300px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding-right: 30px;
+          &>div{
+            flex: 1;
+            padding: 0 10px;
+            border-radius: 2px;
+            font-size: 13px;
+            text-align: center;
+            cursor: pointer;
+            &>div{
+              padding: 8px 0;
+              img{
+                width: 12px;
+                height:12px;
+              }
+            }
+            .left{
+              background: $g_color;
+              color: #fff;
+              img{
+                margin-right: 4px;
+              }
+            }
+            .right{
+              border: 1px solid #E5E6EB;
+              box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.04);
+              color: $g_textColor;
+            }
+            
+          }
+        }
+      }
+      .name-box{
+        width: 100%;
+        .name-title{
+          display: flex;
+          align-items: center;
+          .name-1{
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+          }
+        }
+      }
+      .user-top-num{
+        display: flex;
+        align-items: center;
+        div{
+          text-align: center;
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          .title{
+            font-size: 16px;
+            font-family: DIN Alternate-Bold, DIN Alternate;
+            font-weight: bold;
+            color: #4E5969;
+          }
+          .text{
+            font-size: 16px;
+            font-weight: 400;
+            color: #6d747e;
+            line-height: 22px;
+            padding-left: 10px;
+          }
+          
+        }
+      }
+    }
+   
+  }
+ 
+
+  // 、、、、、、、、、、、、、、、   新版样式  ↑  、、、、、、、、、、、、
   .info-box{
     width: 100%;
     display: flex;
     justify-content: space-between;
     text-align: left;
   }
-  .view-box{
-    background: #FFFFFF;
-    border-radius: 6px;
-    opacity: 1;
-  }
+
   // 左侧
   .info-left-box{
     width: 260px;
@@ -267,41 +457,7 @@ export default {
         }
         
       }
-      .gz-sx-btn{
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-        &>div{
-          flex: 1;
-          padding: 0 10px;
-          border-radius: 2px;
-          font-size: 13px;
-          text-align: center;
-          cursor: pointer;
-          &>div{
-            padding: 8px 0;
-            img{
-              width: 12px;
-              height:12px;
-            }
-          }
-          .left{
-            background: $g_color;
-            color: #fff;
-            img{
-              margin-right: 4px;
-            }
-          }
-          .right{
-            border: 1px solid #E5E6EB;
-            box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.04);
-            color: $g_textColor;
-          }
-          
-        }
-      }
+      
       .user-top-num{
         border-top: 1px solid #F2F3F5;
         display: flex;

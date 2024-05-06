@@ -12,7 +12,7 @@
 
 
     <!-- 聊天弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentLimitation="true" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @dragstop="onDragstop" @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentLimitation="true" :parentH="parentH" :w="width" :h="height" :minw="minw" :x='left' :y='top' @dragstop="onDragstop" @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
         <div class="VueDragResize-title-box">
           <div class="title"><span>我的沟通</span></div>
@@ -69,6 +69,7 @@ export default {
       // 聊天弹窗
       width: 0,
       height: 0,
+      minw: 440,
       parentH: 0,
       parentW: 0,
       top: 40,

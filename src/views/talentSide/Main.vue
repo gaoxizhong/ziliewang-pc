@@ -17,7 +17,14 @@
 
     <!-- 聊天弹窗 开始-->
     <transition name="suck-in" mode="out-in">
-      <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentLimitation="true" :parentW="parentW" :parentH="parentH" :w="width" :h="height" :x='left' :y='top' @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+      <VueDragResize :style="`z-index:${zInfex_0};`"
+       dragHandle=".VueDragResize-title-box" 
+       :isActive="true" :parentLimitation="true" 
+       :parentW="parentW" :parentH="parentH" 
+       :w="width" :h="height" :minw="minw"
+       :x='left' :y='top' 
+       @resizing="resize" 
+       @dragging="resize" v-if="is_VueDragResize">
         <div class="VueDragResize-centent-box">
           <div class="VueDragResize-title-box">
             <div class="title">聊一聊</div>
@@ -83,6 +90,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         isRouterAlive: true,
         width: 0,
         height: 0,
+        minw: 440,
         parentH: 0,
         parentW: 0,
         top: 40,

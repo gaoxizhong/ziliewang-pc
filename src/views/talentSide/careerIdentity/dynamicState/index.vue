@@ -1,13 +1,8 @@
 <template>
-  <div class="container" id="myProfessionalCircle">
-    <!-- 右侧模块 开始 -->
-    <div class="dynamicState-box">
+  <div id="myProfessionalCircle">
+    <div class="dynamicState-box view-box">
       <div class="dynamicState-top">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <!-- <el-tab-pane :label=" `全部${ count_list.all_count?count_list.all_count:0 } ` " name="first"></el-tab-pane> -->
-          <el-tab-pane :label=" `动态${ count_list.dynamic_state_count?count_list.dynamic_state_count:0 }` " name="second"></el-tab-pane>
-          <!-- <el-tab-pane :label=" `评论${ count_list.comment_count?count_list.comment_count:0 }` " name="fourth"></el-tab-pane> -->
-        </el-tabs>
+        <div class="dynamicState-title">动态</div>
         <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
       </div>
       <div class="dynamicState-container">
@@ -108,6 +103,7 @@
         <el-empty description="暂无数据..." v-if="dataList.length == 0"></el-empty>
       </div>
     </div>
+    
     <!-- 、、、、 发布弹窗 、、、、 -->
     <el-dialog :visible.sync="dialogVisible" width="640px" :before-close="handleClose">
       <div class="login-type-box">
@@ -644,14 +640,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .view-box{
+    background: #FFFFFF;
+    border-radius: 6px;
+    opacity: 1;
+    overflow: hidden;
+  }
   .dynamicState-box{
-    flex: 1;
+    width: 100%;
+    margin-top: 20px;    
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15), 0 2px 3px rgba(0, 0, 0, .2);
+
     .dynamicState-top{
       width: 100%;
       height: 50px;
       background: #FFFFFF;
       border-radius: 4px 4px 4px 4px;
       position: relative;
+      padding: 20px 20px 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .dynamicState-title{
+        font-size: 20px;
+        font-weight: bold;
+      }
       .fb-btn{
         width: 96px;
         height: 35px;
@@ -762,7 +775,7 @@ export default {
               margin-top: 0.8rem;
               img{
                 width: 140px;
-                height: 100px;
+                // height: 100px;
                 margin-left: 0.5rem;
                 &:nth-child(1){
                   margin: 0;

@@ -403,7 +403,7 @@ export default {
                 margin-top: 0.8rem;
                 img{
                   width: 140px;
-                  height: 100px;
+                  // height: 100px;
                   margin-left: 0.5rem;
                   &:nth-child(1){
                     margin: 0;

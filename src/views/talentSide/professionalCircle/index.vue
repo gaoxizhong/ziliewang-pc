@@ -752,7 +752,7 @@ clickPoint(s,it_id,idx,c_id){
                 margin-top: 0.8rem;
                 img{
                   width: 140px;
-                  height: 100px;
+                  // height: 100px;
                   margin-left: 0.5rem;
                   &:nth-child(1){
                     margin: 0;
