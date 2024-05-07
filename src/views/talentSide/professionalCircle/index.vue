@@ -19,7 +19,7 @@
           <!-- 列表项 开始 -->
           <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
             <div class="right-container-item" v-if="item.users">
-              <div class="title">
+              <div class="title list-title-box">
                 <div class="title-left" @click.stop="clickName(item)">
                   <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" />
                   <span>{{ item.users.name }}</span>
@@ -30,13 +30,15 @@
               <div class="items-dt-box">
                 <div>
                   <div class="items-dt-p">{{ item.content }}</div>
-                  <div class="items-img-box" v-if="item.images.length>0">
-                    <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
-                  </div>
-                  <div class="items-img-box" v-if="item.video">
-                    <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
-                      <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
-                    </a>
+                  <div class="tu-box">
+                    <div class="items-img-box" v-if="item.images.length>0">
+                      <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
+                    </div>
+                    <div class="items-img-box" v-if="item.video">
+                      <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
+                        <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
+                      </a>
+                    </div>
                   </div>
                 </div>
                 <div class="items-bottom-btn">
@@ -706,6 +708,18 @@ clickPoint(s,it_id,idx,c_id){
             &:nth-child(1){
               margin-top: 0;
             }
+            .title.list-title-box{
+              .title-left{
+                img{
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 50%;
+                }
+                span{
+                  font-size: 14px;
+                }
+              }
+            }
             .title{
               display: flex;
               align-items: center;
@@ -735,6 +749,14 @@ clickPoint(s,it_id,idx,c_id){
                 line-height: 22px;
               }
             }
+            .items-c-box{
+              .items-c-p{
+                font-weight: 400;
+                line-height: 22px;
+                font-size: 13px;
+                color: #666;
+              }
+            }
             .items-dt-box{
               width: 100%;
               padding-left: 20px;
@@ -744,12 +766,17 @@ clickPoint(s,it_id,idx,c_id){
                 color: #1F2E4D;
                 line-height: 28px;
               }
+              .tu-box{
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+              }
               .items-img-box{
-                width: 100%;
                 height: auto;
                 display: flex;
                 flex-wrap: wrap;
-                margin-top: 0.8rem;
+                margin-top: 14px;
+                margin-left: 10px;
                 img{
                   width: 140px;
                   // height: 100px;
@@ -767,6 +794,9 @@ clickPoint(s,it_id,idx,c_id){
                   }
                   
                 }
+              }
+              .items-img-box:nth-of-type(1){
+                margin-left: 0;
               }
               // 评论展示
               .items-review-box{

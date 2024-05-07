@@ -10,7 +10,7 @@
         <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
           <!-- <div class="right-container-title"><span>回忆那么真</span><span>发布了动态</span></div> -->
           <div class="right-container-item">
-            <div class="title">
+            <div class="title list-title-box">
               <div class="title-left">
                 <img :src="infoData.avatar?infoData.avatar:require('../../../../assets/image/img-user.jpg' )" alt="" />
                 <span>{{ infoData.real_name }}</span>
@@ -19,19 +19,24 @@
             </div>
 
             <div class="items-dt-box">
-              <div class="items-dt-p">{{ item.content }}</div>
-              <div class="items-img-box" v-if="item.images.length>0">
-                <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
-              </div>
-              <div class="items-img-box" v-if="item.video">
-                <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
-                  <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
-                </a>
+              <div>
+                <div class="items-dt-p">{{ item.content }}</div>
+                <div class="tu-box">
+                  <div class="items-img-box" v-if="item.images.length>0">
+                    <img :src="items" alt="" title="图片" @click="$preview(idx,item.images)" v-for="(items,idx) in item.images" :key="idx"/>
+                  </div>
+                  <div class="items-img-box" v-if="item.video">
+                    <a href="javascript:0;" title="视频" @click="gotoVideo(item.video)">
+                      <video :src="item.video" style="object-fit: fill;" width="100%" height="100%" ></video>
+                    </a>
+                  </div>
+                </div>
+                
               </div>
               <div class="items-bottom-btn">
                 <div class="bottom-btn-items">
                   <img src="../../../../assets/image/preview-open.png" alt="" />
-                  <span>{{ item.read_num }}阅读</span>
+                  <span>{{ item.read_num?item.read_num:0 }}阅读</span>
                 </div>
                 <div class="bottom-btn-items" @click="clickPoint('',item.id,index)" v-if="item.is_point == 2">
                   <img src="../../../../assets/image/thumbs-up.png" alt="" />
@@ -43,10 +48,11 @@
                 </div>
                 <div class="bottom-btn-items" @click.stop="clickReview(item,index)">
                   <img src="../../../../assets/image/comment.png" alt="" />
-                  <span>{{ item.comment_num}}评论</span>
+                  <span>{{ item.comment_num?item.comment_num:0 }}评论</span>
                 </div>
                 <img src="../../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"  v-if="uid == infoData.uid"/>
               </div>
+
               <!-- 评论区域 开始 -->
               <div class="items-review-box" :class="item.show_review?'show-box':''">
                 <div class="fabu-box">
@@ -59,7 +65,7 @@
 
                   <div class="comment-list-box">
                     <ul>
-                      <li v-for="(items,idx) in detailData.comment_list" :key="idx">
+                      <li v-for="(items,index) in detailData.comment_list" :key="index">
                         <div class="title">
                           <div class="title-left" @click.stop="clickName(items)">
                             <img :src="items.avatar?items.avatar:require('../../../../assets/image/img-user.jpg')" alt="" class="avatar-img"/>
@@ -74,7 +80,7 @@
                           <div class="items-c-p">{{ items.content }}</div>
 
                           <div class="items-bottom-btn">
-                            <div class="bottom-btn-items" @click="clickPoint('commentID',item.id,index,items.id) " v-if="items.is_point == 2">
+                            <div class="bottom-btn-items" @click="clickPoint('commentID',item.id,index,items.id)" v-if="items.is_point == 2">
                               <img src="../../../../assets/image/thumbs-up.png" alt="" />
                               <span>{{ items.point_num }} 赞</span>
                             </div>
@@ -653,11 +659,10 @@ export default {
 
     .dynamicState-top{
       width: 100%;
-      height: 50px;
       background: #FFFFFF;
       border-radius: 4px 4px 4px 4px;
       position: relative;
-      padding: 20px 20px 0 20px;
+      padding: 10px 20px 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -672,46 +677,18 @@ export default {
         background: $g_bg;
         border-radius: 4px;
         color: #fff;
-        font-size: 14px;
+        font-size: 13px;
         text-align: center;
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
         cursor: pointer;
-      }
-      /deep/ .el-tabs{
-        height: 100%;
-        .el-tabs__header {
-          height: 100%;
-          .el-tabs__nav-wrap{
-            height: 100%;
-            line-height: 50px;
-            &::after{
-              height: 0;
-            }
-            .el-tabs__nav-scroll {
-              height: 100%;
-              padding: 0 20px;
-              .el-tabs__item.is-active{
-                color: $g_color;
-              }
-              .el-tabs__active-bar{
-                bottom: 1px;
-                background-color: $g_bg;
-              }
-            }
-          }
-        }
       }
     }
     .dynamicState-container{
       .container-items-box{
         background: #fff;
-        margin-top: 16px;
+        margin-top: 10px;
         position: relative;
         .right-container-title{
-          margin-top: 16px;
+          margin-top: 10px;
           width: 100%;
           height: 44px;
           line-height: 44px;
@@ -725,10 +702,22 @@ export default {
 
         }
         .right-container-item{
-          padding: 1.2rem;
+          padding: 10px 30px;
           margin-top: 0;
           &:nth-child(1){
             margin-top: 0;
+          }
+          .title.list-title-box{
+            .title-left{
+              img{
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+              }
+              span{
+                font-size: 14px;
+              }
+            }
           }
           .title{
             display: flex;
@@ -758,21 +747,35 @@ export default {
               line-height: 22px;
             }
           }
+          .items-c-box{
+            .items-c-p{
+              font-weight: 400;
+              line-height: 22px;
+              font-size: 13px;
+              color: #666;
+            }
+          }
           .items-dt-box{
             width: 100%;
             padding-left: 20px;
+            border-bottom: 1px solid #eee;
             .items-dt-p{
               font-size: 14px;
               font-weight: 400;
               color: #1F2E4D;
               line-height: 28px;
             }
+            .tu-box{
+              display: flex;
+              align-items: center;
+              flex-wrap: wrap;
+            }
             .items-img-box{
-              width: 100%;
               height: auto;
               display: flex;
               flex-wrap: wrap;
-              margin-top: 0.8rem;
+              margin-top: 14px;
+              margin-left: 10px;
               img{
                 width: 140px;
                 // height: 100px;
@@ -790,6 +793,9 @@ export default {
                 }
                 
               }
+            }
+            .items-img-box:nth-of-type(1){
+              margin-left: 0;
             }
             // 评论展示
             .items-review-box{
@@ -815,8 +821,8 @@ export default {
                 /deep/ .el-button{
                   padding: 0;
                   width: 100px;
-                  height: 2rem;
-                  line-height: 2rem;
+                  height: 35px;
+                  line-height: 35px;
                   margin-left: 20px;
                 }
                 /deep/ .el-button--primary{
@@ -824,8 +830,8 @@ export default {
                   border-color: $g_color;
                 }
                 /deep/ .el-input__inner{
-                  height: 2rem;
-                  line-height: 2rem;
+                  height: 35px;
+                  line-height: 35px;
                   font-size: 13px;
                 }
               }
@@ -870,6 +876,7 @@ export default {
                 }
               }
             }
+
           }
           .items-bottom-btn{
             display: flex;

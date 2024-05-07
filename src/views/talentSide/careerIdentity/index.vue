@@ -57,90 +57,50 @@
     <!-- 动态列表 开始 -->
     <dynamicState :see_uid="see_uid" />
     <!-- 动态列表 结束 -->
+    <!-- 工作经历 -->
+    <div class="view-box work-experience">
+      <div class="experience-top">
+        <div class="experience-title">工作经历</div>
+        <div class="fb-btn"></div>
+      </div>
+      <div class="experience-container">
+        <ul class="row-options-detail-box">
+          <li class="options-item" v-for="(item,index) in infoData.user_work_experience" :key="index">
+            <div class="image-box">
+              <img src="../../../assets/image/work-icon.png" alt="" />
+            </div>
+            <div class="item-info">
+              <div>{{ item.position }}</div>
+              <div>{{item.company_name}}</div>
+              <p>{{ item.begin_date }} — {{ item.end_date }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
 
-    <div class="info-box">
-      <!-- 左侧模块 开始 -->
-      <div class="info-left-box">
-        <div class="view-box user-top-box">
-          <div class="user-top">
-            <img :src="infoData.avatar?infoData.avatar:require('../../../assets/image/img-user.jpg' )" alt="" class="user-img"/>
-            <p class="user-name">{{ infoData.real_name }}</p>
-            <p class="user-introduce">{{ infoData.position }}</p>
-          </div>
-          <div class="gz-sx-btn" v-if="uid != see_uid">
-            <div>
-              <div class="left" @click="clickAttention" v-if=" infoData.is_already_attention ==  2">
-                <img src="../../../assets/image/Frame_10.png" alt="" />
-                <span>关注</span>
-              </div>
-              <div class="left" @click="clickCancelAttention" v-if=" infoData.is_already_attention ==  1">
-                <span>已关注</span>
-              </div>
-            </div>
-            <div>
-              <div class="right" @click="clickAddBlacklist" v-if=" infoData.is_already_black ==  2">
-                <!-- <img src="../../../assets/image/Frame_10.png" alt="" /> -->
-                <span>加入黑名单</span>
-              </div>
-              <div class="right" @click="clickCancelBlacklist" v-if=" infoData.is_already_black ==  1">
-                <span>取消黑名单</span>
-              </div>
-            </div>
-          </div>
-          <div class="user-top-num">
-            <div @click="clickAttentionTab('attention')">
-              <span class="title">{{ infoData.attention_num }}</span>
-              <span class="text">关注</span>
-            </div>
-            <div @click="clickAttentionTab('fans')">
-              <span class="title">{{ infoData.fan_num }}</span>
-              <span class="text">粉丝</span>
-            </div>
-          </div>
-        </div>
+    </div>
+    <!-- 教育经历 -->
+    <div class="view-box education-experience">
+      <div class="experience-top">
+        <div class="experience-title">教育经历</div>
+        <div class="fb-btn"></div>
       </div>
-      <!-- 左侧模块 结束 -->
-      <!-- 中间模块 开始 -->
-      <div class="info-m-box">
-        <dynamicState :see_uid="see_uid" />
-      </div>
-      <!-- 中间模块 结束 -->
-      <div class="info-right-box">
-        <div class="view-box user-m-box">
-          <div class="option-box">
-            <div class="option-title">工作经历</div>
-            <ul class="row-options-detail-box">
-              <li class="options-item" v-for="(item,index) in infoData.user_work_experience" :key="index">
-                <div class="image-box">
-                  <img src="../../../assets/image/work-icon.png" alt="" />
-                </div>
-                <div class="item-info">
-                  <div>{{ item.position }}</div>
-                  <div>{{item.company_name}}</div>
-                  <p>{{ item.begin_date }} — {{ item.end_date }}</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div class="option-box">
-            <div class="option-title">教育经历</div>
-            <ul class="row-options-detail-box">
-              <li class="options-item" v-for="(item,index) in infoData.user_education_experience" :key="index">
-                <div class="education-image-box">
-                  <img src="../../../assets/image/shcool.png" alt="" />
-                </div>
-                <div class="item-info">
-                  <div>{{ item.school }}</div>
-                  <div>{{ item.education_background }} · {{ item.specialty }}</div>
-                  <p>{{ item.school_date }}</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div class="experience-container">
+        <ul class="row-options-detail-box">
+          <li class="options-item" v-for="(item,index) in infoData.user_education_experience" :key="index">
+            <div class="education-image-box">
+              <img src="../../../assets/image/shcool.png" alt="" />
+            </div>
+            <div class="item-info">
+              <div>{{ item.school }}</div>
+              <div>{{ item.education_background }} · {{ item.specialty }}</div>
+              <p>{{ item.school_date }}</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
-    
+
   </div>
 </template>
 
@@ -412,128 +372,34 @@ export default {
     }
    
   }
- 
-
-  // 、、、、、、、、、、、、、、、   新版样式  ↑  、、、、、、、、、、、、
-  .info-box{
+  .experience-top{
     width: 100%;
+    background: #FFFFFF;
+    border-radius: 4px 4px 4px 4px;
+    position: relative;
+    padding: 10px 20px 0 20px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    text-align: left;
-  }
-
-  // 左侧
-  .info-left-box{
-    width: 260px;
-    .user-top-box{
-      width: 100%;
-      .user-top{
-        padding: 15px;
-        margin: 0 auto;
-        text-align: center;
-        .user-img{
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          margin-bottom: 5px;
-        }
-        .user-name{
-          color: $g_textColor;
-          font-size: 16px;
-          line-height: 28px;
-          font-weight: bold;
-          text-align: center;
-        }
-        .user-introduce{
-          font-size: 14px;
-          line-height: 23px;
-          text-align: center;
-          color: rgb(102, 102, 102);
-          span{
-            padding: 0 8px;
-            color: $g_color;
-            cursor: pointer;
-          }
-        }
-        
-      }
-      
-      .user-top-num{
-        border-top: 1px solid #F2F3F5;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        div{
-          flex: 1;
-          text-align: center;
-          padding: 10px 0;
-          font-size: 14px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          .title{
-            font-size: 1.2rem;
-            font-family: DIN Alternate-Bold, DIN Alternate;
-            font-weight: bold;
-            color: #4E5969;
-          }
-          .text{
-            font-size: 14px;
-            font-weight: 400;
-            color: #86909C;
-            line-height: 22px;
-          }
-          &:nth-of-type(1){
-            border-right: 1px solid #F2F3F5;
-          }
-        }
-      }
-     
+    .experience-title{
+      font-size: 20px;
+      font-weight: bold;
     }
   }
-  
-  // 中间
-  .info-m-box{
-    flex: 1;
-    padding: 0 10px;
+  // 工作经历
+  .work-experience{
+    margin-top: 20px;    
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15), 0 2px 3px rgba(0, 0, 0, .2);
   }
-
-  // 右侧
-  .info-right-box {
-    width: 320px;
-    .user-m-box{
-      padding: 5px 10px;
-      .m-items-box{
-        display: flex;
-        align-items: center;
-        margin-top: 10px;
-        font-size: 14px;
-        img{
-          width: 0.8rem;
-          height: 0.8rem;
-          margin-right: 0.6rem;
-        }
-        span{
-          color: #86909C;
-        }
-        p{
-          padding-left: 0.5rem;
-          color: $g_textColor;
-        }
-      }
-      .option-box{
-        padding-top: 10px;
-        .option-title{
-          font-size: 15px;
-          line-height: 24px;
-          padding: 10px 0;
-        }
-        &:nth-of-type(1){
-          padding-top: 0;
-        }
-      }
+  // 教育经历
+  .education-experience{
+    margin-top: 20px;    
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15), 0 2px 3px rgba(0, 0, 0, .2);
+  }
+  .experience-container{
+    width: 100%;
+    .row-options-detail-box{
+      padding: 10px 20px;
       .options-item{
         display: flex;
         margin-top: 10px;
@@ -575,10 +441,9 @@ export default {
           }
         }
       }
-
     }
   }
 
-
+  // 、、、、、、、、、、、、、、、   新版样式  ↑  、、、、、、、、、、、、
 
 </style>
