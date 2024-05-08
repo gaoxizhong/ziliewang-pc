@@ -253,6 +253,7 @@ export default {
       this.login_way = n;
       this.isDisable = false;
       this.statusMsg = `获取验证码`;
+
     },
     // 点击用户注册
     clickUserSign(){
@@ -274,9 +275,24 @@ export default {
       }else{
        this.sign_login = 'sign';
       }
+      this.login_user= { // 登录信息
+        phone: '',
+        password:'',
+        code:'',
+        loginChecked: false,
+      };
     }, 
     clickUserLogin(){
       this.sign_login = 'login';
+      this.sign_user = { // 注册信息
+        name:'',
+        id_card:'',
+        phone: '',
+        password:'',
+        code:'',
+        email:'',
+        signChecked: false,
+      };
     },
     // 点击忘记密码
     clickChangePassword(){
@@ -476,6 +492,17 @@ export default {
             login_type: 'pass_login'
           }
           that.submitInfo(data);
+          setTimeout( () =>{
+            that.sign_user = { // 注册信息
+              name:'',
+              id_card:'',
+              phone: '',
+              password:'',
+              code:'',
+              email:'',
+              signChecked: false,
+            };
+          },100)
         }else{
           that.$message.error({
             message:res.msg

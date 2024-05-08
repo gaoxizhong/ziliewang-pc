@@ -201,19 +201,35 @@
         }
       },
       chatLocation(conversation) {
+        let that = this;
         console.log(conversation)
-        let friend = this.profile.friend;
+        let friend = that.profile.friend;
         friend = {
           uid: conversation.userId,
           name: conversation.data.name,
           avatar: conversation.data.avatar,
           
         };
-        if(conversation.data.position_id){
-          friend.position_id = conversation.data.position_id
+        // 创建岗位会话信息
+      let p = {
+        company_uid: conversation.userId,
+        uid: localStorage.getItem('realUid'),
+      }
+      that.$axios.post('/api/position-chat-record/detail',p).then(res =>{
+        if(res.code == 0){
+          let position_id = res.data.position_id;
+          if(position_id){
+            friend.position_id = conversation.data.position_id;
+            that.profile.friend = friend;
+            that.$emit( 'chatLocation',that.profile.friend );
+          }
+        }else{
+          
         }
-        this.profile.friend = friend;
-        this.$emit( 'chatLocation',this.profile.friend );
+      }).catch(e =>{
+        console.log(e)
+      })
+        
       }
     },
   };

@@ -276,6 +276,24 @@ export default {
       that.getPositionList(); // 获取职位
       
     },
+    // 创建岗位会话信息
+    createPositionChatRecord(p_i,u_i){
+      let that = this;
+      let p = {
+        position_id: p_i,
+        uid: u_i,
+        tag: 2,
+      }
+      that.$axios.post('/api/position-chat-record/create',p).then(res =>{
+        if(res.code == 0){
+          console.log('保存岗位成功')
+        }else{
+          
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    }, 
      // 点击岗位列表
      clickpositionList(i){
       let that = this;
@@ -296,6 +314,7 @@ export default {
       }
       that.zx_dialogVisible = false;
       that.position_dialogVisible = false;
+      that.createPositionChatRecord(i.id,seltPositionData.uid);
       that.$bus.$emit('receiveParams', {type:'searchTalent',laiyuan:'nav',infoData });
     },
     position_handleClose(){
