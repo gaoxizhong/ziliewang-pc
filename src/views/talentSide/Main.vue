@@ -146,7 +146,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       this.currentUser = {
         id: localStorage.getItem('realUid'),
         name: this.$store.state.user.name,
-        avatar: this.$store.state.user.realAvatar
+        avatar: this.$store.state.user.realAvatar,
+        tag: 'user'
       }
       //连接goeasy
       if (this.goEasy.getConnectionStatus() === 'disconnected') {

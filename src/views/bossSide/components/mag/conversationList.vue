@@ -211,15 +211,40 @@
       },
       chatLocation (conversation) {
         console.log(conversation)
-        this.profile.friend = {
+        let that = this;
+        let friend = that.profile.friend;
+        friend = {
           uid: conversation.userId,
           name: conversation.data.name,
           avatar: conversation.data.avatar,
-          company_id: conversation.data.company_id, 
-          position_id: conversation.data.position_id, // 岗位id
-          position_name: conversation.data.position_name,
+          company_id: localStorage.getItem('company_id'), 
+          tag: conversation.data.tag?conversation.data.tag: 'user'
         };
-        this.$emit( 'chatLocation',this.profile.friend );
+        let p = {
+          company_uid: localStorage.getItem('staffUid'),
+          uid: conversation.userId,
+        }
+        that.$axios.post('/api/position-chat-record/detail',p).then(res =>{
+          if(res.code == 0){
+            let position_id = res.data?res.data.position_id:'';
+            if( position_id ){
+              friend.position_id = position_id;
+              friend.position_name = res.data.position_name;
+              that.profile.friend = friend;
+              that.$emit( 'chatLocation',friend );
+            }else{
+              that.$message.error({
+                message: '岗位信息获取失败！'
+              })
+            }
+          }else{
+            that.$message.error({
+              message: '岗位信息获取失败！'
+            })
+          }
+        }).catch(e =>{
+          console.log(e)
+        })
       }
     },
   };

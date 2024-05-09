@@ -208,8 +208,15 @@
           uid: conversation.userId,
           name: conversation.data.name,
           avatar: conversation.data.avatar,
-          
+          tag: conversation.data.tag?conversation.data.tag: 'user'
         };
+        if(friend.tag == 'user'){
+          this.profile.friend = friend;
+          this.$emit( 'chatLocation',this.profile.friend );
+        }else{
+
+        }
+        
         // 创建岗位会话信息
       let p = {
         company_uid: conversation.userId,
@@ -217,14 +224,21 @@
       }
       that.$axios.post('/api/position-chat-record/detail',p).then(res =>{
         if(res.code == 0){
-          let position_id = res.data.position_id;
-          if(position_id){
-            friend.position_id = conversation.data.position_id;
+          let position_id = res.data?res.data.position_id:'';
+          if( position_id ){
+            friend.position_id = position_id;
+            friend.position_name = res.data.position_name;
             that.profile.friend = friend;
-            that.$emit( 'chatLocation',that.profile.friend );
+            that.$emit( 'chatLocation',friend );
+          }else{
+            that.$message.error({
+              message: '岗位信息获取失败！'
+            })
           }
         }else{
-          
+          that.$message.error({
+            message: '岗位信息获取失败！'
+          })
         }
       }).catch(e =>{
         console.log(e)

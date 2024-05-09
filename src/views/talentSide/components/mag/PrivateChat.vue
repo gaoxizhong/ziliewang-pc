@@ -5,7 +5,10 @@
         <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar"/>
         <div class="chat-name">{{ friend.name }}</div>
       </div>
-      <div class="position-name">{{ detailData.position_name }}</div>
+      <div class="position-name">
+        <!-- <span class="span-1">沟通岗位：</span> -->
+        <span class="span-2">{{ detailData.position_name }}</span>
+      </div>
     </div>
     <div class="chat-main" ref="scrollView">
       <div class="message-list" ref="messageList">
@@ -19,7 +22,6 @@
           <!-- 时间 -->
           <div class="time-tips">{{ renderMessageDate(item, index) }}</div>
 
-          <div class="message-phone-box" v-if="item.type === 'phone' && item.payload.way_status == 3">你已同意对方索要联系方式</div>
           
           <div class="message-recalled" v-if="item.recalled">
             <div v-if="item.senderId !== currentUser.id">{{ friend.name }}撤回了一条消息</div>
@@ -106,14 +108,23 @@
                     <div class="message-phone-box">您已向对方发送交换联系方式</div>
                   </div>
                   <!-- 人才 发送请求联系方式 ↑ -->
-                  <!-- boss 发送过来的手机号 ↓ -->
+                  <!-- boss 发送过来的联系方式手机号 ↓ -->
                   <div class="message-phone-universal-card" v-if="item.type === 'phone' && item.payload.way_status == 2">
                     <h4 class="message-phone-universal-card-header">联系方式</h4>
                     <div class="message-phone-universal-card-content">
                       <span>{{ item.payload.name }}的手机号：{{ item.payload.phone }}</span>
                     </div>
                   </div>
-                  <!-- boss 发送过来的手机号 ↑ -->
+                  <!-- boss 发送过来的联系方式手机号 ↑ -->
+                  <!-- 人才 同意对方索要联系方式 ↓ -->
+                  <div class="message-phone-universal-card"  v-if="item.type === 'phone' && item.payload.way_status == 3">
+                    <h4 class="message-phone-universal-card-header">联系方式</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>您的手机号：{{ item.payload.real_phone }}</span>
+                    </div>
+                    <div class="message-phone-box">您已同意对方交换联系方式</div>
+                  </div>
+                  <!-- 人才 同意对方索要联系方式  ↑ -->
                   <!-- boss 索要手机号 ↓ -->
                   <div class="message-phone-universal-card" v-if="item.type === 'phone' && item.payload.way_status == 4">
                     <h4 class="message-phone-universal-card-header">对方请求交换联系方式</h4>
@@ -122,7 +133,7 @@
                     </div>
                     
                     <div class="message-phone-universal-card-footer">
-                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(3)">同意交换</div>
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(2,3,item.payload.phone)">同意交换</div>
                     </div>
                   </div>
                   <!-- boss 索要手机号 ↑ -->
@@ -220,7 +231,7 @@
             </div> -->
             <i class="vline"></i>
             <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickDeliver('resume')">发简历</div>
-            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1)">联系方式</div>
+            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1,1)">联系方式</div>
           </div>
           <div class="action-bar-right">
             <div class="action-item">
@@ -537,17 +548,27 @@
           }
         })
       },
-      // 点击 交换联系方式按钮
-      clickPhoneBtn(n){
+      //
+     
+      //type ==1 点击 交换联系方式按钮  type ==2  列表内 点击同意交换联系方式
+      clickPhoneBtn(type,n,pn){
         let that = this;
         let userProfile = this.userProfile;
         let p = {
           position_id: that.friend.position_id,// 岗位id
           company_id: that.friend.company_id,// 公司id
-          user_phone: userProfile.basic_info.real_phone,
         }
-        console.log(p)
-        that.$axios.post('/api/company-deliver/get-contact-information',p).then( res =>{
+        let apiUrl = '';
+        if(type == 1){
+          apiUrl = '/api/company-deliver/get-contact-information';
+          p.user_phone = userProfile.basic_info.real_phone;
+        }
+        if(type == 2){
+          apiUrl = '/api/company-deliver/operate-contact-information';
+          p.status = 1;
+          p.company_phone = pn;
+        }
+        that.$axios.post(apiUrl,p).then( res =>{
           console.log(res)
           if( res.code == 0){
             that.sendPhoneMsg(n);
@@ -1054,6 +1075,11 @@
     border-bottom: 1px solid #f2f2f2;
   }
   .position-name{
+    width: auto;
+    display: flex;
+    align-items: center;
+  }
+  .span-2{
     color: #37f;
   }
   .chat-title-l{
@@ -1172,9 +1198,9 @@
     border-radius: 50%;
   }
 
-  .message-content {
+  /* .message-content {
     max-width: calc(100% - 100px);
-  }
+  } */
 
   .message-payload {
     display: flex;

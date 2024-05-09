@@ -5,7 +5,10 @@
         <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar"/>
         <div class="chat-name">{{ friend.name }}</div>
       </div>
-      <div class="position-name">{{ infoData.position_name }}</div>
+      <div class="position-name">
+        <!-- <span class="span-1">沟通岗位：</span> -->
+        <span class="span-2">{{ infoData.position_name }}</span>
+      </div>
     </div>
     <div class="chat-main" ref="scrollView">
       <div class="message-list" ref="messageList">
@@ -123,7 +126,7 @@
                       <span>对方请求交换联系方式</span>
                     </div>
                     <div class="message-phone-universal-card-footer">
-                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(2)">同意交换</div>
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(2,2,message.payload.real_phone)">同意交换</div>
                     </div>
                   </div>
                   <!-- 个人 索要手机号 ↑ -->
@@ -216,7 +219,7 @@
               <input v-show="false" id="file-input" type="file"  @change="sendFileMessage"/>
             </div> -->
             <i class="vline"></i>
-            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(4)">联系方式</div>
+            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1,4)">联系方式</div>
             <div class="btn-resume toolbar-btn unable" title="邀请面试" @click="clickYqms(1)">邀面试</div>
           </div>
           <div class="action-bar-right">
@@ -603,17 +606,26 @@
         this.yqmsVisible = true;
         return
       },
-      // 点击 交换联系方式按钮
-      clickPhoneBtn(n){
+      // type ==1 点击 交换联系方式按钮  type ==2  列表内 点击同意交换联系方式
+      clickPhoneBtn(type,n,pn){
         let that = this;
         let userProfile = this.userProfile;
         let p = {
           position_id: that.infoData.position_id, // 岗位id
           company_id: localStorage.getItem('company_id'),// 公司id
-          company_phone: userProfile.phone,
           uid: that.to.id
         }
-        that.$axios.post('/api/company-interview/get-contact-information',p).then( res =>{
+        let apiUrl = '';
+        if(type == 1){
+          apiUrl = '/api/company-interview/get-contact-information';
+          p.company_phone = userProfile.phone;
+        }
+        if(type == 2){
+          apiUrl = '/api/company-interview/operate-contact-information';
+          p.user_phone = pn;
+          p.status = 1;
+        }
+        that.$axios.post(apiUrl,p).then( res =>{
           console.log(res)
           if( res.code == 0){
             that.sendPhoneMsg(n);
@@ -1133,6 +1145,10 @@
   }
   .position-name{
     width: auto;
+    display: flex;
+    align-items: center;
+  }
+  .span-2{
     color: #37f;
   }
   .chat-title-l{
@@ -1252,9 +1268,9 @@
     border-radius: 50%;
   }
 
-  .message-content {
-    max-width: calc(100% - 100px);
-  }
+  // .message-content {
+  //   max-width: calc(100% - 100px);
+  // }
 
   .message-payload {
     display: flex;

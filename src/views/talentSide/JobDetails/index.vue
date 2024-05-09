@@ -211,9 +211,29 @@ export default {
         avatar: that.infoData.avatar || 'https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20240127/e4ffd5fcef38311336c5676416b317fa.jpg',
       }
       console.log(infoData)
+      that.createPositionChatRecord(infoData.company_id,infoData.position_id,infoData.uid);
       that.$bus.$emit('talentSide_receiveParams', {type:'JobDetails',laiyuan:'nav',infoData:infoData });
       that.$bus.$emit('talentSide_clickSidebar', {type:'clickChat'});
     },
+    // 创建岗位会话信息
+    createPositionChatRecord(c_i,p_i,u_i){
+      let that = this;
+      let p = {
+        position_id: p_i,
+        company_uid: u_i,
+        company_id: c_i,
+        tag: 1,
+      }
+      that.$axios.post('/api/position-chat-record/create',p).then(res =>{
+        if(res.code == 0){
+          console.log('保存岗位成功')
+        }else{
+          
+        }
+      }).catch(e =>{
+        console.log(e)
+      })
+    }, 
     // 点击打电话
     clickMobile(i){
       let that = this;

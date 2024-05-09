@@ -176,7 +176,7 @@ export default {
         data: {
           name: this.currentUser.name,
           avatar: this.currentUser.avatar,
-          text:'测试'
+          tag:'company'
         },
         onSuccess: function () { 
           console.log("G连接成功.") 
