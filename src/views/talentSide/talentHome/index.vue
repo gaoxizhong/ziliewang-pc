@@ -3,6 +3,10 @@
     <div class="job-search-box">
       <!-- 搜索框模块 开始 -->
       <div class="search-box">
+        <!-- <el-select v-model="region" placeholder="请选择活动区域">
+          <el-option label="区域一" value="shanghai"></el-option>
+          <el-option label="区域二" value="beijing"></el-option>
+        </el-select> -->
         <el-input placeholder="搜索职位/公司/内容关键词" v-model="input_name" class="input-with-select" @keydown.enter.native="searchEnterFun($event)">
           <el-button slot="append" @click="getSearchinfo">搜索</el-button>
         </el-input>
@@ -92,6 +96,7 @@ export default {
   },
   data(){
     return{
+      region:'',
       input_name:'', // 搜索框value
       hotJob_options: [],
       tag: '',
@@ -233,6 +238,8 @@ export default {
     .search-box{
       width: 100%;
       cursor: pointer;
+      display: flex;
+      align-items: center;
       /deep/ .input-with-select {
         width: 100%;
         display: flex;
