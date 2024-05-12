@@ -65,7 +65,7 @@
 
                   <div class="comment-list-box">
                     <ul>
-                      <li v-for="(items,index) in detailData.comment_list" :key="index">
+                      <li v-for="(items,c_index) in detailData.comment_list" :key="c_index">
                         <div class="title">
                           <div class="title-left" @click.stop="clickName(items)">
                             <img :src="items.avatar?items.avatar:require('../../../../assets/image/img-user.jpg')" alt="" class="avatar-img"/>
@@ -80,17 +80,21 @@
                           <div class="items-c-p">{{ items.content }}</div>
 
                           <div class="items-bottom-btn">
-                            <div class="bottom-btn-items" @click="clickPoint('commentID',item.id,index,items.id)" v-if="items.is_point == 2">
+                            <div class="bottom-btn-items" @click="clickPoint('commentID',item.id,c_index,items.id)" v-if="items.is_point == 2">
                               <img src="../../../../assets/image/thumbs-up.png" alt="" />
                               <span>{{ items.point_num }} 赞</span>
                             </div>
-                            <div class="bottom-btn-items" @click="clickCancelPoint('commentID',item.id,index,items.id) " v-else>
+                            <div class="bottom-btn-items" @click="clickCancelPoint('commentID',item.id,c_index,items.id) " v-else>
                               <img src="../../../../assets/image/thumbs-up.png" alt="" />
                               <span class="point-hover">{{ items.point_num }} 已赞</span>
                             </div>
                             <div class="bottom-btn-items" @click.stop="clickRecover(items)">
                               <img src="../../../../assets/image/comment.png" alt="" />
                               <span>{{ items.comment_num }} 回复</span>
+                            </div>
+                            <div class="bottom-btn-items" @click.stop="clickitemsDelt(items,c_index)" v-if="uid == infoData.uid">
+                              <img src="../../../../assets/image/icon-copy.png" alt="" />
+                              <span>删除</span>
                             </div>
                           </div>
                         </div>
@@ -380,6 +384,34 @@ export default {
       }
       this.reply_id = item.id;
       this.recoverVisible = true;
+    },
+    clickitemsDelt(item,index){
+      let that = this;
+      console.log(item)
+      let detailData = this.detailData;
+      console.log(item)
+      detailData.comment_list.splice(index,1);
+      detailData.comment_num--;
+      that.detailData = detailData;
+      return
+      let p = {
+        id: item.id,
+      }
+      that.$axios.post('',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success('删除成功！');
+          detailData.comment_list.splice(index,1);
+          that.detailData = detailData;
+        } else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+        that.is_return = true;
+      }).catch(e =>{
+        console.log(e)
+        that.is_return = true;
+      })
     },
     // 点击列表 评论按钮
     clickReview(i,idx){

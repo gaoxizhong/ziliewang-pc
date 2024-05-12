@@ -1,301 +1,330 @@
 <template>
-  <div class="filter-options-container">
-    <div class="filter-options-row-section">
-      <!-- <div class="selected-clear" @click="clickALLAnticon">
-        <i class="el-icon-delete"></i>
-        <span>清空筛选条件</span>
-      </div> -->
-
-      <div class="options-row">
-        <div class="row-title">目前城市</div>
-        <ul class="row-options-detail-box">
-          <li class="options-item" :class="city == '全国'? 'selected':''" data-code="410" data-name="全国" @click="clickCity('全国')">全国</li>
-          <li class="options-item" :class="selectCityList.indexOf(item.label) != -1? 'selected':''" :data-code="item.code" :data-name="item.label" @click="clickCity(item.label)" v-for="(item,index) in showCityList" :key="index">{{ item.label }}</li>
-          <li class="options-item" id="filter-option-other-city"><span @click="clickCityOther">其他</span><div class="antd-lp-city"></div></li>
-        </ul>
-      </div>
-      
-      <div class="options-row">
-        <div class="row-title">薪资范围:</div>
-        <ul class="row-options-detail-box">
-          <li class="options-item" :class="pay == ''? 'selected':''" @click="clickPay('')">不限</li>
-          <li class="options-item" :class="pay == '3K以下'? 'selected':''" @click="clickPay('3K以下','0-3')">3K以下</li>
-          <li class="options-item" :class="pay == '5K-10k'? 'selected':''" @click="clickPay('5K-10k','5-10')">5K-10k</li>
-          <li class="options-item" :class="pay == '10K-20k'? 'selected':''" @click="clickPay('10K-20k','10-20')">10K-20k</li>
-          <li class="options-item" :class="pay == '20K-40k'? 'selected':''" @click="clickPay('20K-40k','20-40')">20K-40k</li>
-          <li class="options-item" :class="pay == '40K-60k'? 'selected':''" @click="clickPay('40K-60k','40-60')">40K-60k</li>
-          <li class="options-item" :class="pay == '60k以上'? 'selected':''" @click="clickPay('60k以上','60-0')">60k以上</li>
-          <!-- <div class="jsx-1824882820 search-job-custom-salary-box">
-            <span class="jsx-1824882820 salary-name">自定义</span>
-          </div> -->
-        </ul>
-      </div>
-      <div class="options-row">
-        <div class="row-title">工作年限:</div>
-        <ul class="row-options-detail-box">
-          <li class="options-item" :class="exp == ''? 'selected':''" @click="clickexp('')">不限</li>
-          <!-- <li class="options-item" :class="exp == '应届生'? 'selected':''" @click="clickexp('应届生',3)">应届生</li>
-          <li class="options-item" :class="exp == '实习生'? 'selected':''" @click="clickexp('实习生',2)">实习生</li> -->
-          <li class="options-item" :class="exp == '1年以内'? 'selected':''" @click="clickexp('1年以内','0-1')">1年以内</li>
-          <li class="options-item" :class="exp == '1-3年'? 'selected':''" @click="clickexp('1-3年','1-3')">1-3年</li>
-          <li class="options-item" :class="exp == '3-5年'? 'selected':''" @click="clickexp('3-5年','3-5')">3-5年</li>
-          <li class="options-item" :class="exp == '5-10年'? 'selected':''" @click="clickexp('5-10年','5-10')">5-10年</li>
-          <li class="options-item" :class="exp == '10-15年'? 'selected':''" @click="clickexp('10-15年','10-15')">10-15年</li>
-          <li class="options-item" :class="exp == '15年以上'? 'selected':''" @click="clickexp('15年以上','15-100')">15年以上</li>
-        </ul>
-      </div>
-      <div class="options-row">
-        <div class="row-title">期望城市</div>
-        <ul class="row-options-detail-box">
-          <li class="options-item" :class="expect_city == '全国'? 'selected':''" data-code="410" data-name="全国" @click="clickExpectCity('全国')">全国</li>
-          <li class="options-item" :class="selectExpectCityList.indexOf(item.label) != -1? 'selected':''" :data-code="item.code" :data-name="item.label" @click="clickExpectCity(item.label)" v-for="(item,index) in showCityList" :key="index">{{ item.label }}</li>
-          <li class="options-item" id="filter-option-other-city"><span @click="clickExpectCityOther">其他</span><div class="antd-lp-city"></div></li>
-        </ul>
-      </div>
-      <div class="options-row">
-        <div class="row-title">教育经历:</div>
-        <ul class="row-options-detail-box">
-          <li class="options-item" :class="education_background == ''? 'selected':''" @click="clickeducation('')">不限</li>
-          <li class="options-item" :class="education_background == '博士'? 'selected':''" @click="clickeducation('博士')">博士</li>
-          <li class="options-item" :class="education_background == '硕士'? 'selected':''" @click="clickeducation('硕士')">硕士</li>
-          <li class="options-item" :class="education_background == '研究生'? 'selected':''" @click="clickeducation('研究生')">研究生</li>
-          <li class="options-item" :class="education_background == '本科'? 'selected':''" @click="clickeducation('本科')">本科</li>
-          <li class="options-item" :class="education_background == '大专'? 'selected':''" @click="clickeducation('大专')">大专</li>
-          <li class="options-item" :class="education_background == '中专/中技'? 'selected':''" @click="clickeducation('中专/中技')">中专/中技</li>
-          <li class="options-item" :class="education_background == '高中'? 'selected':''" @click="clickeducation('高中')">高中</li>
-          <li class="options-item" :class="education_background == '初中及以下'? 'selected':''" @click="clickeducation('初中及以下')">初中及以下</li>
-        </ul>
-        <div class="options-row-1">
-          <div class="row-title">是否统招：</div>
-          <el-select v-model="is_national_unified" placeholder="是否统招" @change="is_national_unified_change" style="width: 140px;">
-            <el-option label="不限" value=""></el-option>
-            <el-option label="统招" value="1"></el-option>
-            <el-option label="非统招" value="2"></el-option>
-          </el-select>
+  <div>
+    <div class="searchTalent-top-box m-box">
+      <!-- 检索及热门职位 开始 -->
+      <div class="search-box">
+        <div class="search-left-box" v-if=" selectCityList.length>0" @click="clickCityOther">
+          <span style="flex: 1;text-align: center;">{{ selectCityList[0] }} <span class="span-icon">+{{ selectCityList.length }}</span></span>
+          <i class="el-icon-caret-right"></i>
         </div>
-      </div>
-      <div class="options-row">
-        <div class="row-title">院校要求:</div>
-        <ul class="row-options-detail-box">
-          <li class="options-item" :class="school == ''? 'selected':''" @click="clickschool('')">不限</li>
-          <li class="options-item" :class="school == 2 ? 'selected':''" @click="clickschool(2)">211</li>
-          <li class="options-item" :class="school == 3 ? 'selected':''" @click="clickschool(3)">985</li>
-          <li class="options-item" :class="school == 4 ? 'selected':''" @click="clickschool(4)">双一流</li>
-          <li class="options-item" :class="school == 5 ? 'selected':''" @click="clickschool(5)">海外留学</li>
-        </ul>
-      </div>
-      <div class="options-row">
-        <div class="row-title">当前行业:</div>
-        <el-select v-model="desired_industry" filterable multiple collapse-tags clearable placeholder="当前行业" @change="desired_industry_change">
-          <el-option
-            v-for="item in industryList"
-            :key="item.industry"
-            :label="item.industry"
-            :value="item.industry">
-          </el-option>
-        </el-select>
-        <div class="options-row-1">
-          <div class="row-title">当前职位：</div>
-          <div class="item-content" @click="clickInvolved">
-            <el-input v-model="desired_position" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
-            <img src="../../../assets/image/Frame_8.png" alt="" />
+        <!-- 搜索框 开始 -->
+        <div class="search-input-box">
+
+          <div class="input-box">
+            <div class="input-left-box">
+              <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词" @keydown.enter.native="searchInputFun($event)"></el-input>
+            </div>
+            <button class="input-button" @click="getSearchinfo">搜索</button>
           </div>
-        </div>
+          <div class="search-input-tab">
+            <!-- <div><span>展开高级搜索</span><img src="../../../assets/image/bossSide/icon-down.png" alt=""></div> -->
+            <div @click.stop="myCollection"><img src="../../../assets/image/bossSide/icon-star.png" alt=""><span>我的收藏</span></div>
+          </div>
 
-      </div>
-      <div class="options-row">
-        <div class="row-title">年   龄:</div>
-        <div class="options-age-box">
-          <el-input type="number" v-model="age.age_status" placeholder="岁" @input="age_status_input"></el-input>
-          <span> - </span>
-          <el-input type="number" v-model="age.age_end" placeholder="不限" @input="age_end_input"></el-input>
-          <el-button type="primary" @click="age_btn" v-if="is_age">确定</el-button>
         </div>
-        <div class="options-row-1">
-          <div class="row-title">性   别：</div>
-          <el-select v-model="sex" placeholder="性别" @change="sex_change">
-            <el-option label="不限" value=""></el-option>
-            <el-option label="男" value="1"></el-option>
-            <el-option label="女" value="2"></el-option>
-          </el-select>
+        <!-- 搜索框 结束 -->
+      </div>
+      <!-- 检索及热门职位 结束 -->
+    </div>
+    <div class="filter-options-container">
+      <div class="filter-options-row-section">
+        <!-- <div class="selected-clear" @click="clickALLAnticon">
+          <i class="el-icon-delete"></i>
+          <span>清空筛选条件</span>
+        </div> -->
+
+        <div class="options-row">
+          <div class="row-title">目前城市</div>
+          <ul class="row-options-detail-box">
+            <li class="options-item" :class="city == '全国'? 'selected':''" data-code="410" data-name="全国" @click="clickCity('全国')">全国</li>
+            <li class="options-item" :class="selectCityList.indexOf(item.label) != -1? 'selected':''" :data-code="item.code" :data-name="item.label" @click="clickCity(item.label)" v-for="(item,index) in showCityList" :key="index">{{ item.label }}</li>
+            <li class="options-item" id="filter-option-other-city"><span @click="clickCityOther">其他</span><div class="antd-lp-city"></div></li>
+          </ul>
         </div>
         
-      </div>
-
-
-    </div>
-    <div class="selected-options-box">
-      <div class="selected-options-title">已选条件：</div>
-      <ul class="selected-options-list-box">
-        <template v-for="(item,index) in selectCityList">
-          <li class="selected-item" :key="index">
-            <span class="anticon anticon-close">{{ item }}</span>
-            <i class="el-icon-close" @click="clickselectCityList(index)"></i>
-          </li>
-        </template>
-        
-        <li class="selected-item" v-if=" city == '全国' ">
-          <span class="anticon anticon-close">全国</span>
-          <i class="el-icon-close" @click="clickAnticon(-1)"></i>
-        </li>
-        <li class="selected-item" v-if="pay.value">
-          <span class="anticon anticon-close">{{ pay.value }}</span>
-          <i class="el-icon-close" @click="clickAnticon('pay')"></i>
-        </li>
-        <li class="selected-item" v-if="exp.value">
-          <span class="anticon anticon-close">{{ exp.value }}</span>
-          <i class="el-icon-close" @click="clickAnticon('exp')"></i>
-        </li>
-        <!-- 行业选项 开始 -->
-        <template v-for="(item,index) in desired_industry">
-          <li class="selected-item" :key="index">
-            <span class="anticon anticon-close">{{ item }}</span>
-            <i class="el-icon-close" @click="clickDesiredList(index)"></i>
-          </li>
-        </template>
-        <!-- 行业选项 结束 -->
-        <!-- 职业选项 开始 -->
-        <template v-for="(item,index) in position.selectCategoryList">
-          <li class="selected-item" :key="index">
-            <span class="anticon anticon-close">{{ item }}</span>
-            <i class="el-icon-close" @click="clickCategoryList(index)"></i>
-          </li>
-        </template>
-        <!-- 职业选项 结束 -->
-      </ul>
-      <div class="selected-clear" ref="search-jobs-clear-options" id="search-jobs-clear-options" @click="clickALLAnticon">
-        <i class="el-icon-delete"></i>
-        <span>清空筛选条件</span>
-      </div>
-    </div>
-    <!-- 选择城市弹窗 -->
-    <div class="dialogVisible-pop-box" v-if="dialogVisible && cityData.length >=0 ">
-      <div class="mask-box"></div>
-      <div class="dialog-container">
-        <div class="dialog-header">
-          <h3 class="title">请选择城市</h3>
-          <div class="dialog-header-input">
-          </div>
-          <img src="../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
+        <div class="options-row">
+          <div class="row-title">薪资范围:</div>
+          <ul class="row-options-detail-box">
+            <li class="options-item" :class="pay == ''? 'selected':''" @click="clickPay('')">不限</li>
+            <li class="options-item" :class="pay == '3K以下'? 'selected':''" @click="clickPay('3K以下','0-3')">3K以下</li>
+            <li class="options-item" :class="pay == '5K-10k'? 'selected':''" @click="clickPay('5K-10k','5-10')">5K-10k</li>
+            <li class="options-item" :class="pay == '10K-20k'? 'selected':''" @click="clickPay('10K-20k','10-20')">10K-20k</li>
+            <li class="options-item" :class="pay == '20K-40k'? 'selected':''" @click="clickPay('20K-40k','20-40')">20K-40k</li>
+            <li class="options-item" :class="pay == '40K-60k'? 'selected':''" @click="clickPay('40K-60k','40-60')">40K-60k</li>
+            <li class="options-item" :class="pay == '60k以上'? 'selected':''" @click="clickPay('60k以上','60-0')">60k以上</li>
+            <!-- <div class="jsx-1824882820 search-job-custom-salary-box">
+              <span class="jsx-1824882820 salary-name">自定义</span>
+            </div> -->
+          </ul>
         </div>
-        <div class="dialog-body">
-          <div class="body-left-box">
-            <div class="left-list-box">
-              <ul>
-                <li :class="selt_province_item == index? 'active':'' " v-for="(item,index) in cityData" :key="index" @click="click_industryListLi(item,index)">{{ item.label }}</li>
-              </ul>
+        <div class="options-row">
+          <div class="row-title">工作年限:</div>
+          <ul class="row-options-detail-box">
+            <li class="options-item" :class="exp == ''? 'selected':''" @click="clickexp('')">不限</li>
+            <!-- <li class="options-item" :class="exp == '应届生'? 'selected':''" @click="clickexp('应届生',3)">应届生</li>
+            <li class="options-item" :class="exp == '实习生'? 'selected':''" @click="clickexp('实习生',2)">实习生</li> -->
+            <li class="options-item" :class="exp == '1年以内'? 'selected':''" @click="clickexp('1年以内','0-1')">1年以内</li>
+            <li class="options-item" :class="exp == '1-3年'? 'selected':''" @click="clickexp('1-3年','1-3')">1-3年</li>
+            <li class="options-item" :class="exp == '3-5年'? 'selected':''" @click="clickexp('3-5年','3-5')">3-5年</li>
+            <li class="options-item" :class="exp == '5-10年'? 'selected':''" @click="clickexp('5-10年','5-10')">5-10年</li>
+            <li class="options-item" :class="exp == '10-15年'? 'selected':''" @click="clickexp('10-15年','10-15')">10-15年</li>
+            <li class="options-item" :class="exp == '15年以上'? 'selected':''" @click="clickexp('15年以上','15-100')">15年以上</li>
+          </ul>
+        </div>
+        <div class="options-row">
+          <div class="row-title">期望城市</div>
+          <ul class="row-options-detail-box">
+            <li class="options-item" :class="expect_city == '全国'? 'selected':''" data-code="410" data-name="全国" @click="clickExpectCity('全国')">全国</li>
+            <li class="options-item" :class="selectExpectCityList.indexOf(item.label) != -1? 'selected':''" :data-code="item.code" :data-name="item.label" @click="clickExpectCity(item.label)" v-for="(item,index) in showCityList" :key="index">{{ item.label }}</li>
+            <li class="options-item" id="filter-option-other-city"><span @click="clickExpectCityOther">其他</span><div class="antd-lp-city"></div></li>
+          </ul>
+        </div>
+        <div class="options-row">
+          <div class="row-title">教育经历:</div>
+          <ul class="row-options-detail-box">
+            <li class="options-item" :class="education_background == ''? 'selected':''" @click="clickeducation('')">不限</li>
+            <li class="options-item" :class="education_background == '博士'? 'selected':''" @click="clickeducation('博士')">博士</li>
+            <li class="options-item" :class="education_background == '硕士'? 'selected':''" @click="clickeducation('硕士')">硕士</li>
+            <li class="options-item" :class="education_background == '研究生'? 'selected':''" @click="clickeducation('研究生')">研究生</li>
+            <li class="options-item" :class="education_background == '本科'? 'selected':''" @click="clickeducation('本科')">本科</li>
+            <li class="options-item" :class="education_background == '大专'? 'selected':''" @click="clickeducation('大专')">大专</li>
+            <li class="options-item" :class="education_background == '中专/中技'? 'selected':''" @click="clickeducation('中专/中技')">中专/中技</li>
+            <li class="options-item" :class="education_background == '高中'? 'selected':''" @click="clickeducation('高中')">高中</li>
+            <li class="options-item" :class="education_background == '初中及以下'? 'selected':''" @click="clickeducation('初中及以下')">初中及以下</li>
+          </ul>
+          <div class="options-row-1">
+            <div class="row-title">是否统招：</div>
+            <el-select v-model="is_national_unified" placeholder="是否统招" @change="is_national_unified_change" style="width: 140px;">
+              <el-option label="不限" value=""></el-option>
+              <el-option label="统招" value="1"></el-option>
+              <el-option label="非统招" value="2"></el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="options-row">
+          <div class="row-title">院校要求:</div>
+          <ul class="row-options-detail-box">
+            <li class="options-item" :class="school == ''? 'selected':''" @click="clickschool('')">不限</li>
+            <li class="options-item" :class="school == 2 ? 'selected':''" @click="clickschool(2)">211</li>
+            <li class="options-item" :class="school == 3 ? 'selected':''" @click="clickschool(3)">985</li>
+            <li class="options-item" :class="school == 4 ? 'selected':''" @click="clickschool(4)">双一流</li>
+            <li class="options-item" :class="school == 5 ? 'selected':''" @click="clickschool(5)">海外留学</li>
+          </ul>
+        </div>
+        <div class="options-row">
+          <div class="row-title">当前行业:</div>
+          <el-select v-model="desired_industry" filterable multiple collapse-tags clearable placeholder="当前行业" @change="desired_industry_change">
+            <el-option
+              v-for="item in industryList"
+              :key="item.industry"
+              :label="item.industry"
+              :value="item.industry">
+            </el-option>
+          </el-select>
+          <div class="options-row-1">
+            <div class="row-title">当前职位：</div>
+            <div class="item-content" @click="clickInvolved">
+              <el-input v-model="desired_position" autocomplete="on" spellcheck="false" placeholder="请选择" readonly="readonly"></el-input>
+              <img src="../../../assets/image/Frame_8.png" alt="" />
             </div>
           </div>
-          <div class="body-right-box">
-            <div class="right-list-box">
-              <div class="category-list-items">
+
+        </div>
+        <div class="options-row">
+          <div class="row-title">年   龄:</div>
+          <div class="options-age-box">
+            <el-input type="number" v-model="age.age_status" placeholder="岁" @input="age_status_input"></el-input>
+            <span> - </span>
+            <el-input type="number" v-model="age.age_end" placeholder="不限" @input="age_end_input"></el-input>
+            <el-button type="primary" @click="age_btn" v-if="is_age">确定</el-button>
+          </div>
+          <div class="options-row-1">
+            <div class="row-title">性   别：</div>
+            <el-select v-model="sex" placeholder="性别" @change="sex_change">
+              <el-option label="不限" value=""></el-option>
+              <el-option label="男" value="1"></el-option>
+              <el-option label="女" value="2"></el-option>
+            </el-select>
+          </div>
+          
+        </div>
+
+
+      </div>
+      <div class="selected-options-box">
+        <div class="selected-options-title">已选条件：</div>
+        <ul class="selected-options-list-box">
+          <template v-for="(item,index) in selectCityList">
+            <li class="selected-item" :key="index">
+              <span class="anticon anticon-close">{{ item }}</span>
+              <i class="el-icon-close" @click="clickselectCityList(index)"></i>
+            </li>
+          </template>
+          
+          <li class="selected-item" v-if=" city == '全国' ">
+            <span class="anticon anticon-close">全国</span>
+            <i class="el-icon-close" @click="clickAnticon(-1)"></i>
+          </li>
+          <li class="selected-item" v-if="pay.value">
+            <span class="anticon anticon-close">{{ pay.value }}</span>
+            <i class="el-icon-close" @click="clickAnticon('pay')"></i>
+          </li>
+          <li class="selected-item" v-if="exp.value">
+            <span class="anticon anticon-close">{{ exp.value }}</span>
+            <i class="el-icon-close" @click="clickAnticon('exp')"></i>
+          </li>
+          <!-- 行业选项 开始 -->
+          <template v-for="(item,index) in desired_industry">
+            <li class="selected-item" :key="index">
+              <span class="anticon anticon-close">{{ item }}</span>
+              <i class="el-icon-close" @click="clickDesiredList(index)"></i>
+            </li>
+          </template>
+          <!-- 行业选项 结束 -->
+          <!-- 职业选项 开始 -->
+          <template v-for="(item,index) in position.selectCategoryList">
+            <li class="selected-item" :key="index">
+              <span class="anticon anticon-close">{{ item }}</span>
+              <i class="el-icon-close" @click="clickCategoryList(index)"></i>
+            </li>
+          </template>
+          <!-- 职业选项 结束 -->
+        </ul>
+        <div class="selected-clear" ref="search-jobs-clear-options" id="search-jobs-clear-options" @click="clickALLAnticon">
+          <i class="el-icon-delete"></i>
+          <span>清空筛选条件</span>
+        </div>
+      </div>
+      <!-- 选择城市弹窗 -->
+      <div class="dialogVisible-pop-box" v-if="dialogVisible && cityData.length >=0 ">
+        <div class="mask-box"></div>
+        <div class="dialog-container">
+          <div class="dialog-header">
+            <h3 class="title">请选择城市</h3>
+            <div class="dialog-header-input">
+            </div>
+            <img src="../../../assets/image/icon-close.png" alt="" @click="clickClose"/>
+          </div>
+          <div class="dialog-body">
+            <div class="body-left-box">
+              <div class="left-list-box">
                 <ul>
-                  <li :class="selectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in city_list" :key="idx" @click="click_city_list(items,idx)">{{ items.label }}</li>
+                  <li :class="selt_province_item == index? 'active':'' " v-for="(item,index) in cityData" :key="index" @click="click_industryListLi(item,index)">{{ item.label }}</li>
                 </ul>
               </div>
             </div>
-            
-          </div>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <div class="slet-box">
-            <span>当前选择:</span>
-            <span class="span-item" v-for="(item,index) in selectCityList" :key="index">{{ item }}</span>
-          </div>
-          <div class="slet-btn-box">
-            <el-button @click="clickClearCityOption">清空选项</el-button>
-            <el-button type="primary" @click="clickCityOK">确  定</el-button>
-          </div>
-        </span>
-      </div>
-    </div>
-    <!-- 选择城市弹窗 -->
-    <div class="dialogVisible-pop-box" v-if="expect_dialogVisible && cityData.length >=0 ">
-      <div class="mask-box"></div>
-      <div class="dialog-container">
-        <div class="dialog-header">
-          <h3 class="title">请选择城市</h3>
-          <div class="dialog-header-input">
-          </div>
-          <img src="../../../assets/image/icon-close.png" alt="" @click="clickexpect_Close"/>
-        </div>
-        <div class="dialog-body">
-          <div class="body-left-box">
-            <div class="left-list-box">
-              <ul>
-                <li :class="selt_expect_province_item == index? 'active':'' " v-for="(item,index) in cityData" :key="index" @click="click_expect_industryListLi(item,index)">{{ item.label }}</li>
-              </ul>
-            </div>
-          </div>
-          <div class="body-right-box">
-            <div class="right-list-box">
-              <div class="category-list-items">
-                <ul>
-                  <li :class="selectExpectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in expect_city_list" :key="idx" @click="click_expect_city_list(items,idx)">{{ items.label }}</li>
-                </ul>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <div class="slet-box">
-            <span>当前选择:</span>
-            <span class="span-item" v-for="(item,index) in selectExpectCityList" :key="index">{{ item }}</span>
-          </div>
-          <div class="slet-btn-box">
-            <el-button @click="clickExpectClearCityOption">清空选项</el-button>
-            <el-button type="primary" @click="clickExpectCityOK">确  定</el-button>
-          </div>
-        </span>
-      </div>
-    </div>
-    
-    <!-- 选择职业弹窗 -->
-    <div class="dialogVisible-pop-box" v-if="position.dialogVisible">
-      <div class="mask-box"></div>
-      <div class="dialog-container">
-        <div class="dialog-header">
-          <h3 class="title">请选择职位类别</h3>
-          <div class="dialog-header-input">
-            <!-- <el-input type="text" v-model="dialogVisible_seach"></el-input> -->
-          </div>
-          <img src="../../../assets/image/icon-close.png" alt="" @click="clickPositionClose"/>
-        </div>
-        <div class="dialog-body">
-          <div class="body-left-box">
-            <div class="left-list-box">
-              <ul>
-                <li :class="position.selt_item == index? 'active':'' " v-for="(item,index) in position.positionList" :key="index" @click="click_positionListLi(item,index)">{{ item.industry }}</li>
-              </ul>
-            </div>
-          </div>
-          <div class="body-right-box">
-            <div class="right-list-box">
-              <div class="category-list-items" v-for="(item,index) in position.category_list" :key="index">
-                <div class="category-name">{{ item.category_name }}</div>
-                <ul>
-                  <li :class="position.selectCategoryList.indexOf(items.category_name) != -1 ? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name)">{{ items.category_name }}</li>
-                </ul>
+            <div class="body-right-box">
+              <div class="right-list-box">
+                <div class="category-list-items">
+                  <ul>
+                    <li :class="selectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in city_list" :key="idx" @click="click_city_list(items,idx)">{{ items.label }}</li>
+                  </ul>
+                </div>
               </div>
               
             </div>
-            
           </div>
+          <span slot="footer" class="dialog-footer">
+            <div class="slet-box">
+              <span>当前选择:</span>
+              <span class="span-item" v-for="(item,index) in selectCityList" :key="index">{{ item }}</span>
+            </div>
+            <div class="slet-btn-box">
+              <el-button @click="clickClearCityOption">清空选项</el-button>
+              <el-button type="primary" @click="clickCityOK">确  定</el-button>
+            </div>
+          </span>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <div class="slet-box">
-            <span>当前选择:</span>
-            <span class="span-item" v-for="(item,index) in position.selectCategoryList" :key="index">{{ item }}</span>
+      </div>
+      <!-- 选择城市弹窗 -->
+      <div class="dialogVisible-pop-box" v-if="expect_dialogVisible && cityData.length >=0 ">
+        <div class="mask-box"></div>
+        <div class="dialog-container">
+          <div class="dialog-header">
+            <h3 class="title">请选择城市</h3>
+            <div class="dialog-header-input">
+            </div>
+            <img src="../../../assets/image/icon-close.png" alt="" @click="clickexpect_Close"/>
           </div>
-          <div class="slet-btn-box">
-            <el-button @click="clickClearOption">清空选项</el-button>
-            <el-button type="primary" @click="clickPositionOK">确  定</el-button>
+          <div class="dialog-body">
+            <div class="body-left-box">
+              <div class="left-list-box">
+                <ul>
+                  <li :class="selt_expect_province_item == index? 'active':'' " v-for="(item,index) in cityData" :key="index" @click="click_expect_industryListLi(item,index)">{{ item.label }}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="body-right-box">
+              <div class="right-list-box">
+                <div class="category-list-items">
+                  <ul>
+                    <li :class="selectExpectCityList.indexOf(items.label) != -1 ? 'active':'' " v-for="(items,idx) in expect_city_list" :key="idx" @click="click_expect_city_list(items,idx)">{{ items.label }}</li>
+                  </ul>
+                </div>
+              </div>
+              
+            </div>
           </div>
-        </span>
+          <span slot="footer" class="dialog-footer">
+            <div class="slet-box">
+              <span>当前选择:</span>
+              <span class="span-item" v-for="(item,index) in selectExpectCityList" :key="index">{{ item }}</span>
+            </div>
+            <div class="slet-btn-box">
+              <el-button @click="clickExpectClearCityOption">清空选项</el-button>
+              <el-button type="primary" @click="clickExpectCityOK">确  定</el-button>
+            </div>
+          </span>
+        </div>
+      </div>
+      
+      <!-- 选择职业弹窗 -->
+      <div class="dialogVisible-pop-box" v-if="position.dialogVisible">
+        <div class="mask-box"></div>
+        <div class="dialog-container">
+          <div class="dialog-header">
+            <h3 class="title">请选择职位类别</h3>
+            <div class="dialog-header-input">
+              <!-- <el-input type="text" v-model="dialogVisible_seach"></el-input> -->
+            </div>
+            <img src="../../../assets/image/icon-close.png" alt="" @click="clickPositionClose"/>
+          </div>
+          <div class="dialog-body">
+            <div class="body-left-box">
+              <div class="left-list-box">
+                <ul>
+                  <li :class="position.selt_item == index? 'active':'' " v-for="(item,index) in position.positionList" :key="index" @click="click_positionListLi(item,index)">{{ item.industry }}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="body-right-box">
+              <div class="right-list-box">
+                <div class="category-list-items" v-for="(item,index) in position.category_list" :key="index">
+                  <div class="category-name">{{ item.category_name }}</div>
+                  <ul>
+                    <li :class="position.selectCategoryList.indexOf(items.category_name) != -1 ? 'active':'' " v-for="(items,idx) in item.position_list" :key="idx" @click="click_position_list(items.category_name)">{{ items.category_name }}</li>
+                  </ul>
+                </div>
+                
+              </div>
+              
+            </div>
+          </div>
+          <span slot="footer" class="dialog-footer">
+            <div class="slet-box">
+              <span>当前选择:</span>
+              <span class="span-item" v-for="(item,index) in position.selectCategoryList" :key="index">{{ item }}</span>
+            </div>
+            <div class="slet-btn-box">
+              <el-button @click="clickClearOption">清空选项</el-button>
+              <el-button type="primary" @click="clickPositionOK">确  定</el-button>
+            </div>
+          </span>
+        </div>
       </div>
     </div>
   </div>
+
 </template>
 <script>
 import pcas from '../../../assets/json/pc-code.json'
@@ -305,6 +334,7 @@ export default {
   },
   data(){
     return {
+      search_value:'',
       ipCity: localStorage.getItem('ipCity') || '',
       dialogVisible: false,
       cityData: pcas, // 城市信息
@@ -376,6 +406,20 @@ export default {
      }
   },
   methods:{
+    // 点击我的收藏 --- 跳转到我的收藏
+    myCollection(){
+      this.$router.push('/myCollect');
+    },
+    // 回车键点击
+    searchInputFun(e){
+      var keyCode = window.event?e.keyCode:e.which;
+      if(keyCode == 13){
+        this.getSearchinfo();
+      }
+    },
+    getSearchinfo(){
+      this.getfilterInfo();
+    },
     // 点击选择的城市删除
     clickselectCityList(v){
       let selectCityList = this.selectCityList;
@@ -690,18 +734,22 @@ export default {
       let age_status =  this.age.age_status?this.age.age_status:0;
       let age_end =  this.age.age_end?this.age.age_end:0;
       let info = {
-        live_city: this.city == '全国'?'':this.city, // 城市
-        desired_location: this.expect_city == '全国'?'':this.expect_city, // 期望城市
-        salary: this.salary,
-        work_year: this.work_year, // 工作年限
-        // work_times_type: this.work_times_type,
-        education_background: this.education_background, // 学历
-        school_type: this.school,
-        sex: this.sex,
-        is_national_unified: this.is_national_unified,
-        age: age_status + '-' + age_end,
-        desired_industry: this.desired_industry.join(','), // 行业
-        desired_position: this.position.selectCategoryList.join(','), // 职位
+        search_value:this.search_value,
+        info:{
+          live_city: this.city == '全国'?'':this.city, // 城市
+          desired_location: this.expect_city == '全国'?'':this.expect_city, // 期望城市
+          salary: this.salary,
+          work_year: this.work_year, // 工作年限
+          // work_times_type: this.work_times_type,
+          education_background: this.education_background, // 学历
+          school_type: this.school,
+          sex: this.sex,
+          is_national_unified: this.is_national_unified,
+          age: age_status + '-' + age_end,
+          desired_industry: this.desired_industry.join(','), // 行业
+          desired_position: this.position.selectCategoryList.join(','), // 职位
+        }
+        
       };
       console.log(info)
       this.$emit('getfilterInfo',JSON.stringify(info))
@@ -1116,5 +1164,224 @@ export default {
 
     }
   }
+  .searchTalent-top-box{
+    // padding-bottom: 0;
+    
+    .search-box{
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      position: relative;
+      .search-left-box{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #000;
+        z-index: 1;
+        width: 120px;
+        padding: 0 10px;
+        font-size: 14px;
+        cursor: pointer;
+        &::after{
+          content: '';
+          width: 1px;
+          height: 45%;
+          position: absolute;
+          top: 50%;
+          right: 4px;
+          transform: translateY(-50%);
+          background: #DCDFE6;
+        }
+        .span-icon{
+          color: #99b8e0;
+        }
+      }
+      .search-input-box{
+        flex:1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .input-box{
+          flex: 1;
+          height: 48px;
+          line-height: 48px;
+          border-radius: 6px;
+          border: 3px solid $g_color;
+          padding: 0;
+          padding-left: 130px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          .input-left-box{
+            flex: 1;
+            background: #fff;
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            .input-add-box{
+              padding: 0 12px;
+              display: flex;
+              align-items: center;
+              border-right: 1px solid #F2F3F5;
+              cursor: pointer;
+              height: 100%;
+              width: auto;
+              img{
+                width: 14px;
+                height: 14px;
+              }
+              span{
+                font-size: 14px;
+                font-weight: 400;
+                color: #86909C;
+                line-height: 22px;
+                padding-left: 8px;
+              }
 
+              .el-cascader{
+                font-size: 14px;
+                font-weight: 400;
+                color: #86909C;
+                padding-left: 8px;
+                height: 100%;
+                /deep/ .el-input{
+                  height: 100%;
+                }
+                /deep/ .el-input__inner{
+                  padding: 0;
+                }
+                /deep/ .el-input__suffix{
+                  display: none;
+                }
+                /deep/ .el-cascader__label{
+                  width: 100%;
+                  height: 100%;
+                  display: flex;
+                  align-items: center;
+                }
+                
+              }
+              
+            }
+            .el-input{
+              flex: 1;
+            }
+            /deep/ .el-input__inner{
+              height: 100%;
+              line-height: 48px;
+              border: none;
+              font-size: 14px;
+            }
+
+          }
+          button.input-button{
+            width: auto;
+            height: 100%;
+            padding: 0 30px;
+            background: $g_bg;
+            color: #fff;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            border: none;
+            border-color: $g_bg;
+          }
+        }
+
+
+        .search-input-tab{
+          width: auto;
+          display: flex;
+          align-items: center;
+          &>div{
+            margin-left: 1rem;
+            font-size: 14px;
+            font-weight: 400;
+            color: $g_textColor;
+            line-height: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            img{
+              width: 14px;
+              height: 14px;
+            }
+            span{
+              padding: 0 4px;
+            }
+            &:nth-of-type(2){
+              color: #86909C;
+            }
+          }
+        }
+      }
+      .hotJob-box{
+        width: 100%;
+        display: flex;
+        margin-top: 10px;
+        .hotJob-span{
+          width: auto;
+          font-size: 14px;
+          font-weight: bold;
+          color: #1D2129;
+          line-height: 22px;
+        }
+        .hotJob-item-box{
+          flex: 1;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          a{
+            padding: 4px 1rem;
+            border-radius: 4px;
+            background: #fff;
+            text-align: center;
+            font-size: 14px;
+            color: $g_color;
+            margin-left: 8px;
+            margin-bottom: 0.5rem;
+          }
+        }
+      }
+    }
+    .online-job-box{
+      display: flex;
+      align-items: center;
+      .online-job-title{
+        font-size: 14px;
+        font-weight: 400;
+        color: #4E5969;
+        line-height: 22px;
+      }
+      .online-job-tab{
+        margin-left: 1rem;
+        display: flex;
+        align-items: center;
+        span{
+          height: 28px;
+          border-radius: 4px;
+          border: 1px solid #F2F3F5;
+          font-size: 14px;
+          font-weight: 400;
+          color: #86909C;
+          line-height: 22px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 1rem;
+          padding: 0 10px;
+          cursor: pointer;
+          &.hover{
+            color: $g_color;
+          }
+        }
+      }
+    }
+  }
 </style>

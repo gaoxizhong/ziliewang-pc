@@ -134,7 +134,8 @@
         this.hideRightClickMenu();
       });
       this.currentUser = { // 自己信息
-        id: localStorage.getItem('staffUid'),
+        id: 'c_' + localStorage.getItem('staffUid'),
+        uid: localStorage.getItem('staffUid'),
         name: this.$store.state.user.staffName,
         avatar: this.$store.state.user.staffAvatar,
         position_id: this.profile.friend?this.profile.friend.position_id : '', // 岗位id
@@ -213,8 +214,11 @@
         console.log(conversation)
         let that = this;
         let friend = that.profile.friend;
+        console.log(friend)
+
         friend = {
-          uid: conversation.userId,
+          id:conversation.userId,
+          uid: conversation.data.uid,
           name: conversation.data.name,
           avatar: conversation.data.avatar,
           company_id: localStorage.getItem('company_id'), 
@@ -222,7 +226,7 @@
         };
         let p = {
           company_uid: localStorage.getItem('staffUid'),
-          uid: conversation.userId,
+          uid: conversation.data.uid,
         }
         that.$axios.post('/api/position-chat-record/detail',p).then(res =>{
           if(res.code == 0){

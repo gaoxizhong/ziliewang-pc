@@ -496,18 +496,19 @@
       this.userVipRank = localStorage.getItem('staffVipRank');
       this.friend = this.infoData; // 目标用户信息
       this.currentUser = {  // 我的信息--展示
-        id: localStorage.getItem('staffUid'),
+        id: 'c_' + localStorage.getItem('staffUid'),
+        uid: localStorage.getItem('staffUid'),
         name: this.$store.state.user.staffName,
         avatar: this.$store.state.user.staffAvatar,
         position_id: this.infoData.position_id, // 岗位id
         company_id: this.infoData.company_id,// 公司id
         position_name: this.infoData.position_name,
       };
-      console.log('currentUser:',this.currentUser);
       this.to = { // 目标用户
         type: this.GoEasy.IM_SCENE.PRIVATE,
-        id: this.friend.uid,
+        id: this.friend.id,
         data: {
+          uid: this.infoData.uid,
           name: this.infoData.name,
           avatar: this.infoData.avatar,
           position_id: this.infoData.position_id, // 岗位id
@@ -551,7 +552,7 @@
       },
       formatDate,
       onReceivedPrivateMessage(message) {
-        if (message.senderId === this.friend.uid) {
+        if (message.senderId === this.friend.id) {
           this.history.messages.push(message);
           this.markPrivateMessageAsRead();
         }
@@ -610,10 +611,11 @@
       clickPhoneBtn(type,n,pn){
         let that = this;
         let userProfile = this.userProfile;
+        console.log(that.infoData)
         let p = {
           position_id: that.infoData.position_id, // 岗位id
           company_id: localStorage.getItem('company_id'),// 公司id
-          uid: that.to.id
+          uid: that.infoData.uid
         }
         let apiUrl = '';
         if(type == 1){
@@ -905,7 +907,7 @@
           lastMessageTimeStamp = lastMessage.timestamp;
         }
         this.goEasy.im.history({
-          userId: this.friend.uid,
+          userId: this.friend.id,
           lastTimestamp: lastMessageTimeStamp,
           limit: 10,
           onSuccess: (result) => {

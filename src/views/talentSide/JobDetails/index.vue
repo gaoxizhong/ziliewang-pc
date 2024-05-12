@@ -206,6 +206,7 @@ export default {
       let infoData = {
         position_id: that.id,
         company_id: that.infoData.company_id,
+        id:'c_' + that.infoData.publish_uid,
         uid: that.infoData.publish_uid,
         name: that.infoData.publish_name || 'BOSS',
         avatar: that.infoData.avatar || 'https://zlw0720.oss-cn-beijing.aliyuncs.com/avatar/20240127/e4ffd5fcef38311336c5676416b317fa.jpg',

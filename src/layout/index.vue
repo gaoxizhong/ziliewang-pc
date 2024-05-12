@@ -12,7 +12,7 @@
 
 
     <!-- 聊天弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentLimitation="true" :parentH="parentH" :w="width" :h="height" :minw="minw" :x='left' :y='top' @dragstop="onDragstop" @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentLimitation="true" :parentH="parentH" :w="width" :h="height" :minw="minw" :minh="minh" :x='left' :y='top' @dragstop="onDragstop" @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
       <div class="VueDragResize-centent-box">
         <div class="VueDragResize-title-box">
           <div class="title"><span>我的沟通</span></div>
@@ -70,6 +70,7 @@ export default {
       width: 0,
       height: 0,
       minw: 440,
+      minh: 500,
       parentH: 0,
       parentW: 0,
       top: 40,
@@ -84,7 +85,7 @@ export default {
       // 腾讯云 SDKAppID、userSig 的获取参考下面步骤
     
       // 主叫的 userID
-      userID: localStorage.getItem('staffUid'),    
+      userID: 'c_' + localStorage.getItem('staffUid'),    
       // 被叫的 userID
       callUserID: '',
       // videoResolution: videoResolution, // 设置分辨率
@@ -139,8 +140,10 @@ export default {
     this.width = Number(getViewportSize.width)/2; // 可拖动div 宽
     this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
     this.height = Number(getViewportSize.height - 60); // 可拖动div 高度
+    this.minh = Number(getViewportSize.height - 160); // 可拖动div 最小高度
     this.currentUser = {
-      id: localStorage.getItem('staffUid'),
+      id: 'c_' + localStorage.getItem('staffUid'),
+      uid: localStorage.getItem('staffUid'),
       name: this.$store.state.user.staffName,
       avatar: this.$store.state.user.staffAvatar,
     }
@@ -171,15 +174,17 @@ export default {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     },
     connectGoEasy() {
-      this.goEasy.connect({
-        id: this.currentUser.id,
+      let that = this;
+      that.goEasy.connect({
+        id: that.currentUser.id,
         data: {
-          name: this.currentUser.name,
-          avatar: this.currentUser.avatar,
+          uid: localStorage.getItem('staffUid'),
+          name: that.currentUser.name,
+          avatar: that.currentUser.avatar,
           tag:'company'
         },
         onSuccess: function () { 
-          console.log("G连接成功.") 
+          console.log("G连接成功:" + that.currentUser.id) 
         },
         onFailed: function (error) {
           console.log("连接失败, code:" + error.code + ",error:" + error.content);

@@ -4,7 +4,7 @@
       <el-input type="text" prefix-icon="el-icon-search" clearable v-model="searchQuery" placeholder="搜索名称" @input="searchQuery_input"></el-input>
     </div>
     <div v-if="conversations.length">
-      <div v-for="(item, key) in filteredList" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == item.userId}">
+      <div v-for="(item, key) in filteredList" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.id == item.userId}">
         <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
           <div class="avatar">
             <img :src="item.data.avatar?item.data.avatar:require('../../../../assets/image/img-user.jpg')"/>
@@ -124,7 +124,8 @@
         this.hideRightClickMenu();
       });
       this.currentUser = {
-        id: localStorage.getItem('realUid'),
+        id: 'u_'+ localStorage.getItem('realUid'),
+        uid: localStorage.getItem('realUid'),
         name: localStorage.getItem('name'),
         avatar: localStorage.getItem('realAvatar'),
       }
@@ -204,12 +205,15 @@
         let that = this;
         console.log(conversation)
         let friend = that.profile.friend;
+        console.log(friend)
         friend = {
-          uid: conversation.userId,
+          id:conversation.userId,
+          uid: conversation.data.uid,
           name: conversation.data.name,
           avatar: conversation.data.avatar,
           tag: conversation.data.tag?conversation.data.tag: 'user'
         };
+        
         if(friend.tag == 'user'){
           this.profile.friend = friend;
           this.$emit( 'chatLocation',this.profile.friend );
@@ -219,7 +223,7 @@
         
         // 创建岗位会话信息
       let p = {
-        company_uid: conversation.userId,
+        company_uid: conversation.data.uid,
         uid: localStorage.getItem('realUid'),
       }
       that.$axios.post('/api/position-chat-record/detail',p).then(res =>{

@@ -22,11 +22,8 @@ router.beforeEach(async(to, from, next) => {
   let tag = localStorage.getItem('tag');
   if (hasToken) {
     if (to.path === '/login') {
-      if(tag == 'company'){
-        next({ path: '/' })
-      }else{
-        next({ path: '/talentHome' })
-      }
+      removeToken();
+      next(`/login`);
       NProgress.done()
     } else {
       if(tag == 'company' ){

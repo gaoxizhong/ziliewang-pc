@@ -299,15 +299,16 @@ export default {
       let that = this;
       let seltPositionData = that.seltPositionData;
       let name = '';
-      if(seltPositionData.is_name_protect == 1){
-        name = seltPositionData.name
+      if(seltPositionData.basic_info.is_name_protect == 1){
+        name = seltPositionData.basic_info.name
       }else{
-        name = seltPositionData.real_name
+        name = seltPositionData.basic_info.real_name
       }
       let infoData = {
-        uid: seltPositionData.uid || seltPositionData.basic_info.uid,
-        name: name || seltPositionData.basic_info.name,
-        avatar: seltPositionData.avatar || seltPositionData.basic_info.avatar,
+        id: 'u_'+seltPositionData.basic_info.uid,
+        uid: seltPositionData.basic_info.uid,
+        name: name,
+        avatar: seltPositionData.basic_info.avatar,
         company_id: i.company_id, // 企业id
         position_id: i.id,  // 岗位id
         position_name: i.position_name,

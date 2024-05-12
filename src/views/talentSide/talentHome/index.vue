@@ -1,24 +1,6 @@
 <template>
   <div class="container">
     <div class="job-search-box">
-      <!-- 搜索框模块 开始 -->
-      <div class="search-box">
-        <!-- <el-select v-model="region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select> -->
-        <el-input placeholder="搜索职位/公司/内容关键词" v-model="input_name" class="input-with-select" @keydown.enter.native="searchEnterFun($event)">
-          <el-button slot="append" @click="getSearchinfo">搜索</el-button>
-        </el-input>
-      </div>
-      <div class="hotJob-box">
-        <span class="hotJob-span">热门岗位</span>
-        <div class="hotJob-item-box">
-          <a href="javascript:0;" class="hotJob-item" v-for="(item,index) in hotJob_options" :key="index" @click="clickTagname(item.position_name)">{{item.position_name}}</a>
-        </div>
-      </div>
-
-      <!-- 搜索框模块 j结束 -->
       <!-- 筛选模块 开始-->
       <filterOptionsContainer @getfilterInfo="getfilterInfo"/>
       <!-- 筛选模块 开始-->
@@ -112,7 +94,6 @@ export default {
   },
   created(){
     // this.getSearchinfo();
-    this.gethotJobList();
     // 获取个人信息
     this.getUserProfile();
   },
@@ -123,7 +104,8 @@ export default {
     // 筛选
     getfilterInfo(e){
       let info = JSON.parse(e);
-      this.filterInfo = info;
+      this.input_name = info.input_name;
+      this.filterInfo = info.info;
       this.infoList = [];
       this.paginationData= {
         total: 0,
@@ -144,10 +126,6 @@ export default {
       }).catch(e =>{
         console.log(e)
       })
-    },
-    clickTagname(n){
-      this.input_name = n;
-      this.getSearchinfo();
     },
     clickItems(i){
       let that = this;
@@ -178,18 +156,7 @@ export default {
     pageHasChanged() {
       this.getSearchinfo();
     },
-    gethotJobList(){
-      let that = this;
-      that.$axios.post('/api/company-position/hot',{}).then( res =>{
-        if(res.code == 0){
-          that.hotJob_options = res.data;
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
-    },
+
     // 搜索
     getSearchinfo(){
       let that = this;
@@ -235,75 +202,6 @@ export default {
 <style lang="scss" scoped>
   .job-search-box{
     width: 100%;
-    .search-box{
-      width: 100%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      /deep/ .input-with-select {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        height: 50px;
-        line-height: 50px;
-        background: $g_bg;
-        border-radius: 6px;
-        overflow: hidden;
-      }
-      /deep/ .el-input-group--append .el-input__inner {
-        flex: 1;
-        border: 3px solid $g_bg;
-        height: 100%;
-        line-height: 50px;
-        border-radius: 6px;
-      }
-      /deep/ .el-input-group__append{
-        width: 140px;
-        height: 100%;
-        background: none;
-        border: none;
-        padding: 0;
-        margin: 0;
-        .el-button {
-          width: 100%;
-          height: 100%;
-          background: $g_bg;
-          color: #fff;
-          border: 1px solid $g_bg;
-          border-radius: 0;
-          font-size: 16px;
-        }
-      }
-     
-    }
-    .hotJob-box{
-      width: 100%;
-      display: flex;
-      margin-top: 10px;
-      .hotJob-span{
-        width: auto;
-        font-size: 14px;
-        font-weight: bold;
-        color: #1D2129;
-        line-height: 22px;
-      }
-      .hotJob-item-box{
-        flex: 1;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        a{
-          padding: 4px 10px;
-          border-radius: 4px;
-          background: #fff;
-          text-align: center;
-          font-size: 14px;
-          color: $g_color;
-          margin-left: 8px;
-          margin-bottom: 10px;
-        }
-      }
-    }
   }
   .home-box{
     width: 100%;

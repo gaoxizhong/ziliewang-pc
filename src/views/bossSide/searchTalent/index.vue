@@ -1,28 +1,7 @@
 <template>
   <!-- 搜索人才页 -->
   <div class="bossSide-container">
-    <div class="searchTalent-top-box m-box">
-      <!-- 检索及热门职位 开始 -->
-      <div class="search-box">
-        <!-- 搜索框 开始 -->
-        <div class="search-input-box">
 
-          <div class="input-box">
-            <div class="input-left-box">
-              <el-input v-model="search_value" placeholder="搜索职位/公司/内容关键词" @keydown.enter.native="searchInputFun($event)"></el-input>
-            </div>
-            <button class="input-button" @click="getSearchinfo">搜索</button>
-          </div>
-          <div class="search-input-tab">
-            <!-- <div><span>展开高级搜索</span><img src="../../../assets/image/bossSide/icon-down.png" alt=""></div> -->
-            <div @click.stop="myCollection"><img src="../../../assets/image/bossSide/icon-star.png" alt=""><span>我的收藏</span></div>
-          </div>
-
-        </div>
-        <!-- 搜索框 结束 -->
-      </div>
-      <!-- 检索及热门职位 结束 -->
-    </div>
  
     <!-- 高级筛选模块 开始-->
     <div class="screen-box m-box margin-top-20">
@@ -123,7 +102,6 @@ export default {
   },
   created(){
     this.search_value = this.$route.query.input_name;
-    // this.getSearchinfo();
   },
   methods:{
     // 创建岗位会话信息
@@ -148,7 +126,6 @@ export default {
     clickpositionList(i){
       let that = this;
       let seltPositionData = that.seltPositionData;
-      console.log(i)
       let name = '';
       if(seltPositionData.is_name_protect == 1){
         name = seltPositionData.name
@@ -156,9 +133,10 @@ export default {
         name = seltPositionData.real_name
       }
       let infoData = {
-        uid: seltPositionData.uid || seltPositionData.basic_info.uid,
-        name: name || seltPositionData.basic_info.name,
-        avatar: seltPositionData.avatar || seltPositionData.basic_info.avatar,
+        id: 'u_' + seltPositionData.uid,
+        uid: seltPositionData.uid,
+        name: name,
+        avatar: seltPositionData.avatar,
         company_id: i.company_id, // 企业id
         position_id: i.id,  // 岗位id
         position_name: i.position_name,
@@ -199,7 +177,8 @@ export default {
     // 筛选
     getfilterInfo(e){
       let info = JSON.parse(e);
-      this.filterInfo = info;
+      this.search_value = info.search_value;
+      this.filterInfo = info.info;
       this.jobList = [];
       this.paginationData= {
         total: 0,
@@ -212,10 +191,7 @@ export default {
       this.search_value = n;
       this.getSearchinfo();
     },
-    // 点击我的收藏 --- 跳转到我的收藏
-    myCollection(){
-      this.$router.push('/myCollect');
-    },
+
     handleClick(tab, event) {
       console.log(tab, event);
     },
@@ -239,13 +215,7 @@ export default {
       }
       this.selectedOptions = thsAreaCode;
     },
-    // 回车键点击
-    searchInputFun(e){
-      var keyCode = window.event?e.keyCode:e.which;
-      if(keyCode == 13){
-        this.getSearchinfo();
-      }
-    },
+
     // 搜索
     getSearchinfo(){
       let that = this;
@@ -329,195 +299,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .searchTalent-top-box{
-    // padding-bottom: 0;
-    
-    .search-box{
-      padding: 0 3rem;
-      position: sticky;
-      top: 0;
-      .search-input-box{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        .input-box{
-          flex: 1;
-          height: 48px;
-          line-height: 48px;
-          background: $g_bg;
-          border-radius: 6px;
-          border: 3px solid $g_color;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          .input-left-box{
-            flex: 1;
-            background: #fff;
-            height: 100%;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            .input-add-box{
-              padding: 0 12px;
-              display: flex;
-              align-items: center;
-              border-right: 1px solid #F2F3F5;
-              cursor: pointer;
-              height: 100%;
-              width: auto;
-              img{
-                width: 14px;
-                height: 14px;
-              }
-              span{
-                font-size: 14px;
-                font-weight: 400;
-                color: #86909C;
-                line-height: 22px;
-                padding-left: 8px;
-              }
 
-              .el-cascader{
-                font-size: 14px;
-                font-weight: 400;
-                color: #86909C;
-                padding-left: 8px;
-                height: 100%;
-                /deep/ .el-input{
-                  height: 100%;
-                }
-                /deep/ .el-input__inner{
-                  padding: 0;
-                }
-                /deep/ .el-input__suffix{
-                  display: none;
-                }
-                /deep/ .el-cascader__label{
-                  width: 100%;
-                  height: 100%;
-                  display: flex;
-                  align-items: center;
-                }
-                
-              }
-              
-            }
-            .el-input{
-              flex: 1;
-            }
-            /deep/ .el-input__inner{
-              height: 100%;
-              line-height: 48px;
-              border: none;
-              font-size: 14px;
-            }
-
-          }
-          button.input-button{
-            width: auto;
-            height: 100%;
-            padding: 0 30px;
-            background: $g_bg;
-            color: #fff;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            border: none;
-            border-color: $g_bg;
-          }
-        }
-
-
-        .search-input-tab{
-          width: auto;
-          display: flex;
-          align-items: center;
-          &>div{
-            margin-left: 1rem;
-            font-size: 14px;
-            font-weight: 400;
-            color: $g_textColor;
-            line-height: 22px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            img{
-              width: 14px;
-              height: 14px;
-            }
-            span{
-              padding: 0 4px;
-            }
-            &:nth-of-type(2){
-              color: #86909C;
-            }
-          }
-        }
-      }
-      .hotJob-box{
-        width: 100%;
-        display: flex;
-        margin-top: 10px;
-        .hotJob-span{
-          width: auto;
-          font-size: 14px;
-          font-weight: bold;
-          color: #1D2129;
-          line-height: 22px;
-        }
-        .hotJob-item-box{
-          flex: 1;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          a{
-            padding: 4px 1rem;
-            border-radius: 4px;
-            background: #fff;
-            text-align: center;
-            font-size: 14px;
-            color: $g_color;
-            margin-left: 8px;
-            margin-bottom: 0.5rem;
-          }
-        }
-      }
-    }
-    .online-job-box{
-      display: flex;
-      align-items: center;
-      .online-job-title{
-        font-size: 14px;
-        font-weight: 400;
-        color: #4E5969;
-        line-height: 22px;
-      }
-      .online-job-tab{
-        margin-left: 1rem;
-        display: flex;
-        align-items: center;
-        span{
-          height: 28px;
-          border-radius: 4px;
-          border: 1px solid #F2F3F5;
-          font-size: 14px;
-          font-weight: 400;
-          color: #86909C;
-          line-height: 22px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 1rem;
-          padding: 0 10px;
-          cursor: pointer;
-          &.hover{
-            color: $g_color;
-          }
-        }
-      }
-    }
-  }
 
 
 

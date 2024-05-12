@@ -21,7 +21,7 @@
        dragHandle=".VueDragResize-title-box" 
        :isActive="true" :parentLimitation="true" 
        :parentW="parentW" :parentH="parentH" 
-       :w="width" :h="height" :minw="minw"
+       :w="width" :h="height" :minw="minw" :minh="minh"
        :x='left' :y='top' 
        @resizing="resize" 
        @dragging="resize" v-if="is_VueDragResize">
@@ -91,6 +91,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         width: 0,
         height: 0,
         minw: 440,
+        minh: 500,
         parentH: 0,
         parentW: 0,
         top: 40,
@@ -104,7 +105,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         show_TUICallKit: false,
         // 腾讯云 SDKAppID、userSig 的获取参考下面步骤
         // 主叫的 userID
-        userID: localStorage.getItem('realUid'),    
+        userID: 'u_'+ localStorage.getItem('realUid'),    
         // 被叫的 userID
         callUserID: '',
         to:{},
@@ -142,9 +143,11 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       this.parentW = getViewportSize.width; // 组件范围 
       this.width = Number(getViewportSize.width)/2; // 可拖动div 宽度
       this.height = Number(getViewportSize.height - 80); // 可拖动div 高度
+      this.minh = Number(getViewportSize.height - 180); // 可拖动div 最小高度
       this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
       this.currentUser = {
-        id: localStorage.getItem('realUid'),
+        id: 'u_'+ localStorage.getItem('realUid'),
+        uid:localStorage.getItem('realUid'),
         name: this.$store.state.user.name,
         avatar: this.$store.state.user.realAvatar,
         tag: 'user'

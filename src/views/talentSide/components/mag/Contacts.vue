@@ -76,6 +76,7 @@
         console.log(friend)
         this.profile.friend ={
           is_friend: true, // 是好友聊天
+          id: 'u_' + friend.uid,
           uid: friend.uid,
           name: friend.real_name,
           avatar: friend.avatar,

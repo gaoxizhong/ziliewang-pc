@@ -380,7 +380,7 @@
     },
     mounted(){
       this.currentUser = {  // 我的信息--展示
-        id: localStorage.getItem('realUid'),
+        id: 'u_'+ localStorage.getItem('realUid'),
         name: this.$store.state.user.name,
         avatar: this.$store.state.user.realAvatar
       };
@@ -390,8 +390,13 @@
       this.friend = this.infoData;  // 目标用户信息
       this.to = { // 目标用户
         type: this.GoEasy.IM_SCENE.PRIVATE,
-        id: this.friend.uid,
-        data: {name: this.friend.name, avatar: this.friend.avatar,is_friend: this.friend.is_friend},
+        id: this.friend.id,
+        data: {
+          uid:this.friend.uid,
+          name: this.friend.name,
+          avatar: this.friend.avatar,
+          is_friend: this.friend.is_friend
+        },
       };
       if(this.friend.position_id){
         this.to.data.position_id = this.friend.position_id; //职位详情id
@@ -432,7 +437,7 @@
       },
       formatDate,
       onReceivedPrivateMessage(message) {
-        if (message.senderId === this.friend.uid) {
+        if (message.senderId === this.friend.id) {
           this.history.messages.push(message);
           this.markPrivateMessageAsRead();
         }
@@ -605,6 +610,7 @@
       },
       // 发送出简历消息
       clickToolbarBtn(){
+        let that = this;
         let userProfile = that.userProfile;
         let payload = {
           text: '发送简历',
@@ -638,7 +644,7 @@
         let p = {
           position_id: that.friend.position_id,// 岗位id
           company_id: that.friend.company_id,// 公司id
-          company_uid: that.to.id,//  发布人uid
+          company_uid: that.to.data.uid,//  发布人uid
         }
         that.$axios.post('/api/user/deliver',p).then( res =>{
           console.log(res)
@@ -702,7 +708,7 @@
           if(!is_sess){
             that.$axios.post('/api/user/find-company',{
               position_id: that.friend.position_id, // 岗位id
-              company_uid: that.to.id,//  发布人uid
+              company_uid: that.to.uid,//  发布人uid
               company_id: that.friend.company_id, // 公司id
               content: '发起聊天'
             }).then( res =>{
@@ -956,7 +962,7 @@
           lastMessageTimeStamp = lastMessage.timestamp;
         }
         this.goEasy.im.history({
-          userId: this.friend.uid,
+          userId: this.friend.id,
           lastTimestamp: lastMessageTimeStamp,
           limit: 10,
           onSuccess: (result) => {
