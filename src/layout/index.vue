@@ -1,44 +1,66 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
-    <div class="main-container">
-      <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
+  <div class="app-wrapper">
+    <!-- <div class="ad-box">
+      <img src="../assets/image/ad-bg3.png" alt="" class="ad-img"/>
+      <div class="ad-content-box">
+        <div class="content-pagebox">
+          <ul class="ad-content-ul-6">
+            <li style="font-size: 20px;"><span>AI Agent</span></li>
+          </ul>
+          <ul class="ad-content-ul-7">
+            <li style="padding-top: 15px;"><span>工作&nbsp;&nbsp;学习&nbsp;&nbsp;分享</span></li>
+            <li style="padding-top: 12px;"><span>职场社交</span></li>
+            <li style="padding-top: 12px;"><span>打通专属人脉圈</span></li>
+          </ul>
+          <ul class="ad-content-ul-8">
+            <li style=""><span>就上</span><span style="font-size:24px;color: #fff;">自猎网</span></li>
+            <li style="padding-top: 10px;"><span>轻松搞定</span></li>
+          </ul>
+        </div>
       </div>
-      <app-main />
-      <Footer />
-    </div>
+    </div> -->
+    <div :class="classObj" class="app-wrapper">
+      <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+      <sidebar class="sidebar-container" />
+      <div class="main-container">
+        <div :class="{'fixed-header':fixedHeader}">
+          <navbar />
+        </div>
+        <app-main />
+        <Footer />
+      </div>
 
 
-    <!-- 聊天弹窗 开始-->
-    <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentLimitation="true" :parentH="parentH" :w="width" :h="height" :minw="minw" :minh="minh" :x='left' :y='top' @dragstop="onDragstop" @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
-      <div class="VueDragResize-centent-box">
-        <div class="VueDragResize-title-box">
-          <div class="title"><span>我的沟通</span></div>
-          <div class="icon-box">
-            <!-- <img src="../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
-            <img src="../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
+      <!-- 聊天弹窗 开始-->
+      <VueDragResize :style="`z-index:${zInfex_0};`" dragHandle=".VueDragResize-title-box" :isActive="true" :parentW="parentW" :parentLimitation="true" :parentH="parentH" :w="width" :h="height" :minw="minw" :minh="minh" :x='left' :y='top' @dragstop="onDragstop" @resizing="resize" @dragging="resize" v-if="is_VueDragResize">
+        <div class="VueDragResize-centent-box">
+          <div class="VueDragResize-title-box">
+            <div class="title"><span>我的沟通</span></div>
+            <div class="icon-box">
+              <!-- <img src="../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
+              <img src="../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
+            </div>
+          </div>
+          <div class="navbaerMag-content-box">
+            <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 50"  is_pop="is_pop" ref="chat" />
           </div>
         </div>
-        <div class="navbaerMag-content-box">
-          <buddyChart :title_show="title_show" :infoData="infoData" :laiyuan="laiyuan" :width="width" :height="height - 50"  is_pop="is_pop" ref="chat" />
-        </div>
-      </div>
-    </VueDragResize>
-    <!-- 聊天弹窗 结束-->
+      </VueDragResize>
+      <!-- 聊天弹窗 结束-->
 
-    <!-- 音视频聊天窗 -->
-    <div class="TUICallKit-box" :class="show_TUICallKit ? 'show-TUICallKit' : '' ">
-      <TUICallKit 
-        :allowedMinimized="true" 
-        :allowedFullScreen="true"
-        :beforeCalling="beforeCalling"
-        :afterCalling="afterCalling"
-        :statusChanged="handleStatusChanged"
-      />
+      <!-- 音视频聊天窗 -->
+      <div class="TUICallKit-box" :class="show_TUICallKit ? 'show-TUICallKit' : '' ">
+        <TUICallKit 
+          :allowedMinimized="true" 
+          :allowedFullScreen="true"
+          :beforeCalling="beforeCalling"
+          :afterCalling="afterCalling"
+          :statusChanged="handleStatusChanged"
+        />
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -506,5 +528,48 @@ export default {
     left: 50%;
     transform: translate(-50%,-50%);
   }
+// 头部广告
+.ad-box{
+  width: 100%;
+  position: relative;
+  display: flex;
+  &>img{
+    width: 100%;
+    height: 140px;
+  }
+  .ad-content-box{
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    .content-pagebox{
+      width: 1366px;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      padding: 10px 0;
+      &>ul{
+        li{
+          font-size: 14px;
+          color: #bdd7e9;
+          display: flex;
+          align-items: flex-end;
+        }
+      }
+      ul.ad-content-ul-6{
+        padding-top: 0;
+      }
+      ul.ad-content-ul-7{
+        padding-top: 0;
+        padding-left: 10px;
+      }
+      ul.ad-content-ul-8{
+        padding-top: 60px;
+        padding-left: 200px;
+      }
 
+    }
+   
+  }
+}
 </style>

@@ -238,7 +238,7 @@ export default {
     // localStorage.setItem('company_id', ''); // 企业id缓存
     localStorage.setItem('ipCity','');
     this.login_bgurl_1 = this.$root.login_bgurl_1;
-    this.login_bgurl_2 = this.$root.login_bgurl_2;
+    // this.login_bgurl_2 = this.$root.login_bgurl_2;
     this.$nextTick(() => {
       this.preUrl = !!this.$route.query.preUrl ? this.$route.query.preUrl : undefined
     })

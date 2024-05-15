@@ -105,12 +105,12 @@ new Vue({
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       },
-      login_bgurl_2:{
-        backgroundImage:'url(' + require('./assets/image/bg_2.jpg') + ')',
-        backgroundRepeat:'no-repeat',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      },
+      // login_bgurl_2:{
+      //   backgroundImage:'url(' + require('./assets/image/bg_2.jpg') + ')',
+      //   backgroundRepeat:'no-repeat',
+      //   backgroundSize: 'cover',
+      //   backgroundPosition: 'center',
+      // },
       positionItems: {}, // 职位中心选中的信息
     }
   },

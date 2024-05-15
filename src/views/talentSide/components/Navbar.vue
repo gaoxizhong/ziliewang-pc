@@ -1,64 +1,117 @@
 <template>
-  <div class="navber-container" :style="`background:${backgroundColor};`">
-    <div class="navbar">
-      <div class="hospital">
-        <img src="../../../assets/image/logo-2.png" alt="">
-      </div>
-      <div class="navbar-items-box">
-        <el-menu
-        :default-active="activeMenu"
-        class="el-menu-demo"
-        mode="horizontal"
-        :background-color="backgroundColor"
-        text-color="#ffffff"
-        router 
-        active-text-color="#fff" >
-          <el-menu-item index="/talentHome">首页</el-menu-item>
-          <el-menu-item index="/myResume">我的简历</el-menu-item>
-          <el-menu-item index="/myDelivery">我的投递</el-menu-item>
-          <el-menu-item index="/careerIdentity">我的职业身份</el-menu-item>
-          <el-menu-item index="/liveList">直播</el-menu-item>
-        </el-menu>
-      </div>
-      <div class="right-menu">
-        <div class="right-items-box">
-          <div @click="clickxsms">
-            <span>线上面试</span>
-          </div>
-          <div @click="clickProfessionalCircle">
-            <img src="../../../assets/image/nav_1.png" alt="" />
-            <span>朋友圈</span>
-          </div>
-          <div @click="clickmyGoodFriend">
-            <img src="../../../assets/image/nav_hy.png" alt="" />
-            <span>我的好友</span>
-          </div>
-          <div @click="clickMessage" class="communication-box">
-            <img src="../../../assets/image/icon-wechat1.png" alt="" />
-            <span>消息</span>
-            <span class="corner-mark-box" v-if="unreadAmount">{{ unreadAmount }}</span>
-          </div>
+  <div>
+    <div class="navber-container" :style="`background:${backgroundColor};`">
+      <div class="navbar">
+        <div class="hospital">
+          <img src="../../../assets/image/logo-2.png" alt="">
         </div>
-        <el-dropdown class="avatar-container" trigger="click">
-          <div class="avatar-wrapper">
-            <img :src=" avatar ? avatar : require('../../../assets/image/img-user.jpg')" class="user-avatar" />
-            <span class="username">{{ name }}</span>
-            <i class="el-icon-caret-bottom" />
+        <div class="navbar-items-box">
+          <el-menu
+          :default-active="activeMenu"
+          class="el-menu-demo"
+          mode="horizontal"
+          :background-color="backgroundColor"
+          text-color="#ffffff"
+          router 
+          active-text-color="#fff" >
+            <el-menu-item index="/talentHome">首页</el-menu-item>
+            <el-menu-item index="/myResume">我的简历</el-menu-item>
+            <el-menu-item index="/myDelivery">我的投递</el-menu-item>
+            <el-menu-item index="/careerIdentity">我的职业身份</el-menu-item>
+            <el-menu-item index="/liveList">直播</el-menu-item>
+          </el-menu>
+        </div>
+        <div class="right-menu">
+          <div class="right-items-box">
+            <div @click="clickxsms">
+              <span>线上面试</span>
+            </div>
+            <div @click="clickProfessionalCircle">
+              <img src="../../../assets/image/nav_1.png" alt="" />
+              <span>朋友圈</span>
+            </div>
+            <div @click="clickmyGoodFriend">
+              <img src="../../../assets/image/nav_hy.png" alt="" />
+              <span>我的好友</span>
+            </div>
+            <div @click="clickMessage" class="communication-box">
+              <img src="../../../assets/image/icon-wechat1.png" alt="" />
+              <span>消息</span>
+              <span class="corner-mark-box" v-if="unreadAmount">{{ unreadAmount }}</span>
+            </div>
           </div>
-          <el-dropdown-menu slot="dropdown" class="user-dropdown">
-            <router-link to="/talentSideSettings">
-              <el-dropdown-item>设置</el-dropdown-item>
-            </router-link>
-            <el-dropdown-item divided @click.native="logout">
-              <span style="display: block">退出登陆</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+          <el-dropdown class="avatar-container" trigger="click">
+            <div class="avatar-wrapper">
+              <img :src=" avatar ? avatar : require('../../../assets/image/img-user.jpg')" class="user-avatar" />
+              <span class="username">{{ name }}</span>
+              <i class="el-icon-caret-bottom" />
+            </div>
+            <el-dropdown-menu slot="dropdown" class="user-dropdown">
+              <router-link to="/talentSideSettings">
+                <el-dropdown-item>设置</el-dropdown-item>
+              </router-link>
+              <el-dropdown-item divided @click.native="logout">
+                <span style="display: block">退出登陆</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
+
+    </div>
+    <div class="ad-box">
+      <img src="../../../assets/image/ad-bg1.png" alt="" class="ad-img" v-if="ad_show == '/talentHome' || ad_show == '/myResume'"/>
+      <img src="../../../assets/image/ad-bg2.png" alt="" class="ad-img" v-if="ad_show == '/myDelivery'"/>
+      <img src="../../../assets/image/ad-bg3.png" alt="" class="ad-img" v-if="ad_show == '/careerIdentity' || ad_show == '/professionalCircle' || ad_show == '/liveList'"/>
+      <div class="ad-content-box" v-if="ad_show == '/talentHome'|| ad_show == '/myResume'">
+        <div class="content-pagebox">
+          <ul class="ad-content-ul-1">
+            <li style="font-size: 22px;"><span>人工智能</span></li>
+            <li style="padding-top: 20px;"><span>招聘Agent</span></li>
+          </ul>
+          <ul class="ad-content-ul-2">
+            <li style="padding-top: 12px;"><span>搞定职场</span></li>
+            <li style="padding-top: 12px;"><span>搞定工作</span></li>
+            <li style="padding-top: 12px;"><span>优选机会</span></li>
+          </ul>
+          <ul class="ad-content-ul-3">
+            <li style=""><span>就上</span><span style="font-size:24px;color: #fff;">自猎网</span></li>
+            <li style="padding-top: 16px;"><span>轻松搞定</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ad-content-box" v-if="ad_show == '/myDelivery'">
+        <div class="content-pagebox">
+          <ul class="ad-content-ul-4">
+            <li style="padding-top: 10px;"><span>招聘Agent</span></li>
+            <li style="padding-top: 10px;padding-left: 60px;"><span>优选职位</span></li>
+            <li style="font-size: 20px;padding-top: 10px;"><span>人工智能帮你拿offer</span></li>
+          </ul>
+          <ul class="ad-content-ul-5">
+            <li style=""><span>就上</span><span style="font-size:24px;color: #fff;">自猎网</span></li>
+            <li style="padding-top: 10px;"><span>轻松搞定</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="ad-content-box" v-if="ad_show == '/careerIdentity' || ad_show == '/professionalCircle' || ad_show == '/liveList'">
+        <div class="content-pagebox">
+          <ul class="ad-content-ul-6">
+            <li style="font-size: 20px;"><span>AI Agent</span></li>
+          </ul>
+          <ul class="ad-content-ul-7">
+            <li style="padding-top: 15px;"><span>工作&nbsp;&nbsp;学习&nbsp;&nbsp;分享</span></li>
+            <li style="padding-top: 12px;"><span>职场社交</span></li>
+            <li style="padding-top: 12px;"><span>打通专属人脉圈</span></li>
+          </ul>
+          <ul class="ad-content-ul-8">
+            <li style=""><span>就上</span><span style="font-size:24px;color: #fff;">自猎网</span></li>
+            <li style="padding-top: 10px;"><span>轻松搞定</span></li>
+          </ul>
+        </div>
       </div>
     </div>
-
   </div>
-
 </template>
 
 <script>
@@ -101,6 +154,12 @@ export default {
       // if (meta.activeMenu) {
       //   return meta.activeMenu;
       // }
+      return '' || path;
+    },
+    ad_show() {
+      const route = this.$route;
+      let { meta, path,query,fullPath } = route;
+      console.log(route)
       return '' || path;
     },
     navbarMessagePrompt() {
@@ -312,4 +371,66 @@ export default {
     }
   }
 }
+
+
+// 头部广告
+.ad-box{
+  width: 100%;
+  position: relative;
+  display: flex;
+  &>img{
+    width: 100%;
+    height: 140px;
+  }
+  .ad-content-box{
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    .content-pagebox{
+      width: 1366px;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      padding: 10px 0;
+      &>ul{
+        li{
+          font-size: 14px;
+          color: #bdd7e9;
+          display: flex;
+          align-items: flex-end;
+        }
+      }
+      ul.ad-content-ul-1{
+        padding-top: 20px;
+      }
+      ul.ad-content-ul-2{
+        padding-top: 10px;
+        padding-left: 20px;
+      }
+      ul.ad-content-ul-3{
+        padding-top: 40px;
+        padding-left: 200px;
+      }
+      ul.ad-content-ul-5{
+        padding-top: 60px;
+        padding-left: 180px;
+      }
+      ul.ad-content-ul-6{
+        padding-top: 0;
+      }
+      ul.ad-content-ul-7{
+        padding-top: 0;
+        padding-left: 10px;
+      }
+      ul.ad-content-ul-8{
+        padding-top: 60px;
+        padding-left: 200px;
+      }
+
+    }
+   
+  }
+}
+
 </style>
