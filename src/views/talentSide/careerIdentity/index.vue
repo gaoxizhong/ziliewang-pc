@@ -55,7 +55,7 @@
       
     </div>
     <!-- 动态列表 开始 -->
-    <dynamicState :see_uid="see_uid" />
+    <!-- <dynamicState :see_uid="see_uid" /> -->
     <!-- 动态列表 结束 -->
     <!-- 工作经历 -->
     <div class="view-box work-experience">
@@ -106,11 +106,11 @@
 
 <script>
 import videoDialog from '../components/videoDialog.vue';
-import dynamicState from './dynamicState/index.vue';
+// import dynamicState from './dynamicState/index.vue';
 export default {
   name: 'careerIdentity',
   components: {
-    dynamicState,
+    // dynamicState,
     videoDialog
   },
   data(){

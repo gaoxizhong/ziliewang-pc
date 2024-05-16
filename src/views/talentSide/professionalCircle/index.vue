@@ -7,22 +7,27 @@
           <!-- <el-tab-pane label="聊天记录" name="chatHistory"></el-tab-pane> -->
           <el-tab-pane label="好友动态" name="attention"></el-tab-pane>
           <el-tab-pane label="头条" name="hot"></el-tab-pane>
+          <el-tab-pane label="我的" name="myCircle"></el-tab-pane>
           <!-- <el-tab-pane label="直播" name="live"></el-tab-pane> -->
         </el-tabs>
         <div class="fb-btn" @click="clickPublishBtn">发布动态</div>
       </div>
     </div>
     <!-- 好友动态 、 头条 开始 -->
-    <div class="container info-box" v-if=" tag == 'hot'|| tag == 'attention'">
+    <div class="container info-box" v-if=" tag == 'hot'|| tag == 'attention' || tag == 'myCircle'">
       <div class="info-left-box">
         <div class="info-right-container">
           <!-- 列表项 开始 -->
           <div class="container-items-box" v-for="(item,index) in dataList" :key="index">
-            <div class="right-container-item" v-if="item.users">
+            <div class="right-container-item">
               <div class="title list-title-box">
-                <div class="title-left" @click.stop="clickName(item)">
+                <div class="title-left" v-if=" tag == 'hot'|| tag == 'attention' " @click.stop="clickName(item)">
                   <img :src=" item.users.avatar ? item.users.avatar : require('../../../assets/image/img-user.jpg' )" alt="" />
                   <span>{{ item.users.name }}</span>
+                </div>
+                <div class="title-left" v-else>
+                  <img :src="myInfoData.avatar?myInfoData.avatar:require('../../../assets/image/img-user.jpg' )" alt="" />
+                  <span>{{ myInfoData.real_name }}</span>
                 </div>
                 <div class="title-t">{{ item.createtime }}</div>
               </div>
@@ -58,6 +63,8 @@
                     <img src="../../../assets/image/comment.png" alt="" />
                     <span>{{ item.comment_num?item.comment_num:0 }}评论</span>
                   </div>
+                  <img src="../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"  v-if="uid == myInfoData.uid"/>
+
                 </div>
 
                 <!-- 评论区域 开始 -->
@@ -98,6 +105,10 @@
                               <div class="bottom-btn-items" @click.stop="clickRecover(items)">
                                 <img src="../../../assets/image/comment.png" alt="" />
                                 <span>{{ items.comment_num }} 回复</span>
+                              </div>
+                              <div class="bottom-btn-items" @click.stop="clickitemsDelt(item.id,items.id,c_index)" v-if="uid == myInfoData.uid || uid == items.uid">
+                                <img src="../../../assets/image/icon-copy.png" alt="" />
+                                <span>删除</span>
                               </div>
                             </div>
                           </div>
@@ -257,6 +268,8 @@ export default {
       recover_value: '',
       reply_content:'', // 回复弹窗 value
       reply_id: 0,
+      myInfoData: {}, // 我的数据
+      uid: localStorage.getItem('realUid')
     }
   },
   computed: {
@@ -266,7 +279,7 @@ export default {
 
   },
   created(){
-    if(this.tag == 'hot'|| this.tag == 'attention'){
+    if(this.tag == 'hot'|| this.tag == 'attention' || this.tag == 'myCircle'){
       this.getList();
     }
   },
@@ -276,31 +289,50 @@ export default {
     },
     clickTab(n){
       this.content_tag = n;
-      this.textarea = '';
-      this.upImgList = [];
-      this.video_files_path = [];
     },
     handleClick(tab, event){
       console.log(tab)
       this.tag = tab._props.name;
-      if( this.tag == 'hot'|| this.tag == 'attention' ){ // 头条 好友动态
+      if( this.tag == 'hot'|| this.tag == 'attention' || this.tag == 'myCircle' ){ // 头条 好友动态 我的
         this.page = 1;
+        this.dataList = [];
         this.getList();
       }
  
     },
     getList(){
-      this.$axios.post('/api/profession-circle/index',{
-        page: this.page,
-        tag: this.tag
-      }).then(res =>{
+      let that = this;
+      let uid = localStorage.getItem('realUid');
+      let p = {
+        page: that.page,
+        tag: that.tag,
+      }
+      let url = '';
+
+      if(that.tag == 'hot'|| that.tag == 'attention'){
+        url = '/api/profession-circle/index';
+      }
+      if( that.tag == 'myCircle' ){
+        url = '/api/profession-circle/my';
+        p.see_uid = uid;
+      }
+
+      that.$axios.post(url,p).then(res =>{
         
         if(res.code == 0){
-          let dataList = res.data;
+          let dataList = [];
+          if(that.tag == 'hot'|| that.tag == 'attention'){
+            dataList = res.data;
+          }
+          if( that.tag == 'myCircle' ){
+            dataList = res.data.list;
+            that.myInfoData = res.data.users;
+          }
+           
           dataList.forEach( ele =>{
             ele.show_review = false
           })
-          this.dataList = dataList;
+          that.dataList = dataList;
         }else{
           that.$message.error({
             message:res.msg
@@ -311,7 +343,6 @@ export default {
     // 点击头像、名称
     clickName(i){
       console.log(i)
-      let uid = localStorage.getItem('realUid');
       this.$router.push({
         path:'/careerIdentity',   //跳转的路径
         query:{           //路由传参时push和query搭配使用 ，作用时传递参数
@@ -330,8 +361,8 @@ export default {
     //   })
     // },
 
-// 点击点赞
-clickPoint(s,it_id,idx,c_id){
+      // 点击点赞
+    clickPoint(s,it_id,idx,c_id){
       console.log('clickPoint')
       let that = this;
       let index = idx;
@@ -434,7 +465,7 @@ clickPoint(s,it_id,idx,c_id){
       that.dataList = dataList;
     },
     // 获取详情
-   async getInfoData(){
+    async getInfoData(){
       await this.$axios.post('/api/profession-circle/detail',{
         profession_circle_id: this.id
       }).then( res =>{
@@ -637,6 +668,64 @@ clickPoint(s,it_id,idx,c_id){
       this.$refs.video._data.video_dialogVisible = true;
     },
 
+
+    // 我的 --- 删除动态
+    clickItemDelete(i,idx){
+      let that = this;
+      let item = i;
+      let index = idx;
+      let dataList = that.dataList;
+      console.log(item)
+      let p = {
+        id: item.id,
+      }
+      that.$axios.post('/api/profession-circle/delete',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success('删除成功！');
+          dataList.splice(index,1);
+          that.dataList = dataList;
+        } else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+        that.is_return = true;
+      }).catch(e =>{
+        console.log(e)
+        that.is_return = true;
+      })
+
+    },
+
+    // 删除评论
+    clickitemsDelt(it_id,c_id,index){
+      let that = this;
+      let detailData = this.detailData;
+      detailData.comment_list.splice(index,1);
+      detailData.comment_num--;
+      that.detailData = detailData;
+      return
+      let p = {
+        profession_circle_id: it_id,  // 职圈说说id
+        profession_circle_comment_id: c_id, // 这条评论id
+      }
+      that.$axios.post('/api/profession-circle-comment/delete',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success('删除成功！');
+          detailData.comment_list.splice(index,1);
+          that.detailData = detailData;
+        } else{
+          that.$message.error({
+            message:res.msg
+          })
+        }
+        that.is_return = true;
+      }).catch(e =>{
+        console.log(e)
+        that.is_return = true;
+      })
+    },
+
    
   },
 };
@@ -701,6 +790,7 @@ clickPoint(s,it_id,idx,c_id){
         .container-items-box{
           background: #fff;
           padding: 16px 16px 0 16px;
+          position: relative;
           .right-container-item{
             margin-top: 0;
             padding-bottom: 16px;
@@ -901,9 +991,20 @@ clickPoint(s,it_id,idx,c_id){
                   line-height: 22px;
                 }
               }
+              .item-delete-img{
+                width: 22px;
+                height: 22px;
+                position: absolute;
+                right: 20px;
+                bottom: 0;
+                display: none;
+                cursor: pointer;
+              }
             }
           }
-
+          &:hover .items-bottom-btn .item-delete-img{
+            display: block;
+          }
         }
         
       }

@@ -263,8 +263,6 @@ export default {
     },
     clickTab(n){
       this.tag = n;
-      this.textarea = '';
-      this.upImgList = '';
     },
     // 点击列表
     // clicklistItems(i){

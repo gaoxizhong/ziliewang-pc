@@ -1649,7 +1649,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    background: #f6f6f666;
+    background: #f6f6f607;
     display: flex;
     align-items: center;
     justify-content: center;
