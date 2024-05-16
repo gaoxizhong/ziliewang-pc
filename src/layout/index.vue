@@ -572,4 +572,9 @@ export default {
    
   }
 }
+@media screen and (max-width: 1466px){
+  .ad-box .ad-content-box .content-pagebox{
+    width: 1100px;
+  }
+}
 </style>
