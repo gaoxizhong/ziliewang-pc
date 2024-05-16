@@ -5,7 +5,7 @@
     </div>
     <div v-if="conversations.length">
       <div v-for="(item, key) in filteredList" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.id == item.userId}">
-        <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
+        <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,item)">
           <div class="avatar">
             <img :src="item.data.avatar?item.data.avatar:require('../../../../assets/image/img-user.jpg')"/>
             <div v-if="item.unread>0"
@@ -169,6 +169,8 @@
         this.rightClickMenu.visible = true;
         this.rightClickMenu.x = e.pageX;
         this.rightClickMenu.y = e.pageY;
+        console.log( this.rightClickMenu)
+
       },
       hideRightClickMenu() {
         this.rightClickMenu.visible = false;

@@ -63,7 +63,7 @@
                     <img src="../../../assets/image/comment.png" alt="" />
                     <span>{{ item.comment_num?item.comment_num:0 }}评论</span>
                   </div>
-                  <img src="../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"  v-if="uid == myInfoData.uid"/>
+                  <img src="../../../assets/image/icon-copy.png" alt="删除"  class="item-delete-img" @click.stop="clickItemDelete(item,index)"  v-if="tag == 'myCircle' && uid == myInfoData.uid"/>
 
                 </div>
 
@@ -79,7 +79,7 @@
 
                     <div class="comment-list-box">
                       <ul>
-                        <li v-for="(items,index) in infoData.comment_list" :key="index">
+                        <li v-for="(items,c_index) in infoData.comment_list" :key="c_index">
                           <div class="title">
                             <div class="title-left" @click.stop="clickName(items)">
                               <img :src="items.avatar?items.avatar:require('../../../assets/image/img-user.jpg')" alt="" class="avatar-img"/>
@@ -94,11 +94,11 @@
                             <div class="items-c-p">{{ items.content }}</div>
 
                             <div class="items-bottom-btn">
-                              <div class="bottom-btn-items" @click="clickPoint('commentID',item.id,index,items.id)" v-if="items.is_point == 2">
+                              <div class="bottom-btn-items" @click="clickPoint('commentID',item.id,c_index,items.id)" v-if="items.is_point == 2">
                                 <img src="../../../assets/image/thumbs-up.png" alt="" />
                                 <span>{{ items.point_num }} 赞</span>
                               </div>
-                              <div class="bottom-btn-items" @click="clickCancelPoint('commentID',item.id,index,items.id) " v-else>
+                              <div class="bottom-btn-items" @click="clickCancelPoint('commentID',item.id,c_index,items.id) " v-else>
                                 <img src="../../../assets/image/thumbs-up.png" alt="" />
                                 <span class="point-hover">{{ items.point_num }} 已赞</span>
                               </div>
@@ -106,7 +106,7 @@
                                 <img src="../../../assets/image/comment.png" alt="" />
                                 <span>{{ items.comment_num }} 回复</span>
                               </div>
-                              <div class="bottom-btn-items" @click.stop="clickitemsDelt(item.id,items.id,c_index)" v-if="uid == myInfoData.uid || uid == items.uid">
+                              <div class="bottom-btn-items" @click.stop="clickitemsDelt(item.id,items.id,c_index,index)" v-if="uid == item.uid || uid == items.uid">
                                 <img src="../../../assets/image/icon-copy.png" alt="" />
                                 <span>删除</span>
                               </div>
@@ -698,13 +698,10 @@ export default {
     },
 
     // 删除评论
-    clickitemsDelt(it_id,c_id,index){
+    clickitemsDelt(it_id,c_id,c_i,i){
       let that = this;
-      let detailData = this.detailData;
-      detailData.comment_list.splice(index,1);
-      detailData.comment_num--;
-      that.detailData = detailData;
-      return
+      let infoData = that.infoData;
+      let dataList = that.dataList;
       let p = {
         profession_circle_id: it_id,  // 职圈说说id
         profession_circle_comment_id: c_id, // 这条评论id
@@ -712,8 +709,11 @@ export default {
       that.$axios.post('/api/profession-circle-comment/delete',p).then( res =>{
         if(res.code == 0){
           that.$message.success('删除成功！');
-          detailData.comment_list.splice(index,1);
-          that.detailData = detailData;
+          infoData.comment_list.splice(c_i,1);
+          infoData.comment_num--;
+          dataList[i].comment_num --;
+          that.infoData = infoData;
+          that.dataList = dataList;
         } else{
           that.$message.error({
             message:res.msg
@@ -899,8 +899,8 @@ export default {
                 overflow: auto;
                 &.show-box{
                   height: auto;
-                  padding-top: 16px;
-                  padding-bottom: 16px;
+                  padding-top: 10px;
+                  padding-bottom: 14px;
                   max-height: 450px;
                 }
                 .fabu-box{
@@ -912,8 +912,8 @@ export default {
                   /deep/ .el-button{
                     padding: 0;
                     width: 100px;
-                    height: 2rem;
-                    line-height: 2rem;
+                    height: 35px;
+                    line-height: 35px;
                     margin-left: 20px;
                   }
                   /deep/ .el-button--primary{
@@ -921,8 +921,8 @@ export default {
                     border-color: $g_color;
                   }
                   /deep/ .el-input__inner{
-                    height: 2rem;
-                    line-height: 2rem;
+                    height: 35px;
+                    line-height: 35px;
                     font-size: 13px;
                   }
                 }
@@ -948,7 +948,7 @@ export default {
                       transform: translateY(-50%);
                     }
                     span{
-                      padding: 0 0.5rem;
+                      padding: 0 8px;
                     }
                   }
                   .comment-list-box{
@@ -973,6 +973,7 @@ export default {
               display: flex;
               align-items: center;
               margin-top: 14px;
+              position: relative;
               .bottom-btn-items{
                 margin-right: 16px;
                 display: flex;

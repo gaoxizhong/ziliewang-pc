@@ -296,7 +296,7 @@ export default {
             let SDKAppID = atob(res.data.sdk_appid);
             TUICallKitServer.init({
               SDKAppID: Number(SDKAppID),
-              userID: this.userID + '',
+              userID: this.userID,
               userSig,
               // tim: this.tim     // 如果工程中已有 tim 实例，需在此处传入
             });
@@ -316,7 +316,7 @@ export default {
         this.TUICallKit_type = e.type;
         // 1v1 video call
         await TUICallKitServer.call({ 
-            userID: e.to.id + '',
+            userID: e.to.id,
             type: e.type == 1? TUICallType.AUDIO_CALL: TUICallType.VIDEO_CALL, //1、语音通话(TUICallType.AUDIO_CALL )、2、视频通话(TUICallType.VIDEO_CALL )
           });
       } catch (error) {

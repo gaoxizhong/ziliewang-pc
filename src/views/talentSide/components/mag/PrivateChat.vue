@@ -103,7 +103,7 @@
                   <div class="message-phone-universal-card" v-if="item.type === 'phone' && item.payload.way_status == 1">
                     <h4 class="message-phone-universal-card-header">联系方式</h4>
                     <div class="message-phone-universal-card-content">
-                      <span>您的手机号：{{ item.payload.phone }}</span>
+                      <span>您的手机号：{{ item.payload.real_phone }}</span>
                     </div>
                     <div class="message-phone-box">您已向对方发送交换联系方式</div>
                   </div>
