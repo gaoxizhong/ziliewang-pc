@@ -4,7 +4,7 @@
       <div class="contact-searchQuery-box">
         <el-input type="text" prefix-icon="el-icon-search" clearable v-model="searchQuery" placeholder="搜索名称" @input="searchQuery_input"></el-input>
       </div>
-      <div v-for="(item, key) in filteredList" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.uid == item.userId}">
+      <div v-for="(item, key) in filteredList" :key="key" @click="chatLocation(item)" class="conversation-box" :class="{actived: profile.friend && profile.friend.id == item.userId}">
         <div class="conversation" @contextmenu.prevent.stop="e => showRightClickMenu(e,conversation)">
           <div class="avatar">
             <img :src="item.data.avatar?item.data.avatar:require('../../../../assets/image/img-user.jpg')"/>
@@ -213,10 +213,7 @@
       chatLocation (conversation) {
         console.log(conversation)
         let that = this;
-        let friend = that.profile.friend;
-        console.log(friend)
-
-        friend = {
+        let friend = {
           id:conversation.userId,
           uid: conversation.data.uid,
           name: conversation.data.name,

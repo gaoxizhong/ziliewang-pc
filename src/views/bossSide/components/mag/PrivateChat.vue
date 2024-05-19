@@ -611,20 +611,18 @@
       clickPhoneBtn(type,n,pn){
         let that = this;
         let userProfile = this.userProfile;
-        console.log(that.infoData)
         let p = {
           position_id: that.infoData.position_id, // 岗位id
           company_id: localStorage.getItem('company_id'),// 公司id
-          uid: that.infoData.uid
+          uid: that.infoData.uid,
+          company_phone: userProfile.phone
         }
         let apiUrl = '';
         if(type == 1){
           apiUrl = '/api/company-interview/get-contact-information';
-          p.company_phone = userProfile.phone;
         }
         if(type == 2){
           apiUrl = '/api/company-interview/operate-contact-information';
-          p.user_phone = pn;
           p.status = 1;
         }
         that.$axios.post(apiUrl,p).then( res =>{
@@ -1573,7 +1571,7 @@
 
   .action-bar .action-item .iconfont {
     font-size: 23px;
-    margin: 0 8px;
+    margin: 0 6px 0 4px;
     z-index: 3;
     color: #606266;
     cursor: pointer;
@@ -1789,7 +1787,7 @@
     height: 12px;
     vertical-align: middle;
     background: #e0e0e0;
-    margin: 0 10px;
+    margin: 0 8px;
   }
   .toolbar-btn {
     height: 22px;

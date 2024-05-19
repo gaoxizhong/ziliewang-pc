@@ -562,16 +562,15 @@
         let p = {
           position_id: that.friend.position_id,// 岗位id
           company_id: that.friend.company_id,// 公司id
+          user_phone: userProfile.basic_info.real_phone
         }
         let apiUrl = '';
         if(type == 1){
           apiUrl = '/api/company-deliver/get-contact-information';
-          p.user_phone = userProfile.basic_info.real_phone;
         }
         if(type == 2){
           apiUrl = '/api/company-deliver/operate-contact-information';
           p.status = 1;
-          p.company_phone = pn;
         }
         that.$axios.post(apiUrl,p).then( res =>{
           console.log(res)
@@ -640,7 +639,13 @@
           },1000)
           return
         }
-        console.log(that.friend)
+        let userProfile = that.userProfile;
+        if(!userProfile.basic_info.curriculum_vitae){
+          that.$message.error({
+            message: '请先填写简历信息并上传简历附件！'
+          })
+          return
+        }
         let p = {
           position_id: that.friend.position_id,// 岗位id
           company_id: that.friend.company_id,// 公司id
@@ -1496,7 +1501,7 @@
 
   .action-bar .action-item .iconfont {
     font-size: 23px;
-    margin: 0 8px;
+    margin: 0 6px 0 4px;
     z-index: 3;
     color: #606266;
     cursor: pointer;
@@ -1791,7 +1796,7 @@
     height: 12px;
     vertical-align: middle;
     background: #e0e0e0;
-    margin: 0 10px;
+    margin: 0 8px;
   }
   .toolbar-btn {
     height: 22px;

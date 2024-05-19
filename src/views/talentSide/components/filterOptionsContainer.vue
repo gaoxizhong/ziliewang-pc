@@ -2,8 +2,8 @@
   <div>
     <!-- 搜索框模块 开始 -->
     <div class="search-box">
-      <div class="search-left-box" v-if=" selectCityList.length>0" @click="clickCityOther">
-        <span style="flex: 1;text-align: center;">{{ selectCityList[0] }} <span class="span-icon">+{{ selectCityList.length }}</span></span>
+      <div class="search-left-box" @click="clickCityOther">
+        <span style="flex: 1;text-align: center;">{{ city == '全国'?'全国': selectCityList[0] }} <span class="span-icon" v-if=" selectCityList.length>0">+{{ selectCityList.length }}</span></span>
         <i class="el-icon-caret-right"></i>
       </div>
       <el-input placeholder="搜索职位/公司/内容关键词" v-model="input_name" class="input-with-select" @keydown.enter.native="searchEnterFun($event)">

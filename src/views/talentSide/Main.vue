@@ -176,7 +176,11 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
        connectGoEasy() {
         this.goEasy.connect({
           id: this.currentUser.id,
-          data: {name: this.currentUser.name, avatar: this.currentUser.avatar},
+          data: {
+            name: this.currentUser.name,
+            avatar: this.currentUser.avatar,
+            uid: this.currentUser.uid,
+          },
           onSuccess: function () { 
             console.log("连接成功.")
           },

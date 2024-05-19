@@ -3,8 +3,8 @@
     <div class="searchTalent-top-box m-box">
       <!-- 检索及热门职位 开始 -->
       <div class="search-box">
-        <div class="search-left-box" v-if=" selectCityList.length>0" @click="clickCityOther">
-          <span style="flex: 1;text-align: center;">{{ selectCityList[0] }} <span class="span-icon">+{{ selectCityList.length }}</span></span>
+        <div class="search-left-box"  @click="clickCityOther">
+          <span style="flex: 1;text-align: center;">{{ city == '全国'?'全国': selectCityList[0] }} <span class="span-icon" v-if="selectCityList.length>0">+{{ selectCityList.length }}</span></span>
           <i class="el-icon-caret-right"></i>
         </div>
         <!-- 搜索框 开始 -->

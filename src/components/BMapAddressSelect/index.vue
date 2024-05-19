@@ -30,6 +30,8 @@
 </template>
  
 <script>
+import BaiduMap from '../../utils/map.js'
+
 export default {
   data() {
     return {
@@ -51,55 +53,59 @@ export default {
     initBaiduMap() {
       let that = this;
       this.$nextTick(function () {
-        /** 初始化地图Start */
-        var map = new BMap.Map("baidu-map-container"); // 创建地图实例
-        var point = new BMap.Point(that.addressInfo.longitude,that.addressInfo.latitude ); // 设置中心点坐标
-        map.centerAndZoom(point, 13); // 地图初始化，同时设置地图展示级别
-        map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
-        /** 初始化地图End */
+        BaiduMap.init()
+        .then((BMap) => {
+        // 这个时候就可以访问到BMap了，
+          /** 初始化地图Start */
+          var map = new BMap.Map("baidu-map-container"); // 创建地图实例
+          var point = new BMap.Point(that.addressInfo.longitude,that.addressInfo.latitude ); // 设置中心点坐标
+          map.centerAndZoom(point, 13); // 地图初始化，同时设置地图展示级别
+          map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+          /** 初始化地图End */
  
-        /** 点击地图创建坐标事件Start */
-        // 添加地图点击事件
-        map.addEventListener("click", function (e) {
-          var clickpt = e.point; // 点击的坐标
-          map.clearOverlays(); // 移除地图上的标注
-          var marker = new BMap.Marker(clickpt); // 创建标注
-          map.addOverlay(marker); // 将标注添加到地图中
-          // 逆地址解析
-          that.geocAddress(clickpt);
-        });
-        /** 点击地图创建坐标事件End */
- 
-        /** 搜索地址Start */
-        // 建立一个自动完成的对象
-        var ac = new BMap.Autocomplete({
-          input: "searchAddres",
-          location: map,
-        });
-        // 鼠标点击下拉列表后的事件
-        ac.addEventListener("onconfirm", function (e) {
-          map.clearOverlays(); // 移除地图上的标注
-          var local = new BMap.LocalSearch(map, {
-            //智能搜索
-            onSearchComplete: function (results) {
-              let poi = results.getPoi(0); //获取第一个智能搜索的结果
-              var searchpt = poi.point; // 获取坐标
-              map.centerAndZoom(searchpt, 16);
-              map.addOverlay(new BMap.Marker(searchpt)); //添加标注
-              that.geocAddress(searchpt); // 逆地址解析
-            },
+          /** 点击地图创建坐标事件Start */
+          // 添加地图点击事件
+          map.addEventListener("click", function (e) {
+            var clickpt = e.point; // 点击的坐标
+            map.clearOverlays(); // 移除地图上的标注
+            var marker = new BMap.Marker(clickpt); // 创建标注
+            map.addOverlay(marker); // 将标注添加到地图中
+            // 逆地址解析
+            that.geocAddress(clickpt);
           });
-          // 搜索词
-          var searchValue = e.item.value;
-          local.search(
-            searchValue.province +
-              searchValue.city +
-              searchValue.district +
-              searchValue.street +
-              searchValue.business
-          );
-        });
-        /** 搜索地址End */
+          /** 点击地图创建坐标事件End */
+ 
+          /** 搜索地址Start */
+          // 建立一个自动完成的对象
+          var ac = new BMap.Autocomplete({
+            input: "searchAddres",
+            location: map,
+          });
+          // 鼠标点击下拉列表后的事件
+          ac.addEventListener("onconfirm", function (e) {
+            map.clearOverlays(); // 移除地图上的标注
+            var local = new BMap.LocalSearch(map, {
+              //智能搜索
+              onSearchComplete: function (results) {
+                let poi = results.getPoi(0); //获取第一个智能搜索的结果
+                var searchpt = poi.point; // 获取坐标
+                map.centerAndZoom(searchpt, 16);
+                map.addOverlay(new BMap.Marker(searchpt)); //添加标注
+                that.geocAddress(searchpt); // 逆地址解析
+              },
+            });
+            // 搜索词
+            var searchValue = e.item.value;
+            local.search(
+              searchValue.province +
+                searchValue.city +
+                searchValue.district +
+                searchValue.street +
+                searchValue.business
+            );
+          });
+          /** 搜索地址End */
+        })
       });
     },
  

@@ -50,6 +50,7 @@ module.exports = {
     },
     externals: {
       AgoraRTCSdkNg: 'AgoraRTC',
+      "BMap": "BMap"
       // websdk: 'websdk'
     }
   },
