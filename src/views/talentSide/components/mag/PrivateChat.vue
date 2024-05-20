@@ -133,7 +133,7 @@
                     </div>
                     
                     <div class="message-phone-universal-card-footer">
-                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(2,3,item.payload.phone)">同意交换</div>
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneWechatBtn(2,3,'phone')">同意交换</div>
                     </div>
                   </div>
                   <!-- boss 索要手机号 ↑ -->
@@ -221,17 +221,15 @@
             </div> -->
             <!-- 文件 -->
             <!-- <div class="action-item">
-              <label for="file-input" v-if="userVipRank > 0">
-                <i class="iconfont icon-wenjianjia" title="文件"></i>
-              </label>
-              <label @click="clickvipRank_0" v-else>
+              <label @click="clickvipRank_0">
                 <i class="iconfont icon-wenjianjia" title="文件"></i>
               </label>
               <input v-show="false" id="file-input" type="file" @change="sendFileMessage"/>
             </div> -->
             <i class="vline"></i>
             <div class="btn-resume toolbar-btn unable" title="发送简历" @click="clickDeliver('resume')">发简历</div>
-            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1,1)">联系方式</div>
+            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneWechatBtn(1,1,'phone')">联系方式</div>
+            <div class="btn-resume toolbar-btn unable" title="交换微信" @click="clickPhoneWechatBtn(1,1,'wechat')">换微信</div>
           </div>
           <div class="action-bar-right">
             <div class="action-item">
@@ -555,16 +553,16 @@
       },
       //
      
-      //type ==1 点击 交换联系方式按钮  type ==2  列表内 点击同意交换联系方式
-      clickPhoneBtn(type,n,pn){
+      // 交换联系方式 
+      clickPhoneWechatBtn(type,n,tag){
         let that = this;
         let userProfile = this.userProfile;
         let p = {
           position_id: that.friend.position_id,// 岗位id
           company_id: that.friend.company_id,// 公司id
-          user_phone: userProfile.basic_info.real_phone
         }
         let apiUrl = '';
+        // type ==1 点击 交换按钮  type ==2  列表内 点击同意交换方式按钮
         if(type == 1){
           apiUrl = '/api/company-deliver/get-contact-information';
         }
@@ -572,10 +570,26 @@
           apiUrl = '/api/company-deliver/operate-contact-information';
           p.status = 1;
         }
+        // tag : 'phone' 手机的联系方式  'wechat' 微信的联系方式
+        if(tag == 'phone'){
+          p.user_phone =  userProfile.basic_info.real_phone;
+        }
+        if(tag == 'wechat'){
+          p.user_wx = userProfile.basic_info.wechat_number;
+        }
+        if(!p.user_wx || p.user_wx == ''){
+          that.$message.warning('请先在我的简历内添加微信!');
+          return
+        }
         that.$axios.post(apiUrl,p).then( res =>{
           console.log(res)
           if( res.code == 0){
-            that.sendPhoneMsg(n);
+            if(tag == 'phone'){
+              that.sendPhoneMsg(n);
+            }
+            if(tag == 'wechat'){
+              that.sendWechatMsg(n);
+            }
           }else{
             that.$message.error({
               message: res.msg
@@ -607,6 +621,32 @@
           }
         });
       },
+
+   
+      // 发送交换微信聊天信息
+      sendWechatMsg(n){
+        let userProfile = this.userProfile;
+        let payload = {
+          text: '交换微信',
+          wechat_number: userProfile.basic_info.wechat_number,
+          real_name: userProfile.basic_info.real_name,
+          name: userProfile.basic_info.name,
+          way_status: n,  // 1. 向对方发起交换联系方式发出请求,2.boss 发送过来的手机号(boss同意) 3.同意对方索要联系方式 4. boss发送交换联系方式发出请求
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'wechat',  //字符串，可以任意自定义类型 wechat 联系方式
+          text: '交换微信',
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            this.sendMessage(message);
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
+      },
+
       // 发送出简历消息
       clickToolbarBtn(){
         let that = this;

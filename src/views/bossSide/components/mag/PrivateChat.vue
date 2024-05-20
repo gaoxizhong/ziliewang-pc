@@ -126,7 +126,7 @@
                       <span>对方请求交换联系方式</span>
                     </div>
                     <div class="message-phone-universal-card-footer">
-                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneBtn(2,2,message.payload.real_phone)">同意交换</div>
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneWechatBtn(2,2,'phone')">同意交换</div>
                     </div>
                   </div>
                   <!-- 个人 索要手机号 ↑ -->
@@ -219,8 +219,9 @@
               <input v-show="false" id="file-input" type="file"  @change="sendFileMessage"/>
             </div> -->
             <i class="vline"></i>
-            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneBtn(1,4)">联系方式</div>
+            <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneWechatBtn(1,4,'phone')">联系方式</div>
             <div class="btn-resume toolbar-btn unable" title="邀请面试" @click="clickYqms(1)">邀面试</div>
+            <div class="btn-resume toolbar-btn unable" title="交换微信" @click="clickPhoneWechatBtn(1,1,'wechat')">换微信</div>
           </div>
           <div class="action-bar-right">
             <div class="action-item">
@@ -607,28 +608,44 @@
         this.yqmsVisible = true;
         return
       },
-      // type ==1 点击 交换联系方式按钮  type ==2  列表内 点击同意交换联系方式
-      clickPhoneBtn(type,n,pn){
+      // 交换联系方式 
+      clickPhoneWechatBtn(type,n,tag){
         let that = this;
         let userProfile = this.userProfile;
         let p = {
           position_id: that.infoData.position_id, // 岗位id
           company_id: localStorage.getItem('company_id'),// 公司id
           uid: that.infoData.uid,
-          company_phone: userProfile.phone
         }
         let apiUrl = '';
+        // type ==1 点击 交换联系方式按钮  type ==2  列表内 点击同意交换联系方式
         if(type == 1){
           apiUrl = '/api/company-interview/get-contact-information';
         }
         if(type == 2){
           apiUrl = '/api/company-interview/operate-contact-information';
           p.status = 1;
+        }// tag : 'phone' 手机的联系方式  'wechat' 微信的联系方式
+        if(tag == 'phone'){
+          p.company_phone =  userProfile.phone;
         }
+        if(tag == 'wechat'){
+          p.company_wx = userProfile.company_wx;
+        }
+        if(!p.company_wx || p.company_wx == ''){
+          that.$message.warning('请先在个人信息内添加微信!');
+          return
+        }
+
         that.$axios.post(apiUrl,p).then( res =>{
           console.log(res)
           if( res.code == 0){
-            that.sendPhoneMsg(n);
+            if(tag == 'phone'){
+              that.sendPhoneMsg(n);
+            }
+            if(tag == 'wechat'){
+              that.sendWechatMsg(n);
+            }
           }else{
             that.$message.error({
               message: res.msg
@@ -650,6 +667,29 @@
         this.goEasy.im.createCustomMessage({
           type: 'phone',  //字符串，可以任意自定义类型 phone 联系方式
           text: '交换联系方式',
+          payload,
+          to: this.to,
+          onSuccess: (message) => {
+            this.sendMessage(message);
+          },
+          onFailed: (err) => {
+            console.log("创建消息err:", err);
+          }
+        });
+      },
+      // 发送交换微信聊天信息
+      sendWechatMsg(n){
+        let userProfile = this.userProfile;
+        let payload = {
+          text: '交换微信',
+          wechat_number: userProfile.company_wx,
+          real_name: userProfile.staff_name,
+          name: userProfile.staff_name,
+          way_status: n,  // 1. 向对方发起交换联系方式发出请求,2.boss 发送过来的手机号(boss同意) 3.同意对方索要联系方式 4. boss发送交换联系方式发出请求
+        }
+        this.goEasy.im.createCustomMessage({
+          type: 'wechat',  //字符串，可以任意自定义类型 wechat 联系方式
+          text: '交换微信',
           payload,
           to: this.to,
           onSuccess: (message) => {

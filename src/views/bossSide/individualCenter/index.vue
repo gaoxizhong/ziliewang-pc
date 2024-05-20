@@ -44,6 +44,11 @@
           <!-- <span class="sub-span">该头像将对求职者可见</span> -->
         </div>
         <div class="items-box">
+          <div class="title"><span>* </span>微信</div>
+          <el-input v-model="infoData.company_wx" placeholder="请输入微信号或绑定手机号"></el-input>
+          <!-- <span class="sub-span">该头像将对求职者可见</span> -->
+        </div>
+        <div class="items-box">
           <div class="title"><span>* </span>公司</div>
           <el-input v-model="infoData.company_name" placeholder="请输入" disabled></el-input>
         </div>
@@ -226,6 +231,7 @@ export default {
       phrases_id:'',
       infoData:{
         staff_name:"Lucy",
+        company_wx:"",
         role_desc: "",
         avatar:'',
         phone:'',
@@ -414,6 +420,7 @@ export default {
     setUserSave_btn(){
       let p = {
         staff_name: this.infoData.staff_name,
+        company_wx: this.infoData.company_wx,
         individual_resume: this.infoData.individual_resume,
       }
       if(this.upload_files_path){
@@ -421,6 +428,10 @@ export default {
       }
       if(p.staff_name == '' || !p.staff_name){
         this.$message.error('姓名不能为空！');
+        return
+      }
+      if(p.company_wx == '' || !p.company_wx){
+        this.$message.error('微信不能为空！');
         return
       }
       if(p.individual_resume == '' || !p.individual_resume){

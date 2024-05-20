@@ -117,7 +117,12 @@
               <el-input v-model="infoData.real_phone" placeholder="请输入电话" clearable></el-input>
             </div>
           </div>
-
+          <div class="mb20 redact-item">
+            <div class="item-label">微信</div>
+            <div class="item-content">
+              <el-input v-model="infoData.wechat_number" placeholder="请输入微信号或绑定手机号" clearable></el-input>
+            </div>
+          </div>
           <div class="mb20 redact-item">
             <div class="item-label">邮箱</div>
             <div class="item-content">
@@ -132,6 +137,7 @@
               <div class="radio-item" :class="infoData.sex == 2 ? 'radio-checked':'' ">女</div>
             </div>
           </div>
+          <div class="mb20 redact-item"></div>
           <div class="mb20 redact-item">
             <div class="item-label">上传个人照片</div>
             <div class="item-content">
@@ -345,6 +351,7 @@ export default {
         sex: this.infoData.sex,
         phone: this.infoData.real_phone,
         email: this.infoData.real_email,
+        wechat_number: this.infoData.wechat_number,
         work_status: this.infoData.work_status,
         birth_year_month: this.infoData.birth_year_month,
         begin_work_date: this.infoData.begin_work_date,
@@ -372,6 +379,10 @@ export default {
       }
       if(p.email == '' || !p.email){
         this.$message.warning('邮箱不能为空!');
+        return
+      }
+      if(p.wechat_number == '' || !p.wechat_number){
+        this.$message.warning('微信不能为空!');
         return
       }
       const subCallback= ()=>{
@@ -608,9 +619,9 @@ export default {
           }
         }
       }
-      .redact-item:nth-child(odd) {
-        margin-bottom: 0;
-      }
+      // .redact-item:nth-child(odd) {
+      //   margin-bottom: 0;
+      // }
       .form-btns{
         // position: absolute;
         // bottom: 26px;
