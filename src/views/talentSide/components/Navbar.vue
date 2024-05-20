@@ -59,6 +59,7 @@
       </div>
 
     </div>
+    <!-- 广告展示 开始 ↓ -->
     <div class="ad-box">
       <img src="../../../assets/image/ad-bg1.png" alt="" class="ad-img" v-if="ad_show == '/talentHome' || ad_show == '/myResume'"/>
       <img src="../../../assets/image/ad-bg2.png" alt="" class="ad-img" v-if="ad_show == '/myDelivery'"/>
@@ -80,7 +81,6 @@
           </ul>
         </div>
       </div>
-
       <div class="ad-content-box" v-if="ad_show == '/myDelivery'">
         <div class="content-pagebox">
           <ul class="ad-content-ul-4">
@@ -111,6 +111,8 @@
         </div>
       </div>
     </div>
+    <!-- 广告展示 结束 ↑ -->
+
   </div>
 </template>
 

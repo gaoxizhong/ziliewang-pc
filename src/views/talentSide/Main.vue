@@ -237,8 +237,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       },
       // 点击缩小--按钮
       clickMinificationpngBtn(){
-        this.zInfex_0 = -1;
-        this.top = -800;
+        this.is_VueDragResize = false;
         this.$bus.$emit('talentSide_clickSidebar',{ is_clickMinificationpngBtn:true } );
       },
         // 点击消息

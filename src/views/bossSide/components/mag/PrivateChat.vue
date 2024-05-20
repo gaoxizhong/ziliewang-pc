@@ -126,10 +126,52 @@
                       <span>对方请求交换联系方式</span>
                     </div>
                     <div class="message-phone-universal-card-footer">
-                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneWechatBtn(2,2,'phone')">同意交换</div>
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneWechatBtn(2,2,'phone',message)">同意交换</div>
                     </div>
                   </div>
                   <!-- 个人 索要手机号 ↑ -->
+
+                  <!-- 交换微信功能展示 ↓   -->
+                  <!-- boss 索要微信< 4 ↓ -->
+                  <div class="message-phone-universal-card"  v-if="message.type === 'wechat' && message.payload.way_status == 4">
+                    <h4 class="message-phone-universal-card-header">交换微信</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>您的微信：{{ message.payload.wechat_number }}</span>
+                    </div>
+                    <div class="message-phone-box">您已向对方发送交换微信</div>
+                  </div>
+                  <!-- boss 索要微信 ↑ -->
+
+                  <div class="message-phone-universal-card"  v-if="message.type === 'wechat' && message.payload.way_status == 2">
+                    <h4 class="message-phone-universal-card-header">交换微信</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>您的微信：{{ message.payload.wechat_number }}</span>
+                    </div>
+                    <div class="message-phone-box">您已同意对方交换微信</div>
+                  </div>
+                  
+                  <!-- 个人 发送过来的手机号 ↓ -->
+                  <div class="message-phone-universal-card" v-if="message.type === 'wechat' && message.payload.way_status == 3">
+                    <h4 class="message-phone-universal-card-header">交换微信</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>{{ message.payload.real_name }}的微信：{{ message.payload.wechat_number }}</span>
+                    </div>
+                  </div>
+                  <!-- 个人 发送过来的手机号 ↑ -->
+                  <!-- 个人 索要手机号 ↓ -->
+                  <div class="message-phone-universal-card" v-if="message.type === 'wechat' && message.payload.way_status == 1">
+                    <h4 class="message-phone-universal-card-header">交换微信</h4>
+                    <div class="message-phone-universal-card-content">
+                      <span>对方请求交换微信</span>
+                    </div>
+                    <div class="message-phone-universal-card-footer">
+                      <div class="message-phone-universal-card-btn-main message-phone-universal-card-btn" @click="clickPhoneWechatBtn(2,2,'wechat',message)">同意交换</div>
+                    </div>
+                  </div>
+                  <!-- 个人 索要手机号 ↑ -->
+
+                  <!-- 交换微信功能展示 ↑   -->
+
                   <!-- 文件 开始 -->
                   <a v-if="message.type === 'file'" :href="message.payload.url" target="_blank" download="download">
                     <div class="content-file" title="点击下载">
@@ -221,7 +263,7 @@
             <i class="vline"></i>
             <div class="btn-resume toolbar-btn unable" title="交换联系方式" @click="clickPhoneWechatBtn(1,4,'phone')">联系方式</div>
             <div class="btn-resume toolbar-btn unable" title="邀请面试" @click="clickYqms(1)">邀面试</div>
-            <div class="btn-resume toolbar-btn unable" title="交换微信" @click="clickPhoneWechatBtn(1,1,'wechat')">换微信</div>
+            <div class="btn-resume toolbar-btn unable" title="交换微信" @click="clickPhoneWechatBtn(1,4,'wechat')">换微信</div>
           </div>
           <div class="action-bar-right">
             <div class="action-item">
@@ -609,9 +651,10 @@
         return
       },
       // 交换联系方式 
-      clickPhoneWechatBtn(type,n,tag){
+      clickPhoneWechatBtn(type,n,tag,i){
         let that = this;
         let userProfile = this.userProfile;
+        let item = i;
         let p = {
           position_id: that.infoData.position_id, // 岗位id
           company_id: localStorage.getItem('company_id'),// 公司id
@@ -628,15 +671,21 @@
         }// tag : 'phone' 手机的联系方式  'wechat' 微信的联系方式
         if(tag == 'phone'){
           p.company_phone =  userProfile.phone;
+          if(type == 2){
+            p.user_phone = item.payload.real_phone;
+          }
         }
         if(tag == 'wechat'){
           p.company_wx = userProfile.company_wx;
+          if(type == 2){
+            p.user_wx = item.payload.wechat_number;
+          }
+          if(!p.company_wx || p.company_wx == ''){
+            that.$message.warning('请先在个人信息内添加微信!');
+            return
+          }
         }
-        if(!p.company_wx || p.company_wx == ''){
-          that.$message.warning('请先在个人信息内添加微信!');
-          return
-        }
-
+        
         that.$axios.post(apiUrl,p).then( res =>{
           console.log(res)
           if( res.code == 0){
