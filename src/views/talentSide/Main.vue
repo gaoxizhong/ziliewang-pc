@@ -15,6 +15,8 @@
     <Footer />
     <!-- 底部 结束  -->
 
+    <!-- 侧边栏 -->
+    <Sidebar :infoData="infoData"/>
     <!-- 聊天弹窗 开始-->
     <transition name="suck-in" mode="out-in">
       <VueDragResize :style="`z-index:${zInfex_0};`"
@@ -30,7 +32,7 @@
             <div class="title">聊一聊</div>
             <div class="icon-box">
               <!-- <span class="gt-span" @click="clickMessage">跳至沟通</span> -->
-              <!-- <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn"> -->
+              <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn">
               <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
             </div>
           </div>
@@ -43,10 +45,8 @@
 
     <!-- 聊天弹窗 结束-->
 
-    <!-- 侧边栏 -->
-    <Sidebar />
+ 
 
-    <!-- 聊天弹窗 结束-->
     <div class="TUICallKit-box" :class="show_TUICallKit ? 'show-TUICallKit' : '' ">
       <TUICallKit 
         :allowedMinimized="true" 
@@ -111,7 +111,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         to:{},
         TUICallKit_type: 0,
         countTime: null,
-        counter: 0
+        counter: 0,
+        unreadTotal: null, // 新消息数量
       }
     },
     watch: {
@@ -133,6 +134,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     mounted(){
       // 组件间通信
       this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
+      this.$bus.$on('click_conversationList_item_getInfoData', this.click_conversationList_item_getInfoData);
+
       // 腾讯云-- 点击电话、视频
       this.$bus.$on('user_clickCall', this.user_clickCall);
     },
@@ -156,10 +159,12 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       if (this.goEasy.getConnectionStatus() === 'disconnected') {
          this.connectGoEasy(); 
       }
+      this.listenConversationUpdate();// 监听会话列表变化
 
       // 腾讯云 音视频 初始化 ↓
       this.Init();
     },
+    // 页面卸载
     beforeDestroy() {
       //断开连接
       this.goEasy.disconnect({
@@ -170,6 +175,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
             console.log("断开连接失败, code:"+error.code+ ",error:"+error.content);
         }
       });
+      this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
     },
     methods:{
       //连接goeasy
@@ -192,7 +198,15 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
           }
         });
       },
-     
+      listenConversationUpdate() {
+        this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
+      },
+      // 获取消息数量
+      setUnreadNumber(content) {
+        console.log(content)
+        this.unreadAmount = content.unreadTotal;
+        this.$store.dispatch('user/actions_unreadTotal', content.unreadTotal); // vuex
+      },
       talentSide_receiveParams(params){
         console.log(params)
         // '接收到的参数:' params
@@ -200,17 +214,18 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         if(params.type){
           this.title_show = params.type //JobDetails 是详情页  navbarMag 是导航
         }
-        if(params.is_clickMinificationpngBtn){  // 表示点击的 右侧浮动按钮
-          this.is_clickMinificationpngBtn = false;
-        }else{
-          this.infoData = params.infoData;
-          this.is_VueDragResize = false;
-          this.$nextTick(function () {
-            this.is_VueDragResize = true;
-          });
-        }
+        this.infoData = params.infoData;
+        this.is_VueDragResize = false;
+        this.$nextTick(function () {
+          this.is_VueDragResize = true;
+        });
         // this.zInfex_0 = 99;
         // this.top = 56;
+      },
+      // 点击会话列表获取所点击对象数据
+      click_conversationList_item_getInfoData(params){
+        console.log(params)
+        this.infoData = params;
       },
       //监听到当前路由状态并激活当前菜单
       setCurrentRoute() {
@@ -223,7 +238,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
           this.isRouterAlive = true;
         });
       },
-
+      
       // 拖拽时可以确定元素位置
       resize(newRect) {
         this.width = newRect.width;
@@ -238,7 +253,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       // 点击缩小--按钮
       clickMinificationpngBtn(){
         this.is_VueDragResize = false;
-        this.$bus.$emit('talentSide_clickSidebar',{ is_clickMinificationpngBtn:true } );
+        // this.$bus.$emit('talentSide_clickSidebar',{ is_clickMinificationpngBtn:true } );
+        this.$store.dispatch('user/actions_sidebarShow',true);// vuex
       },
         // 点击消息
       clickMessage(){
@@ -466,7 +482,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
   }
   //  弹窗 动画样式 -----
   .suck-in-enter-active, .suck-in-leave-active {
-    transition: all 0.8s ease;
+    transition: all 0.5s ease;
     transform-origin: right;
   }
 

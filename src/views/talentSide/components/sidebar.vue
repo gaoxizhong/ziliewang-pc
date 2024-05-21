@@ -1,8 +1,9 @@
 <template>
-  <div class="block-sidebar" v-if="sidebar">
+  <div class="block-sidebar" v-if="sidebar_show">
     <div class="block-sidebar-item iconfont">
       <button class="CB-kJkihA" @click="sidebarChatBtn">
         <img src="../../../assets/image/icon-chatMessage.png" alt="">
+        <span class="corner-mark-box" v-if="unreadTotal">{{ unreadTotal }}</span>
       </button>
     </div>
   </div>
@@ -13,37 +14,45 @@
 export default {
   components: {
   },
+  props:{
+    infoData:{
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+  },
   data(){
     return{
       sidebar: false,
-      is_clickMinificationpngBtn: false
     }
   },
- 
- 
+  computed: {
+    unreadTotal() {
+      return this.$store.state.user.unreadTotal
+    },
+    sidebar_show() {
+      return this.$store.state.user.sidebar_show
+    },
+  },
+  watch:{
+    '$store.state.unreadTotal'(newVal){
+      this.unreadTotal = newVal;
+      this.$forceUpdate();// 更新数据
+    },
+    '$store.state.sidebar_show'(newVal){
+      this.sidebar_show = newVal;
+      this.$forceUpdate();// 更新数据
+    },
+  },
   mounted() {
-    // 组件间通信
-    this.$bus.$on('talentSide_clickSidebar', this.clickSidebar)
+  
   },
   methods: {
-    clickSidebar(params){
-      // '接收到的参数:' params
-      if(params.is_clickMinificationpngBtn){
-        this.is_clickMinificationpngBtn = params.is_clickMinificationpngBtn;
-      }
-      if(params.type == 'clickChat'){
-        // 点击的聊一聊
-        this.sidebar = false;
-      }else{
-        this.sidebar = true;
-      }
-      
-    },
     // 点击侧边栏 聊天按钮
     sidebarChatBtn(){
-      this.sidebar = false;
-      let is_clickMinificationpngBtn = this.is_clickMinificationpngBtn;
-      this.$bus.$emit('talentSide_receiveParams', {is_clickMinificationpngBtn});
+      this.$bus.$emit( 'talentSide_receiveParams', {type:'sidebar',laiyuan:'rightSidebar',infoData:this.infoData } );
+      this.$store.dispatch('user/actions_sidebarShow',false);// vuex
     }
     
     
@@ -90,6 +99,19 @@ export default {
       color: #666;
       background-color: #fff;
       box-shadow: 0 0 8px 0 rgba(0,0,0,0.16);
+      position: relative;
+      .corner-mark-box{
+        line-height: initial;
+        background: #ff0000;
+        color: #fff;
+        border-radius: 10px;
+        padding: 2px 6px;
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        font-size: 12px;
+        transform: scale(0.8);
+      }
       img{
         width: 24px;
         height: 22px;

@@ -777,6 +777,7 @@
       },
        // 点击常用语 icon
        showCyyBox(){
+        let that = this;
         if( that.cyy.visible ){
           that.cyy.visible = false;
           return

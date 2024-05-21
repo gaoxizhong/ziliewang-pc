@@ -37,7 +37,7 @@
             <div @click="clickMessage" class="communication-box">
               <img src="../../../assets/image/icon-wechat1.png" alt="" />
               <span>消息</span>
-              <span class="corner-mark-box" v-if="unreadAmount">{{ unreadAmount }}</span>
+              <span class="corner-mark-box" v-if="unreadTotal">{{ unreadTotal }}</span>
             </div>
           </div>
           <el-dropdown class="avatar-container" trigger="click">
@@ -130,7 +130,6 @@ export default {
     return{
       width: 0,
       height: 0,
-      unreadAmount: null,
       backgroundColor:'#262f34',
       uid: localStorage.getItem('realUid'),
     }
@@ -143,6 +142,9 @@ export default {
     avatar() {
       // return localStorage.getItem('realAvatar')
       return this.$store.state.user.realAvatar
+    },
+    unreadTotal() {
+      return this.$store.state.user.unreadTotal
     },
     activeMenu() {
       const route = this.$route;
@@ -179,6 +181,12 @@ export default {
       this.name = newVal;
       this.$forceUpdate();// 更新数据
     },
+    '$store.state.unreadTotal'(newVal){
+      console.log('unreadTotal')
+      this.unreadTotal = newVal;
+      this.$forceUpdate();// 更新数据
+    },
+    
     '$store.state.navbarMessagePrompt'(newVal){
       console.log('navbarMessagePrompt')
       this.navbarMessagePrompt = newVal;
@@ -187,25 +195,15 @@ export default {
   },
   // 退出关闭
   beforeDestroy() {
-    this.goEasy.im.off(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
+    
   },
   mounted(){
 
   },
   created(){
-    let getViewportSize = this.$getViewportSize();
 
-    this.listenConversationUpdate();// 监听会话列表变化
   },
   methods: {
-    listenConversationUpdate() {
-      this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, this.setUnreadNumber);
-    },
-    // 获取消息数量
-    setUnreadNumber(content) {
-      console.log(content)
-      this.unreadAmount = content.unreadTotal;
-    },
     logout() {
       // debugger
       setToken('');

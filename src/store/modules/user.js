@@ -10,7 +10,8 @@ const state = {
   realAvatar: localStorage.getItem('realAvatar') || '', // 用户端的个人头像
   role: '',
   navbarMessagePrompt: false, // 消息提示
-  TUStatusInfo: {}, // 腾讯云 音视频状态
+  unreadTotal: null, // 及时通讯消息数
+  sidebar_show: false
 }
 
 const mutations = {
@@ -34,6 +35,12 @@ const mutations = {
   },
   mutations_SET_navbarMessagePrompt: (state, role) => {
     state.navbarMessagePrompt = role
+  },
+  set_unreadTotal: (state, num) =>{
+    state.unreadTotal = num
+  },
+  set_sidebarShow: (state, sidebar) =>{
+    state.sidebar_show = sidebar
   },
 }
 
@@ -135,6 +142,13 @@ const actions = {
   actions_navbarMessagePrompt({ commit }, data) {
     commit('mutations_SET_navbarMessagePrompt', data);
   },
+  actions_unreadTotal({ commit }, data) {
+    commit('set_unreadTotal', data);
+  },
+  actions_sidebarShow({ commit }, data) {
+    commit('set_sidebarShow', data);
+  },
+  
 }
 
 export default {

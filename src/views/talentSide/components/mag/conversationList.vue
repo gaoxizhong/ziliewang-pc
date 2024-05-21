@@ -205,7 +205,6 @@
       },
       chatLocation(conversation) {
         let that = this;
-        console.log(conversation)
         let friend = that.profile.friend;
         console.log(friend)
         friend = {
@@ -217,38 +216,40 @@
         };
         
         if(friend.tag == 'user'){
-          this.profile.friend = friend;
-          this.$emit( 'chatLocation',this.profile.friend );
+          that.profile.friend = friend;
+          that.$emit( 'chatLocation',friend );
+          that.$bus.$emit( 'click_conversationList_item_getInfoData',friend );
         }else{
-
-        }
-        
-        // 创建岗位会话信息
-      let p = {
-        company_uid: conversation.data.uid,
-        uid: localStorage.getItem('realUid'),
-      }
-      that.$axios.post('/api/position-chat-record/detail',p).then(res =>{
-        if(res.code == 0){
-          let position_id = res.data?res.data.position_id:'';
-          if( position_id ){
-            friend.position_id = position_id;
-            friend.position_name = res.data.position_name;
-            that.profile.friend = friend;
-            that.$emit( 'chatLocation',friend );
-          }else{
-            that.$message.error({
-              message: '岗位信息获取失败！'
-            })
+          // 创建岗位会话信息
+          let p = {
+            company_uid: conversation.data.uid,
+            uid: localStorage.getItem('realUid'),
           }
-        }else{
-          that.$message.error({
-            message: '岗位信息获取失败！'
+          that.$axios.post('/api/position-chat-record/detail',p).then(res =>{
+            if(res.code == 0){
+              let position_id = res.data?res.data.position_id:'';
+              if( position_id ){
+                friend.position_id = position_id;
+                friend.position_name = res.data.position_name;
+                that.profile.friend = friend;
+                that.$emit( 'chatLocation',friend );
+                that.$bus.$emit( 'click_conversationList_item_getInfoData',friend );
+              }else{
+                that.$message.error({
+                  message: '岗位信息获取失败！'
+                })
+              }
+            }else{
+              that.$message.error({
+                message: '岗位信息获取失败！'
+              })
+            }
+          }).catch(e =>{
+            console.log(e)
           })
         }
-      }).catch(e =>{
-        console.log(e)
-      })
+        
+       
         
       }
     },

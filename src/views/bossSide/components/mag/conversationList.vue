@@ -211,7 +211,6 @@
         }
       },
       chatLocation (conversation) {
-        console.log(conversation)
         let that = this;
         let friend = {
           id:conversation.userId,
