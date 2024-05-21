@@ -136,7 +136,7 @@
           </template>
           <li class="selected-item" v-if=" city == '全国' ">
             <span class="anticon anticon-close">全国</span>
-            <i class="el-icon-close" @click="clickAnticon(-1)"></i>
+            <!-- <i class="el-icon-close" @click="clickAnticon(-1)"></i> -->
           </li>
           <li class="selected-item" v-if="pay.value">
             <span class="anticon anticon-close">{{ pay.value }}</span>
@@ -412,7 +412,11 @@ export default {
       let selectCityList = this.selectCityList;
       selectCityList.splice(v,1);
       this.selectCityList = selectCityList;
-      this.city = this.selectCityList.join(',')
+      if(selectCityList.length <= 0){
+        this.city = '全国'
+      }else{
+        this.city = this.selectCityList.join(',');
+      }
       this.getfilterInfo();
     },
     // 点击清空筛选条件
