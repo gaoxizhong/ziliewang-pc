@@ -60,7 +60,7 @@
 
     </div>
     <!-- 广告展示 开始 ↓ -->
-    <div class="ad-box">
+    <!-- <div class="ad-box">
       <img src="../../../assets/image/ad-bg1.png" alt="" class="ad-img" v-if="ad_show == '/talentHome' || ad_show == '/myResume'"/>
       <img src="../../../assets/image/ad-bg2.png" alt="" class="ad-img" v-if="ad_show == '/myDelivery'"/>
       <img src="../../../assets/image/ad-bg3.png" alt="" class="ad-img" v-if="ad_show == '/careerIdentity' || ad_show == '/professionalCircle' || ad_show == '/liveList'"/>
@@ -110,7 +110,7 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- 广告展示 结束 ↑ -->
 
   </div>

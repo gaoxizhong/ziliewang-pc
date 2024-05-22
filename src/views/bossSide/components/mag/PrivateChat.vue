@@ -2,7 +2,7 @@
   <div class="chat-container">
     <div class="chat-title">
       <div class="chat-title-l">
-        <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar"/>
+        <img :src="friend.avatar?friend.avatar:require('../../../../assets/image/img-user.jpg')" class="chat-avatar" @click="clickAvatar"/>
         <div class="chat-name">{{ friend.name }}</div>
       </div>
       <div class="position-name">
