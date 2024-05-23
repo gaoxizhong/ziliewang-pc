@@ -128,6 +128,10 @@
             <el-input v-model="phone" placeholder="电话"></el-input>
           </div>
           <div class="items-box">
+            <div class="title"><span>* </span>微信</div>
+            <el-input v-model="company_wx" placeholder="绑定微信的手机号或微信号"></el-input>
+          </div>
+          <div class="items-box">
             <div class="title"><span>* </span>登录密码</div>
             <el-input v-model="password" placeholder="登录密码"></el-input>
           </div>
@@ -199,6 +203,7 @@ export default {
       id_card:'',
       phone:'',
       password:'',
+      company_wx: '',
     }
   },
   created(){
@@ -306,6 +311,7 @@ export default {
         id_card: that.id_card,
         phone: that.phone,
         password: that.password,
+        company_wx: that.company_wx,
         registered_capital: that.registered_capital, //注册资本
         approval_date: that.approval_date, // 核准日期
         establishment_date: that.establishment_date, // 成立日期
@@ -350,6 +356,11 @@ export default {
         that.$message.warning('密码不能为空!');
         return
       }
+      if(p.company_wx == '' || !p.company_wx){
+        that.$message.warning('微信不能为空!');
+        return
+      }
+      
       await that.$axios.post('/api/company/apply',p).then( res =>{
         if(res.code == 0){
           that.$message.success('提交成功！');
@@ -384,6 +395,7 @@ export default {
       this.id_card = '';
       this.phone = ''; //  个人手机号
       this.password = ''; // 个人密码
+      this.company_wx = ''; // 微信号
       this.registered_capital = ''; //注册资本
       this.approval_date = ''; // 核准日期
       this.establishment_date = ''; // 成立日期

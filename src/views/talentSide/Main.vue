@@ -91,7 +91,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         width: 0,
         height: 0,
         minw: 440,
-        minh: 500,
+        minh: 340,
         parentH: 0,
         parentW: 0,
         top: 40,
