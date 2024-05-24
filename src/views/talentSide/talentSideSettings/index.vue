@@ -16,6 +16,7 @@
           <div class="le-box-title">账号设置</div>
           <ul class="le-ul">
             <li :class="setType =='set_phone'? 'hover': '' " @click="clickLeItems('set_phone')">手机号码</li>
+            <li :class="setType =='set_wechat'? 'hover': '' " @click="clickLeItems('set_wechat')">绑定微信</li>
             <li :class="setType =='set_email'? 'hover': '' " @click="clickLeItems('set_email')">我的邮箱</li>
             <li :class="setType =='set_password'? 'hover': '' " @click="clickLeItems('set_password')">密码设置</li>
             <li :class="setType =='account_cancellation'? 'hover': '' " @click="clickLeItems('account_cancellation')">账号注销</li>
@@ -94,6 +95,13 @@
             <div class="info-box" >当前手机号: {{ basic_info.real_phone }}</div>
             <button @click="clickSetPhone">修改手机号</button>
           </div>
+          <!-- 手机号码 -->
+          <div class="container-right-items" id="set_wechat">
+            <div class="title">绑定微信</div>
+            <div class="info-box" >当前微信: {{ basic_info.wechat_number }}</div>
+            <button @click="clickSetWechat">修改微信</button>
+          </div>
+          
           <!-- 我的邮箱 -->
           <div class="container-right-items" id="set_email">
             <div class="title">我的邮箱</div>
@@ -171,6 +179,22 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="setPhoneVisible = false">取 消</el-button>
           <el-button type="primary" @click="clickPhoneQR">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <!-- 修改微信 弹窗 -->
+    <div class="setWechatVisible">
+      <el-dialog title="修改微信" :visible.sync="setWechatVisible" width="500px" :before-close="closeWechatVisible">
+        <div class="cententinfo-box">
+          <div class="cententinfo-title">微信: {{ basic_info.wechat_number }}</div>
+          <div class="demo-input-suffix">
+            <span>新微信:</span>
+            <el-input v-model="wechat_number" type="text" name="wechat_number" placeholder="新微信号或绑定微信的手机号"></el-input>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setWechatVisible = false">取 消</el-button>
+          <el-button type="primary" @click="clickWechatQR">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -284,11 +308,13 @@ export default {
       setType:'set_resume',
       setPasswordVisible: false,
       setPhoneVisible: false,
+      setWechatVisible: false,
       setEmailVisible: false,
       setShieldVisible: false, // 屏蔽公司
       setPhrasesVisible: false, // 常用语
       password:'',
       phone:'',
+      wechat_number:'',
       email:'',
       email_code:'',
       phrases:'',
@@ -399,6 +425,9 @@ export default {
     closePhoneVisible(){
       this.setPhoneVisible = false;
     },
+    closeWechatVisible(){
+      this.setWechatVisible = false;
+    },
     // 关闭 修改邮箱弹窗
     closeEmailVisible(){
       this.setEmailVisible = false;
@@ -472,6 +501,10 @@ export default {
     // 点击修改手机号
     clickSetPhone(){
       this.setPhoneVisible = true;
+    },
+    // 点击修改微信
+    clickSetWechat(){
+      this.setWechatVisible = true;
     },
     // 点击添加公司
     clickSetShield(){
@@ -788,7 +821,35 @@ export default {
         console.log(e)
       })
     },
-   
+    // 确认修改微信
+    clickWechatQR(){
+      let that = this;
+      let p = {
+        wechat_number: that.wechat_number,
+      };
+      that.$axios.post('/api/user/change-wechatnumber',p).then( res =>{
+        if(res.code == 0){
+          that.$message.success({
+            message:'修改成功'
+          })
+          setTimeout(()=>{
+             // 获取个人信息
+             that.getUserProfile();
+             that.setWechatVisible = false;
+          },1500)
+          return
+        }
+        if(res.code == 1){
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        console.log(e)
+      })
+    },
   },
 };
 </script>

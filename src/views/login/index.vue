@@ -78,6 +78,10 @@
                 <div class="input-box">
                   <el-input v-model="sign_user.phone" type="tel" name="phone" placeholder="请输入手机号"></el-input>
                 </div>
+                <div class="input-box">
+                  <el-input v-model="sign_user.wechat_number" type="text" name="wechat_number" placeholder="请输入微信号或绑定微信的手机号"></el-input>
+                </div>
+                
                 <!-- <div class="input-box">
                   <el-input class="input" maxlength="4" placeholder="短信验证码" v-model="sign_user.code" name="code"/>
                   <div class="send-vcode-btn" :style="{'color': isDisable?'#ababab':'#3377FF'}" :disabled="isDisable" @click.stop="click_code(2)">{{statusMsg}}</div>
@@ -198,6 +202,7 @@ export default {
         password:'',
         code:'',
         email:'',
+        wechat_number:'',
         signChecked: false,
       },
       change_password: { // 修改密码
@@ -291,6 +296,7 @@ export default {
         password:'',
         code:'',
         email:'',
+        wechat_number:'',
         signChecked: false,
       };
     },
@@ -458,6 +464,12 @@ export default {
         })
         return
       }
+      if(sign_user.wechat_number ==''){
+        that.$message.error({
+          message:'请输入微信'
+        })
+        return
+      }
       // if(sign_user.code ==''){
       //   that.$message.error({
       //     message:'请输入验证码'
@@ -478,6 +490,7 @@ export default {
         email: sign_user.email,
         password: sign_user.password,
         phone: sign_user.phone,
+        wechat_number: sign_user.wechat_number,
       };
 
       that.$axios.post('/api/register',p).then( res =>{
@@ -500,6 +513,7 @@ export default {
               password:'',
               code:'',
               email:'',
+              wechat_number:'',
               signChecked: false,
             };
           },100)
@@ -748,8 +762,8 @@ $cursor: #000;
   top: 50%;
   right: 20px;
   z-index: 99;
-  transform: translateY(-52%);
-  padding: 20px 30px;
+  transform: translateY(-55%);
+  padding: 10px 30px 14px 30px;
 
   .select-box{
     padding: 0;
