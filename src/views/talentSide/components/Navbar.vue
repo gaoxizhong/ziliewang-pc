@@ -39,6 +39,11 @@
               <span>消息</span>
               <span class="corner-mark-box" v-if="unreadTotal">{{ unreadTotal }}</span>
             </div>
+            <div @click="clickNotification" class="communication-box">
+              <img src="../../../assets/image/icon-wechat1.png" alt="" />
+              <span>通知</span>
+              <span class="corner-mark-box" v-if="notificationTotal">{{ notificationTotal }}</span>
+            </div>
           </div>
           <el-dropdown class="avatar-container" trigger="click">
             <div class="avatar-wrapper">
@@ -132,6 +137,7 @@ export default {
       height: 0,
       backgroundColor:'#262f34',
       uid: localStorage.getItem('realUid'),
+      notificationTotal: null
     }
   },
   computed: {
@@ -228,6 +234,10 @@ export default {
     clickMessage(){
       this.$bus.$emit('talentSide_receiveParams', {type:'navbarMag',laiyuan:'nav',infoData:{} });
     },
+    // 点击通知
+    clickNotification(){
+      
+    }
   },
 };
 </script>
