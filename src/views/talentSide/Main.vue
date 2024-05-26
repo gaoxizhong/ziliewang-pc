@@ -31,7 +31,6 @@
           <div class="VueDragResize-title-box">
             <div class="title">聊一聊</div>
             <div class="icon-box">
-              <!-- <span class="gt-span" @click="clickMessage">跳至沟通</span> -->
               <img src="../../assets/image/icon-minificationpng.png" alt="缩小"  @click="clickMinificationpngBtn">
               <img src="../../assets/image/icon-close.png" alt="关闭" @click="clickCloseBtn"/>
             </div>
@@ -57,7 +56,19 @@
       />
     </div>
 
-    
+    <!-- 系统通知 --  侧边抽屉 -->
+    <div id="drawer-box">
+      <el-drawer title="系统通知" :visible.sync="is_Notification" :before-close="clickCloseBtn">
+        <div class="items-box">
+          <ul>
+            <li class="s-list-nav" v-for="(item,index) in userDefriendList" :key="index">
+             
+            </li>
+          </ul>
+          <div class="tips-box" v-if="userDefriendList.length<= 0">- 暂无通知 -</div>
+        </div>
+      </el-drawer>
+    </div>
   </div>
 </template>
 <script>
@@ -113,6 +124,9 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         countTime: null,
         counter: 0,
         unreadTotal: null, // 新消息数量
+
+        is_Notification: false,
+        userDefriendList: []
       }
     },
     watch: {
@@ -135,7 +149,8 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       // 组件间通信
       this.$bus.$on('talentSide_receiveParams', this.talentSide_receiveParams);
       this.$bus.$on('click_conversationList_item_getInfoData', this.click_conversationList_item_getInfoData);
-
+      // 点击导航 通知按钮
+      this.$bus.$on('getNotification',this.getNotification);
       // 腾讯云-- 点击电话、视频
       this.$bus.$on('user_clickCall', this.user_clickCall);
     },
@@ -222,6 +237,33 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         // this.zInfex_0 = 99;
         // this.top = 56;
       },
+      // 监听导航上 点击通知按钮事件
+      getNotification(params){
+        let that = this;
+        this.is_Notification = false;
+        this.$nextTick(function () {
+          this.is_Notification = true;
+        });
+        return
+        that.$axios.post('',{}).then( res =>{
+          if(res.code == 0){
+            that.userDefriendList = res.data.list;
+            that.drawer = true;
+          }else{
+            that.$message.error({
+              message:res.msg
+            })
+            return
+          }
+
+        }).catch( e =>{
+          that.$message.error({
+            message:e.message
+          })
+          console.log(e)
+        })
+       
+      },
       // 点击会话列表获取所点击对象数据
       click_conversationList_item_getInfoData(params){
         console.log(params)
@@ -246,19 +288,20 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         this.top = newRect.top;
         this.left = newRect.left;
       },
-      // 点击关闭
+      // 点击 聊天弹窗关闭按钮
       clickCloseBtn(){
         this.is_VueDragResize = false;
       },
-      // 点击缩小--按钮
+      // 点击聊天弹窗缩小--按钮
       clickMinificationpngBtn(){
         this.is_VueDragResize = false;
         // this.$bus.$emit('talentSide_clickSidebar',{ is_clickMinificationpngBtn:true } );
         this.$store.dispatch('user/actions_sidebarShow',true);// vuex
       },
-        // 点击消息
-      clickMessage(){
       
+      // 点击 系统通知弹窗关闭按钮
+      clickCloseBtn(){
+        this.is_Notification = false;
       },
 
       // 腾讯云 初始化
@@ -505,5 +548,28 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
+  }
+  // 黑名单
+  #drawer-box{
+    /deep/ .el-drawer__header{
+      margin: 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e2e2e2;
+    }
+    .items-box{
+      width: 100%;
+      padding: 5px 20px 20px 20px;
+      .s-list-nav{
+        width: 100%;
+        position: relative;
+      }
+      .tips-box{
+        width: 100%;
+        margin-top: 30px;
+        color: #999;
+        font-size: 14px;
+        text-align: center;
+      }
+    }
   }
 </style>

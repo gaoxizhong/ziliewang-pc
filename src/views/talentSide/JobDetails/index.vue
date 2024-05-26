@@ -57,6 +57,7 @@
             <div class="boss-info-btn">
               <el-button class="chat" :class="infoData.check_is_position == 1?'hover':'' " @click="clickChat" >聊一聊</el-button>
               <el-button class="chat" @click="clickMobile(infoData)">打电话</el-button>
+              <el-button class="chat" @click="clickWechat(infoData)">加微信</el-button>
             </div>
           </div>
           <!-- boss信息 结束 -->
@@ -235,6 +236,20 @@ export default {
         console.log(e)
       })
     }, 
+    // 点击添加微信
+    clickWechat(i){
+      let that = this;
+      if(that.userVipRank < 1){
+        this.$message.error("需要升级为VIP会员可获取对方微信!");
+        setTimeout( () =>{
+          that.$router.push('/talentSide/topUpBuy');
+        },1000)
+        return
+      }
+      this.$alert(i.company.company_wx, '微信', {
+        confirmButtonText: '确定',
+      });
+    },
     // 点击打电话
     clickMobile(i){
       let that = this;
@@ -248,22 +263,6 @@ export default {
       this.$alert(i.company.phone, '电话', {
         confirmButtonText: '确定',
       });
-      return
-      let p = {
-        uid: i.company.phone,
-      }
-      that.$axios.post('',p).then( res =>{
-        if(res.code == 0){
-          
-          this.$alert(res.data.mobile, '电话', {
-            confirmButtonText: '确定',
-          });
-        }else{
-          that.$message.error({
-            message:res.msg
-          })
-        }
-      })
     },
   },
 };

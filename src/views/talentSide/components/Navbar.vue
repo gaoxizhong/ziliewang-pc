@@ -137,7 +137,6 @@ export default {
       height: 0,
       backgroundColor:'#262f34',
       uid: localStorage.getItem('realUid'),
-      notificationTotal: null
     }
   },
   computed: {
@@ -151,6 +150,9 @@ export default {
     },
     unreadTotal() {
       return this.$store.state.user.unreadTotal
+    },
+    notificationTotal() {
+      return this.$store.state.user.notificationTotal
     },
     activeMenu() {
       const route = this.$route;
@@ -190,6 +192,11 @@ export default {
     '$store.state.unreadTotal'(newVal){
       console.log('unreadTotal')
       this.unreadTotal = newVal;
+      this.$forceUpdate();// 更新数据
+    },
+    '$store.state.notificationTotal'(newVal){
+      console.log('notificationTotal')
+      this.notificationTotal = newVal;
       this.$forceUpdate();// 更新数据
     },
     
@@ -236,7 +243,7 @@ export default {
     },
     // 点击通知
     clickNotification(){
-      
+      this.$bus.$emit('getNotification',{});
     }
   },
 };

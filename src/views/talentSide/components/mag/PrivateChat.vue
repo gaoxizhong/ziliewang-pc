@@ -87,7 +87,7 @@
                   <div class="message-phone-universal-card" v-if="item.type === 'interview' &&  item.payload.way_status == 3">
                     <h4 class="message-phone-universal-card-header" style="color: #ff0000;">同意了面试邀请</h4>
                     <div class="message-phone-universal-card-footer">
-                      <span class="span-ckms" @click="goTomyDelivery">查看面试信息</span>
+                      <span class="span-ckms" @click.stop="clickInterview(item)">查看面试信息</span>
                     </div>
                   </div>
                   <!-- 同意面试邀请 结束 -->
@@ -309,6 +309,55 @@
         <div class="action-item" @click="showCancel">取消</div>
       </div>
     </div>
+    <!-- 查看面试邀请详情----弹窗 -->
+    <div class="container-zx">
+      <el-dialog :title="ms_infoData.text" :center="false" :visible.sync="ms_dialogVisible" width="600px" :before-close="ms_handleClose">
+        <div class="pc-preview-wrapper">
+          <div class="talent-box">
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试岗位：</div>
+                <div class="items-text">{{ms_infoData.position_name?ms_infoData.position_name:''}}</div>
+              </div>
+            </div>
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">投递人：</div>
+                <div class="items-text">{{ ms_infoData.name?ms_infoData.name:'暂无' }}</div>
+              </div>
+            </div>
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">联系电话：</div>
+                <div class="items-text">{{ms_infoData.phone?ms_infoData.phone:'暂无'}}</div>
+              </div>
+            </div>
+            
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试时间：</div>
+                <div class="items-text">{{ms_infoData.interview_time?ms_infoData.interview_time:'暂无'}}</div>
+              </div>
+            </div>
+            <div class="box-items" v-if="ms_infoData.remark">
+              <div class="items items-l">
+                <div class="items-label">备注：</div>
+                <div class="items-text">{{ms_infoData.remark?ms_infoData.remark:''}}</div>
+              </div>
+            </div>
+            
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试地址：</div>
+                <div class="items-text">{{ms_infoData.interview_address?ms_infoData.interview_address:''}}</div>
+              </div>
+            </div>
+            <div id="baidu-msyq" style="width: 560px; height: 340px;"></div>
+          </div>
+
+        </div>
+      </el-dialog>
+    </div>
     
   </div>
 </template>
@@ -317,6 +366,7 @@
   import {formatDate} from '../../../../utils/utils.js'
   import EmojiDecoder from '../../../../utils/EmojiDecoder';
   import GoeasyVideoPlayer from "../../../../components/GoEasyVideoPlayer";
+  import BaiduMap from '../../../../utils/map.js'
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
@@ -402,6 +452,9 @@
           ids: []
         },
         yqms_tag: 1, // 面试邀请 3、 同意 2、拒绝
+        //查看面试信息弹窗
+        ms_dialogVisible: false,
+        ms_infoData: {}
       };
     },
     watch:{
@@ -426,29 +479,30 @@
       };
     },
     created() {
-      this.userVipRank = localStorage.getItem('userVipRank');
-      this.friend = this.infoData;  // 目标用户信息
-      this.to = { // 目标用户
-        type: this.GoEasy.IM_SCENE.PRIVATE,
-        id: this.friend.id,
+      let that = this;
+      that.userVipRank = localStorage.getItem('userVipRank');
+      that.friend = that.infoData;  // 目标用户信息
+      that.to = { // 目标用户
+        type: that.GoEasy.IM_SCENE.PRIVATE,
+        id: that.friend.id,
         data: {
-          uid:this.friend.uid,
-          name: this.friend.name,
-          avatar: this.friend.avatar,
-          is_friend: this.friend.is_friend
+          uid:that.friend.uid,
+          name: that.friend.name,
+          avatar: that.friend.avatar,
+          is_friend: that.friend.is_friend
         },
       };
-      if(this.friend.position_id){
-        this.to.data.position_id = this.friend.position_id; //职位详情id
-        this.$axios.post('/api/company-position/detail',{
-          position_id:this.friend.position_id
+      if(that.friend.position_id){
+        that.to.data.position_id = that.friend.position_id; //职位详情id
+        that.$axios.post('/api/company-position/detail',{
+          position_id:that.friend.position_id
         }).then( res =>{
           if(res.code == 0){
             let detailData = res.data;
             detailData.job_benefits = detailData.job_benefits.split(',');
-            this.detailData = detailData;
-            this.to.data.company_id = res.data.company_id;
-            this.friend.company_id = res.data.company_id;
+            that.detailData = detailData;
+            that.to.data.company_id = res.data.company_id;
+            that.friend.company_id = res.data.company_id;
           }else{
             this.$message.error({
               message:res.msg
@@ -545,19 +599,29 @@
         this.audioPlayer.playingMessage = null;
       },
 
-      clickYqms(){
+      clickYqms(i){
         let userProfile = this.userProfile;
         let yqms_tag = this.yqms_tag;
+        let ms_infoData = i;
+        console.log(yqms_tag)
         let text = '';
         let payload = {
           name: userProfile.basic_info.real_name,
-          way_status: yqms_tag,   // 1. 向对方 发送邀请面试请求,2.用户拒绝面试邀请， 3.用户同意面试邀请
-        }
-        if(yqms_tag == 2){
-          text = '同意面试邀请';
-          payload.text = text;
+          way_status: yqms_tag,   //接口参数status 1、是同意 2、是拒绝；会话列表展示way_status 同意为3
         }
         if(yqms_tag == 3){
+          text = '同意面试邀请';
+          payload.text = text;
+          payload.position_name = ms_infoData.position_name,
+          payload.interview_time = ms_infoData.interview_time; // 面试时间
+          payload.staff = ms_infoData.staff; // 企业联系人
+          payload.phone = ms_infoData.phone; // 手机号
+          payload.interview_address = ms_infoData.interview_address; //地址
+          payload.remark = ms_infoData.remark; // 备注
+          payload.latitude = ms_infoData.latitude;
+          payload.longitude = ms_infoData.longitude;
+        }
+        if(yqms_tag == 2){
           text = '拒绝面试邀请';
           payload.text = text;
         }
@@ -581,11 +645,11 @@
         that.yqms_tag = n;
         let p = {
           id: info.interview_id,// 岗位id
-          status: n,
+          status: n == 3?1:n, //接口参数status 1、是同意 2、是拒绝；会话列表展示同意为3
         }
         that.$axios.post('/api/user/operate-interview-invite',p).then( res =>{
           if(res.code == 0){
-            that.clickYqms();
+            that.clickYqms(info);
           }else{
             that.$message.error({
               message:res.msg
@@ -1081,6 +1145,9 @@
                 this.markPrivateMessageAsRead();
               }
             }
+            setTimeout( () =>{
+              console.log(this.detailData)
+            },100)
           },
           onFailed: (error) => {
             //获取失败
@@ -1150,14 +1217,48 @@
         })
       },
       // 点击查看面试信息
-      goTomyDelivery(){
-        this.$router.push('/myDelivery?subTag=3');
+      // goTomyDelivery(){
+      //   this.$router.push('/myDelivery?subTag=3');
+      // },
+      // 点击发送出去的面试邀请信息
+      clickInterview(i){
+        console.log(i)
+        this.ms_infoData = i.payload;
+        this.ms_dialogVisible = true;
+        this.initBaiduMap();
+      },
+      // 初始化百度地图
+      initBaiduMap() {
+        let that = this;
+        this.$nextTick(function () {
+          BaiduMap.init()
+          .then((BMap) => {
+          // 这个时候就可以访问到BMap了，
+            /** 初始化地图Start */
+            var map = new BMap.Map("baidu-msyq"); // 创建地图实例
+            var point = new BMap.Point(that.ms_infoData.longitude,that.ms_infoData.latitude ); // 设置中心点坐标
+            map.centerAndZoom(point, 13); // 地图初始化，同时设置地图展示级别
+            map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+            /** 初始化地图End */
+            // 创建标注
+            const marker = new BMap.Marker(point);
+          
+            // 将标注添加到地图中
+            map.addOverlay(marker);
+            /** 点击地图创建坐标事件Start */
+           
+           
+          })
+        });
+      },
+      ms_handleClose(){
+        this.ms_dialogVisible = false;
       },
     },
   };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .chat-container {
     width: 100%;
     height: 100%;
@@ -1967,5 +2068,85 @@
   }
 
   /* ============ 交换联系方式  ↑ ==================*/
-
+  .container-zx /deep/ .el-dialog{
+    min-width: 320px;
+    max-height: 500px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0 !important;
+    overflow: hidden;
+    .el-dialog__header{
+      text-align: left;
+      padding: 10px 20px;
+      .el-dialog__title{
+        font-size: 16px;
+        color: $g_textColor;
+      }
+      .el-dialog__headerbtn{
+        top: 10px;
+      }
+    }
+    .el-dialog__body{
+      padding: 0px 10px;
+      height: calc(100vh - 150px);
+      overflow: overlay;
+      .pc-preview-wrapper{
+        border-radius: 4px;
+        padding: 10px;
+        color: $g_textColor;
+        line-height: 26px;
+        
+        .box-items{
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          margin-top: 10px;
+          &:nth-of-type(1){
+            margin-top: 0;
+          }
+          .items{
+            flex: 1;
+            display: flex;
+            align-items: center;
+            .items-label{
+              width: 80px;
+              font-size: 14px;
+              font-weight: bold;
+              text-align: right;
+            }
+            .items-text{
+              font-size: 14px;
+              color: #414a60;
+              padding-left: 4px;
+            }
+            
+          }
+          .items-l{
+            justify-content: flex-start;
+          }
+          .items-r{
+            justify-content: flex-end;
+            .label-text{
+              display: inline-block;
+              vertical-align: middle;
+              font-size: 13px;
+              img{
+                width: 14px;
+                height: 14px;
+              }
+            }
+            .vline {
+              margin: 0 0.9rem;
+            }
+            .fz {
+              margin-left: 5px;
+              display: inline-block;
+              width: 16px;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
+  }
 </style>

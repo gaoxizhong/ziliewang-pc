@@ -9,6 +9,7 @@ const getters = {
   staffName: state => state.user.staffName,
   role: state => state.user.role,
   unreadTotal: state => state.user.unreadTotal, // 及时通讯消息数
+  notificationTotal: state => state.user.notificationTotal, // 系统通知消息数
   sidebar_show: state => state.user.sidebar_show,
   permission_routes: state => state.permission.routes,
   suer_TUStatusInfo: state => state.TUICallKit.suer_TUStatusInfo, // 人才端 腾讯云音视频状态数据

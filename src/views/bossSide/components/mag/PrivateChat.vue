@@ -334,7 +334,7 @@
           </div>
           <div class="items-box">
             <div class="title">面试地址：</div>
-            <el-input v-model="interviewData.interview_address" placeholder="面试地址"></el-input>
+            <el-input v-model="interviewData.interview_address" placeholder="点击地图选择精准地址" disabled @click="showMap"></el-input>
             <div class="icon-dt-box" @click="showMap">
               <img src="../../../../assets/image/icon-dt.png" alt="" />
               <span>选择地址</span>
@@ -355,52 +355,45 @@
       <el-dialog :title="ms_infoData.text" :center="false" :visible.sync="ms_dialogVisible" width="600px" :before-close="ms_handleClose">
         <div class="pc-preview-wrapper">
           <div class="talent-box">
-
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试岗位：</div>
+                <div class="items-text">{{ms_infoData.position_name?ms_infoData.position_name:''}}</div>
+              </div>
+            </div>
             <div class="box-items">
               <div class="items items-l">
                 <div class="items-label">投递人：</div>
-                <div class="items-text">{{ ms_infoData.name?ms_infoData.name:'' }}</div>
+                <div class="items-text">{{ ms_infoData.name?ms_infoData.name:'暂无' }}</div>
               </div>
             </div>
             <div class="box-items">
               <div class="items items-l">
                 <div class="items-label">联系电话：</div>
-                <div class="items-text">{{ms_infoData?ms_infoData.phone:'暂无'}}</div>
-              </div>
-            </div>
-            <div class="box-items">
-              <div class="items items-l">
-                <div class="items-label">面试岗位：</div>
-                <div class="items-text">{{ms_infoData.interview_address?ms_infoData.interview_address:''}}</div>
-              </div>
-            </div>
-
-            <div class="box-items">
-              <div class="items items-l">
-                <div class="items-label">面试时间：</div>
-                <div class="items-text">{{ms_infoData.interview_time?ms_infoData.interview_time:''}}</div>
-              </div>
-            </div>
-            <div class="box-items">
-              <div class="items items-l">
-                <div class="items-label">面试地址：</div>
-                <div class="items-text">{{ms_infoData.staff?ms_infoData.staff:''}}</div>
-              </div>
-            </div>
-            <div class="box-items">
-              <div class="items items-l">
-                <div class="items-label">面试官：</div>
-                <div class="items-text">{{ms_infoData.staff?ms_infoData.staff:''}}</div>
+                <div class="items-text">{{ms_infoData.phone?ms_infoData.phone:'暂无'}}</div>
               </div>
             </div>
             
             <div class="box-items">
               <div class="items items-l">
+                <div class="items-label">面试时间：</div>
+                <div class="items-text">{{ms_infoData.interview_time?ms_infoData.interview_time:'暂无'}}</div>
+              </div>
+            </div>
+            <div class="box-items" v-if="ms_infoData.remark">
+              <div class="items items-l">
                 <div class="items-label">备注：</div>
                 <div class="items-text">{{ms_infoData.remark?ms_infoData.remark:''}}</div>
               </div>
             </div>
-
+            
+            <div class="box-items">
+              <div class="items items-l">
+                <div class="items-label">面试地址：</div>
+                <div class="items-text">{{ms_infoData.interview_address?ms_infoData.interview_address:''}}</div>
+              </div>
+            </div>
+            <div id="baidu-msyq" style="width: 560px; height: 340px;"></div>
           </div>
 
         </div>
@@ -418,6 +411,7 @@
   import GoeasyVideoPlayer from "../../../../components/GoEasyVideoPlayer";
   import onlineResume from '../onlineResume.vue';
   import BMapAddressSelect from "../../../../components/BMapAddressSelect/index";
+  import BaiduMap from '../../../../utils/map.js'
 
   const IMAGE_MAX_WIDTH = 200;
   const IMAGE_MAX_HEIGHT = 150;
@@ -585,9 +579,11 @@
       confirmMapAddress(addressInfo) {
         let that = this;
         that.addressInfo = addressInfo;
-        console.log(that.interviewData)
+        console.log(that.addressInfo)
         that.$nextTick( () =>{
         })
+        that.interviewData.latitude = addressInfo.latitude;
+        that.interviewData.longitude = addressInfo.longitude;
         that.interviewData.interview_address = addressInfo.province +addressInfo.city +addressInfo.district +addressInfo.address ;
       },
       changeIndustry(e){
@@ -775,8 +771,8 @@
       clickInput(){
         this.$refs.input.focus();
       },
-       // 点击常用语 icon
-       showCyyBox(){
+      // 点击常用语 icon
+      showCyyBox(){
         let that = this;
         if( that.cyy.visible ){
           that.cyy.visible = false;
@@ -1154,9 +1150,12 @@
               interview_address: p.interview_address, //地址
               remark: p.remark, // 备注
               staff: p.staff, // 企业联系人
+              phone: p.phone, // 手机号
               position_name:that.interviewData.position.position_name,
               name: userProfile.staff_name,
               way_status: 1,  // 1. 向对方 发送邀请面试请求,2.用户同意面试邀请
+              longitude: interviewData.longitude, 
+              latitude: interviewData.latitude, 
             }
             that.goEasy.im.createCustomMessage({
               type: 'interview',  //字符串，可以任意自定义类型 面试邀请方式
@@ -1180,8 +1179,34 @@
       },
       // 点击发送出去的面试邀请信息
       clickInterview(i){
+        console.log(i)
         this.ms_infoData = i.payload;
         this.ms_dialogVisible = true;
+        this.initBaiduMap();
+      },
+      // 初始化百度地图
+      initBaiduMap() {
+        let that = this;
+        this.$nextTick(function () {
+          BaiduMap.init()
+          .then((BMap) => {
+          // 这个时候就可以访问到BMap了，
+            /** 初始化地图Start */
+            var map = new BMap.Map("baidu-msyq"); // 创建地图实例
+            var point = new BMap.Point(that.ms_infoData.longitude,that.ms_infoData.latitude ); // 设置中心点坐标
+            map.centerAndZoom(point, 13); // 地图初始化，同时设置地图展示级别
+            map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+            /** 初始化地图End */
+            // 创建标注
+            const marker = new BMap.Marker(point);
+          
+            // 将标注添加到地图中
+            map.addOverlay(marker);
+            /** 点击地图创建坐标事件Start */
+           
+           
+          })
+        });
       },
       ms_handleClose(){
         this.ms_dialogVisible = false;
@@ -2150,21 +2175,25 @@
     top: 50%;
     transform: translateY(-50%);
     margin-top: 0 !important;
+    overflow: hidden;
     .el-dialog__header{
       text-align: left;
+      padding: 10px 20px;
       .el-dialog__title{
         font-size: 16px;
         color: $g_textColor;
       }
+      .el-dialog__headerbtn{
+        top: 10px;
+      }
     }
     .el-dialog__body{
-      padding: 20px 30px 30px;
-      height: calc(100vh - 128px);
+      padding: 0px 10px;
+      height: calc(100vh - 150px);
       overflow: overlay;
-      padding: 10px;
       .pc-preview-wrapper{
         border-radius: 4px;
-        padding: 10px 20px;
+        padding: 10px;
         color: $g_textColor;
         line-height: 26px;
         
@@ -2182,7 +2211,7 @@
             align-items: center;
             .items-label{
               width: 80px;
-              font-size: 15px;
+              font-size: 14px;
               font-weight: bold;
               text-align: right;
             }

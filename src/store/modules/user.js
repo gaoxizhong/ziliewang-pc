@@ -11,6 +11,7 @@ const state = {
   role: '',
   navbarMessagePrompt: false, // 消息提示
   unreadTotal: null, // 及时通讯消息数
+  notificationTotal: null, // 系统通知消息数
   sidebar_show: false
 }
 
@@ -38,6 +39,9 @@ const mutations = {
   },
   set_unreadTotal: (state, num) =>{
     state.unreadTotal = num
+  },
+  set_notificationTotal: (state, num) =>{
+    state.notificationTotal = num
   },
   set_sidebarShow: (state, sidebar) =>{
     state.sidebar_show = sidebar
@@ -144,6 +148,9 @@ const actions = {
   },
   actions_unreadTotal({ commit }, data) {
     commit('set_unreadTotal', data);
+  },
+  actions_notificationTotal({ commit }, data){
+    commit('set_notificationTotal', data)
   },
   actions_sidebarShow({ commit }, data) {
     commit('set_sidebarShow', data);

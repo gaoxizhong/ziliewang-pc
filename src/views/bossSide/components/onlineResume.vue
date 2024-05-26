@@ -9,7 +9,7 @@
               <img :src="basic_info?basic_info.avatar:require('../../../assets/image/bossSide/img-user.jpg')" alt="" class="cur-default"/>
             </div>
             <div class="item-right item-right-1">
-              <div style="text-align: left;">
+              <div style="text-align: left;display: flex;">
                 <h2 class="name">{{ basic_info.is_name_protect == 1? basic_info.name: basic_info.real_name  }}</h2>
                 <div class="info-labels fr">
                   <span class="label-text">
@@ -406,6 +406,7 @@ export default {
             vertical-align: top;
             padding-top: 2px;
             h2.name{
+              width: auto;
               font-size: 14px;
               font-weight: bold;
               display: inline-block;
@@ -434,7 +435,8 @@ export default {
               }
             }
             .fr {
-              float: right;
+              flex: 1;
+              padding-left: 10px;
             }
             .text {
               color: #61687c;

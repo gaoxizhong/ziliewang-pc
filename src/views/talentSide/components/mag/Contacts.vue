@@ -13,6 +13,7 @@
             <div class="friend-mail">{{ friend.real_email }}</div>
           </div>
         </div>
+        <div class="tips-box" v-if="friends.length <=0">-双方相互关注后即可成为好友-</div>
       </div>
     </div>
     <div class="contact-main" v-if="!is_chat">
@@ -308,5 +309,11 @@
     margin: 0 auto;
     align-items: center;
     justify-content: center;
+  }
+  .tips-box{
+    font-size:12px;
+    padding: 30px 10px;
+    text-align: center;
+    color: #999;
   }
 </style>
