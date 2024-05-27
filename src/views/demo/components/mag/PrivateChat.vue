@@ -252,10 +252,7 @@
             </div> -->
             <!-- 图片 -->
             <div class="action-item">
-              <label for="img-input" v-if="userVipRank > 0">
-                <i class="iconfont icon-tupian" title="图片"></i>
-              </label>
-              <label  @click="clickvipRank_0" v-else>
+              <label for="img-input">
                 <i class="iconfont icon-tupian" title="图片"></i>
               </label>
               <input v-show="false" id="img-input" accept="image/*" multiple type="file" @change="sendImageMessage"/>
@@ -499,6 +496,7 @@
       };
       if(that.friend.position_id){
         that.to.data.position_id = that.friend.position_id; //职位详情id
+        return
         that.$axios.post('/api/company-position/detail',{
           position_id:that.friend.position_id
         }).then( res =>{
@@ -522,8 +520,6 @@
 
       this.listenConversationUpdate(); //监听会话列表变化
       this.loadConversations(); //加载会话列表
-      // 获取个人信息
-      this.getUserProfile();
     },
     beforeDestroy() {
       this.goEasy.im.off(this.GoEasy.IM_EVENT.PRIVATE_MESSAGE_RECEIVED, this.onReceivedPrivateMessage);
@@ -651,6 +647,7 @@
           id: info.interview_id,// 岗位id
           status: n, //3、是同意 2、是拒绝
         }
+        return
         that.$axios.post('/api/user/operate-interview-invite',p).then( res =>{
           if(res.code == 0){
             that.clickYqms(info);
@@ -790,13 +787,6 @@
       // 点击 发简历按钮
       clickDeliver(){
         let that = this;
-        if(that.userVipRank < 1){
-          this.$message.error("需要升级为VIP会员可投递简历!");
-          setTimeout( () =>{
-            that.$router.push('/talentSide/topUpBuy');
-          },1000)
-          return
-        }
         let userProfile = that.userProfile;
         if(!userProfile.basic_info.curriculum_vitae){
           that.$message.error({
@@ -809,6 +799,8 @@
           company_id: that.friend.company_id,// 公司id
           company_uid: that.to.data.uid,//  发布人uid
         }
+        that.clickToolbarBtn();
+        return
         that.$axios.post('/api/user/deliver',p).then( res =>{
           console.log(res)
           if( res.code == 0){
@@ -869,6 +861,7 @@
             }
           })
           if(!is_sess){
+            return
             that.$axios.post('/api/user/find-company',{
               position_id: that.friend.position_id, // 岗位id
               company_uid: that.to.uid,//  发布人uid
@@ -907,6 +900,8 @@
           that.cyy.visible = false;
           return
         }else{
+          that.cyy.visible = true;
+          return
           that.$axios.post('/api/common-language/list',{
             no_looding: 1, // 隐藏-- 封装请求里的 looding
           }).then(res =>{
@@ -1195,24 +1190,11 @@
         },1000)
         return
       },
-      // 获取个人信息
-      getUserProfile(){
-        let that = this;
-        that.$axios.post('/api/user/profile',{}).then(res =>{
-          if(res.code == 0){
-            that.userProfile = res.data;
-          }else{
-            that.$message.error({
-              message:res.msg
-            })
-          }
-        }).catch(e =>{
-          console.log(e)
-        })
-      },
+    
       // 点击常用语设置
       clickSetBtn(){
         this.cyy.visible = false;
+        return
         this.$router.push({
           path:'/talentSideSettings',
           query:{

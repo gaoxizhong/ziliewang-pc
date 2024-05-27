@@ -11,9 +11,6 @@
       <router-view v-if="!$route.meta.keepAlive && isRouterAlive" :key="$route.fullPath" ref="routerView"></router-view>
     </div>
     <!-- 主题 结束 -->
-    <!-- 底部 开始  -->
-    <Footer />
-    <!-- 底部 结束  -->
 
     <!-- 侧边栏 -->
     <Sidebar :infoData="infoData"/>
@@ -56,29 +53,14 @@
       />
     </div>
 
-    <!-- 系统通知 --  侧边抽屉 -->
-    <div id="drawer-box">
-      <el-drawer title="系统通知" :visible.sync="is_Notification" :before-close="clickCloseNotificationBtn">
-        <div class="items-box">
-          <ul>
-            <li class="s-list-nav" v-for="(item,index) in userDefriendList" :key="index">
-             
-            </li>
-          </ul>
-          <div class="tips-box" v-if="userDefriendList.length<= 0">- 暂无通知 -</div>
-        </div>
-      </el-drawer>
-    </div>
   </div>
 </template>
 <script>
 import Navbar from './components/Navbar';
-import Footer from '../../components/footer';
 import VueDragResize from 'vue-drag-resize';
 import Sidebar from './components/sidebar';
 import buddyChart from './components/mag/buddyChart.vue';
 import { TUICallKit, TUICallKitServer, TUICallType,STATUS } from "@tencentcloud/call-uikit-vue2.6";
-import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
 
   export default {
     provide(){ 
@@ -90,7 +72,6 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     name: 'Mian',
     components: {
       Navbar,
-      Footer,
       VueDragResize,
       Sidebar,
       buddyChart,
@@ -125,8 +106,6 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
         counter: 0,
         unreadTotal: null, // 新消息数量
 
-        is_Notification: false,
-        userDefriendList: []
       }
     },
     watch: {
@@ -177,7 +156,7 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       this.listenConversationUpdate();// 监听会话列表变化
 
       // 腾讯云 音视频 初始化 ↓
-      this.Init();
+      // this.Init();
     },
     // 页面卸载
     beforeDestroy() {
@@ -548,28 +527,5 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-  }
-  // 黑名单
-  #drawer-box{
-    /deep/ .el-drawer__header{
-      margin: 0;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #e2e2e2;
-    }
-    .items-box{
-      width: 100%;
-      padding: 5px 20px 20px 20px;
-      .s-list-nav{
-        width: 100%;
-        position: relative;
-      }
-      .tips-box{
-        width: 100%;
-        margin-top: 30px;
-        color: #999;
-        font-size: 14px;
-        text-align: center;
-      }
-    }
   }
 </style>

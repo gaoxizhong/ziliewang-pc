@@ -246,7 +246,7 @@ export default {
         },1000)
         return
       }
-      this.$alert(i.company.company_wx, '微信', {
+      this.$alert(i.companystaff.company_wx, '微信', {
         confirmButtonText: '确定',
       });
     },
@@ -260,7 +260,7 @@ export default {
         },1000)
         return
       }
-      this.$alert(i.company.phone, '电话', {
+      this.$alert(i.companystaff.phone, '电话', {
         confirmButtonText: '确定',
       });
     },

@@ -6,7 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import talentSide from '../views/talentSide/Main.vue';
-
+import msgDemo from '../views/demo/Main.vue';
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -484,6 +484,13 @@ export const constantRoutes = [
       // },
     ]
   },
+  // demo
+  {
+    path:'/messageDemo',
+    component: msgDemo,
+    meta: { title: '消息demo'},
+    hidden: true,
+  }
 
 ]
 //相应权限人员可见

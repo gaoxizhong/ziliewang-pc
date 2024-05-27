@@ -41,30 +41,52 @@
         </div>
       </div>
     </div>
-
-
-     <!-- 我的资产 开始 -->
-      <div class="m-box margin-top-20 vip-box">
-        <div class="title-box">
-          <div class="left">
-            <img src="../../../assets/image/bossSide/wallet-three.png" alt="" />
-            <span>我的资产</span>
-          </div>
-          <div class="right zc-box" @click="clickmyAssets">
-            <span>更多</span>
-            <img src="../../../assets/image/bossSide/right.png" alt="">
-          </div>
+    <!-- 我的资产 开始 -->
+    <div class="m-box margin-top-20 vip-box">
+      <div class="title-box">
+        <div class="left">
+          <img src="../../../assets/image/bossSide/wallet-three.png" alt="" />
+          <span>我的资产</span>
         </div>
-        <div class="my-goldCoin-box">
-          <div class="goldCoin-title">会员等级</div>
-          <div class="goldCoin-num-btn-box">
-            <span class="goldCoin-span">{{ basic_info.vip_rank_text?basic_info.vip_rank_text:'普通用户' }}</span>
-            <button class="goldCoin-btn" @click="goToTopUpBuy">购买</button>
-          </div>
-          <div class="goldCoin-title" v-if="basic_info.vip_expire_time_text">到期时间: {{ basic_info.vip_expire_time_text }}</div>
+        <div class="right zc-box" @click="clickmyAssets">
+          <span>更多</span>
+          <img src="../../../assets/image/bossSide/right.png" alt="">
         </div>
       </div>
-      <!-- 我的资产 结束 -->
+      <div class="my-goldCoin-box">
+        <div class="goldCoin-title">会员等级</div>
+        <div class="goldCoin-num-btn-box">
+          <span class="goldCoin-span">{{ basic_info.vip_rank_text?basic_info.vip_rank_text:'普通用户' }}</span>
+          <button class="goldCoin-btn" @click="goToTopUpBuy">购买</button>
+        </div>
+        <div class="goldCoin-title" v-if="basic_info.vip_expire_time_text">到期时间: {{ basic_info.vip_expire_time_text }}</div>
+      </div>
+    </div>
+    <!-- 我的资产 结束 -->
+
+
+    <!-- 用户黑名单 --  侧边抽屉 -->
+    <div id="drawer-box">
+      <el-drawer :title="cb_title" :visible.sync="drawer" :direction="direction" :before-close="drawer_handleClose">
+        <div class="items-box">
+          <ul>
+            <li class="s-list-nav" v-for="(item,index) in userDefriendList" :key="index">
+              <div class="itemWrap">
+                <div class="s-avatar">
+                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg')" alt="" />
+                </div>
+
+                <div class="s-list-info">
+                  <div class="s-list-name"><span>{{ item.name }}</span></div>
+                  <!-- <div class="s-list-intro"><span>ta很懒，什么也没有留下</span></div> -->
+                </div>
+              </div>
+            </li>
+            <div class="tips-box" v-if="userDefriendList.length<= 0">- 暂无数据 -</div>
+          </ul>
+        </div>
+      </el-drawer>
+    </div>
   </div>
 
 </template>
@@ -80,6 +102,10 @@ export default {
       infoData:{}, // 信息
       basic_info:{},
       perfection_degree: {},
+      cb_title:'',
+      drawer: false,
+      userDefriendList: []
+
     }
   },
   computed: {
@@ -96,7 +122,40 @@ export default {
   methods: {
     
     goTomyProfessionalCircle(){
-      this.$router.push('/myProfessionalCircle');
+      this.cb_title = '谁看过我';
+      // 获取用户黑名单列表
+      this.getUserDefriendList();
+      // this.$router.push('/myProfessionalCircle');
+    },
+    // 关闭侧边栏
+    drawer_handleClose() {
+      this.drawer = false;
+    },
+    getUserDefriendList(){
+      let that = this;
+      let p = {
+        page: 1,
+        pagesize: 100
+      };
+      that.drawer = true;
+      return
+      that.$axios.post('',p).then( res =>{
+        if(res.code == 0){
+          that.userDefriendList = res.data.list;
+          that.drawer = true;
+        }else{
+          that.$message.error({
+            message:res.msg
+          })
+          return
+        }
+
+      }).catch( e =>{
+        that.$message.error({
+          message:e.message
+        })
+        console.log(e)
+      })
     },
     goTo(type){
       this.$router.push('/myDelivery?tag=' + type);
@@ -327,6 +386,88 @@ export default {
       }
     }
 
+  }
+}
+// 侧边栏
+#drawer-box{
+  /deep/ .el-drawer__header{
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e2e2;
+  }
+  .items-box{
+    width: 100%;
+    padding: 5px 20px 20px 20px;
+    .s-list-nav{
+      width: 100%;
+      position: relative;
+      .itemWrap{
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        .s-avatar{
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          overflow: hidden;
+          &>img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .s-list-info{
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin: 14px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          .s-list-name {
+            font-size: 15px;
+            color: #1e1f24;
+          }
+          .s-list-name span {
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .s-list-intro {
+            font-size: 13px;
+            height: 16px;
+            width: 100%;
+            color: #848691;
+            display: flex;
+            align-items: center;
+          }
+          .s-list-intro span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+        .s-list-button .s-button {
+          height: 28px;
+          width: 60px;
+          background-color: $g_bg;
+          color: #fff;
+          border-radius: 20px;
+          font-size: 13px;
+          line-height: 28px;
+          text-align: center;
+          cursor: pointer;
+        }
+
+      }
+    }
+    .tips-box{
+      width: 100%;
+      margin-top: 30px;
+      color: #999;
+      font-size: 14px;
+      text-align: center;
+    }
   }
 }
 </style>
