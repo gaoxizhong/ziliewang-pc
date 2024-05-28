@@ -479,9 +479,9 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 1rem;
+      margin-top: 16px;
       span{
-        font-size: 22px;
+        font-size: 20px;
         font-weight: bold;
         color: #ff0000;
         line-height: 32px;
