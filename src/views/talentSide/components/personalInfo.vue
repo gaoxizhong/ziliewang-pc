@@ -67,18 +67,18 @@
 
     <!-- 用户黑名单 --  侧边抽屉 -->
     <div id="drawer-box">
-      <el-drawer :title="cb_title" :visible.sync="drawer" :direction="direction" :before-close="drawer_handleClose">
+      <el-drawer :title="cb_title" :visible.sync="drawer" :before-close="drawer_handleClose">
         <div class="items-box">
           <ul>
             <li class="s-list-nav" v-for="(item,index) in userDefriendList" :key="index">
               <div class="itemWrap">
                 <div class="s-avatar">
-                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg')" alt="" />
+                  <img :src=" item.companystaff.avatar ? item.companystaff.avatar : require('../../../assets/image/img-user.jpg')" alt="" />
                 </div>
 
                 <div class="s-list-info">
-                  <div class="s-list-name"><span>{{ item.name }}</span></div>
-                  <!-- <div class="s-list-intro"><span>ta很懒，什么也没有留下</span></div> -->
+                  <div class="s-list-name"><span>{{ item.companystaff.staff_name }}</span><span class="span-time">{{ item.createtime }}</span></div>
+                  <div class="s-list-intro"><span>{{ item.companystaff.company_name }}</span></div>
                 </div>
               </div>
             </li>
@@ -137,9 +137,7 @@ export default {
         page: 1,
         pagesize: 100
       };
-      that.drawer = true;
-      return
-      that.$axios.post('',p).then( res =>{
+      that.$axios.post('/api/see/me/list',p).then( res =>{
         if(res.code == 0){
           that.userDefriendList = res.data.list;
           that.drawer = true;
@@ -402,12 +400,13 @@ export default {
       width: 100%;
       position: relative;
       .itemWrap{
-        padding: 10px 0;
+        padding: 8px 0;
         display: flex;
         align-items: center;
+        border-bottom: 1px solid #e2e2e2;
         .s-avatar{
-          width: 50px;
-          height: 50px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           overflow: hidden;
           &>img{
@@ -419,27 +418,33 @@ export default {
           flex: 1;
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          margin: 14px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          justify-content: space-between;
+          margin: 10px;
+         
           .s-list-name {
             font-size: 15px;
             color: #1e1f24;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
           }
           .s-list-name span {
             overflow-x: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
           }
-          .s-list-intro {
+          .s-list-name span.span-time{
             font-size: 13px;
+            color: #848691;
+          }
+          .s-list-intro {
+            font-size: 14px;
             height: 16px;
             width: 100%;
             color: #848691;
             display: flex;
             align-items: center;
+            padding-top: 10px;
           }
           .s-list-intro span {
             overflow: hidden;
