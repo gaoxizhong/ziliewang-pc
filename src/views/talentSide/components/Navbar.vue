@@ -266,7 +266,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   .hospital{
-    height: 40px;
+    height: 42px;
   }
   .hospital>img{
     width: 100%;

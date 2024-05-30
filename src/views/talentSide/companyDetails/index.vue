@@ -4,7 +4,7 @@
     <div class="container-title-box">
       <div class="container-titleinfo">
         <div class="titleinfo-left-box">
-          <img :src="infoData.logo" alt="" class="company-logo"/>
+          <img :src="infoData.logo?infoData.logo: require('../../../assets/image/img-user.jpg')" alt="" class="company-logo"/>
           <div class="company-name-box">
             <div class="title-box">
               <div class="title-text"><span v-if="infoData.company_name">{{infoData.company_name }}</span></div>

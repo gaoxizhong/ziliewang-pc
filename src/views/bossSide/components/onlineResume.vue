@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container-zx">
-      <el-dialog title="简历详情" :center="false" :visible.sync="zx_dialogVisible" width="920px" :before-close="handleClose">
+      <el-dialog title="简历详情" :center="false" :visible.sync="zx_dialogVisible" width="940px" :before-close="handleClose">
         <div class="pc-preview-wrapper m-box">
           <!-- 个人信息 -->
           <div class="resume-item item-base" v-if="basic_info">
@@ -128,7 +128,8 @@
             <div class="title">感觉人才还不错，您可以:</div>
             <div class="form-btns">
               <el-button type="primary" @click="clickChat(infoData)">打招呼</el-button>
-              <el-button @click="clickMobile(infoData)">电话沟通</el-button>
+              <el-button @click="getContactMthod(infoData,'phone')">电话沟通</el-button>
+              <el-button @click="getContactMthod(infoData,'wechat_number')">获取微信</el-button>
             </div>
             <div class="icon-box">
               <div>
@@ -238,15 +239,26 @@ export default {
         }
       })
     },
-    // 点击打电话
-    async clickMobile(i){
+    // 点击获取微信、手机号
+    async getContactMthod(i,t){
       let that = this;
       let p = {
         uid: i.uid|| i.basic_info.uid,
       }
-      that.$axios.post('/api/company/get-user-mobile',p).then( res =>{
+      let text = '';
+      if(t == 'phone'){
+        p.field = 'phone';
+        text = '手机号';
+      }
+      if(t == 'wechat_number'){
+        p.field = 'wechat_number';
+        text = '微信';
+
+      }
+
+      that.$axios.post('/api/company/get-contact-method',p).then( res =>{
         if(res.code == 0){
-          this.$alert(res.data.mobile, '电话', {
+          this.$alert(res.data.contact_method, text, {
             confirmButtonText: '确定',
           });
         }else{
@@ -258,6 +270,7 @@ export default {
         console.log(e)
       })
     },
+
 
     // 点击聊一聊
     async clickChat(i){
@@ -378,6 +391,7 @@ export default {
         flex: 1;
         color: #414a60;
         line-height: 26px;
+        padding: 20px 16px;
         .resume-item{
           display: block;
           zoom: 1;
@@ -425,7 +439,7 @@ export default {
                 }
               }
               .vline {
-                margin: 0 0.9rem;
+                margin: 0 10px;
               }
               .fz {
                 margin-left: 5px;

@@ -161,7 +161,6 @@ import * as GenerateTestUserSig from "../../debug/GenerateTestUserSig-es";
       this.parentW = getViewportSize.width; // 组件范围 
       this.width = Number(getViewportSize.width)/2; // 可拖动div 宽度
       this.height = Number(getViewportSize.height - 80); // 可拖动div 高度
-      this.minh = Number(getViewportSize.height - 180); // 可拖动div 最小高度
       this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
       this.currentUser = {
         id: 'u_'+ localStorage.getItem('realUid'),

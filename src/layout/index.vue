@@ -162,7 +162,6 @@ export default {
     this.width = Number(getViewportSize.width)/2; // 可拖动div 宽
     this.left = Number(getViewportSize.width)/2 - Number(this.width)/2;
     this.height = Number(getViewportSize.height - 60); // 可拖动div 高度
-    this.minh = Number(getViewportSize.height - 160); // 可拖动div 最小高度
     this.currentUser = {
       id: 'c_' + localStorage.getItem('staffUid'),
       uid: localStorage.getItem('staffUid'),

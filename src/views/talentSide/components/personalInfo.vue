@@ -69,16 +69,16 @@
     <div id="drawer-box">
       <el-drawer :title="cb_title" :visible.sync="drawer" :before-close="drawer_handleClose">
         <div class="items-box">
-          <ul>
-            <li class="s-list-nav" v-for="(item,index) in userDefriendList" :key="index">
+          <ul v-if="userDefriendList.length>0">
+            <li class="s-list-nav" v-for="(item,index) in userDefriendList" :key="index" @click="goToCompanyDetails(item.company_id)">
               <div class="itemWrap">
                 <div class="s-avatar">
-                  <img :src=" item.companystaff.avatar ? item.companystaff.avatar : require('../../../assets/image/img-user.jpg')" alt="" />
+                  <img :src=" item.avatar ? item.avatar : require('../../../assets/image/img-user.jpg')" alt="" />
                 </div>
 
                 <div class="s-list-info">
-                  <div class="s-list-name"><span>{{ item.companystaff.staff_name }}</span><span class="span-time">{{ item.createtime }}</span></div>
-                  <div class="s-list-intro"><span>{{ item.companystaff.company_name }}</span></div>
+                  <div class="s-list-name"><span>{{ item.staff_name ?item.staff_name :'暂无' }}</span><span class="span-time">{{ item.createtime }}</span></div>
+                  <div class="s-list-intro"><span>{{ item.company_name?item.company_name :'暂无'  }}</span></div>
                 </div>
               </div>
             </li>
@@ -120,7 +120,15 @@ export default {
     this.getUserProfile();
   },
   methods: {
-    
+    goToCompanyDetails(id){
+      this.drawer = false;
+      this.$router.push({
+        path:'/companyDetails',
+        query:{
+          id: id
+        }
+      })
+    },
     goTomyProfessionalCircle(){
       this.cb_title = '谁看过我';
       // 获取用户黑名单列表
@@ -399,6 +407,7 @@ export default {
     .s-list-nav{
       width: 100%;
       position: relative;
+      cursor: pointer;
       .itemWrap{
         padding: 8px 0;
         display: flex;
