@@ -1,98 +1,108 @@
 <template>
   <div class="app-container">
     <el-form :inline="true" :model="data" class="demo-form-inline">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="申诉时间:">
+            <el-date-picker
+              v-model="data.AAB01_START"
+              type="date"
+              :picker-options="pickerOptions1"
+              placeholder="申诉开始日期"
+            />
+          </el-form-item>
+          <el-form-item label="">
+            <el-date-picker
+              v-model="data.AAB01_END"
+              type="date"
+              :picker-options="pickerOptions2"
+              placeholder="申诉结束日期"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="整改级别:">
+            <el-select v-model="data.levels" filterable clearable placeholder="全部">
+              <el-option v-for="item of levels" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="住院号码:">
+            <el-input v-model="data.AAA28" placeholder="请输入住院号码" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="入院时间:">
+            <el-date-picker
+              v-model="data.AAB01_start_time"
+              type="date"
+              :picker-options="pickerOptions1"
+              placeholder="入院开始日期"
+            />
+          </el-form-item>
+          <el-form-item label="">
+            <el-date-picker
+              v-model="data.AAB01_end_time"
+              type="date"
+              :picker-options="pickerOptions2"
+              placeholder="入院结束日期"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="申诉科室:">
+            <el-select v-model="data.appeal_document" filterable clearable placeholder="申诉科室">
+              <el-option v-for="item of deportments" :key="item.id" :label="item.name" :value="item.name" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="申诉医师:">
+            <el-input v-model="data.appeal_docter" placeholder="申诉医师" />
+          </el-form-item>
+        </el-col>
 
-      <el-form-item label="申诉时间:">
-        <el-date-picker
-          v-model="data.AAB01_START"
-          type="date"
-          :picker-options="pickerOptions1"
-          placeholder="申诉开始日期"
-        />
-      </el-form-item>
-      <el-form-item label="">
-        <el-date-picker
-          v-model="data.AAB01_END"
-          type="date"
-          :picker-options="pickerOptions2"
-          placeholder="申诉结束日期"
-        />
-      </el-form-item>
-      <div class="placeholder"></div>
-      <el-form-item label="整改级别:">
-        <el-select v-model="data.levels" filterable clearable placeholder="全部">
-          <el-option v-for="item of levels" :key="item.id" :label="item.name" :value="item.id" />
-        </el-select>
-      </el-form-item>
-      <div class="placeholder"></div>
+        <el-col :span="12">
+          <el-form-item label="审核时间:">
+            <el-date-picker
+              v-model="data.examine_start_time"
+              type="date"
+              :picker-options="pickerOptions1"
+              placeholder="审核开始日期"
+            />
+          </el-form-item>
+          <el-form-item label="">
+            <el-date-picker
+              v-model="data.examine_end_time"
+              type="date"
+              :picker-options="pickerOptions2"
+              placeholder="审核结束日期"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="质控医师:">
+            <el-input v-model="data.case_docter" placeholder="质控医师" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="缺陷描述:">
+            <el-input v-model="data.defect_content" placeholder="请输入缺陷描述" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <div style="width: 100%;display: flex;justify-content: end;">
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="onReset">重置</el-button>
+            </el-form-item>
+          </div>
+        </el-col>
 
-      <el-form-item label="住院号码:">
-        <el-input v-model="data.AAA28" placeholder="请输入住院号码" />
-      </el-form-item>
-      <div class="placeholder"></div>    
-      <el-form-item label="申诉科室:">
-        <el-select v-model="data.appeal_document" filterable clearable placeholder="申诉科室">
-          <el-option v-for="item of deportments" :key="item.id" :label="item.name" :value="item.name" />
-        </el-select>
-      </el-form-item>
-      <div class="placeholder"></div>
-
-      <el-form-item label="入院时间:">
-        <el-date-picker
-          v-model="data.AAB01_start_time"
-          type="date"
-          :picker-options="pickerOptions1"
-          placeholder="入院开始日期"
-        />
-      </el-form-item>
-      <el-form-item label="">
-        <el-date-picker
-          v-model="data.AAB01_end_time"
-          type="date"
-          :picker-options="pickerOptions2"
-          placeholder="入院结束日期"
-        />
-      </el-form-item>
-      <div class="placeholder"></div>
-
-      <el-form-item label="申诉医师:">
-        <el-input v-model="data.appeal_docter" placeholder="申诉医师" />
-      </el-form-item>
-
-      <el-form-item label="质控医师:">
-        <el-input v-model="data.case_docter" placeholder="质控医师" />
-      </el-form-item>
-      <div class="placeholder"></div>
-
-      <el-form-item label="审核时间:">
-        <el-date-picker
-          v-model="data.examine_start_time"
-          type="date"
-          :picker-options="pickerOptions1"
-          placeholder="审核开始日期"
-        />
-      </el-form-item>
-      <el-form-item label="">
-        <el-date-picker
-          v-model="data.examine_end_time"
-          type="date"
-          :picker-options="pickerOptions2"
-          placeholder="审核结束日期"
-        />
-      </el-form-item>
-      <div class="placeholder"></div>
-
-      <el-form-item label="缺陷描述:">
-        <el-input v-model="data.case_docter" placeholder="请输入缺陷描述" />
-      </el-form-item>
-      <div class="placeholder"></div>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">查询</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="onReset">重置</el-button>
-      </el-form-item>
-
+      </el-row>
     </el-form>
   </div>
 </template>
@@ -104,17 +114,17 @@ export default {
       type: Object,
       default() {
         return {
-          BLZT: '',
-          level: '',
-          ZKYS: '',
-          BLDJ: '',
-          AAA28: '',
-          AAA01: '',
-          AAC11N: '',
           AAB01_START: '',
           AAB01_END: '',
-          AAC01_START: '',
-          AAC01_END: ''
+          levels: '',
+          AAB01_start_time: '',
+          AAB01_end_time: '',
+          appeal_document: '',
+          appeal_docter: '',
+          examine_start_time: '',
+          examine_end_time: '',
+          case_docter: '',
+          defect_content: ''
         }
       }
     }
@@ -133,31 +143,6 @@ export default {
           name: '建议'
         }
       ],
-
-      BLDJs: [
-        {
-          id: 1,
-          name: '甲'
-        },
-        {
-          id: 2,
-          name: '乙'
-        },
-        {
-          id: 3,
-          name: '丙'
-        }
-      ],
-      BLZTs: [
-        {
-          id: 0,
-          name: '未改'
-        },
-        {
-          id: 2,
-          name: '已改'
-        }
-      ]
     }
   },
   created() {
@@ -214,6 +199,12 @@ export default {
     }
     ::v-deep .el-input__icon{
       line-height: 35px;
+    }
+    ::v-deep .el-form-item__content{
+      flex: 1;
+      .el-input{
+        width: auto;
+      }
     }
   }
 </style>
