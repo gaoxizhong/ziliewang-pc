@@ -1,5 +1,7 @@
 <template>
   <div class="bossSide-container">
+    <SearchBoxVue :data="searchData" @search="handleSearch" @reset="handleReset" />
+
     <div class="m-box staffManagement">
       <!-- <div class="search-bar">
         <el-form ref="form" size="small" :model="search" inline label-width="120px">
@@ -106,10 +108,12 @@
 
 <script>
 import mPagination from '@/components/m-pagination';
+import SearchBoxVue from '@/components/SearchBox2.vue'
 export default {
   name: 'staffManagement',
   components: {
     mPagination,
+    SearchBoxVue
   },
   data() {
     return {
